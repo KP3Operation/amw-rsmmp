@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -159,7 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -184,5 +184,17 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Calling Code
+    |--------------------------------------------------------------------------
+    |
+    | This value is the code of phone calling number. This value is used
+    | when the send OTP verification to user(s).
+    |
+    */
+
+    'calling_code' => env('APP_CALLING_CODE', '+62'),
 
 ];

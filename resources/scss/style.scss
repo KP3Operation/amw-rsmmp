@@ -1,0 +1,1209 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+/*
+
+DAFTAR ISI
+
+1.  COLORS
+2.  SPACING
+        2.1 Spacing & Margin
+        2.2 Gap
+        2.3 Border Radius
+3.  TYPOGRAPHY
+        3.1 Font Family
+        3.2 Font Size
+4.  BUTTON
+        4.1 Button Close (Modal & Alert)
+5.  BORDER
+        5.1 Border Color
+6.  ALERT
+7.  MODAL / POPUP
+8.  INPUT
+9.  HEADER
+10. HOMEPAGE
+        10.1 List Menu Homepage
+        10.2 Homepage Carousel Overview Role Doctor
+11. CAROUSEL
+        11.1 Carousel Indicators
+12. SUMMARY FEE HOMEPAGE
+13. NAVBAR
+14. PROFILE
+        14.1 Header Profile Patient
+        14.2 Header Profile Doctor
+15. RIWAYAT MEDIS PAGE
+16. SUMMARY FEE PAGE
+17. FILTER
+        16.1 Filter Sticky
+18. MEDIA QUERY
+19. ACCORDION
+20. TAB APPOINTMENT & SUMMARY FEE
+21. SCROLL BAR
+22. NEW DATA
+23. PAGINATION
+24. MIXIN
+*/
+
+/*
+Apabila ada style yang tidak bisa keubah, letakaan setelah @import bootstrap
+*/
+
+/*
+    1. COLORS
+
+    Cara membuat warna agar masuk ke theme-color bootstrap:
+        1. Buat sebuah variabel yang berisi minimal 1 warna. Contoh
+            $warna-orange: ("oren": #F8D7DA);
+        2. Merge warna yang telah dibuat dengan theme-color dengan cara seperti di bawah ini:
+            $theme-colors: merge($theme-colors, $warna-orange)
+
+    Cara menggunakan warnanya di class di html adalah dengan menggunakan nama property dari custom warna yang dibuat (oren). Contoh:
+        1. Apabila ingin mengganti background maka classnya menjadi bg-oren
+        2. Apabila ingin mengganti nama teks, maka classnya menjadi text-oren
+*/
+
+
+$red-100: #F8D7DA;
+$red-200: #F1AEB5;
+$red-500: #DC3545;
+$red-600: #B02A37;
+
+$green-100: #D2F4EA;
+$green-200: #A6E9D5;
+$green-500: #20C997;
+$green-600: #1AA179;
+$green-700: #70AE45;
+
+$black: #121212;
+$white: #FFF;
+$gray-100: #F8F9FA;
+$gray-200: #E9ECEF;
+$gray-400: #CED4DA;
+$gray-600: #6C757D;
+$gray-700: #495057;
+$gray-800: #343A40;
+
+$blue: #0D6EFD;
+$blue-100: #E7F1FF;
+$blue-200: #9EC5FE;
+$blue-500: $blue;
+$blue-700: #084298;
+
+$custom-red: (
+    "red-100": $red-100,
+    "red-200": $red-200,
+    "red-500": $red-500,
+    "red-600": $red-600,
+);
+
+$custom-green: (
+    "green-100": $green-100,
+    "green-200": $green-200,
+    "green-500": $green-500,
+    "green-600": $green-600,
+    "green-700": $green-700
+);
+
+$custom-blue: (
+    "blue": $blue,
+    "blue-100": $blue-100,
+    "blue-200": $blue-200,
+    "blue-500": $blue-500,
+    "blue-700": $blue-700,
+);
+
+$custom-neutral: (
+    "black": #121212,
+    "white": #FFF,
+    "gray-100": #F8F9FA,
+    "gray-200": #E9ECEF,
+    "gray-400": #CED4DA,
+    "gray-600": #6C757D,
+    "gray-700": #495057,
+    "gray-800": #343A40,
+);
+
+$theme-colors: map-merge($theme-colors, $custom-blue);
+$theme-colors: map-merge($theme-colors, $custom-red);
+$theme-colors: map-merge($theme-colors, $custom-green);
+$theme-colors: map-merge($theme-colors, $custom-neutral);
+
+.icon-blue-200 {
+    color: $blue-200;
+}
+
+.icon-blue-500 {
+    color: $blue-500;
+}
+
+.icon-red-200 {
+    color: $red-200;
+}
+
+.icon-red-500 {
+    color: $red-500;
+}
+
+.icon-red-600 {
+    color: $red-600;
+}
+
+.icon-green-200 {
+    color: $green-200;
+}
+
+.icon-green-500 {
+    color: $green-500;
+}
+
+.icon-white {
+    color: $white;
+}
+
+.icon-black {
+    color: $black;
+}
+
+main {
+    width: 393px;
+    min-height: 100vh;
+    margin-left: auto;
+    margin-right: auto;
+    color: $black;
+}
+
+// 2. SPACING
+
+// 2.1 PADDING & MARGIN
+$spacer: 1rem;
+$custom-spacer: (
+    0: 0,
+    1: $spacer * .25,
+    //4px
+    2: $spacer * .5,
+    // 8px
+    3: $spacer,
+    // 16px
+    4: $spacer * 1.25,
+    //20px
+    5: $spacer * 1.5,
+    //24px
+    6: $spacer * 2.5,
+    // 40px,
+    7: $spacer * 6.25,
+    // 100px
+    8: $spacer * 4.375 // 70px
+);
+
+$spacers: map-merge($spacers, $custom-spacer);
+
+// 2.2 GAP
+.col-gap-20 {
+    column-gap: $spacer * 1.25
+}
+
+.col-gap-16 {
+    column-gap: $spacer;
+}
+
+.col-gap-8 {
+    column-gap: $spacer * .5;
+}
+
+.rows-gap-20 {
+    row-gap: 20px;
+}
+
+.rows-gap-16 {
+    row-gap: 16px;
+}
+
+.rows-gap-8 {
+    row-gap: 8px;
+}
+
+// 2.3 BORDER RADIUS
+.radius-100 {
+    border-radius: 100px;
+}
+
+// 3. TYPOGRAPHY
+
+
+
+// 3.1 FONT FAMILY
+$font-family-sans-serif: "Manrope", sans-serif;
+
+// 3.2 FONT SIZE
+$custom-font-size: (
+    1: 32px,
+    2: 24px,
+    3: 20px,
+    4: 16px,
+    5: 14px,
+    6: 12px,
+);
+
+$font-sizes: map-merge($font-sizes, $custom-font-size);
+
+// 3.3 LINE HEIGHT
+$line-height-150: 150%;
+
+// 4 BUTTON
+$btn-padding-y: 8px;
+$btn-padding-x: 16px;
+$btn-font-family: $font-family-sans-serif;
+$btn-font-weight: $font-weight-semibold;
+
+// 4.1 BUTTON CLOSE
+$btn-close-bg: none;
+$btn-close-width: 1.25rem;
+$btn-close-height: 100%;
+$btn-close-opacity: 1;
+$btn-close-x: 0;
+$btn-close-y: 0;
+
+// 5 BORDER
+
+// 5.1 BORDER COLOR
+.border-white {
+    border-color: $white;
+}
+
+// 6 ALERT
+.alert-dismissible .btn-close {
+    padding: 0 16px 0 0 !important;
+}
+
+.alert {
+    width: 353px;
+    position: fixed !important;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+
+
+    &.alert-red {
+        background: $red-100;
+        border-color: $red-200;
+        color: $red-500;
+
+        i {
+            color: $red-500
+        }
+    }
+
+    &.alert-green {
+        background: $green-100;
+        border-color: $green-200;
+        color: $green-500;
+
+        i {
+            color: $green-500;
+        }
+    }
+
+    &.alert-blue {
+        background: $blue-100;
+        border-color: $blue-200;
+        color: $blue-500;
+
+        i {
+            color: $blue-500;
+        }
+    }
+}
+
+// 7 MODAL / POPUP
+$modal-md: 353px;
+
+.modal {
+    color: $black;
+
+    .modal-content {
+        border-radius: 8px;
+
+        .modal-header {
+            .modal-title {
+                font-size: $font-size-base;
+                font-weight: 700;
+            }
+
+            .btn-close {
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+            }
+        }
+
+        .modal-body {
+            text-align: center;
+            color: $black;
+        }
+
+        .modal-footer {
+            justify-content: flex-start;
+            column-gap: 20px;
+        }
+    }
+}
+
+// 8 INPUT
+$input-padding-x: $spacer;
+$input-padding-y: $spacer * .5;
+$input-border-radius: 4px;
+$input-placeholder-color: $gray-600;
+$input-border-color: $gray-400;
+$input-focus-border-color: $blue-200;
+$input-color: $black;
+
+input[type="text"]:read-only,
+input[type="number"]:read-only,
+input[type="email"]:read-only,
+input[type="tel"]:read-only,
+input[type="date"]:read-only,
+input[type="time"]:read-only {
+    background: $gray-200;
+}
+
+$form-select-padding-x: $spacer;
+$form-select-padding-y: $spacer * .5;
+
+// 9 HEADER
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    position: fixed;
+    top: 0;
+    width: 393px;
+    z-index: 999;
+
+    &.header-default {
+        background: $white;
+        border-bottom: solid 1px $gray-400;
+        text-align: center;
+        justify-content: flex-start;
+
+        &.no-margin {
+            h1 {
+                margin-right: 0;
+            }
+        }
+
+        a {
+            font-size: 24px;
+            color: $black;
+        }
+
+        h1 {
+            flex-grow: 1;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 30px;
+        }
+
+        .add {
+            font-size: 24px;
+            color: $blue-500;
+        }
+    }
+
+    &.header-dokter {
+        background: $blue-100;
+
+        .notifikasi {
+            position: relative;
+            color: $black;
+            text-decoration: none;
+
+            .info {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: $red-500;
+                font-size: 10px;
+                font-weight: 600;
+                color: $white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: -10px;
+                left: 7px;
+            }
+        }
+    }
+
+    &.header-pasien {
+        background: $blue-500;
+        color: $white;
+        font-size: 20px;
+
+        span {
+            font-weight: 700;
+        }
+    }
+
+}
+
+.header-detail-encounter {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 20px;
+    background: $blue-500;
+    padding: $spacer $spacer * 1.25;
+    border-radius: 8px 8px 0 0;
+    position: sticky;
+    width: 100%;
+    color: $white;
+    z-index: 99;
+    transition: .2s ease-in-out;
+
+    &.scroll {
+        width: calc(100% + 40px);
+        margin-left: -20px;
+        border-radius: 0;
+        top: 68px;
+
+    }
+
+    .note {
+        font-size: 14px;
+    }
+
+    .name {
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .queue {
+        text-align: right;
+    }
+}
+
+// 10 HOMEPAGE
+
+// 10.1 List Menu Homepage
+.list-menu-homepage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 20px;
+
+    &.pasien {
+        .item {
+            overflow: hidden;
+            position: relative;
+
+            &::before,
+            &::after {
+                content: '';
+                width: 66px;
+                height: 66px;
+                border-radius: 50%;
+                display: block;
+                position: absolute;
+            }
+
+            &::before {
+                top: -24px;
+                right: -16px;
+                z-index: 2;
+            }
+
+            &::after {
+                right: 0;
+                top: -13px;
+            }
+
+            &.riwayat-medis {
+                &::before {
+                    background: #C9DFFF;
+                }
+
+                &::after {
+                    background: #88B8FF;
+                }
+            }
+
+            &.appointment {
+                background: #FFCF82;
+
+                .icon {
+                    background: #FF9E00;
+                }
+
+                &::before {
+                    background: #FFDBA1;
+                }
+
+                &::after {
+                    background: #FFBD52;
+                }
+            }
+
+            &.doctor-schedule {
+                &::before {
+                    background: #0FCF96;
+                }
+
+                &::after {
+                    background: #51E8BB;
+                }
+            }
+
+            &.family-member {
+                background: #E2D3FF;
+
+                .icon {
+                    background: #8E56FF;
+                }
+
+                &::before {
+                    background: #C0A2FB;
+                }
+
+                &::after {
+                    background: #B088FF;
+                }
+            }
+        }
+    }
+
+    .item {
+        width: calc((100% / 2) - 10px);
+        padding: 16px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+
+        &.summary-fee {
+            background: #E2D3FF;
+
+            .icon {
+                background: #8E56FF;
+            }
+        }
+
+        &.profile {
+            background: #FFCF82;
+
+            .icon {
+                background: #FF9E00;
+            }
+        }
+
+        .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: $white;
+
+            &.icon-doctor {
+                width: 40px;
+                height: 40px;
+            }
+
+            &.icon-pasien {
+                width: 50px;
+                height: 50px;
+                font-size: 25px;
+            }
+        }
+
+
+    }
+}
+
+// 10.2 Homepage Overview Doctor
+.carousel-item {
+    display: flex;
+}
+
+.overview-slider-doctor {
+    width: 166px;
+    height: 207px;
+    background: $blue-500;
+    border-radius: 8px;
+    padding: 16px 0;
+
+    .date {
+        display: flex;
+        justify-content: flex-end;
+
+        div {
+            width: 128px;
+            display: flex;
+            column-gap: 8px;
+            justify-content: flex-end;
+            padding: 4px 16px;
+            border-radius: 8px 0 0 8px;
+            color: $blue-500;
+            background: $white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+    }
+
+    .patient {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 32px;
+        padding: 0 16px;
+        color: $white;
+
+        p {
+            font-size: 14px;
+
+            span {
+                font-size: 32px;
+                font-weight: 700;
+            }
+
+            text-align: right;
+        }
+    }
+
+    .location {
+        margin-top: 16px;
+        padding: 0 16px;
+        color: $white;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700
+    }
+}
+
+// 11 CAROUSEL
+
+// 11.1 CAROUSEL INDICATOR
+$carousel-indicator-width: 10px;
+$carousel-indicator-height: 10px;
+$carousel-indicator-active-bg: $blue-500;
+
+.carousel-indicators {
+    margin-top: 16px;
+
+    button {
+        border-radius: 50%;
+    }
+}
+
+// 12. SUMMARY FEE HOMEPAGE
+.summary-homepage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &.pending {
+        background: $blue-100;
+        border: solid 1px $blue-200;
+
+        .status {
+            color: $blue-700;
+            background: $blue-200;
+        }
+    }
+
+    &.terbayar {
+        background: $green-100;
+        border: solid 1px $green-200;
+
+        .status {
+            color: $green-700;
+            background: $green-200;
+        }
+    }
+
+    .amount {
+        text-align: right;
+        font-weight: 700
+    }
+
+    .status {
+        padding: 4px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+    }
+}
+
+.btn-filter-fee {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.filter-homepage-summary-fee {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease-in-out;
+
+    form {
+        div {
+            width: calc(49.5% - 28px);
+        }
+        button {
+            width: 42px;
+            height: 42px;
+        }
+    }
+    &.expand {
+        max-height: 300px;
+    }
+}
+
+// 13. NAVBAR
+nav {
+    position: fixed;
+    bottom: 0;
+    width: 393px;
+    display: flex;
+    justify-content: space-between;
+    column-gap: 20px;
+    background: $white;
+    padding: 8px 20px;
+    border-top: solid 1px $gray-400;
+    z-index: 999;
+
+    a {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        row-gap: 4px;
+        text-align: center;
+        text-decoration: none;
+        color: $gray-600;
+        font-size: 14px;
+
+        i {
+            font-size: 20px;
+        }
+
+        svg {
+            height: 32px;
+        }
+
+        &.active {
+            color: $blue-500;
+            font-weight: 600;
+
+            svg path {
+                fill: $blue-500;
+            }
+        }
+    }
+}
+
+// 14. PROFILE
+
+// 14.1 HEADER PROFILE PATIENT
+.profile-patient {
+    display: flex;
+    column-gap: 20px;
+    padding: 24px 20px;
+    color: $white;
+    background: $blue-500;
+    border-radius: 8px;
+    margin-top: 20px;
+
+    img {
+        width: 49px;
+        height: 49px;
+        border-radius: 50%;
+    }
+
+    p {
+        font-size: 14px;
+
+        &.name {
+            font-size: 16px;
+            font-weight: 700;
+        }
+    }
+}
+
+// 14.2 HEADER PROFILE DOCTOR
+.profile-doctor {
+    height: 240px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), url('@resources/static/images/cover-profile-doctor.png'), lightgray 50% / cover no-repeat;
+    margin-top: 62px;
+    text-align: center;
+    color: $white;
+
+    img {
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: solid 2px $blue-200;
+        object-fit: cover;
+    }
+}
+
+// 15. RIWAYAT MEDIS
+
+// 15.1 TAB RIWAYAT MEDIS
+.tab-riwayat-medis {
+    white-space: nowrap;
+    overflow-x: scroll;
+    padding-bottom: 8px;
+
+    button.nav-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: solid 1px $blue-200;
+        border-radius: 8px;
+        padding: 8px;
+        color: $black;
+        background: transparent;
+        width: 90px;
+        flex-shrink: 0;
+
+        &.active {
+            background: $blue-100;
+            color: $black;
+            font-weight: 700;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: $blue-500;
+            border-radius: 50%;
+            color: $white;
+
+            i {
+                font-size: 16px
+            }
+        }
+
+        p {
+            font-size: 14px;
+            margin-top: 8px;
+        }
+    }
+}
+
+// 16. SUMMARY FEE PAGE
+.filter-summary-fee {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    form {
+        div {
+            width: calc(50% - 28px);
+        }
+        button {
+            width: 42px;
+            height: 42px;
+        }
+    }
+}
+
+.tab-periode {
+    position: sticky;
+    top: 69px;
+    background: $white;
+    z-index: 99;
+    transition: .5s ease-in-out;
+    padding: 20px;
+}
+
+// 17. FILTER
+
+// 17.1 FILTER STICKY
+.filter-sticky {
+    position: sticky !important;
+    padding: 16px 20px;
+    background: $white;
+    top: 68px;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    ;
+
+    span {
+        width: 220px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: left;
+    }
+
+    .dropdown-menu {
+        margin-left: -20px !important;
+    }
+}
+
+.filter-sticky-2 {
+    top: 68px;
+    z-index: 99;
+}
+
+// 18. MEDIA QUERY
+@media (max-width: 393px) {
+
+    main,
+    .header,
+    nav {
+        width: 100%;
+    }
+
+    .alert {
+        width: 80%
+    }
+
+    .tab-riwayat-medis button.nav-link {
+        width: calc(33.3% - 14px);
+        height: 110px;
+    }
+}
+
+// 19 ACCORDION
+$accordion-padding-x: $spacer * 1.25;
+$accordion-padding-y: $spacer;
+$accordion-color: $black;
+$accordion-bg: $blue-100;
+$accordion-border-width: 0;
+$accordion-border-color: transparent;
+$accordion-inner-border-radius: 8px;
+$accordion-border-radius: 8px;
+$accordion-body-padding-x: $spacer;
+$accordion-body-padding-y: 0 $spacer;
+$accordion-button-active-color: $black;
+$accordion-button-active-bg: $blue-100;
+$accordion-button-focus-box-shadow: none;
+$accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='{#{$black}}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+$accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$black}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+
+
+.accordion-item {
+    border-radius: 8px;
+
+    &.rawat-inap {
+        .accordion-button {
+            position: relative;
+            align-items: flex-start;
+
+            &.collapsed {
+                &::after {
+                    transform: translateY(50%);
+                }
+            }
+
+            &::after {
+                position: relative;
+                top: 50px;
+                transform: translateY(50%) rotate(180deg);
+            }
+        }
+    }
+
+    .accordion-button {
+        border-radius: 8px !important;
+
+    }
+
+    .accordion-header {
+        color: $black;
+
+        button {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 150%;
+        }
+    }
+}
+
+.accordion-divider {
+    width: 100%;
+    height: 2px;
+    border: dashed 1.5px $blue-200;
+}
+
+// ACCORDION PAGE SUMMARY FEE
+body#summary-fee {
+    #pending,
+    #terbayar {
+        .accordion-button {
+            padding: $spacer $spacer $spacer $spacer * 3.75;
+            &::after {
+                position: absolute;
+                left: 20px;
+            }
+        }
+    }
+
+}
+
+// 20 APPOINTMENT
+.tab-appointment,
+.tab-summary-fee {
+    .nav-link {
+        border: solid 1px $blue-500;
+        color: $blue-500;
+        font-weight: 600;
+
+        &.active {
+            background: $blue-500;
+            border-radius: 8px;
+        }
+    }
+}
+
+// 21 SCROLL BAR
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: $gray-400;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $blue-500;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $blue-700;
+}
+
+.tab-riwayat-medis::-webkit-scrollbar {
+    height: 5px;
+}
+
+// 22 NEW DATA
+.new-data {
+    width: 10px;
+    height: 10px;
+    background: $blue-500;
+    border-radius: 50%;
+}
+
+.new-data-bg {
+    background: $green-100;
+    border-color: $green-200;
+}
+
+// 23 PAGINATION
+.pagination {
+    .page-item {
+        &.active {
+            .page-link {
+                color: $white;
+                font-weight: 700;
+            }
+        }
+
+        .page-link {
+            color: $black;
+            padding: 8 16px;
+            &:hover {
+                background: $blue-700;
+                color: $white;
+            }
+        }
+    }
+}
+
+
+@import '~bootstrap/scss/bootstrap.scss';
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 150%;
+}
+
+
+/*
+24. MIXIN
+Jika ingin mengubah style dari sebuah komponen, disarankan menggunakan mixin dibanding membuat style sendiri lalu menggunakan !important untuk mengubah style
+
+Jika mixin yang telah dibuat tidak mengganti style default komponen, maka coba pindahkan mixin tersebut dibawah @import bootstrap
+
+*/
+
+.btn-blue-700-rounded {
+    @include button-variant($blue-700, $blue-700, $white);
+    border-radius: 100px;
+}
+
+.btn-blue-500-rounded {
+    @include button-variant($blue-500, $blue-500, $white);
+    border-radius: 100px;
+}
+
+.btn-blue-500-rounded-sm {
+    @include button-variant($blue-500, $blue-500, $white);
+    border-radius: 8px;
+}
+
+.btn-green-700-rounded {
+    @include button-variant($green-700,
+        $green-700,
+        $white,
+        $hover-background: $green-700,
+        $hover-border: $green-700,
+        $hover-color: $white );
+    border-radius: 100px;
+}
+
+.btn-red-500-rounded {
+    @include button-variant($red-500,
+        $red-500,
+        $white,
+        $hover-background: $red-500,
+        $hover-border: $red-500,
+        $hover-color: $white );
+    border-radius: 100px;
+}
+
+.btn-outline-white-rounded {
+    @include button-outline-variant($white,
+        $color-hover: $blue-700,
+        $active-background: $white,
+        $active-border: $white,
+        $active-color: $blue-700 );
+    text-decoration: none;
+    border-radius: 100px;
+}
+
+.btn-outline-red-rounded-sm {
+    @include button-outline-variant($red-500,
+        $color-hover: $white,
+        $active-background: $red,
+        $active-border: $red,
+        $active-color: $white );
+    border-radius: 8px;
+}
+
+.modal {
+    .btn-link {
+        @include button-variant(transparent, transparent, $gray-800);
+        text-decoration: none;
+    }
+
+    .btn-blue {
+        @include button-variant($blue-500, $blue-500, $white);
+        border-radius: 100px;
+    }
+}

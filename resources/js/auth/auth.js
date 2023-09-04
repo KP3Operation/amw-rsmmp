@@ -1,8 +1,11 @@
-import "../bootstrap";
-import "../../scss/style.scss";
+import "@resources/js/bootstrap";
+import "@resources/scss/style.scss";
+import router from "@auth/router";
+
+import.meta.glob(["@resources/static/**"]);
 
 import { createApp } from "vue";
 
-import Auth from "./Auth.vue";
+import Auth from "@auth/Auth.vue";
 
-createApp(Auth).mount("#app");
+createApp(Auth).use(router).mount("#app");

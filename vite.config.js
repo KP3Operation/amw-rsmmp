@@ -11,10 +11,11 @@ export default defineConfig({
                 // assets related
                 "resources/css/app.css",
                 "resources/css/style.css",
+                // "resources/css/style.css.map",
                 "resources/js/libs/alert.js",
                 "resources/js/libs/multiselect.js",
                 "resources/js/libs/notification.js",
-                // vue related
+                // vue related - auth
                 "resources/js/auth/auth.js",
             ],
             refresh: true,
@@ -24,6 +25,7 @@ export default defineConfig({
         alias: {
             "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
             "@resources": path.resolve(__dirname, "resources"),
+            "@auth": path.resolve(__dirname, "resources/js/auth"),
         },
     },
 });

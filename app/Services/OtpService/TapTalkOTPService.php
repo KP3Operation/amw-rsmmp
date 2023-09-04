@@ -5,6 +5,7 @@ namespace App\Services\OtpService;
 use App\Models\OtpCode;
 use App\Models\User;
 use Exception;
+use App\Jobs\SendTapTalkOtp;
 
 class TapTalkOTPService implements IOTPService
 {
@@ -15,8 +16,7 @@ class TapTalkOTPService implements IOTPService
         if ($existingCode != null)
             $this->sendOtp($user); // FIXME: Possible infinite looping
 
-        // TODO: Need to implement HTTP request
-        // ...
+        SendTapTalkOtp::dispatch($code, $user->phone_number);
 
         $otpCode = OtpCode::whereUserId($user->id)->first();
         if ($otpCode != null) {

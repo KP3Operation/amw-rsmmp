@@ -17,6 +17,7 @@ return new class extends Migration
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
             $table->bigInteger('code');
+            $table->string('taptalk_message_id')->nullable();
             $table->enum('status', ['unverified', 'verified'])->default('unverified');
             $table->timestamps();
         });

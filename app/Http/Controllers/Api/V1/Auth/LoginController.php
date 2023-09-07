@@ -31,7 +31,7 @@ class LoginController extends Controller
 
         $otpCode = $this->otpService->sendOtp($user);
         $user->otp_created_at = $otpCode->created_at;
-        $user->otp_timeout = 10000; // miliseconds FIXME: Need env var(?)
+        $user->otp_timeout = 10000; // miliseconds - 10 seconds
 
         return new LoginResource($user);
     }

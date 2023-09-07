@@ -46,10 +46,7 @@
     <main class="bg-blue-500 text-white pt-6 px-4">
         <img src="{{ Vite::asset('resources/static/images/logo-white.svg') }}" alt="Aviat Logo" width="40"
             height="40">
-        <h1 class="fs-1 mt-6 fw-bold">Selamat Datang Di
-            Aviat Mobile Web</h1>
-
-        <h2 class="mt-6 fs-3 fw-bold">Masuk Akun</h2>
+        <h1 class="fs-1 mt-6 fw-bold">{{ __('login.welcome_message') }}</h1>
 
         <div id="app"></div>
 

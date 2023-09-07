@@ -16,6 +16,7 @@
         "@vitejs/plugin-vue": "^4.3.4",
         "bootstrap": "^5.3.1",
         "vue": "^3.2.36",
+        "vue-i18n": "^9.2.2",
         "vue-loader": "^17.2.2",
         "vue-router": "^4.2.4"
     }

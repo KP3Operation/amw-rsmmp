@@ -52,7 +52,7 @@ class SendTapTalkOtp implements ShouldQueue
                                         ->first();
                     if ($otpCode) {
                         $otpCode->update([
-                            'taptalk_message_id' => $messageId
+                            'message_id' => $messageId
                         ]);
                     } else {
                         // Something wrong, why thereis no data (?)

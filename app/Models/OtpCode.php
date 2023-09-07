@@ -14,7 +14,7 @@ class OtpCode extends Model
         'code',
         'user_id',
         'status',
-        'taptalk_message_id'
+        'message_id'
     ];
 
     public function user(): BelongsTo

@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Services\OtpService\IOTPService;
-use App\Services\OtpService\TapTalkOTPService;
+use App\Services\OtpService\WatzapOTPService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(LoginController::class)
             ->needs(IOTPService::class)
             ->give(function () {
-                return new TapTalkOTPService();
+                return new WatzapOTPService();
             });
     }
 

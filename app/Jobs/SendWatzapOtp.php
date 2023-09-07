@@ -42,14 +42,17 @@ class SendWatzapOtp implements ShouldQueue
                 // We are good
             } else if ($status >=400 && $status <= 499) {
                 // Something wrong with payloads or authentication
+                throw new \Exception("There is an error while communicating with watzap service", 400);
             } else if ($status >= 500 && $status <= 599) {
-                // TapTaplk server error
+                // watzap server error
+                throw new \Exception("There is an error while communicating with watzap service", 500);
             } else {
                 // Don't know why it is error :)
+                throw new \Exception("Internal server error", 500);
             }
 
         } else {
-            // TODO: Something wrong
+            throw new \Exception("Internal server error", 500);
         }
     }
 }

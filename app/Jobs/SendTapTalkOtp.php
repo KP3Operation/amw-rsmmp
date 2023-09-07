@@ -56,19 +56,23 @@ class SendTapTalkOtp implements ShouldQueue
                         ]);
                     } else {
                         // Something wrong, why thereis no data (?)
+                        throw new \Exception("Internal server error", 500);
                     }
                 }
 
             } else if ($status >=400 && $status <= 499) {
                 // Something wrong with payloads or authentication
+                throw new \Exception("There is an error while communicating with taptalk service", 400);
             } else if ($status >= 500 && $status <= 599) {
                 // TapTaplk server error
+                throw new \Exception("There is an error while communicating with taptalk service", 500);
             } else {
                 // Don't know why it is error :)
+                throw new \Exception("Internal server error", 500);
             }
 
         } else {
-            // TODO: Something wrong
+            throw new \Exception("Internal server error", 500);
         }
     }
 }

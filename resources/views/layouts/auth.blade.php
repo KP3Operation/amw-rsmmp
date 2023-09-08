@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=375, initial-scale=1, maximum-scale=1">
     <title>{{ env('APP_NAME') }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -46,8 +46,6 @@
     <main class="bg-blue-500 text-white pt-6 px-4">
         <img src="{{ Vite::asset('resources/static/images/logo-white.svg') }}" alt="Aviat Logo" width="40"
             height="40">
-        <h1 class="fs-1 mt-6 fw-bold">{{ __('login.welcome_message') }}</h1>
-
         <div id="app"></div>
 
     </main>

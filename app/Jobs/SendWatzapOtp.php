@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 class SendWatzapOtp implements ShouldQueue
@@ -26,6 +27,8 @@ class SendWatzapOtp implements ShouldQueue
 
     public function handle(): void
     {
+        Log::info("Send OTP for {phoneNumber} with code {code}", ['phoneNumber' => $this->phoneNumber, 'code' => $this->code]);
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])->post(config('watzap.send_message_url'), [

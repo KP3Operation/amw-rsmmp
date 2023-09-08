@@ -18,6 +18,7 @@ class LoginResource extends JsonResource
             'data' => [
                 'phone_number' => $this->phone_number,
                 'otp_created_at' => $this->otp_created_at,
+                'otp_updated_at' => $this->otp_updated_at,
                 'otp_timeout' => $this->otp_timeout
             ],
             'links' => [

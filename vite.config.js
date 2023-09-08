@@ -26,6 +26,7 @@ export default defineConfig({
             "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
             "@resources": path.resolve(__dirname, "resources"),
             "@auth": path.resolve(__dirname, "resources/js/auth"),
+            "@shared": path.resolve(__dirname, "resources/js/shared"),
         },
     },
 });

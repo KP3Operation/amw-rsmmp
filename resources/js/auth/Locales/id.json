@@ -1,8 +1,20 @@
 {
     "welcome_message": "Selamat Datang Di Aviat Mobile Web",
-    "phone_number": "No. Handphone",
-    "does_not_have_account": "Belum Punya Akun?",
-    "login_to_account": "Masuk Akun",
-    "login": "Masuk",
-    "register": "Daftar"
+    "login": {
+        "phone_number": "No. Handphone",
+        "does_not_have_account": "Belum Punya Akun?",
+        "login_to_account": "Masuk Akun",
+        "login": "Masuk",
+        "register": "Daftar"
+    },
+    "verification": {
+        "title": "Verifikasi Kode OTP",
+        "subtitle": "Mohon untuk periksa whatsapp atau SMS anda untuk melihat kode OTP",
+        "otp_code": "Kode OTP",
+        "does_not_get_code": "Tidak Menerima Kode?",
+        "resend_code": "Kirim Ulang",
+        "cancel": "Batal",
+        "verify": "Verifikasi OTP",
+        "enter_otp_code": "Masukkan Kode OTP"
+    }
 }

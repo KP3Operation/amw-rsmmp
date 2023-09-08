@@ -1,8 +1,20 @@
 {
     "welcome_message": "Welcome Aviat Mobile Web",
-    "phone_number": "Phone Number",
-    "does_not_have_account": "Doesn't Have Account?",
-    "login_to_account": "Login to Account",
-    "login": "Login",
-    "register": "Register"
+    "login": {
+        "phone_number": "Phone Number",
+        "does_not_have_account": "Doesn't Have Account?",
+        "login_to_account": "Login to Account",
+        "login": "Login",
+        "register": "Register"
+    },
+    "verification": {
+        "title": "OTP Code Verification",
+        "subtitle": "Please check you whatsapp or SMS to get your OTP code",
+        "otp_code": "OTP code",
+        "does_not_get_code": "Doesn't Get the Code?",
+        "resend_code": "Resend code",
+        "cancel": "Cancel",
+        "verify": "Verify OTP",
+        "enter_otp_code": "OTP Code"
+    }
 }

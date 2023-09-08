@@ -15,9 +15,9 @@ const form = reactive(
 const login = async () => {
     const response = await form.post('/api/v1/login');
     authStore.phoneNumber = response.data.data.phone_number;
-    authStore.otpCreatedAt = response.data.data.created_at;
-    authStore.otpUpdatedAt = response.data.data.updated_at;
-    authStore.otpTimeout = response.data.data.timeout;
+    authStore.otpCreatedAt = response.data.data.otp_created_at;;
+    authStore.otpUpdatedAt = response.data.data.otp_updated_at;
+    authStore.otpTimeout = response.data.data.otp_timeout;
     form.reset();
     router.push({path: '/verification'});
 }

@@ -1,0 +1,298 @@
+#!/usr/bin/env php
+<?php
+
+(PHP_SAPI !== 'cli' || isset($_SERVER['HTTP_USER_AGENT'])) && die('cli only');
+
+$initialEnvVars = [
+    'DB_CONNECTION'=> 'pgsql',
+    'DB_HOST'=> '127.0.0.1',
+    'DB_PORT'=> '5432',
+    'DB_DATABASE'=> 'aviatmobileweb',
+    'DB_USERNAME'=> 'root',
+    'DB_PASSWORD'=> '',
+    'APP_NAME'=> 'Aviatmobileweb',
+    'APP_ENV'=>'local',
+    'APP_DEBUG'=> true,
+    'APP_URL' => 'http://localhost'
+];
+
+$requiredExts = [
+    'ctype',
+    'curl',
+    'dom',
+    'fileinfo',
+    'filter',
+    'hash',
+    'mbstring',
+    'openssl',
+    'pdo_pgsql',
+    'pgsql',
+    'xml',
+    'session',
+    'PDO',
+    'tokenizer'
+];
+
+function run(string $command): string
+{
+    $descriptorspec = array(
+        0 => array("pipe", "r"), // stdin
+        1 => array("pipe", "w"), // stdout
+        2 => array("pipe", "w"), // stderr
+    );
+
+    $process = proc_open($command, $descriptorspec, $pipes);
+    $output = '';
+
+    if (is_resource($process)) {
+        fclose($pipes[0]); // Close stdin, as we don't need to write to it
+
+        while (!feof($pipes[1])) {
+            $output .= fgets($pipes[1]);
+        }
+
+        fclose($pipes[1]); // Close stdout
+        fclose($pipes[2]); // Close stderr
+        proc_close($process); // Close the process
+    }
+
+    return $output;
+}
+
+function isEnvExists (): bool
+{
+    if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . '.env')) {
+        return true;
+    }
+    return false;
+}
+
+function ask(string $question, string $default = ''): string
+{
+    $answer = readline($question.($default ? " ({$default})" : null).': ');
+    if (! $answer) {
+        return $default;
+    }
+    return $answer;
+}
+
+function confirm(string $question, bool $default = false): bool
+{
+    $answer = ask($question.' ('.($default ? 'Y/n' : 'y/N').')');
+    if (! $answer) {
+        return $default;
+    }
+    return strtolower($answer) === 'y';
+}
+
+function writeln(string $line): void
+{
+    echo $line . PHP_EOL;
+}
+
+function generateAsciiTable($headers, $data) {
+    // Find the maximum width for each column
+    $columnWidths = array_map('strlen', $headers);
+    foreach ($data as $row) {
+        foreach ($row as $key => $value) {
+            if (is_bool($value)) {
+                // If the value is boolean, set it to a checkmark or empty string
+                $value = $value ? '✓' : '';
+            }
+            $columnWidths[$key] = max($columnWidths[$key], strlen($value));
+        }
+    }
+
+    // Create the table header
+    $table = "+";
+    foreach ($headers as $key => $header) {
+        $table .= str_pad("", $columnWidths[$key] + 2, "-") . "+";
+    }
+    $table .= "\n|";
+    foreach ($headers as $key => $header) {
+        $table .= " " . str_pad($header, $columnWidths[$key], " ") . " |";
+    }
+    $table .= "\n+";
+    foreach ($headers as $key => $header) {
+        $table .= str_pad("", $columnWidths[$key] + 2, "-") . "+";
+    }
+
+    // Create the table data
+    foreach ($data as $row) {
+        $table .= "\n|";
+        foreach ($row as $key => $value) {
+            if (is_bool($value)) {
+                // If the value is boolean, set it to a checkmark or empty string
+                $value = $value ? '✓' : '';
+            }
+            $table .= " " . str_pad($value, $columnWidths[$key], " ") . " |";
+        }
+    }
+
+    $table .= "\n+";
+    foreach ($headers as $key => $header) {
+        $table .= str_pad("", $columnWidths[$key] + 2, "-") . "+";
+    }
+    return $table;
+}
+
+function replaceEnvValues($envFilePath, $replacementValues) {
+    if (!file_exists($envFilePath)) {
+        return false; // File doesn't exist
+    }
+
+    // Read the contents of the file
+    $fileContents = file_get_contents($envFilePath);
+
+    // Replace the values in the file contents
+    foreach ($replacementValues as $key => $value) {
+        $search = "{$key}=";
+        $replacement = "{$key}={$value}";
+        $fileContents = preg_replace("/^{$search}.*/m", $replacement, $fileContents);
+    }
+
+    // Write the updated contents back to the file
+    file_put_contents($envFilePath, $fileContents);
+
+    return true; // Values replaced successfully
+}
+
+if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . '.env')) {
+    if (!confirm('\'.env\' file exists, continue?', false)) {
+        exit(1);
+    } else {
+        run('cp .env .env.backup');
+    }
+} else {
+    writeln('Copy .env.example to .env...');
+    run('cp .env.example .env');
+}
+
+writeln("Check php ext...");
+$enabledExts = get_loaded_extensions();
+$headers = ["Name", "Is Active"];
+$exts = [];
+$extsStatus = true;
+for ($i = 0; $i < count($requiredExts); $i++) {
+    $exts[$i] = [$requiredExts[$i], in_array($requiredExts[$i], $enabledExts)];
+
+    if (!in_array($requiredExts[$i], $enabledExts)) {
+        $extsStatus = false;
+    }
+}
+
+if (!$extsStatus) {
+    writeln('Please enable the required extension(s)');
+    writeln(generateAsciiTable($headers, $exts));
+    exit(1);
+}
+
+$initialEnvVars['DB_CONNECTION'] = ask('Database connection', $initialEnvVars['DB_CONNECTION']);
+$initialEnvVars['DB_HOST'] = ask('Database host', $initialEnvVars['DB_HOST']);
+$initialEnvVars['DB_PORT'] = ask('Database port', $initialEnvVars['DB_PORT']);
+$initialEnvVars['DB_DATABASE'] = ask('Database name', $initialEnvVars['DB_DATABASE']);
+$initialEnvVars['DB_USERNAME'] = ask('Database username', $initialEnvVars['DB_USERNAME']);
+$initialEnvVars['DB_PASSWORD'] = ask('Database password', $initialEnvVars['DB_PASSWORD']);
+
+$initialEnvVars['APP_NAME'] = ask('Application name', $initialEnvVars['APP_NAME']);
+$initialEnvVars['APP_ENV'] = ask('Application env', $initialEnvVars['APP_ENV']);
+$initialEnvVars['APP_URL'] = ask('Application url', $initialEnvVars['APP_URL']);
+$initialEnvVars['APP_DEBUG'] = confirm('Enable debug?', $initialEnvVars['APP_DEBUG']);
+
+$runComposerInstall = confirm('Run `composer install`?', true);
+$runNpmInstall = confirm('Run `npm install`', true);
+if ($runComposerInstall) {
+    $runDatabaseSeeder = confirm('Run database seeder?', false);
+    $runStorageLink = confirm('Run storage link?', false);
+}
+if ($runNpmInstall) {
+    $runAssetsBuilder = confirm('Run frontend assets builder?', false);
+}
+
+$headers = ["Key", "Value"];
+$envVars = [
+    ['Database connection', $initialEnvVars['DB_CONNECTION']],
+    ['Database host', $initialEnvVars['DB_HOST']],
+    ['Database port', $initialEnvVars['DB_PORT']],
+    ['Database name', $initialEnvVars['DB_DATABASE']],
+    ['Database username', $initialEnvVars['DB_USERNAME']],
+    ['Database password', $initialEnvVars['DB_PASSWORD']],
+    ['Application name', $initialEnvVars['APP_NAME']],
+    ['Application env', $initialEnvVars['APP_ENV']],
+    ['Application url', $initialEnvVars['APP_URL']],
+    ['Application enable debug', $initialEnvVars['APP_DEBUG']],
+    ['Run `composer install`', $runComposerInstall],
+    ['Run `npm install`', $runNpmInstall],
+    ['Run database seeder', $runDatabaseSeeder],
+    ['Run storage link', $runStorageLink],
+    ['Run frontend assets builder', $runDatabaseSeeder],
+];
+
+writeln('Review configuratios');
+writeln(generateAsciiTable($headers, $envVars));
+
+if (! confirm('Save configurations?', true)) {
+    exit(1);
+}
+
+if (replaceEnvValues(__DIR__ . DIRECTORY_SEPARATOR . '.env', $initialEnvVars)) {
+    writeln("Configurations saved.");
+} else {
+    writeln("File not found or unable to saved the configurations.");
+    exit(1);
+}
+
+if ($runComposerInstall) {
+    writeln("Running `composer install`:");
+    $output = run('composer install');
+    writeln("\t" . $output);
+
+    writeln("Generate application key:");
+    $output = run('php artisan key:generate');
+    writeln("\t" . $output);
+
+    writeln("Migrate database:");
+    $output = run('php artisan migrate');
+    writeln("\t" . $output);
+    if ($runDatabaseSeeder) {
+        writeln("Seeding database");
+        $output = run('php artisan db:seed');
+        writeln("\t" . $output);
+    }
+
+    writeln("Optimize:");
+    $output = run('php artisan optimize');
+    writeln("\t" . $output);
+
+    if ($runStorageLink) {
+        writeln("Linking storage");
+        $output = run('php artisan storage:link');
+        writeln("\t" . $output);
+    }
+}
+
+if ($runNpmInstall) {
+    writeln("Running `npm install`:");
+    $output = run('npm install');
+    writeln("\t" . $output);
+    if ($runAssetsBuilder) {
+        writeln("Running `npm run build`:");
+        $output = run('npm run build');
+        writeln("\t" . $output);
+    }
+}
+
+
+writeln("");
+writeln("");
+writeln("|--------------------------------------");
+writeln("| Aviatmobileweb ");
+writeln("|--------------------------------------");
+writeln("| Installation successfully!");
+writeln("| ");
+writeln("| Notes: ");
+writeln("|   You must setup `cronjob` for aviatmobileweb, please refer to https://laravel.com/docs/10.x/queues#supervisor-configuration");
+writeln("|   if you want to run the development service workers that Laravel has please refer to");
+writeln("|   https://laravel.com/docs/10.x/queues#running-the-queue-worker");
+writeln("| ");
+writeln("| ");

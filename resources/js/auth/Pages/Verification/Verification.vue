@@ -3,6 +3,7 @@ import Form from "vform";
 import {reactive, ref} from "vue";
 import axios from "axios";
 import {useAuthStore} from "@shared/+store/auth.store.js";
+import {getSecondsLeft} from "@shared/utils/helpers.js";
 
 const authStore = useAuthStore();
 let currentDate = new Date();
@@ -17,21 +18,15 @@ const form = reactive(
     })
 );
 
-const getSecondsLeft = (startDate, endDate) => {
-    const startTimestamp = startDate.getTime();
-    const endTimestamp = endDate.getTime();
-    const millisecondsDiff = endTimestamp - startTimestamp;
-    return Math.floor(millisecondsDiff / 1000);
-}
-
 const otpVerification = async () => {
     const response = await form.post(`/api/v1/verification`);
     form.reset();
+    // TODO: Debug code, need to remove
     console.log("res: ", response);
 }
 
 const resendOtpCode = async () => {
-    if (futureDateTime < currentDate.getTime()) {
+    if (isCountDownRunning) {
         const response = await axios.post(`/api/v1/login`, {
             "phone_number": authStore.phoneNumber.replace(import.meta.env.VITE_APP_CALLING_CODE, "")
         });
@@ -45,6 +40,7 @@ const resendOtpCode = async () => {
         futureDateTime = lastCodeUpdatedDate.getTime() + authStore.otpTimeout;
         countDown();
         isCountDownRunning.value = true;
+        // TODO: Debug code, need to remove
         console.log("resend: ", response);
     }
 }
@@ -55,18 +51,14 @@ const countDown = () => {
         if (resendOtpTimeout.value <= 0) {
             clearInterval(timerId);
             isCountDownRunning.value = false;
-            console.log("Countdown finished!");
         } else {
             resendOtpTimeout.value--;
             paddedResendOtpTimeout.value = resendOtpTimeout.value.toString().padStart(2, "0");
-            console.log(`Remaining time: ${resendOtpTimeout.value} seconds`);
         }
     }, 1000);
 }
 
 countDown();
-
-// TODO: Implement timout counting
 
 </script>
 
@@ -98,14 +90,5 @@ countDown();
             <span class="kirim-otp text-white fw-bold text-decoration-none" v-if="isCountDownRunning">
                 OO:{{ paddedResendOtpTimeout }}</span>
         </p>
-
-        <div class="d-none alert alert-dismissible alert-red d-flex col-gap-16 shadow text-red-500 fs-5 fw-semibold"
-             role="alert">
-            <p></p>
-
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <i class="bi bi-x icon-red-600 fs-2 fw-bold"></i>
-            </button>
-        </div>
     </div>
 </template>

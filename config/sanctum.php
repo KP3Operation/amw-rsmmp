@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => now()->addDay(), // 1 days token expire
 
     /*
     |--------------------------------------------------------------------------

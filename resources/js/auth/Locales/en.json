@@ -16,5 +16,34 @@
         "cancel": "Cancel",
         "verify": "Verify OTP",
         "enter_otp_code": "OTP Code"
+    },
+    "register": {
+        "title": "User Registration",
+        "phone_number": "Phone Number",
+        "register_as": "Register As",
+        "doctor": "Doctor",
+        "patient": "Patient",
+        "ssn": "Social Security Number",
+        "full_name": "Full Name",
+        "register": "Register",
+        "already_have_an_account": "Already have an account?",
+        "login": "Login",
+        "phone_number_already_registered": "Phone number already registered",
+        "phone_number_already_registered_desc": "Phone number already registered, continue to login with this phone number?",
+        "cancel": "Cancel"
+    },
+    "confirmation": {
+        "title": "Complete your profile",
+        "subtitle": "*Required",
+        "phone_number": "Phone Number",
+        "full_name": "Full Name",
+        "ssn": "Social Security Number",
+        "gender": "Gender",
+        "birth_date": "Birth Date",
+        "email": "Email",
+        "save": "Save",
+        "cancel": "Cancel",
+        "male": "Male",
+        "female": "Female"
     }
 }

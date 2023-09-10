@@ -4,9 +4,9 @@ import {reactive, ref} from "vue";
 import axios from "axios";
 import {useAuthStore} from "@shared/+store/auth.store.js";
 import {getSecondsLeft} from "@shared/utils/helpers.js";
+import router from "@auth/router.js";
 
 const authStore = useAuthStore();
-let currentDate = new Date();
 let lastCodeUpdatedDate = new Date(authStore.otpUpdatedAt);
 let futureDateTime = lastCodeUpdatedDate.getTime() + authStore.otpTimeout;
 let resendOtpTimeout = ref(0);
@@ -18,11 +18,17 @@ const form = reactive(
     })
 );
 
-const otpVerification = async () => {
-    const response = await form.post(`/api/v1/verification`);
-    form.reset();
-    // TODO: Debug code, need to remove
-    console.log("res: ", response);
+const otpVerification = () => {
+    form.post(`/api/v1/verification`).then((response) => {
+        form.reset();
+        if (authStore.isRegistration) {
+            router.push({path: '/confirmation'});
+        } else {
+            window.location.href = "/patient/home";
+        }
+    }).catch((error) => {
+       // TODO: error handling
+    });
 }
 
 const resendOtpCode = async () => {
@@ -35,13 +41,10 @@ const resendOtpCode = async () => {
         authStore.otpUpdatedAt = response.data.data.otp_updated_at;
         authStore.otpTimeout = response.data.data.otp_timeout;
 
-        currentDate = new Date();
         lastCodeUpdatedDate = new Date(authStore.otpUpdatedAt);
         futureDateTime = lastCodeUpdatedDate.getTime() + authStore.otpTimeout;
         countDown();
         isCountDownRunning.value = true;
-        // TODO: Debug code, need to remove
-        console.log("resend: ", response);
     }
 }
 

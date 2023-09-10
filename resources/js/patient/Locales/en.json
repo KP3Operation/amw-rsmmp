@@ -1,0 +1,11 @@
+{
+    "header": {
+        "greeting": "Hi"
+    },
+    "menus": {
+        "home": "Home",
+        "appointment": "Appointment",
+        "history": "History",
+        "profile": "Profile"
+    }
+}

@@ -13,23 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// FIXME: Need to remove
-// Route::get('/testapi', function () {
-//     $response = \Illuminate\Support\Facades\Http::withHeaders([
-//             'API-Key' => config('taptalk.api_key'),
-//             'Content-Type' => 'application/json'
-//         ])->post(config('taptalk.send_message_api'), [
-//             'phone' => '+6282211223344',
-//             'messageType' => config('taptalk.message_type'),
-//             'body' => '123321'
-//     ]);
-
-//     if ($response->ok()) {
-//         $response->collect('status')->first();
-//         $response->collect('data')['id'];
-//     }
-// });
-
 Route::get('/auth/{vuejs?}', function () {
     return view('layouts.auth');
+})->where('vuejs', '[\/\w\.-]*');
+
+Route::get('/patient/{vuejs?}', function () {
+    return view('layouts.patient');
 })->where('vuejs', '[\/\w\.-]*');

@@ -2,13 +2,13 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 
 export const useAuthStore = defineStore('auth', () =>{
-    const phoneNumber = ref(null);
-    const otpCreatedAt = ref(null);
-    const otpUpdatedAt = ref(null);
-    const otpTimeout = ref(0);
-    const userEmail = ref(null);
-    const userId = ref(0);
-    const userToken = ref(null);
+    let phoneNumber = ref(null);
+    let otpCreatedAt = ref(null);
+    let otpUpdatedAt = ref(null);
+    let otpTimeout = ref(0);
+    let userEmail = ref(null);
+    let userId = ref(0);
+    let userToken = ref(null);
 
     function $reset() {
         phoneNumber.value = null;

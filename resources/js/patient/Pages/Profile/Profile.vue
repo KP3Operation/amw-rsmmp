@@ -1,0 +1,169 @@
+<script setup>
+import PatientPhoto from "@resources/static/images/patient-photo.png";
+import SyncPhoto from "@resources/static/images/sinkronisasi.png";
+import { useAuthStore } from "@shared/+store/auth.store.js";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
+import axios from "axios";
+import * as bootstrap from 'bootstrap';
+import { onMounted, reactive } from 'vue';
+
+const modalState = reactive({
+    syncDataModal: null
+});
+const authStore = useAuthStore();
+const layoutStore = useLayoutStore();
+
+const showSyncDataModal = () => {
+    modalState.syncDataModal.show();
+}
+
+const syncData = () => {
+    modalState.syncDataModal.hide();
+    layoutStore.isFullView = true;
+    axios.get("/api/v1/me/sync").then(() => {
+        layoutStore.toggleSuccessAlert("Berhasil Sinkronisasi Profil");
+        window.location.reload();
+    }).catch((error) => {
+        // console.log(error);
+    }).finally(() => {
+        layoutStore.isFullView = false;
+    })
+}
+
+const logout = () => {
+    axios.get('/api/v1/logout').then(() => {
+        authStore.$reset();
+        window.location.href = "/auth/login";
+    }).catch((error) => {
+        // error while logout
+    });
+}
+
+onMounted(() => {
+    modalState.syncDataModal = new bootstrap.Modal("#modal-sinkronisasi", {});
+});
+
+</script>
+
+<template>
+    <div>
+        <div v-if="!layoutStore.isFullView">
+            <div class="px-4 pt-8">
+                <section class="profile-patient">
+                    <img :src="PatientPhoto" :alt="authStore.userFullName" width="49" height="49">
+
+                    <div>
+                        <p class="name">{{ authStore.userFullName }}</p>
+                        <p>{{ authStore.gender }} 25 Tahun</p>
+                    </div>
+                </section>
+
+                <div class="mt-4 d-flex flex-column rows-gap-16">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h2 class="fs-3 fw-bold">{{ $t('profile.subtitle') }}</h2>
+
+                        <router-link to="/profile/edit" class="text-decoration-none icon-blue-500">
+                            <i class="bi bi-pencil-fill fs-3"></i>
+                        </router-link>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
+                        <p class="fs-5 text-gray-600">{{ $t('profile.patient_id') }}</p>
+
+                        <p class="text-end">{{ authStore.patientId }}</p>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
+                        <p class="fs-5 text-gray-600">{{ $t('profile.ssn') }}</p>
+
+                        <p class="text-end">{{ authStore.ssn == 0 ? '' : authStore.ssn }}</p>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
+                        <p class="fs-5 text-gray-600">{{ $t('profile.phone_number') }}</p>
+
+                        <p class="text-end">{{ authStore.phoneNumber }}</p>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
+                        <p class="fs-5 text-gray-600">{{ $t('profile.birth_date') }}</p>
+
+                        <p class="text-end">{{ authStore.birthDate }}</p>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
+                        <p class="fs-5 text-gray-600">{{ $t('profile.gender') }}</p>
+
+                        <p class="text-end">{{ authStore.gender }}</p>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="fs-5 text-gray-600">{{ $t('profile.email') }}</p>
+
+                        <p class="text-end">{{ authStore.userEmail }}</p>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column mt-4">
+                    <button class="btn btn-green-700-rounded" type="button" @click="showSyncDataModal">{{
+                        $t('profile.sync_data') }}</button>
+
+                    <a href="#" @click="logout"
+                        class="d-block text-red-500 fw-semibold text-center text-decoration-none mt-4">{{
+                            $t('profile.logout')
+                        }}</a>
+                </div>
+            </div>
+
+            <div class="modal" id="modal-sinkronisasi" aria-labelledby="Sinkronisasi Modal" aria-hidden="true"
+                tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <!-- START POPUP HEADER -->
+                        <div class="modal-header d-flex justify-content-between">
+                            <div class="d-flex align-items-center col-gap-8">
+                                <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
+
+                                <h5 class="modal-title">Sinkronisasi Data</h5>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="bi bi-x fs-2 icon-black"></i>
+                            </button>
+                        </div>
+                        <!-- END POPUP HEADER-->
+
+                        <!-- START POPUP BODY-->
+                        <div class="modal-body">
+                            <p>Sinkronisasi Sekarang ?</p>
+                        </div>
+                        <!-- END POPUP BODY-->
+
+                        <div class="modal-footer d-flex flex-nowrap">
+                            <button type="button" class="w-50 btn btn-link m-0" data-bs-dismiss="modal">Batalkan</button>
+                            <button type="button" @click="syncData" class="w-50 btn-sinkronisasi btn btn-blue m-0">Ya
+                                Sinkronisasi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none alert alert-dismissible d-flex col-gap-16 shadow fs-5 fw-semibold mt-6" role="alert">
+                <p></p>
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    <i class="bi bi-x icon-red-600 fs-2 fw-bold"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white d-flex align-items-center mt-4 h-100" v-if="layoutStore.isFullView">
+            <div class="text-center">
+                <img :src="SyncPhoto" alt="Ilustrasi Sinkronisasi" width="324" height="212" class="d-inline-block">
+
+                <h1 class="mt-2 fs-4 fw-bold">{{ $t('profile.sync.title') }}</h1>
+                <p class="mt-2 text-gray-700">{{ $t('profile.sync.subtitle') }}</p>
+            </div>
+        </div>
+    </div>
+</template>

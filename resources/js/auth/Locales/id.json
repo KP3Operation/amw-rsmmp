@@ -16,5 +16,35 @@
         "cancel": "Batal",
         "verify": "Verifikasi OTP",
         "enter_otp_code": "Masukkan Kode OTP"
+    },
+    "register": {
+        "title": "Registrasi User",
+        "phone_number": "No. Handphone",
+        "register_as": "Daftar Sebagai",
+        "doctor": "Dokter",
+        "patient": "Pasien",
+        "ssn": "Nomor Induk Kependudukan (NIK)",
+        "full_name": "Nama Lengkap",
+        "register": "Daftar",
+        "already_have_an_account": "Sudah punya akun?",
+        "login": "Masuk",
+        "phone_number_already_registered": "No. Handphone sudah terdaftar",
+        "phone_number_already_registered_desc": "No. Handphone sudah terdaftar, lanjut masuk dengan nomor ini?",
+        "cancel": "Batal",
+        "doctor_id": "ID Dokter"
+    },
+    "confirmation": {
+        "title": "Lengkapi Profil Anda",
+        "subtitle": "*Wajib Diisi",
+        "phone_number": "No. Handphone",
+        "full_name": "Nama Lengkap",
+        "ssn": "Nomor Induk Kependudukan (NIK) ",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "email": "Email",
+        "save": "Simpan",
+        "cancel": "Batal",
+        "male": "Laki-Laki",
+        "female": "Perempuan"
     }
 }

@@ -17,6 +17,8 @@ export default defineConfig({
                 "resources/js/libs/notification.js",
                 // vue related - auth
                 "resources/js/auth/auth.js",
+                "resources/js/patient/patient.js",
+                "resources/js/doctor/doctor.js",
             ],
             refresh: true,
         }),
@@ -27,6 +29,8 @@ export default defineConfig({
             "@resources": path.resolve(__dirname, "resources"),
             "@auth": path.resolve(__dirname, "resources/js/auth"),
             "@shared": path.resolve(__dirname, "resources/js/shared"),
+            "@patient": path.resolve(__dirname, "resources/js/patient"),
+            "@doctor": path.resolve(__dirname, "resources/js/doctor"),
         },
     },
 });

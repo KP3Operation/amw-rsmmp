@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Auth\LoginController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\Auth\LogoutController;
+use App\Http\Controllers\Api\V1\Auth\RegisterController;
+use App\Http\Controllers\Api\V1\Shared\MeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +17,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group(['prefix' => 'v1'], function () {
     Route::post('/login', [LoginController::class, 'sendOtp']);
     Route::post('/verification', [LoginController::class, 'authenticate']);
+    Route::post('/register/patient', [RegisterController::class, 'storePatient']);
+    Route::post('/register/doctor', [RegisterController::class, 'storeDoctor']);
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('/me', [MeController::class, 'index']);
+        Route::put('/me/{id}', [MeController::class, 'update']);
+        Route::get('/me/sync', [MeController::class, 'syncData']);
+        Route::get('/logout', [LogoutController::class, 'invalidateSession']);
+        Route::put('/register/patient/{phoneNumber}', [RegisterController::class, 'updatePatient']);
+    });
 });

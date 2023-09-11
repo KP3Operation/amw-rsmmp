@@ -50,8 +50,10 @@ const login = async () => {
         </form>
 
         <p class="mt-4 text-center">
-            {{ $t('login.does_not_have_account') }} <a href="#" class="fw-bold text-decoration-none text-white">{{ $t('login.register')
-            }}</a>
+            {{ $t('login.does_not_have_account') }}
+            <router-link to="/register" class="fw-bold text-decoration-none text-white">
+                {{ $t('login.register') }}
+            </router-link>
         </p>
     </div>
 </template>

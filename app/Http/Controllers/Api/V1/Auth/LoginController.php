@@ -10,6 +10,7 @@ use App\Http\Resources\Auth\AuthenticateResource;
 use App\Models\OtpCode;
 use App\Models\User;
 use App\Services\OtpService\IOTPService;
+use Auth;
 use Exception;
 use Illuminate\Validation\ValidationException;
 
@@ -51,10 +52,17 @@ class LoginController extends Controller
             'status' => 'verified'
         ]);
 
+        Auth::loginUsingId($user->id);
+        $authenticateRequest->session()->regenerate();
+
         // delete old tokens first
         $user->tokens()->delete();
 
         $user->token = $user->createToken('auth_token')->plainTextToken;
+        foreach ($user->roles as $role) {
+            $user->role = $role->name;
+            break;
+        }
 
         return new AuthenticateResource($user);
     }

@@ -1,0 +1,14 @@
+{
+    "menus": {
+        "home": "Home",
+        "appointment": "Appointment",
+        "fee": "Fee",
+        "profile": "Profile"
+    },
+    "profile": {
+        "title": "Profile",
+        "phone_number": "Phone Number",
+        "smf": "Staff Medis Fungsional (SMF)",
+        "logout": "Logout"
+    }
+}

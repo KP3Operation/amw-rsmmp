@@ -14,7 +14,7 @@ class WatzapOTPService implements IOTPService
         $code = $this->generateOTP(6);
 
         // TODO: need to remove while prod
-        //SendWatzapOtp::dispatch($user->phone_number, $code);
+        SendWatzapOtp::dispatch($user->phone_number, $code);
 
         $otpCode = OtpCode::whereUserId($user->id)->first();
         if ($otpCode != null) {

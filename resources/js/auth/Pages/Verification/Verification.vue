@@ -1,9 +1,9 @@
 <script setup>
 import Form from "vform";
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 import axios from "axios";
-import {useAuthStore} from "@shared/+store/auth.store.js";
-import {getSecondsLeft} from "@shared/utils/helpers.js";
+import { useAuthStore } from "@shared/+store/auth.store.js";
+import { getSecondsLeft } from "@shared/utils/helpers.js";
 import router from "@auth/router.js";
 
 const authStore = useAuthStore();
@@ -22,12 +22,16 @@ const otpVerification = () => {
     form.post(`/api/v1/verification`).then((response) => {
         form.reset();
         if (authStore.isRegistration) {
-            router.push({path: '/confirmation'});
+            router.push({ path: '/confirmation' });
         } else {
-            window.location.href = "/patient/home";
+            if (response.data.data.role === 'patient') {
+                window.location.href = "/patient/home";
+            } else {
+                window.location.href = "/doctor/home";
+            }
         }
     }).catch((error) => {
-       // TODO: error handling
+        // TODO: error handling
     });
 }
 
@@ -69,14 +73,13 @@ countDown();
     <div>
         <h1 class="fs-2 fw-bold mt-5">{{ $t('verification.title') }}</h1>
         <p>{{ $t('verification.subtitle') }}</p>
-        <form id="verification-form"  @submit.prevent="otpVerification" @keydown="form.onKeydown($event)" class="mt-5">
+        <form id="verification-form" @submit.prevent="otpVerification" @keydown="form.onKeydown($event)" class="mt-5">
             <div>
                 <label for="kode-otp">{{ $t('verification.otp_code') }}</label>
                 <input type="text" name="code" id="kode-otp" :placeholder="$t('verification.enter_otp_code')"
-                       class="form-control mt-2"
-                       v-model="form.code">
-                <div class="error mt-2 fs-6 fw-bold text-red-200"
-                     v-if="form.errors.has('code')" v-html="form.errors.get('code')" />
+                    class="form-control mt-2" v-model="form.code">
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('code')"
+                    v-html="form.errors.get('code')" />
             </div>
 
             <div class="d-flex flex-column mt-3">
@@ -88,7 +91,8 @@ countDown();
         </form>
 
         <p class="mt-4 text-center">{{ $t('verification.does_not_get_code') }}
-            <a href="#" @click="resendOtpCode" class="kirim-otp text-white fw-bold text-decoration-none" v-if="!isCountDownRunning">
+            <a href="#" @click="resendOtpCode" class="kirim-otp text-white fw-bold text-decoration-none"
+                v-if="!isCountDownRunning">
                 {{ $t('verification.resend_code') }}</a>
             <span class="kirim-otp text-white fw-bold text-decoration-none" v-if="isCountDownRunning">
                 OO:{{ paddedResendOtpTimeout }}</span>

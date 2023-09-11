@@ -20,3 +20,7 @@ Route::get('/auth/{vuejs?}', function () {
 Route::get('/patient/{vuejs?}', function () {
     return view('layouts.patient');
 })->where('vuejs', '[\/\w\.-]*');
+
+Route::get('/doctor/{vuejs?}', function () {
+    return view('layouts.doctor');
+})->where('vuejs', '[\/\w\.-]*');

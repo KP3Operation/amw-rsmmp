@@ -15,7 +15,11 @@ class UserSeeder extends Seeder
         $user = \App\Models\User::factory()->create([
             'name' => 'Patient User',
             'email' => 'patient@local.test',
-            'phone_number' => '82211223344'
+            'phone_number' => '81311114526'
+        ]);
+
+        $user->userPatientData()->update([
+            "ssn" => "3275125901890003"
         ]);
 
         $patientRole = \App\Models\Role::factory()->create([

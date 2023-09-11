@@ -44,7 +44,7 @@
 
 <body class="bg-gray-200">
     <main class="bg-white pb-7">
-        <div id="app"></div>
+        <div id="app" class="h-100"></div>
     </main>
     @vite('resources/js/patient/patient.js')
 </body>

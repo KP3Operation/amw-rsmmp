@@ -5,7 +5,7 @@ import RegisterPage from "@auth/Pages/Register/Register.vue";
 import NotFoundPage from "@auth/Pages/NotFound/NotFound.vue";
 import VerificationPage from "@auth/Pages/Verification/Verification.vue";
 import ConfirmationPage from "@auth/Pages/Confirmation/Confirmation.vue";
-import {useAuthStore} from "@shared/+store/auth.store.js";
+import { useAuthStore } from "@shared/+store/auth.store.js";
 import axios from "axios";
 
 const routes = [
@@ -40,16 +40,23 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
     const authStore = useAuthStore();
 
-    if ((authStore.userEmail === null || authStore.userId === 0) && to.name !== "LoginPage") {
+    if (
+        authStore.phoneNumber === null &&
+        to.name !== "LoginPage" &&
+        to.name !== "RegisterPage"
+    ) {
         axios.get("/sanctum/csrf-cookie").then(() => {
-            axios.get(`/api/v1/me`).then((response) => {
-                window.location.href = `/patient/home`;
-            }).catch((error) => {
-                if (error.response.status === 401) {
-                    authStore.$reset();
-                    window.location.href = `/auth/login`;
-                }
-            });
+            axios
+                .get(`/api/v1/me`)
+                .then((response) => {
+                    window.location.href = `/patient/home`;
+                })
+                .catch((error) => {
+                    if (error.response.status === 401) {
+                        authStore.$reset();
+                        window.location.href = `/auth/login`;
+                    }
+                });
         });
     }
 });

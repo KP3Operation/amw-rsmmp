@@ -59,6 +59,10 @@ class LoginController extends Controller
         $user->tokens()->delete();
 
         $user->token = $user->createToken('auth_token')->plainTextToken;
+        foreach ($user->roles as $role) {
+            $user->role = $role->name;
+            break;
+        }
 
         return new AuthenticateResource($user);
     }

@@ -30,7 +30,8 @@
         "login": "Login",
         "phone_number_already_registered": "Phone number already registered",
         "phone_number_already_registered_desc": "Phone number already registered, continue to login with this phone number?",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "doctor_id": "Doctor ID"
     },
     "confirmation": {
         "title": "Complete your profile",

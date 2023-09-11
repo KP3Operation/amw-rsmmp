@@ -30,7 +30,8 @@
         "login": "Masuk",
         "phone_number_already_registered": "No. Handphone sudah terdaftar",
         "phone_number_already_registered_desc": "No. Handphone sudah terdaftar, lanjut masuk dengan nomor ini?",
-        "cancel": "Batal"
+        "cancel": "Batal",
+        "doctor_id": "ID Dokter"
     },
     "confirmation": {
         "title": "Lengkapi Profil Anda",

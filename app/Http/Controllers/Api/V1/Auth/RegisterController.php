@@ -11,6 +11,7 @@ use App\Http\Resources\Auth\DoctorRegisterResource;
 use App\Http\Resources\Auth\PatientRegisterResource;
 use App\Http\Resources\Auth\UpdatePatientResource;
 use App\Models\User;
+use App\Models\UserDoctor;
 use App\Models\UserPatient;
 use App\Services\OtpService\IOTPService;
 use Illuminate\Validation\ValidationException;
@@ -46,7 +47,6 @@ class RegisterController extends Controller
             ]);
 
             $user->roles()->sync([$request->validated('role')]);
-
         });
 
         $user = User::where('phone_number', '=', $request->validated('phone_number'))->first();
@@ -85,6 +85,36 @@ class RegisterController extends Controller
 
     public function storeDoctor(DoctorRegisterRequest $request): DoctorRegisterResource
     {
-        throw new \Exception("Unimpelemented");
+        $user = UserDoctor::where('doctor_id', '=', $request->validated('doctor_id'))->first();
+        if ($user)
+            throw new UserAlreadyExistException(__("register.errros.doctor_id_already_registered"), 409);
+
+        DB::transaction(function () use ($request) {
+            $user = User::create([
+                "phone_number" => $request->validated("phone_number"),
+                "name" => null,
+                "password" => "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi", // password
+                "email" => null
+            ]);
+
+            UserDoctor::create([
+                "user_id" => $user->id,
+                "doctor_id" => $request->validated('doctor_id')
+            ]);
+
+            $user->roles()->sync([$request->validated('role')]);
+        });
+
+        $user = User::where('phone_number', '=', $request->validated('phone_number'))->first();
+        $userDoctor = UserDoctor::where('user_id', '=', $user->id)->first();
+
+        $otpCode = $this->otpService->sendOtp($user);
+
+        $user->doctor_id = $userDoctor->doctor_id;
+        $user->otp_created_at = $otpCode->created_at;
+        $user->otp_updated_at = $otpCode->updated_at;
+        $user->otp_timeout = 30000; // miliseconds - 10 seconds
+
+        return new DoctorRegisterResource($user);
     }
 }

@@ -34,5 +34,8 @@ export function calculateAge(birthdate) {
  */
 export function getUserFirstName(fullName) {
     const arrName = fullName.split(" ");
+    if (arrName[0] === "dr." || arrName[0] === "drg.") {
+        return arrName[1];
+    }
     return arrName[0];
 }

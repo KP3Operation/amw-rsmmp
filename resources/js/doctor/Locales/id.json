@@ -18,7 +18,25 @@
         "title": "Appointment"
     },
     "home": {
-        "title": "Home"
+        "title": "Home",
+        "welcome": "Selamat Datang",
+        "greeting": "Selamat Bekerja dan Menyehatkan Masyarakat",
+        "appointment": "Appointment",
+        "appointment_desc": "Lihat Daftar Janji Temu Dengan Pasien",
+        "inpatient_list": "Inpatient List",
+        "inpatient_list_desc": "Lihat Pasien Inap Dibawah Anda",
+        "summary_fee": "Summary Fee",
+        "summary_fee_desc": "Lihat Penghasilan Anda",
+        "profile": "Profile",
+        "profile_desc": "Lihat Informasi Profil Anda",
+        "overview_consult_schedule": "Overview Jadwal Konsultasi",
+        "overview_inpatient_list": "Overview Pasien Rawat Inap",
+        "overview_summary_fee": "Overview Summary Fee",
+        "from": "Dari",
+        "to": "Hingga",
+        "priod": "Periode",
+        "pending": "Pending",
+        "payout": "Terbayar"
     },
     "notification": {
         "title": "Notifikasi"

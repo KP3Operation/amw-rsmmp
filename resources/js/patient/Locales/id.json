@@ -53,6 +53,16 @@
         "title": "Appointment"
     },
     "history": {
-        "title": "History"
+        "title": "Riwayat Medis"
+    },
+    "home": {
+        "welcome": "Selamat Datang",
+        "greeting": "Kesehatan anda adalah prioritas bagi kami. Kami siap menolong untuk kesehatan anda",
+        "what_your_need": "Apa Yang Anda Butuhkan?",
+        "history": "Riwayat Medis",
+        "doctor_schedule": "Jadwal Dokter",
+        "family_member": "Family Member",
+        "appointment": "Appointment",
+        "next_consult_schedule": "Jadwal Konsultasi Akan Datang"
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
+use App\Http\Controllers\Api\V1\Patient\MedicalHistoryController;
 use App\Http\Controllers\Api\V1\Shared\MeController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,5 +32,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/me', [MeController::class, 'index']);
         Route::put('/me/{id}', [MeController::class, 'update']);
         Route::get('/me/sync', [MeController::class, 'syncData']);
+
+        Route::get('/patient/medical/history/vitalsign', [MedicalHistoryController::class, 'vitalSign']);
     });
 });

@@ -10,6 +10,8 @@ class PatientDto extends Data
     public function __construct(
         #[MapInputName('PatientID')]
         public string $patientId,
+        #[MapInputName('MedicalNo')]
+        public string $medicalNo,
         #[MapInputName('FirstName')]
         public string $firstName,
         #[MapInputName('MiddleName')]

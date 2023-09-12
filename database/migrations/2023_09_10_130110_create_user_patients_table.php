@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('gender')->nullable();
             $table->longText('photo')->nullable();
+            $table->string('medical_no')->nullable();
             $table->dateTime('sync_at')->nullable();
             $table->timestamps();
         });

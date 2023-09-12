@@ -18,6 +18,7 @@ class UserPatient extends Model
         'gender',
         'ssn',
         'photo',
+        'medical_no',
         'sync_at'
     ];
 

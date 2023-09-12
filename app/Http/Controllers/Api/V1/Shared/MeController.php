@@ -61,6 +61,7 @@ class MeController extends Controller
                     "ssn" => $patientData->ssn,
                     "birth_date" => $patientData->birthDate,
                     "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki",
+                    "medical_no" => $patientData->medicalNo,
                     "sync_at" => Carbon::now()
                 ]);
             } else {
@@ -70,6 +71,7 @@ class MeController extends Controller
                     "ssn" => $patientData->ssn,
                     "birth_date" => $patientData->birthDate,
                     "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki",
+                    "medical_no" => $patientData->medicalNo,
                     "sync_at" => Carbon::now()
                 ]);
             }

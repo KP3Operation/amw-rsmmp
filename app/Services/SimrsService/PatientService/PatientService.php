@@ -24,6 +24,8 @@ class PatientService implements IPatientService
 
         $response = Http::withHeaders([
             'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
         ])->get(config("simrs.base_url") . "/V1_1/AppointmentWS.asmx/PatientSearchByField", [
             "AccessKey" => $accessKey,
             "MedicalNo" => "",

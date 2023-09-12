@@ -14,9 +14,11 @@ class DoctorService implements IDoctorService
 
         $response = Http::withHeaders([
             'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
         ])->get(config("simrs.base_url") . "/MobileWS2.asmx/ParamedicGetList", [
             "AccessKey" => $accessKey,
-            "ParamedicID" => "",
+            "ParamedicID" => $doctorId,
             "ParamedicName" => "",
             "SmfID" => ""
         ]);

@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('CASCADE')->onUpdate('CASCADE');
             $table->string('doctor_id')->nullable();
             $table->string('smf_name')->nullable();
-            $table->dateTime('sycn_at')->nullable();
+            $table->string('smf_id')->nullable();
+            $table->longText('photo')->nullable();
+            $table->dateTime('sync_at')->nullable();
             $table->timestamps();
         });
     }

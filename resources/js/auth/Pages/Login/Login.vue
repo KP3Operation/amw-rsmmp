@@ -3,8 +3,11 @@ import Form from "vform";
 import { reactive } from "vue";
 import {useAuthStore} from "@shared/+store/auth.store.js";
 import router from "@auth/router.js";
+import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
 
 const authStore = useAuthStore();
+const layoutStore = useLayoutStore();
 const callingCode = import.meta.env.VITE_APP_CALLING_CODE;
 const form = reactive(
     new Form({
@@ -13,13 +16,20 @@ const form = reactive(
 );
 
 const login = async () => {
-    const response = await form.post('/api/v1/login');
-    authStore.phoneNumber = response.data.data.phone_number;
-    authStore.otpCreatedAt = response.data.data.otp_created_at;;
-    authStore.otpUpdatedAt = response.data.data.otp_updated_at;
-    authStore.otpTimeout = response.data.data.otp_timeout;
-    form.reset();
-    router.push({path: '/verification'});
+    layoutStore.isLoading = true;
+    form.post('/api/v1/login').then((response) => {
+        const data = response.data.data;
+        form.reset();
+        authStore.phoneNumber = data.phone_number;
+        authStore.otpCreatedAt = data.otp_created_at;
+        authStore.otpUpdatedAt = data.otp_updated_at;
+        authStore.otpTimeout = data.otp_timeout;
+        router.push({path: '/verification'});
+    }).catch((error) => {
+        //
+    }).finally(() => {
+        layoutStore.isLoading = false;
+    });
 }
 
 </script>
@@ -44,8 +54,7 @@ const login = async () => {
             </div>
 
             <div class="mt-4 d-flex flex-column">
-                <button class="btn btn-blue-700-rounded" type="submit" form="login-form" :disabled="form.busy">
-                    {{ $t('login') }}</button>
+                <SubmitButton :text="$t('login')" className="btn-blue-700-rounded" />
             </div>
         </form>
 

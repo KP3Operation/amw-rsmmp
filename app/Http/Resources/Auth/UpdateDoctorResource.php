@@ -14,6 +14,11 @@ class UpdateDoctorResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->resource,
+            'links' => [
+                'self' => null,
+            ],
+        ];
     }
 }

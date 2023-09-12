@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\UserDoctor;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateDoctorRequest extends FormRequest
@@ -11,7 +12,7 @@ class UpdateDoctorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth('sanctum')->check();
     }
 
     /**
@@ -21,8 +22,13 @@ class UpdateDoctorRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = auth('sanctum')->user();
+        $userDoctor = UserDoctor::where('user_id', '=', $user->id)->first();
+
         return [
-            //
+            "doctor_id" => "required|unique:user_doctors,doctor_id," . $userDoctor->id,
+            "name" => "required",
+            "smf_name" => "required"
         ];
     }
 }

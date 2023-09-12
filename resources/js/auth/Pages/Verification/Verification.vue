@@ -5,8 +5,11 @@ import axios from "axios";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { getSecondsLeft } from "@shared/utils/helpers.js";
 import router from "@auth/router.js";
+import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
 
 const authStore = useAuthStore();
+const layoutStore = useLayoutStore();
 let lastCodeUpdatedDate = new Date(authStore.otpUpdatedAt);
 let futureDateTime = lastCodeUpdatedDate.getTime() + authStore.otpTimeout;
 let resendOtpTimeout = ref(0);
@@ -19,12 +22,14 @@ const form = reactive(
 );
 
 const otpVerification = () => {
+    layoutStore.isLoading = true;
     form.post(`/api/v1/verification`).then((response) => {
         form.reset();
+        const data = response.data.data;
         if (authStore.isRegistration) {
             router.push({ path: '/confirmation' });
         } else {
-            if (response.data.data.role === 'patient') {
+            if (data.role === 'patient') {
                 window.location.href = "/patient/home";
             } else {
                 window.location.href = "/doctor/home";
@@ -32,6 +37,8 @@ const otpVerification = () => {
         }
     }).catch((error) => {
         // TODO: error handling
+    }).finally(() => {
+        layoutStore.isLoading = false;
     });
 }
 
@@ -83,8 +90,7 @@ countDown();
             </div>
 
             <div class="d-flex flex-column mt-3">
-                <button type="submit" class="btn btn-blue-700-rounded" :disabled="form.busy" form="verification-form">
-                    {{ $t('verification.verify') }}</button>
+                <SubmitButton :text="$t('verification.verify')" className="btn-blue-700-rounded" />
                 <router-link to="/login" class="btn btn-outline-white-rounded mt-3">
                     {{ $t('verification.cancel') }}</router-link>
             </div>

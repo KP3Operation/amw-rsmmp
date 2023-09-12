@@ -8,5 +8,5 @@ use App\Models\User;
 
 interface IPatientService
 {
-    public function getPatient(User $user): PatientDataDto;
+    public function getPatients(User $user): PatientDataDto;
 }

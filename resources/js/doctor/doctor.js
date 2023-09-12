@@ -7,6 +7,8 @@ import pinia from "@shared/+store/pinia.init.js";
 import Doctor from "@doctor/Doctor.vue";
 
 import.meta.glob(["@resources/static/**"]);
+const { t } = i18n.global;
+window.t = t;
 
 import { createApp } from "vue";
 

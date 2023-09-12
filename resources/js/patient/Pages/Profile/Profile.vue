@@ -1,17 +1,20 @@
 <script setup>
-import PatientPhoto from "@resources/static/images/patient-photo.png";
+import DefaultAvatar from "@resources/static/images/avatar-default.png";
 import SyncPhoto from "@resources/static/images/sinkronisasi.png";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import axios from "axios";
 import * as bootstrap from 'bootstrap';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
+import { calculateAge } from "@shared/utils/helpers.js";
+import Header from "@shared/Components/Header/Header.vue";
 
 const modalState = reactive({
     syncDataModal: null
 });
 const authStore = useAuthStore();
 const layoutStore = useLayoutStore();
+const patientAge = ref(0);
 
 const showSyncDataModal = () => {
     modalState.syncDataModal.show();
@@ -21,10 +24,9 @@ const syncData = () => {
     modalState.syncDataModal.hide();
     layoutStore.isFullView = true;
     axios.get("/api/v1/me/sync").then(() => {
-        layoutStore.toggleSuccessAlert("Berhasil Sinkronisasi Profil");
-        window.location.reload();
+        layoutStore.toggleSuccessAlert(t('profile.sync.success'));
     }).catch((error) => {
-        // console.log(error);
+        layoutStore.toggleErrorAlert(t('profile.sync.failed'));
     }).finally(() => {
         layoutStore.isFullView = false;
     })
@@ -35,12 +37,13 @@ const logout = () => {
         authStore.$reset();
         window.location.href = "/auth/login";
     }).catch((error) => {
-        // error while logout
+        layoutStore.toggleErrorAlert(t('profile.logout_failed'));
     });
 }
 
 onMounted(() => {
     modalState.syncDataModal = new bootstrap.Modal("#modal-sinkronisasi", {});
+    patientAge.value = calculateAge(authStore.birthDate);
 });
 
 </script>
@@ -48,13 +51,14 @@ onMounted(() => {
 <template>
     <div>
         <div v-if="!layoutStore.isFullView">
+            <Header :title="$t('profile.title')"></Header>
             <div class="px-4 pt-8">
                 <section class="profile-patient">
-                    <img :src="PatientPhoto" :alt="authStore.userFullName" width="49" height="49">
+                    <img :src="DefaultAvatar" :alt="authStore.userFullName" width="49" height="49">
 
                     <div>
                         <p class="name">{{ authStore.userFullName }}</p>
-                        <p>{{ authStore.gender }} 25 Tahun</p>
+                        <p>{{ authStore.gender }} {{ patientAge }} {{ $t('profile.year') }}</p>
                     </div>
                 </section>
 
@@ -119,30 +123,23 @@ onMounted(() => {
                 tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-
-                        <!-- START POPUP HEADER -->
                         <div class="modal-header d-flex justify-content-between">
                             <div class="d-flex align-items-center col-gap-8">
                                 <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
 
-                                <h5 class="modal-title">Sinkronisasi Data</h5>
+                                <h5 class="modal-title">{{ $t('profile.sync_modal.title') }}</h5>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <i class="bi bi-x fs-2 icon-black"></i>
                             </button>
                         </div>
-                        <!-- END POPUP HEADER-->
-
-                        <!-- START POPUP BODY-->
                         <div class="modal-body">
-                            <p>Sinkronisasi Sekarang ?</p>
+                            <p>{{ $t('profile.sync_modal.message') }}</p>
                         </div>
-                        <!-- END POPUP BODY-->
-
                         <div class="modal-footer d-flex flex-nowrap">
-                            <button type="button" class="w-50 btn btn-link m-0" data-bs-dismiss="modal">Batalkan</button>
+                            <button type="button" class="w-50 btn btn-link m-0" data-bs-dismiss="modal">{{ $t('profile.sync_modal.cancel') }}</button>
                             <button type="button" @click="syncData" class="w-50 btn-sinkronisasi btn btn-blue m-0">Ya
-                                Sinkronisasi</button>
+                                {{ $t('profile.sync_modal.sync') }}</button>
                         </div>
                     </div>
                 </div>

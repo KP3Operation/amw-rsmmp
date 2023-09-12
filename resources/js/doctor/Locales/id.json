@@ -10,5 +10,17 @@
         "phone_number": "No. Handphone",
         "smf": "Staff Medis Fungsional (SMF)",
         "logout": "Logout"
+    },
+    "fee": {
+        "title": "Persentase Pembayaran Dokter"
+    },
+    "appointment": {
+        "title": "Appointment"
+    },
+    "home": {
+        "title": "Home"
+    },
+    "notification": {
+        "title": "Notifikasi"
     }
 }

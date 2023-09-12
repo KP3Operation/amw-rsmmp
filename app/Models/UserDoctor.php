@@ -14,6 +14,8 @@ class UserDoctor extends Model
         'user_id',
         'doctor_id',
         'smf_name',
+        'smf_id',
+        'photo',
         'sync_at'
     ];
 

@@ -19,9 +19,19 @@
         "email": "Email",
         "sync_data": "Sikronisasi Data",
         "logout": "Logout",
+        "logout_failed": "Gagal logout",
+        "year": "Tahun",
         "sync": {
             "title": "Kami Sedang Mensinkronisasi Data Anda",
-            "subtitle": "Mohon Menunggu. Data Anda Sedang Kami Sinkronisasi Dengan Sistem Kami"
+            "subtitle": "Mohon Menunggu. Data Anda Sedang Kami Sinkronisasi Dengan Sistem Kami",
+            "success": "Berhasil Sinkronisasi Profil",
+            "failed": "Gagal Sinkronisasi Profil"
+        },
+        "sync_modal": {
+            "title": "Sinkronisasi Data",
+            "message": "Sinkronisasi Sekarang ?",
+            "sync": "Sinkronisasi",
+            "cancel": "Batalkan"
         },
         "edit": {
             "title": "Edit Profile",
@@ -34,7 +44,15 @@
             "update": "Ubah",
             "cancel": "Batal",
             "male": "Laki-Laki",
-            "female": "Perempuan"
+            "female": "Perempuan",
+            "success": "Berhasil Update Profil",
+            "failed": "Gagal Update Profil"
         }
+    },
+    "appointment": {
+        "title": "Appointment"
+    },
+    "history": {
+        "title": "History"
     }
 }

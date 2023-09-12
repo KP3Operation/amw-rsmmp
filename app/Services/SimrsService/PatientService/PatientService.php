@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 
 class PatientService implements IPatientService
 {
-    public function getPatient(User $user): PatientDataDto
+    public function getPatients(User $user): PatientDataDto
     {
         $ssn = "";
         $accessKey = config("simrs.access_key");
@@ -23,8 +23,7 @@ class PatientService implements IPatientService
         }
 
         $response = Http::withHeaders([
-            'Content-Type' => "",
-            "Authorization" => "Bearer " . config("simrs.bearer_token")
+            'Content-Type' => ""
         ])->get(config("simrs.base_url") . "/V1_1/AppointmentWS.asmx/PatientSearchByField", [
             "AccessKey" => $accessKey,
             "MedicalNo" => "",

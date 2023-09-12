@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UserDoctor;
 use App\Models\UserPatient;
 use App\Services\SimrsService\PatientService\IPatientService;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 
@@ -45,7 +46,7 @@ class MeController extends Controller
     {
         $user = User::where('id', '=', $request->user()->id)->first();
 
-        $response = $this->patientService->getPatient($user);
+        $response = $this->patientService->getPatients($user);
 
         DB::transaction(function () use ($response, $user) {
             $patientData = $response->data->first();
@@ -59,7 +60,8 @@ class MeController extends Controller
                     "patient_id" => $patientData->patientId,
                     "ssn" => $patientData->ssn,
                     "birth_date" => $patientData->birthDate,
-                    "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki"
+                    "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki",
+                    "sync_at" => Carbon::now()
                 ]);
             } else {
                 UserPatient::create([
@@ -67,7 +69,8 @@ class MeController extends Controller
                     "patient_id" => $patientData->patientId,
                     "ssn" => $patientData->ssn,
                     "birth_date" => $patientData->birthDate,
-                    "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki"
+                    "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki",
+                    "sync_at" => Carbon::now()
                 ]);
             }
         });

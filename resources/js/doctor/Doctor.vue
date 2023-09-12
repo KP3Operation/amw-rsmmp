@@ -1,6 +1,4 @@
 <script setup>
-import HeaderComponent from "@doctor/Components/Header/Header.vue";
-import ProfileHeaderComponent from "@doctor/Components/ProfileHeader/ProfileHeader.vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 
 const layoutStore = useLayoutStore();
@@ -31,11 +29,6 @@ const layoutStore = useLayoutStore();
                 <p>{{ $t('menus.profile') }}</p>
             </router-link>
         </nav>
-
-        <HeaderComponent v-if="layoutStore.doctorActiveMenu === 'home'" />
-        <HeaderComponent v-if="layoutStore.doctorActiveMenu === 'fee'" />
-        <HeaderComponent v-if="layoutStore.doctorActiveMenu === 'appointment'" />
-        <ProfileHeaderComponent v-if="layoutStore.doctorActiveMenu === 'profile'" />
 
         <router-view></router-view>
     </div>

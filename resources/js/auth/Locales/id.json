@@ -34,10 +34,16 @@
         "doctor_id": "ID Dokter"
     },
     "confirmation": {
-        "title": "Lengkapi Profil Anda",
+        "title": {
+            "patient": "Lengkapi Profil Anda",
+            "doctor": "Konfirmasi Data Dokter"
+        },
         "subtitle": "*Wajib Diisi",
         "phone_number": "No. Handphone",
-        "full_name": "Nama Lengkap",
+        "full_name": {
+            "patient": "Nama Lengkap",
+            "doctor": "Nama Dokter"
+        },
         "ssn": "Nomor Induk Kependudukan (NIK) ",
         "gender": "Jenis Kelamin",
         "birth_date": "Tanggal Lahir",
@@ -45,6 +51,8 @@
         "save": "Simpan",
         "cancel": "Batal",
         "male": "Laki-Laki",
-        "female": "Perempuan"
+        "female": "Perempuan",
+        "doctor_id": "ID Dokter",
+        "smf_name": "Nama SMF"
     }
 }

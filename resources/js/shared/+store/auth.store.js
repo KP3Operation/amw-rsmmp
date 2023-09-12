@@ -34,7 +34,7 @@ export const useAuthStore = defineStore("auth", () => {
         userEmail.value = null;
         userFullName.value = "";
         userId.value = 0;
-        userId.value = "patient";
+        userRole.value = "patient";
 
         // patient
         ssn.value = 0;

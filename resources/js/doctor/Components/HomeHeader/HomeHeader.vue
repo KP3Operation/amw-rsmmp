@@ -13,7 +13,7 @@ const authStore = useAuthStore();
         <router-link to="/home">
             <img :src="Logo" alt="Logo Aviat" width="33" height="33">
         </router-link>
-        <router-link to="#" class="notifikasi">
+        <router-link to="/notification" class="notifikasi">
             <i class="bi bi-bell-fill fs-3"></i>
 
             <div class="info">{{ notifcationsCount }}+</div>

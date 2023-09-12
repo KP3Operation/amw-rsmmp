@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Patient;
+namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RoleResource extends JsonResource
+class UpdateDoctorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,7 @@ class RoleResource extends JsonResource
         return [
             'data' => $this->resource,
             'links' => [
-                'self' => '/api/v1/patient/roles',
+                'self' => null,
             ],
         ];
     }

@@ -1,6 +1,9 @@
 <script setup>
+import Header from "@shared/Components/Header/Header.vue";
 </script>
 
 <template>
-    <h1>Appointment</h1>
+    <div>
+        <Header :title="$t('appointment.title')" :with-back-url="true"></Header>
+    </div>
 </template>

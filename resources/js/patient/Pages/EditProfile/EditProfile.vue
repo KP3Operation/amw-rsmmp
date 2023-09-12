@@ -4,7 +4,8 @@ import { useLayoutStore } from "@shared/+store/layout.store.js";
 import Form from "vform";
 import { reactive } from 'vue';
 import router from "@patient/router";
-
+import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
+import Header from "@shared/Components/Header/Header.vue";
 
 const layoutStore = useLayoutStore();
 const authStore = useAuthStore();
@@ -18,27 +19,27 @@ const form = reactive(
 );
 
 const updateProfile = () => {
+    layoutStore.isLoading = true;
     form.put(`/api/v1/me/${authStore.userId}`).then(() => {
-        authStore.userFullName = form.name;
-        authStore.gender = form.gender;
-        authStore.birthDate = form.birth_date;
-        authStore.userEmail = form.email;
+        authStore.$patch({
+            userFullName: form.name,
+            gender: form.gender,
+            birthDate: form.birth_date,
+            userEmail: form.email,
+        });
+        layoutStore.toggleSuccessAlert(t('profile.edit.success'));
         router.push({ path: '/profile' });
-        layoutStore.toggleSuccessAlert("Berhasil Update Profil");
     }).catch(() => {
-        //
-    });
+        layoutStore.toggleSuccessAlert(t('profile.edit.failed'));
+    }).finally(() => {
+        layoutStore.isLoading = false;
+    })
 }
 </script>
 <template>
     <div>
-        <div class="header header-default">
-            <router-link to="/profile">
-                <i class="bi bi-arrow-left"></i>
-            </router-link>
+        <Header :title="$t('profile.edit.title')" :with-back-url="true" page-name="ProfilePage"></Header>
 
-            <h1>{{ $t('profile.edit.title') }}</h1>
-        </div>
         <div class="px-4 pt-7">
             <form @submit.prevent="updateProfile" @keydown="form.onKeydown($event)" class="d-flex flex-column rows-gap-16">
                 <div>
@@ -90,7 +91,7 @@ const updateProfile = () => {
                         v-html="form.errors.get('email')" />
                 </div>
 
-                <button type="submit" class="btn btn-blue-500-rounded">{{ $t('profile.edit.update') }}</button>
+                <SubmitButton :text="$t('profile.edit.update')" className="btn-blue-500-rounded" />
 
                 <router-link to="/profile" class="text-blue-500 text-center text-decoration-none fw-semibold">{{
                     $t('profile.edit.cancel') }}</router-link>

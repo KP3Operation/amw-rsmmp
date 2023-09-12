@@ -17,7 +17,8 @@ class UserPatient extends Model
         'birth_date',
         'gender',
         'ssn',
-        'sycn_at'
+        'photo',
+        'sync_at'
     ];
 
     public function user(): BelongsTo

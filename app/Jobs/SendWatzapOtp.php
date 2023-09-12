@@ -31,6 +31,8 @@ class SendWatzapOtp implements ShouldQueue
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
+        ])->withOptions([
+            "verify" => false
         ])->post(config('watzap.send_message_url'), [
             'api_key' => config('watzap.api_key'),
             'number_key' => config('watzap.number_key'),

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('ssn')->nullable()->unique();
             $table->date('birth_date')->nullable();
             $table->string('gender')->nullable();
-            $table->dateTime('sycn_at')->nullable();
+            $table->longText('photo')->nullable();
+            $table->dateTime('sync_at')->nullable();
             $table->timestamps();
         });
     }

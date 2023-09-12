@@ -6,6 +6,10 @@ use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Services\OtpService\IOTPService;
 use App\Services\OtpService\WatzapOTPService;
+use App\Services\SimrsService\DoctorService\DoctorService;
+use App\Services\SimrsService\DoctorService\IDoctorService;
+use App\Services\SimrsService\PatientService\IPatientService;
+use App\Services\SimrsService\PatientService\PatientService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
         // binding interface -> implementation
         $this->app->when(LoginController::class)
             ->needs(IOTPService::class)
@@ -23,12 +26,14 @@ class AppServiceProvider extends ServiceProvider
                 return new WatzapOTPService();
             });
 
-
         $this->app->when(RegisterController::class)
             ->needs(IOTPService::class)
             ->give(function () {
                 return new WatzapOTPService();
             });
+
+        $this->app->bind(IPatientService::class, PatientService::class);
+        $this->app->bind(IDoctorService::class, DoctorService::class);
     }
 
     /**

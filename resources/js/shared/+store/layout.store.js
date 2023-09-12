@@ -7,10 +7,18 @@ export const useLayoutStore = defineStore("layout", () => {
     let isFullView = ref(false);
     let showSuccessAlert = ref(false);
     let successAlertMessage = ref("");
+    let showErrorAlert = ref(false);
+    let errorAlertMessage = ref("");
+    let isLoading = ref(false);
 
     function toggleSuccessAlert(msg) {
         showSuccessAlert.value = true;
         successAlertMessage.value = `${msg}`;
+    }
+
+    function toggleErrorAlert(msg) {
+        showErrorAlert.value = true;
+        errorAlertMessage.value = `${msg}`;
     }
 
     function $reset() {
@@ -19,15 +27,22 @@ export const useLayoutStore = defineStore("layout", () => {
         isFullView.value = false;
         showSuccessAlert.value = false;
         successAlertMessage.value = "";
+        showErrorAlert.value = false;
+        errorAlertMessage.value = "";
+        isLoading = false;
     }
 
     return {
         toggleSuccessAlert,
+        toggleErrorAlert,
         $reset,
         patientActiveMenu,
         doctorActiveMenu,
         isFullView,
         showSuccessAlert,
         successAlertMessage,
+        showErrorAlert,
+        errorAlertMessage,
+        isLoading,
     };
 });

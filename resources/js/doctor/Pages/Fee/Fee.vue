@@ -1,6 +1,9 @@
 <script setup>
+import Header from "@shared/Components/Header/Header.vue";
 </script>
 
 <template>
-    <h1>Fee</h1>
+    <div>
+        <Header :title="$t('fee.title')" :with-back-url="true" custom-heading-class="fs-4"></Header>
+    </div>
 </template>

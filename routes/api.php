@@ -24,10 +24,12 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('/register/doctor', [RegisterController::class, 'storeDoctor']);
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('/logout', [LogoutController::class, 'invalidateSession']);
+        Route::put('/register/patient/{phoneNumber}', [RegisterController::class, 'updatePatient']);
+        Route::put('/register/doctor/{phoneNumber}', [RegisterController::class, 'updateDoctor']);
+
         Route::get('/me', [MeController::class, 'index']);
         Route::put('/me/{id}', [MeController::class, 'update']);
         Route::get('/me/sync', [MeController::class, 'syncData']);
-        Route::get('/logout', [LogoutController::class, 'invalidateSession']);
-        Route::put('/register/patient/{phoneNumber}', [RegisterController::class, 'updatePatient']);
     });
 });

@@ -49,7 +49,13 @@ router.beforeEach(async (to, from) => {
             axios
                 .get(`/api/v1/me`)
                 .then((response) => {
-                    window.location.href = `/patient/home`;
+                    if (response.data.role === "patient") {
+                        window.location.href = `/patient/home`;
+                    }
+
+                    if (response.data.role === "doctor") {
+                        window.location.href = `/doctor/home`;
+                    }
                 })
                 .catch((error) => {
                     if (error.response.status === 401) {

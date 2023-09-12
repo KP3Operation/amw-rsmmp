@@ -5,7 +5,7 @@ namespace App\Http\Resources\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DoctorRegisterResource extends JsonResource
+class RegisterDoctorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

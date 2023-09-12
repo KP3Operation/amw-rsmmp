@@ -54,7 +54,7 @@ const login = async () => {
             </div>
 
             <div class="mt-4 d-flex flex-column">
-                <SubmitButton :text="$t('login')" className="btn-blue-700-rounded" />
+                <SubmitButton :text="$t('login.login')" className="btn-blue-700-rounded" />
             </div>
         </form>
 

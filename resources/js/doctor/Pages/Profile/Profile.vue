@@ -43,7 +43,7 @@ const logout = () => {
                     <span class="fs-6 text-gray-700">{{ $t('profile.smf') }}</span>
                 </div>
 
-                <p class="w-50 text-end fw-semibold">Staff Medis Kardiologi</p>
+                <p class="w-50 text-end fw-semibold">{{ authStore.smfName }}</p>
             </div>
 
             <a href="#" @click="logout" class="d-block btn btn-outline-red-500 rounded-pill mt-4 text-decoration-none">{{

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
-use Auth;
 use Illuminate\Http\Request;
 use Session;
 
@@ -15,7 +14,7 @@ class LogoutController extends Controller
 
         Session::flush();
 
-        // Auth::logout($user->password);
+        // \Auth::logout($user->password);
 
         $request->session()->invalidate();
 

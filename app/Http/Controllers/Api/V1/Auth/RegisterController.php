@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Exceptions\UserAlreadyExistException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\DoctorRegisterRequest;
-use App\Http\Requests\Auth\PatientRegisterRequest;
+use App\Http\Requests\Auth\RegisterDoctorRequest;
+use App\Http\Requests\Auth\RegisterPatientRequest;
+use App\Http\Requests\Auth\UpdateDoctorRequest;
 use App\Http\Requests\Auth\UpdatePatientRequest;
-use App\Http\Resources\Auth\DoctorRegisterResource;
-use App\Http\Resources\Auth\PatientRegisterResource;
+use App\Http\Resources\Auth\RegisterDoctorResource;
+use App\Http\Resources\Auth\RegisterPatientResource;
+use App\Http\Resources\Auth\UpdateDoctorResource;
 use App\Http\Resources\Auth\UpdatePatientResource;
 use App\Models\User;
 use App\Models\UserDoctor;
@@ -16,7 +18,6 @@ use App\Models\UserPatient;
 use App\Services\OtpService\IOTPService;
 use Illuminate\Validation\ValidationException;
 use DB;
-use stdClass;
 
 class RegisterController extends Controller
 {
@@ -27,7 +28,7 @@ class RegisterController extends Controller
         $this->otpService = $otpService;
     }
 
-    public function storePatient(PatientRegisterRequest $request): PatientRegisterResource
+    public function storePatient(RegisterPatientRequest $request): RegisterPatientResource
     {
         $user = User::with('userPatientData')->where('phone_number', '=', $request->validated('phone_number'))->first();
         if ($user)
@@ -59,7 +60,7 @@ class RegisterController extends Controller
         $user->otp_updated_at = $otpCode->updated_at;
         $user->otp_timeout = 30000; // miliseconds - 10 seconds
 
-        return new PatientRegisterResource($user);
+        return new RegisterPatientResource($user);
     }
 
     public function updatePatient(UpdatePatientRequest $request, string $phoneNumber): UpdatePatientResource
@@ -68,22 +69,24 @@ class RegisterController extends Controller
         if (!$user)
             throw ValidationException::withMessages(["phone_number" => __("login.errros.wrong_phone_number")]);
 
-        $user->update($request->only([
-            'name',
-            'email',
-            'phone_number'
-        ]));
+        DB::transaction(function () use ($user) {
+            $user->update($request->only([
+                'name',
+                'email',
+                'phone_number'
+            ]));
 
-        $user->userPatientData()->update($request->only([
-            'ssn',
-            'birth_date',
-            'gender'
-        ]));
+            $user->userPatientData()->update($request->only([
+                'ssn',
+                'birth_date',
+                'gender'
+            ]));
+        });
 
         return new UpdatePatientResource($user);
     }
 
-    public function storeDoctor(DoctorRegisterRequest $request): DoctorRegisterResource
+    public function storeDoctor(RegisterDoctorRequest $request): RegisterDoctorResource
     {
         $user = UserDoctor::where('doctor_id', '=', $request->validated('doctor_id'))->first();
         if ($user)
@@ -115,6 +118,11 @@ class RegisterController extends Controller
         $user->otp_updated_at = $otpCode->updated_at;
         $user->otp_timeout = 30000; // miliseconds - 10 seconds
 
-        return new DoctorRegisterResource($user);
+        return new RegisterDoctorResource($user);
+    }
+
+    public function updateDoctor(UpdateDoctorRequest): UpdateDoctorResource
+    {
+        throw new \Exception("Unimplemented");
     }
 }

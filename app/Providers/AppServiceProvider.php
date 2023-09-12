@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Services\OtpService\IOTPService;
 use App\Services\OtpService\WatzapOTPService;
+use App\Services\SimrsService\PatientService\IPatientService;
+use App\Services\SimrsService\PatientService\PatientService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
             ->give(function () {
                 return new WatzapOTPService();
             });
+
+        $this->app->bind(IPatientService::class, PatientService::class);
     }
 
     /**

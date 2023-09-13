@@ -53,7 +53,34 @@
         "title": "Appointment"
     },
     "history": {
-        "title": "Riwayat Medis"
+        "title": "Riwayat Medis",
+        "name": "Nama",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "year": "Tahun",
+        "medical_no": "No. RM",
+        "vital_sign": "Tanda Vital",
+        "medical_prescription": "Resep Obat",
+        "lab_result": "Hasil Lab",
+        "meeting": "Pertemuan",
+        "filter": "Filter",
+        "all": "Semua",
+        "pulse": "Denyut Nadi",
+        "body_temperature": "Suhu Tubuh",
+        "blood_pressure": "Tekanan Darah",
+        "vital_sign_history": {
+            "date_created": "Tanggal Pencatatan",
+            "time_created": "Jam Pencatatan",
+            "registration_no": "No. Registrasi",
+            "unit_vital_sign": "Unit Tanda Vital",
+            "unit": "Unit"
+        },
+        "modal_filter": {
+            "title": "Filter",
+            "member": "Member",
+            "reset": "Reset",
+            "apply": "Terapkan"
+        }
     },
     "home": {
         "welcome": "Selamat Datang",

@@ -2,13 +2,19 @@
 import MicroscopeWhite from "@resources/static/icons/microscope-white.svg";
 import Header from "@shared/Components/Header/Header.vue";
 import axios from "axios";
-import { onMounted } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { usePatientVitalSignStore } from "@patient/+store/patient-vital-sign.store";
 import { useLayoutStore } from "@shared/+store/layout.store";
-import { convertDateTimeToDate, calculateAge } from "@shared/utils/helpers";
+import VitalSignCard from "@patient/Components/VitalSignCard/VitalSignCard.vue";
+import PatientCard from "@patient/Components/PatientCard/PatientCard.vue";
+import * as bootsrap from "bootstrap";
 
 const patientVitalSignStore = usePatientVitalSignStore();
 const layoutStore = useLayoutStore();
+const currentActiveTab = ref('unit-vital');
+const modalState = reactive({
+    familyMemberFilterModal: null
+});
 
 const fetchVitalSignHistory = () => {
     layoutStore.isLoading = true;
@@ -34,6 +40,7 @@ const fetchVitalSignHistory = () => {
 
 onMounted(() => {
     fetchVitalSignHistory();
+    modalState.familyMemberFilterModal = new bootsrap.Modal("#modal-filter");
 });
 
 </script>
@@ -41,95 +48,67 @@ onMounted(() => {
 <template>
     <div>
         <Header :title="$t('history.title')" :with-back-url="true" :with-action-btn="true">
-            <button id="btn-akan-datang" class="btn d-flex col-gap-8 align-items-center fw-bold text-blue-500 p-0">
+            <button id="btn-akan-datang" @click="modalState.familyMemberFilterModal.show();"
+                class="btn d-flex col-gap-8 align-items-center fw-bold text-blue-500 p-0">
                 <i class="bi bi-filter-left fs-2"></i>
             </button>
         </Header>
 
         <div class="px-4 pt-7">
-            <div class="bg-blue-100 rounded p-3">
-                <div class="d-flex col-gap-20">
-                    <div class="w-50">
-                        <p class="fs-6 text-gray-700">Nama</p>
-                        <p class="fs-6 fw-semibold">{{ patientVitalSignStore.patient.name }}</p>
-                    </div>
 
-                    <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">No. RM</p>
-                        <p class="fs-6 fw-semibold">12345678</p>
-                    </div>
-                </div>
-
-                <div class="d-flex col-gap-20 mt-2">
-                    <div class="w-50">
-                        <p class="fs-6 text-gray-700">Jenis Kelamin</p>
-                        <p class="fs-6 fw-semibold mt-1">{{ patientVitalSignStore.patientData.gender }}</p>
-                    </div>
-
-                    <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">Tanggal Lahir</p>
-                        <p class="fs-6 fw-semibold mt-1"><span
-                                v-text="convertDateTimeToDate(patientVitalSignStore.patientData.birth_date)"></span>&nbsp;
-                            (<span v-text="calculateAge(patientVitalSignStore.patientData.birth_date)"></span> Tahun)
-                        </p>
-                    </div>
-                </div>
-
-            </div>
+            <PatientCard :name="patientVitalSignStore.patient.name" :gender="patientVitalSignStore.patientData.gender"
+                :medicalNo="patientVitalSignStore.patientData.medical_no"
+                :birthDate="patientVitalSignStore.patientData.birth_date" />
 
             <div class="tab-riwayat-medis nav nav-pills d-flex flex-nowrap col-gap-20 mt-4">
                 <button class="nav-link unit-vital active" data-bs-toggle="pill" data-bs-target="#unit-vital" role="tab"
-                    aria-controls="unit-vital" aria-selected="true">
+                    aria-controls="unit-vital" aria-selected="true" @click="currentActiveTab = 'unit-vital'">
                     <div class="icon">
                         <i class="bi bi-heart-pulse-fill"></i>
                     </div>
 
-                    <p>Tanda Vital</p>
+                    <p>{{ $t('history.vital_sign') }}</p>
                 </button>
 
                 <button class="nav-link resep-obat" data-bs-toggle="pill" data-bs-target="#resep-obat" role="tab"
-                    aria-controls="resep-obat" aria-selected="true">
+                    aria-controls="resep-obat" aria-selected="true" @click="currentActiveTab = 'resep-obat'">
                     <div class="icon">
                         <i class="bi bi-capsule"></i>
                     </div>
 
-                    <p>Resep Obat</p>
+                    <p>{{ $t('history.medical_prescription') }}</p>
                 </button>
 
                 <button class="nav-link hasil-lab" data-bs-toggle="pill" data-bs-target="#hasil-lab" role="tab"
-                    aria-controls="hasil-lab" aria-selected="true">
+                    aria-controls="hasil-lab" aria-selected="true" @click="currentActiveTab = 'hasil-lab'">
                     <div class="icon">
                         <img :src="MicroscopeWhite" alt="Icon" width="16" height="16">
                     </div>
 
-                    <p>Hasil Lab</p>
+                    <p>{{ $t('history.lab_result') }}</p>
                 </button>
 
                 <button class="nav-link pertemuan" data-bs-toggle="pill" data-bs-target="#pertemuan" role="tab"
-                    aria-controls="pertemuan" aria-selected="true">
+                    aria-controls="pertemuan" aria-selected="true" @click="currentActiveTab = 'pertemuan'">
                     <div class="icon">
                         <i class="bi bi-clipboard-heart-fill"></i>
                     </div>
 
-                    <p>Pertemuan</p>
+                    <p>{{ $t('history.meeting') }}</p>
                 </button>
             </div>
 
 
-            <!-- START LIST TAB-->
             <div class="tab-content mt-4" id="tab-content">
 
-                <!-- START UNIT VITAL-->
                 <section class="tab-pane fade show active" id="unit-vital" role="tabpanel" aria-labelledby="unit-vital"
                     tabindex="0">
-                    <!-- START FILTER -->
                     <div id="multiselect" class="dropdown filter-sticky d-flex col-gap-20 align-items-center">
-                        <p>Filter</p>
+                        <p>{{ $t('history.filter') }}</p>
                         <button
                             class="d-flex align-items-center w-100 px-3 py-2 border border-gray-400 rounded-3 bg-white justify-content-between text-black"
                             type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span>Semua</span>
-
+                            <span>{{ $t('history.all') }}</span>
                             <i class="bi bi-chevron-down"></i>
                         </button>
                         <ul class="dropdown-menu px-4 py-3 shadow rounded-0 border-0 mt-2">
@@ -137,7 +116,7 @@ onMounted(() => {
                                 <input class="form-check-input on" type="checkbox" name="filter" value="Semua" id="semua"
                                     checked>
                                 <label class="form-check-label" for="semua">
-                                    Semua
+                                    {{ $t('history.all') }}
                                 </label>
                             </li>
 
@@ -145,7 +124,7 @@ onMounted(() => {
                                 <input class="form-check-input" type="checkbox" name="filter" value="Denyut Nadi"
                                     id="denyut-nadi" checked>
                                 <label class="form-check-label" for="denyut-nadi">
-                                    Denyut Nadi
+                                    {{ $t('history.pulse') }}
                                 </label>
                             </li>
 
@@ -153,7 +132,7 @@ onMounted(() => {
                                 <input class="form-check-input" type="checkbox" name="filter" value="Suhu Tubuh"
                                     id="suhu-tubuh" checked>
                                 <label class="form-check-label" for="suhu-tubuh">
-                                    Suhu Tubuh
+                                    {{ $t('history.body_temperature') }}
                                 </label>
                             </li>
 
@@ -161,90 +140,54 @@ onMounted(() => {
                                 <input class="form-check-input" type="checkbox" name="filter" value="Tekanan Darah"
                                     id="tekanan-darah" checked>
                                 <label class="form-check-label" for="tekanan-darah">
-                                    Tekanan Darah
+                                    {{ $t('history.blood_pressure') }}
                                 </label>
                             </li>
                         </ul>
                     </div>
-                    <!-- END FILTER -->
+                    <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in patientVitalSignStore.histories">
 
-                    <!-- START LIST UNIT VITAL-->
-                    <div class="d-flex flex-column rows-gap-16 mt-4"
-                        v-for="(history, index) in patientVitalSignStore.histories">
-                        <div class="d-flex flex-column rows-gap-16 rounded-3 p-3 bg-blue-100 border border-blue-200">
-                            <div class="d-flex justify-between">
-                                <div class="w-50">
-                                    <p class="fs-6 text-gray-700">Tanggal Pencatatan</p>
-                                    <p class="mt-2 fs-5 fw-semibold"
-                                        v-text="convertDateTimeToDate(history.recordDate_yMdHms)"></p>
-                                </div>
-
-                                <div class="w-50 text-end">
-                                    <p class="fs-6 text-gray-700">Jam Pencatatan</p>
-                                    <p class="mt-2 fs-5 fw-semibold">{{ history.recordTime }}</p>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-between">
-                                <div class="w-50">
-                                    <p class="fs-6 text-gray-700">No. Registrasi</p>
-                                    <p class="mt-2 fs-5 fw-semibold">{{ history.registrationNo }}</p>
-                                </div>
-
-                                <div class="w-50 text-end">
-                                    <p class="fs-6 text-gray-700">Unit Tanda Vital</p>
-                                    <p class="mt-2 fs-5 fw-semibold">{{ history.vitalSignUnit }}</p>
-                                </div>
-                            </div>
-
-                            <div>
-                                <p class="fs-6 text-gray-700">Unit</p>
-                                <p class="mt-2 fs-5 fw-semibold">
-                                <p class="mt-2 fs-5 fw-semibold">{{ history.vitalSignName }}</p>
-                                </p>
-                            </div>
-                        </div>
+                        <VitalSignCard :dateCreated="history.recordDate_yMdHms" :timeCreated="history.recordTime"
+                            :registrationNo="history.registrationNo" :vitalSignUnit="history.vitalSignUnit"
+                            :vitalSignName="history.vitalSignName" />
 
                     </div>
-                    <!-- END LIST UNIT VITAL-->
                 </section>
-                <!-- END UNIT VITAL-->
 
+                <section class="tab-pane fade" id="resep-obat" role="tabpanel" aria-labelledby="unit-vital" tabindex="0">
+                </section>
+
+                <section class="tab-pane fade" id="hasil-lab" role="tabpanel" aria-labelledby="unit-vital" tabindex="0">
+                </section>
+
+                <section class="tab-pane fade" id="pertemuan" role="tabpanel" aria-labelledby="unit-vital" tabindex="0">
+                </section>
 
                 <div class="text-center mt-3" v-if="layoutStore.isLoading">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-
             </div>
-            <!-- END LIST TAB-->
         </div>
-        <!-- END CONTAINER-->
 
-        <!-- START MODAL FILTER -->
         <div class="modal" id="modal-filter" aria-labelledby="Modal Filter" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
-
-                    <!-- START POPUP HEADER -->
                     <div class="modal-header d-flex justify-content-between">
                         <div class="d-flex align-items-center col-gap-8">
                             <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
 
-                            <h5 class="modal-title">Filter</h5>
+                            <h5 class="modal-title">{{ $t('history.filter.title') }}</h5>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <i class="bi bi-x fs-2 icon-black"></i>
                         </button>
                     </div>
-                    <!-- END POPUP HEADER-->
-
-                    <!-- START POPUP BODY-->
                     <div class="modal-body">
                         <form action="" class="d-flex flex-column rows-gap-16">
                             <div>
-                                <label for="member" class="d-block text-start">Member</label>
+                                <label for="member" class="d-block text-start">{{ $t('history.filter.member') }}</label>
                                 <select name="member" id="member" class="form-select mt-2">
                                     <option value="Muhammad John Doe" selected>Muhammad John Doe</option>
                                     <option value="Diego Rizki">Diego Rizki</option>
@@ -254,19 +197,17 @@ onMounted(() => {
 
                             <div class="d-flex col-gap-20">
 
-                                <button type="reset" class="w-50 btn btn-red-500-rounded"
-                                    data-bs-dismiss="modal">Reset</button>
+                                <button type="reset" class="w-50 btn btn-red-500-rounded" data-bs-dismiss="modal">{{
+                                    $t('history.filter.reset') }}</button>
 
-                                <button type="button" class="w-50 btn btn-blue-500-rounded"
-                                    data-bs-dismiss="modal">Terapkan</button>
+                                <button type="button" class="w-50 btn btn-blue-500-rounded" data-bs-dismiss="modal">{{
+                                    $t('history.filter.apply') }}</button>
                             </div>
 
                         </form>
                     </div>
-                    <!-- END POPUP BODY-->
                 </div>
             </div>
         </div>
-        <!-- END MODAL FILTER -->
     </div>
 </template>

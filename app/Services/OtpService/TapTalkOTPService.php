@@ -16,7 +16,50 @@ class TapTalkOTPService implements IOTPService
         if ($existingCode != null)
             $this->sendOtp($user); // FIXME: Possible infinite looping
 
-        SendTapTalkOtp::dispatch($code, $user->phone_number);
+        if (config('simrs.otp_with_queue')) {
+            SendTapTalkOtp::dispatch($code, $user->phone_number);
+        } else {
+            $response = Http::withHeaders([
+                'API-Key' => config('taptalk.api_key'),
+                'Content-Type' => 'application/json'
+            ])->post(config('taptalk.send_message_api'), [
+                'phone' => $this->phoneNumber,
+                'messageType' => config('taptalk.message_type'),
+                'body' => $this->code
+            ]);
+
+            if ($response->ok()) {
+                $status = $response->collect('status')->first();
+                if ($status == 200) {
+                    // We are good
+                    $messageId = $response->collect('data')['id'];
+                    if ($messageId) {
+                        $otpCode = OtpCode::whereCode($this->code)
+                            ->whereStatus('unverified')
+                            ->first();
+                        if ($otpCode) {
+                            $otpCode->update([
+                                'message_id' => $messageId
+                            ]);
+                        } else {
+                            // Something wrong, why thereis no data (?)
+                            throw new \Exception("Internal server error", 500);
+                        }
+                    }
+                } else if ($status >= 400 && $status <= 499) {
+                    // Something wrong with payloads or authentication
+                    throw new \Exception("There is an error while communicating with taptalk service", 400);
+                } else if ($status >= 500 && $status <= 599) {
+                    // TapTaplk server error
+                    throw new \Exception("There is an error while communicating with taptalk service", 500);
+                } else {
+                    // Don't know why it is error :)
+                    throw new \Exception("Internal server error", 500);
+                }
+            } else {
+                throw new \Exception("Internal server error", 500);
+            }
+        }
 
         $otpCode = OtpCode::whereUserId($user->id)->first();
         if ($otpCode != null) {

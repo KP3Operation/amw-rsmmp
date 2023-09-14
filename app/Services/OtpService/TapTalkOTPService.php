@@ -23,9 +23,9 @@ class TapTalkOTPService implements IOTPService
                 'API-Key' => config('taptalk.api_key'),
                 'Content-Type' => 'application/json'
             ])->post(config('taptalk.send_message_api'), [
-                'phone' => $this->phoneNumber,
+                'phone' => $user->phone_number,
                 'messageType' => config('taptalk.message_type'),
-                'body' => $this->code
+                'body' => $code
             ]);
 
             if ($response->ok()) {
@@ -34,7 +34,7 @@ class TapTalkOTPService implements IOTPService
                     // We are good
                     $messageId = $response->collect('data')['id'];
                     if ($messageId) {
-                        $otpCode = OtpCode::whereCode($this->code)
+                        $otpCode = OtpCode::whereCode($code)
                             ->whereStatus('unverified')
                             ->first();
                         if ($otpCode) {

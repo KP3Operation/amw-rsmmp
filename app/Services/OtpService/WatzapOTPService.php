@@ -24,8 +24,8 @@ class WatzapOTPService implements IOTPService
             ])->post(config('watzap.send_message_url'), [
                 'api_key' => config('watzap.api_key'),
                 'number_key' => config('watzap.number_key'),
-                'phone_no' => str_replace("+", "", $this->phoneNumber),
-                'message' => __("login.otp_message", ["otpcode" => $this->code])
+                'phone_no' => str_replace("+", "", $user->phone_number),
+                'message' => __("login.otp_message", ["otpcode" => $code])
             ]);
 
             if ($response->ok()) {

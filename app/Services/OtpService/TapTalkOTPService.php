@@ -14,9 +14,9 @@ class TapTalkOTPService implements IOTPService
         $code = $this->generateOTP(6);
         $existingCode = OtpCode::whereCode($code)->first();
         if ($existingCode != null)
-            $this->sendOtp($user); // FIXME: Possible infinite looping
+            $this->sendOtp($user);
 
-        if (config('simrs.otp_with_queue')) {
+        if (config('app.otp_with_queue')) {
             SendTapTalkOtp::dispatch($code, $user->phone_number);
         } else {
             $response = Http::withHeaders([

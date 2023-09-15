@@ -14,7 +14,7 @@ class WatzapOTPService implements IOTPService
     {
         $code = $this->generateOTP(6);
 
-        if (config('simrs.otp_with_queue')) {
+        if (config('app.otp_with_queue')) {
             SendWatzapOtp::dispatch($user->phone_number, $code);
         } else {
             $response = Http::withHeaders([

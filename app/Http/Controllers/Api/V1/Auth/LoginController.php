@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Services\OtpService\IOTPService;
 use Auth;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -28,7 +29,8 @@ class LoginController extends Controller
         $user = User::where('phone_number', '=', $loginRequest->validated('phone_number'))->first();
 
         if (!$user)
-            throw ValidationException::withMessages(["phone_number" => __("login.errros.wrong_phone_number")]);
+            //throw ValidationException::withMessages(["phone_number" => __("login.errros.wrong_phone_number")]);
+            throw new ModelNotFoundException(__("login.errros.wrong_phone_number"));
 
         $otpCode = $this->otpService->sendOtp($user);
         $user->otp_created_at = $otpCode->created_at;

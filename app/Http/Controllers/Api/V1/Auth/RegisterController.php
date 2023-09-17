@@ -99,7 +99,7 @@ class RegisterController extends Controller
 
         $simrsDoctorData = $this->doctorService->getDoctors($request->doctor_id);
         if (!$simrsDoctorData->data->first())
-            throw new InvalidDoctorId(__("register.errros.invalid_doctor_id"), 400);
+            throw ValidationException::withMessages(["doctor_id" => __("register.errros.invalid_doctor_id")]);
 
         DB::transaction(function () use ($request, $simrsDoctorData) {
 

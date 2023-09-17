@@ -5,7 +5,11 @@
         "does_not_have_account": "Belum Punya Akun?",
         "login_to_account": "Masuk Akun",
         "login": "Masuk",
-        "register": "Daftar"
+        "register": "Daftar",
+        "phone_number_not_registered": "No Hp Belum Terdaftar",
+        "phone_number_not_registered_desc": "No Hp Belum Terdaftar, Lanjut daftar dengan nomor ini?",
+        "yes": "Ya",
+        "cancel": "Batal"
     },
     "verification": {
         "title": "Verifikasi Kode OTP",
@@ -31,7 +35,10 @@
         "phone_number_already_registered": "No. Handphone sudah terdaftar",
         "phone_number_already_registered_desc": "No. Handphone sudah terdaftar, lanjut masuk dengan nomor ini?",
         "cancel": "Batal",
-        "doctor_id": "ID Dokter"
+        "doctor_id": "ID Dokter",
+        "phone_number_not_registered": "No Hp Belum Terdaftar",
+        "phone_number_not_registered_desc": "No Hp Belum Terdaftar, Lanjut daftar dengan nomor ini?",
+        "yes": "Ya"
     },
     "confirmation": {
         "title": {

@@ -1,11 +1,16 @@
 <script setup>
 import Form from "vform";
-import { reactive } from "vue";
+import {onMounted, reactive} from "vue";
 import {useAuthStore} from "@shared/+store/auth.store.js";
 import router from "@auth/router.js";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
+import * as bootstrap from "bootstrap";
+import axios from "axios";
 
+const modalState = reactive({
+    notRegisteredModal: null,
+});
 const authStore = useAuthStore();
 const layoutStore = useLayoutStore();
 const callingCode = import.meta.env.VITE_APP_CALLING_CODE;
@@ -26,12 +31,23 @@ const login = async () => {
         authStore.otpTimeout = data.otp_timeout;
         router.push({path: '/verification'});
     }).catch((error) => {
-        //
+        if (error.response.status === 404) {
+            modalState.notRegisteredModal.show();
+        }
     }).finally(() => {
         layoutStore.isLoading = false;
     });
 }
 
+const navigateToRegister = async () => {
+    form.reset();
+    modalState.notRegisteredModal.hide();
+    router.push({ path: '/register' });
+}
+
+onMounted(() => {
+    modalState.notRegisteredModal = new bootstrap.Modal("#modal-register");
+});
 </script>
 
 <template>
@@ -64,5 +80,36 @@ const login = async () => {
                 {{ $t('login.register') }}
             </router-link>
         </p>
+    </div>
+
+    <div class="modal" id="modal-register" aria-labelledby="Register Modal" data-bs-backdrop="static" aria-hidden="true"
+         tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header d-flex justify-content-between">
+                    <div class="d-flex align-items-center col-gap-8">
+                        <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
+
+                        <h5 class="modal-title">{{ $t('login.phone_number_not_registered') }}</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bi bi-x fs-2 icon-black"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ $t('login.phone_number_not_registered_desc') }}</p>
+                </div>
+
+                <div class="modal-footer flex-nowrap">
+                    <button type="button" class="w-50 btn btn-link" data-bs-dismiss="modal">{{ $t('register.cancel')
+                        }}</button>
+                    <button type="button" @click="navigateToRegister" class="w-50 btn-masuk btn btn-blue">
+                        {{ $t('login.yes') }},
+                        {{ $t('login.register') }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

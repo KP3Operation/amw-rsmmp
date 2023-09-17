@@ -9,7 +9,7 @@ use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\Auth\AuthenticateResource;
 use App\Models\OtpCode;
 use App\Models\User;
-use App\Services\OtpService\IOTPService;
+use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
 use Auth;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,9 +17,9 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    private IOTPService $otpService;
+    private IOtpWrapperService $otpService;
 
-    public function __construct(IOTPService $otpService)
+    public function __construct(IOtpWrapperService $otpService)
     {
         $this->otpService = $otpService;
     }
@@ -29,10 +29,10 @@ class LoginController extends Controller
         $user = User::where('phone_number', '=', $loginRequest->validated('phone_number'))->first();
 
         if (!$user)
-            //throw ValidationException::withMessages(["phone_number" => __("login.errros.wrong_phone_number")]);
             throw new ModelNotFoundException(__("login.errros.wrong_phone_number"));
 
         $otpCode = $this->otpService->sendOtp($user);
+
         $user->otp_created_at = $otpCode->created_at;
         $user->otp_updated_at = $otpCode->updated_at;
         $user->otp_timeout = 30000; // miliseconds - 10 seconds

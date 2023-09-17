@@ -1,7 +1,7 @@
 <script setup>
 import Form from "vform";
-import {onMounted, reactive} from "vue";
-import {useAuthStore} from "@shared/+store/auth.store.js";
+import { onMounted, reactive } from "vue";
+import { useAuthStore } from "@shared/+store/auth.store.js";
 import router from "@auth/router.js";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
@@ -29,7 +29,7 @@ const login = async () => {
         authStore.otpCreatedAt = data.otp_created_at;
         authStore.otpUpdatedAt = data.otp_updated_at;
         authStore.otpTimeout = data.otp_timeout;
-        router.push({path: '/verification'});
+        router.push({ path: '/verification' });
     }).catch((error) => {
         if (error.response.status === 404) {
             modalState.notRegisteredModal.show();
@@ -40,6 +40,7 @@ const login = async () => {
 }
 
 const navigateToRegister = async () => {
+    authStore.phoneNumber = form.phone_number;
     form.reset();
     modalState.notRegisteredModal.hide();
     router.push({ path: '/register' });
@@ -54,19 +55,16 @@ onMounted(() => {
     <div>
         <h1 class="fs-1 mt-6 fw-bold">{{ $t('welcome_message') }}</h1>
         <h2 class="mt-6 fs-3 fw-bold">{{ $t('login.login_to_account') }}</h2>
-        <form id="login-form" class="mt-6"
-              @submit.prevent="login" @keydown="form.onKeydown($event)">
+        <form id="login-form" class="mt-6" @submit.prevent="login" @keydown="form.onKeydown($event)">
             <div>
                 <label for="no-hp">{{ $t('login.phone_number') }}</label>
                 <div class="input-group flex-nowrap mt-2">
                     <span class="input-group-text">{{ callingCode }}</span>
-                    <input type="tel" name="phone_number"
-                           id="no-hp" placeholder="8123940183020"
-                           class="form-control"
-                           v-model="form.phone_number">
+                    <input type="tel" name="phone_number" id="no-hp" placeholder="8123940183020" class="form-control"
+                        v-model="form.phone_number">
                 </div>
-                <div class="error mt-2 fs-6 fw-bold text-red-200"
-                   v-if="form.errors.has('phone_number')" v-html="form.errors.get('phone_number')" />
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('phone_number')"
+                    v-html="form.errors.get('phone_number')" />
             </div>
 
             <div class="mt-4 d-flex flex-column">
@@ -83,7 +81,7 @@ onMounted(() => {
     </div>
 
     <div class="modal" id="modal-register" aria-labelledby="Register Modal" data-bs-backdrop="static" aria-hidden="true"
-         tabindex="-1">
+        tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
@@ -103,7 +101,7 @@ onMounted(() => {
 
                 <div class="modal-footer flex-nowrap">
                     <button type="button" class="w-50 btn btn-link" data-bs-dismiss="modal">{{ $t('register.cancel')
-                        }}</button>
+                    }}</button>
                     <button type="button" @click="navigateToRegister" class="w-50 btn-masuk btn btn-blue">
                         {{ $t('login.yes') }},
                         {{ $t('login.register') }}

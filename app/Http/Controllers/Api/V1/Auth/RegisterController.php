@@ -16,7 +16,7 @@ use App\Http\Resources\Auth\UpdatePatientResource;
 use App\Models\User;
 use App\Models\UserDoctor;
 use App\Models\UserPatient;
-use App\Services\OtpService\IOTPService;
+use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
 use App\Services\SimrsService\DoctorService\IDoctorService;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -24,10 +24,10 @@ use DB;
 
 class RegisterController extends Controller
 {
-    private IOTPService $otpService;
+    private IOtpWrapperService $otpService;
     private IDoctorService $doctorService;
 
-    public function __construct(IOTPService $otpService, IDoctorService $doctorService)
+    public function __construct(IOtpWrapperService $otpService, IDoctorService $doctorService)
     {
         $this->otpService = $otpService;
         $this->doctorService = $doctorService;
@@ -99,7 +99,7 @@ class RegisterController extends Controller
 
         $simrsDoctorData = $this->doctorService->getDoctors($request->doctor_id);
         if (!$simrsDoctorData->data->first())
-            throw new InvalidDoctorId(__("register.errros.invalid_doctor_id"), 400);
+            throw ValidationException::withMessages(["doctor_id" => __("register.errros.invalid_doctor_id")]);
 
         DB::transaction(function () use ($request, $simrsDoctorData) {
 

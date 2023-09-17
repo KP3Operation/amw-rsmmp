@@ -48,6 +48,7 @@ $ php -v
 ```
 
 and the output will be look like
+
 ```sh
 PHP 8.2.9 (cli) (built: Aug  1 2023 12:41:16) (NTS Visual C++ 2019 x64)
 Copyright (c) The PHP Group
@@ -56,7 +57,8 @@ Zend Engine v4.2.9, Copyright (c) Zend Technologies
 
 ```
 
-### Composer
+#### Composer
+
 Ensure you have installed [Composer](https://getcomposer.org/), and added it to your operating system path. You can verify if composer have successfully installed by checking from your terminal.
 
 ```sh
@@ -64,6 +66,7 @@ $ composer -v
 ```
 
 and the output will be look like
+
 ```sh
    ______
   / ____/___  ____ ___  ____  ____  ________  _____
@@ -80,7 +83,8 @@ Usage:
 
 ```
 
-### NodeJS
+#### NodeJS
+
 Ensure you have installed [NodeJS](https://nodejs.org/), and added it to your operating system path. You can verify if NodeJS have successfully installed by checking from your terminal.
 
 ```sh
@@ -88,26 +92,29 @@ $ node -v
 ```
 
 and the output will be look like
+
 ```sh
 v18.8.0
 ```
 
 also you need to verify if the `npm` is successfully installed
+
 ```sh
 $ npm -v
 ```
 
 and the output will be look like
+
 ```sh
 8.18.0
 ```
 
-
 #### Web Server
 
 Ensure you have installed one of the following Web Server.
-- Apache
-- Nginx
+
+-   Apache
+-   Nginx
 
 You can also use the builtin development server that `Laravel` has, instead of using Apache or Nginx.
 
@@ -120,16 +127,20 @@ This is a main project of aviatmobileweb that are written on top of Laravel fram
 1. Clone Aviatmobileweb project from repository to your local machine.
 2. Navigate to the aviatmobileweb project from your terminal.
 3. Run the command line installer.
+
 ```sh
 $ php install
 ```
 
+---
+
 You can also manually setup **Aviatmobileweb** by:
 
 #### Backend Setup
+
 Make sure [Prerequesites and One-Time Setup](#prerequesites-and-one-time-setup) has been setup properly.
 
-Setup env variables file by duplicate and rename `.env.example` to `.env` if the `.env` file not exist yet. Please update `.env` value with your local development setup. Over all, you need to pay attention to the following `.env` vars:
+Setup env variables file by duplicating and rename `.env.example` to `.env` if the `.env` file not exist yet. Please update `.env` value with your local development setup. Over all, you need to pay attention to the following `.env` vars:
 
 ```env
 APP_NAME=Aviatmobileweb
@@ -158,36 +169,43 @@ WATZAP_NUMBER_KEY=
 ```
 
 Install all composer packages by running command
+
 ```sh
 $ composer install
 ```
 
 Generate app key by running command
+
 ```sh
 $ php artisan key:generate
 ```
 
 Migrate all database migration by command
+
 ```sh
 $ php artisan migrate
 ```
 
 or if you want to drop all existing tables and start a fresh database you can run command
+
 ```sh
 $ php artisan migrate:fresh
 ```
 
 Seed initial data by running command
+
 ```sh
 $ php artisan db:seed
 ```
 
 You also needed to create a symlink for storage by running command
+
 ```sh
 $ php artisan storage:link
 ```
 
 You may need to clear all app caches and create a new one by running following command
+
 ```sh
 $ php artisan optimize
 ```
@@ -197,11 +215,40 @@ $ php artisan optimize
 Make sure [Prerequesites and One-Time Setup](#prerequesites-and-one-time-setup) has been setup properly.
 
 Install all npm packages by command
+
 ```sh
 $ npm install
 ```
 
 Build the frontend assets by command
+
 ```sh
 $ npm run build
 ```
+
+## The Environtment `Variables`
+
+Only the following environment attributes would require your attention out of the 67 environment variables that can be configured within this web application.
+
+|           Name            |             Default Value              |                                                          Description                                                          |
+| :-----------------------: | :------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
+|        `APP_NAME`         |             AviatMobileWeb             | The web app name, please dot not include any white space(s), if you want to include it, please surround it with double quotes |
+|         `APP_ENV`         |                 local                  |                                                      The app envitonment                                                      |
+|         `APP_KEY`         |                                        |                                           The web application key, can not be blank                                           |
+|        `APP_DEBUG`        |                  true                  |                                                    Show application debug                                                     |
+|         `APP_URL`         |            http://localhost            |                                                The web application 'BASE' url                                                 |
+|    `APP_CALLING_CODE`     |                 "+62"                  |                                                   The calling country code                                                    |
+|       `APP_LOCALE`        |                   id                   |                                                 The application localization                                                  |
+|   `APP_FALLBACK_LOCALE`   |                   en                   |                              The default value if the specific localization key does not exists                               |
+|   `APP_OTP_WITH_QUEUE`    |                 false                  |                              Set it to `true` if you want to send the otp message by using queue                              |
+|      `DB_CONNECTION`      |                 pgsql                  |                                                                                                                               |
+|         `DB_HOST`         |               127.0.0.1                |                                                                                                                               |
+|         `DB_PORT`         |                  5432                  |                                                                                                                               |
+|       `DB_DATABASE`       |             aviatmobileweb             |                                                                                                                               |
+|       `DB_USERNAME`       |                  dev                   |                                                                                                                               |
+|       `DB_PASSWORD`       |                  dev                   |                                                                                                                               |
+| `WATZAP_SEND_MESSAGE_URL` | https://api.watzap.id/v1/send_message  |                                                     The `WatZap` endpoint                                                     |
+|     `WATZAP_API_KEY`      |               FooBarBazz               |                                                     The `WatZap` API key                                                      |
+|    `WATZAP_NUMBER_KEY`    |               FooBarBazz               |                                                    The `WatZap` number key                                                    |
+|     `SIMRS_BASE_URL`      | http://103.111.202.214/live/WebService |                                                      The SIMRS Base URL                                                       |
+|    `SIMRS_ACCESS_KEY`     |                 MWApA                  |                                                     The SIMRS access key                                                      |

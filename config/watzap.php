@@ -16,6 +16,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Watzap validate whatsApp number
+    |--------------------------------------------------------------------------
+    |
+    | This value is the url endpoint of Watzap to validate whatsApp phone number.
+    |
+    */
+
+    'validate_whatsapp_number_url' => env('WATZAP_VALIDATE_WHATSAPP_NUMBER_URL', 'https://api.watzap.id/v1/validate_number'),
+
+
+    /*
+    |--------------------------------------------------------------------------
     | API Key
     |--------------------------------------------------------------------------
     |

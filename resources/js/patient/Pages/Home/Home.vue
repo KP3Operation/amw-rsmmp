@@ -59,7 +59,7 @@ const authStore = useAuthStore();
                     </router-link>
                 </div>
             </section>
-            <section class="mt-6">
+            <!-- <section class="mt-6">
                 <h2 class="fs-3 fw-bold text-black">{{ $t('home.next_consult_schedule') }}</h2>
                 <div id="jadwal-konsultasi" class="carousel slide mt-2" data-bs-interval="5000" data-bs-touch="true" data-bs-ride="carousel">
                     <div class="carousel-inner d-flex flex-nowrap col-gap-20">
@@ -83,7 +83,7 @@ const authStore = useAuthStore();
                                 aria-label="Slide 2"></button>
                     </div>
                 </div>
-            </section>
+            </section> -->
         </div>
     </div>
 </template>

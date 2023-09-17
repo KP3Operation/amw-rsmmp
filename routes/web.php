@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+    return redirect()->route('/auth/login');
+});
+
 Route::get('/auth/{vuejs?}', function () {
     return view('layouts.auth');
 })->where('vuejs', '[\/\w\.-]*');

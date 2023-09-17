@@ -28,6 +28,7 @@ class DoctorService implements IDoctorService
         }
 
         $data = $response->json();
+
         return DoctorDataDto::from($data);
     }
 }

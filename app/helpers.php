@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\OtpCode;
 use App\Models\User;
 
 if (!function_exists('user_role')) {
@@ -21,5 +22,27 @@ if (!function_exists('parse_microsoft_date')) {
     {
         $timestamp = (int) substr($date, 6, -2) / 1000; // Extract the timestamp value
         return DateTime::createFromFormat('U', $timestamp);
+    }
+}
+
+if (!function_exists('generate_otp')) {
+    function generate_otp(int $length): int
+    {
+        $otp = '0';
+        $characters = '0123456789'; // possible characters for the otp
+
+        $charcount = strlen($characters);
+        while (strlen($otp) <= $length) {
+            $otp .= $characters[rand(1, $charcount - 1)];
+        }
+
+        $otp = (int) $otp;
+
+        $existingcode = otpcode::where('code', '=', $otp)->first();
+
+        if ($otp == 0 || $existingcode != null)
+            generate_otp($length);
+
+        return $otp;
     }
 }

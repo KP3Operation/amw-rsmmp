@@ -23,7 +23,8 @@ const showSummaryFeeFilter = ref(false);
                 <img :src="Doctor2" alt="Ilustrasi" width="80" height="57">
 
                 <div>
-                    <h1 class="fs-4 fw-bold">{{ $t('home.welcome') }} <br /> <span v-text="getUserFirstName(authStore.userFullName)"></span></h1>
+                    <h1 class="fs-4 fw-bold">{{ $t('home.welcome') }} <br /> <span
+                            v-text="getUserFirstName(authStore.userFullName)"></span></h1>
 
                     <p class="mt-2 fs-6 text-gray-700">{{ $t('home.greeting') }}</p>
                 </div>
@@ -76,7 +77,7 @@ const showSummaryFeeFilter = ref(false);
             <!-- END BANNER -->
 
             <!-- START OVERVIEW JADWAL KONSULTASI -->
-            <section class="mt-5">
+            <!-- <section class="mt-5">
                 <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_consult_schedule') }}</h2>
 
                 <div id="overview-jadwal-konsultasi" class="carousel slide mt-3" data-bs-touch="true"
@@ -191,11 +192,11 @@ const showSummaryFeeFilter = ref(false);
                                 aria-label="Slide 2"></button>
                     </div>
                 </div>
-            </section>
+            </section> -->
             <!-- END OVERVIEW JADWAL KONSULTASI -->
 
             <!-- START OVERVIEW RAWAT INAP -->
-            <section class="mt-5">
+            <!-- <section class="mt-5">
                 <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_inpatient_list') }}</h2>
 
                 <div id="overview-rawat-inap" class="carousel slide mt-3" data-bs-touch="true" data-bs-ride="carousel">
@@ -309,11 +310,11 @@ const showSummaryFeeFilter = ref(false);
                                 aria-label="Slide 2"></button>
                     </div>
                 </div>
-            </section>
+            </section> -->
             <!-- END OVERVIEW RAWAT INAP -->
 
             <!-- START OVERVIEW FEE -->
-            <section class="mt-5">
+            <!-- <section class="mt-5">
                 <div class="d-flex align-items-center justify-content-between col-gap-20 mb-3">
                     <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_inpatient_list') }}</h2>
                     <button class="btn btn-filter-fee p-0"
@@ -324,40 +325,39 @@ const showSummaryFeeFilter = ref(false);
                     </button>
                 </div>
 
-                <!-- START FILTER TANGGAL-->
-                <div class="filter-homepage-summary-fee p-0 mb-3" :class="showSummaryFeeFilter ? 'expand' : ''">
-                    <form class="d-flex col-gap-8 align-items-end">
-                        <div>
-                            <label for="dari" class="fs-6 text-gray-700">{{ $t('home.to') }}</label>
-                            <input type="date" name="dari" id="dari" class="form-control mt-2">
-                        </div>
+            <div class="filter-homepage-summary-fee p-0 mb-3" :class="showSummaryFeeFilter ? 'expand' : ''">
+                <form class="d-flex col-gap-8 align-items-end">
+                    <div>
+                        <label for="dari" class="fs-6 text-gray-700">{{ $t('home.to') }}</label>
+                        <input type="date" name="dari" id="dari" class="form-control mt-2">
+                    </div>
 
-                        <div>
-                            <label for="hingga" class="fs-6 text-gray-700">{{ $t('home.from') }}</label>
-                            <input type="date" name="hingga" id="hingga" class="form-control mt-2">
-                        </div>
+                    <div>
+                        <label for="hingga" class="fs-6 text-gray-700">{{ $t('home.from') }}</label>
+                        <input type="date" name="hingga" id="hingga" class="form-control mt-2">
+                    </div>
 
-                        <button class="btn bg-green-700 d-flex align-items-center justify-content-center">
-                            <i class="bi bi-search icon-white"></i>
-                        </button>
-                    </form>
+                    <button class="btn bg-green-700 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-search icon-white"></i>
+                    </button>
+                </form>
 
-                    <p class="error-filter-date mt-3 text-red-500 fs-6 fw-semibold"></p>
-                </div>
-                <!-- END FILTER TANGGAL-->
+                <p class="error-filter-date mt-3 text-red-500 fs-6 fw-semibold"></p>
+            </div>
 
-                <p class="periode mb-3">{{ $t('home.priod') }}: <span>Bulan Ini</span></p>
 
-                <div class="summary-homepage pending">
-                    <p class="status">{{ $t('home.pending') }}</p>
-                    <p class="amount">6 Item</p>
-                </div>
+            <p class="periode mb-3">{{ $t('home.priod') }}: <span>Bulan Ini</span></p>
 
-                <div class="summary-homepage terbayar">
-                    <p class="status">{{ $t('home.payout') }}</p>
-                    <p class="amount">Rp8.500.000</p>
-                </div>
-            </section>
+            <div class="summary-homepage pending">
+                <p class="status">{{ $t('home.pending') }}</p>
+                <p class="amount">6 Item</p>
+            </div>
+
+            <div class="summary-homepage terbayar">
+                <p class="status">{{ $t('home.payout') }}</p>
+                <p class="amount">Rp8.500.000</p>
+            </div>
+            </section> -->
             <!-- END OVERVIEW FEE -->
         </div>
         <!-- END CONTAINER -->

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
-            $table->bigInteger('code');
+            $table->bigInteger('code')->unique();
             $table->string('message_id')->nullable();
             $table->enum('status', ['unverified', 'verified'])->default('unverified');
             $table->timestamps();

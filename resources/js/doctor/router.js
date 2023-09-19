@@ -9,6 +9,7 @@ import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 
+
 const routes = [
     {
         path: "/home",
@@ -89,6 +90,11 @@ router.beforeEach(async (to, from) => {
                     }
                 });
         });
+    }
+
+    if (authStore.userRole !== 'doctor') {
+        authStore.$reset();
+        window.location.href = `/patient/home`;
     }
 });
 

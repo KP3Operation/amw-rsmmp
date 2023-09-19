@@ -1,9 +1,12 @@
+import axios from "axios";
+import {useAuthStore} from "@shared/+store/auth.store.js";
+
 /**
  * @param {Date} startDate
  * @param {Date} endDate
  * @returns {number}
  */
-export function getSecondsLeft (startDate, endDate) {
+export function getSecondsLeft(startDate, endDate) {
     const startTimestamp = startDate.getTime();
     const endTimestamp = endDate.getTime();
     const millisecondsDiff = endTimestamp - startTimestamp;
@@ -21,7 +24,10 @@ export function calculateAge(birthdate) {
     let age = today.getFullYear() - birthdateObj.getFullYear();
     const monthDiff = today.getMonth() - birthdateObj.getMonth();
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdateObj.getDate())) {
+    if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthdateObj.getDate())
+    ) {
         age--;
     }
 
@@ -38,4 +44,34 @@ export function getUserFirstName(fullName) {
         return arrName[1];
     }
     return arrName[0];
+}
+
+export function updateMyProfileStore() {
+    const authStore = useAuthStore();
+    axios
+        .get(`/api/v1/me`)
+        .then((response) => {
+            authStore.$patch({
+                userFullName: response.data.user.name,
+                userEmail: response.data.user.email,
+                userId: response.data.user.id,
+                phoneNumber: response.data.user.phone_number.replace(
+                    `${import.meta.env.VITE_CALLING_CODE}`,
+                    ""
+                ),
+                userRole: response.data.role,
+
+                // patient data
+                ssn: response.data.patient_data.ssn,
+                patientId: response.data.patient_data.patient_id,
+                birthDate: response.data.patient_data.birth_date,
+                gender: response.data.patient_data.gender,
+            });
+        })
+        .catch((error) => {
+            if (error?.response?.status === 401) {
+                authStore.$reset();
+                window.location.href = `/auth/login`;
+            }
+        });
 }

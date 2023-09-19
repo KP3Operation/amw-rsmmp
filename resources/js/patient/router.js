@@ -101,6 +101,11 @@ router.beforeEach(async (to, from) => {
                 });
         });
     }
+
+    if (authStore.userRole !== 'patient') {
+        authStore.$reset();
+        window.location.href = `/doctor/home`;
+    }
 });
 
 export default router;

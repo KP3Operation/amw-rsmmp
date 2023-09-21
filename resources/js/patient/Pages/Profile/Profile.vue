@@ -11,10 +11,11 @@ import Header from "@shared/Components/Header/Header.vue";
 import { storeToRefs } from "pinia";
 
 const modalState = reactive({
-    syncDataModal: null
+    syncDataModal: null,
+    logoutConfirmationModal: null
 });
 const authStore = useAuthStore();
-const { patientId, ssn, userFullName, phoneNumber, gender, userEmail, birthDate  } = storeToRefs(authStore);
+const { patientId, ssn, userFullName, phoneNumber, gender, userEmail, birthDate } = storeToRefs(authStore);
 const layoutStore = useLayoutStore();
 const patientAge = ref(0);
 
@@ -45,6 +46,7 @@ const logout = () => {
 
 onMounted(() => {
     modalState.syncDataModal = new bootstrap.Modal("#modal-sinkronisasi", {});
+    modalState.logoutConfirmationModal = new bootstrap.Modal("#logout-modal", {});
     patientAge.value = calculateAge(birthDate.value);
 });
 
@@ -114,7 +116,7 @@ onMounted(() => {
                     <button class="btn btn-green-700-rounded" type="button" @click="showSyncDataModal">{{
                         $t('profile.sync_data') }}</button>
 
-                    <a href="#" @click="logout"
+                    <a href="javascript:void(0);" @click="modalState.logoutConfirmationModal.show()"
                         class="d-block text-red-500 fw-semibold text-center text-decoration-none mt-4">{{
                             $t('profile.logout')
                         }}</a>
@@ -163,6 +165,34 @@ onMounted(() => {
 
                 <h1 class="mt-2 fs-4 fw-bold">{{ $t('profile.sync.title') }}</h1>
                 <p class="mt-2 text-gray-700">{{ $t('profile.sync.subtitle') }}</p>
+            </div>
+        </div>
+
+        <div class="modal" id="logout-modal" aria-labelledby="Logout Modal" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-between">
+                        <div class="d-flex align-items-center col-gap-8">
+                            <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
+                            <h5 class="modal-title">{{ $t('profile.logout_modal.title') }}</h5>
+                        </div>
+                        <button type="button" class="btn-close" aria-label="Close"
+                            @click="modalState.logoutConfirmationModal.hide()">
+                            <i class="bi bi-x fs-2 icon-black"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ $t('profile.logout_modal.description') }}</p>
+                    </div>
+                    <div class="modal-footer flex-nowrap">
+                        <button type="button" class="w-50 btn btn-link" @click="modalState.logoutConfirmationModal.hide()">
+                            {{ $t('profile.logout_modal.cancel') }}
+                        </button>
+                        <button type="button" @click="logout" class="w-50 btn-masuk btn btn-blue">
+                            {{ $t('profile.logout_modal.yes') }}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

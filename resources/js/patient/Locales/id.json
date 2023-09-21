@@ -47,6 +47,12 @@
             "female": "Perempuan",
             "success": "Berhasil Update Profil",
             "failed": "Gagal Update Profil"
+        },
+        "logout_modal": {
+            "title": "Konfirmasi Logout",
+            "description": "Anda akan logout dari Aviat Mobile Web",
+            "yes": "Ya",
+            "cancel": "Batal"
         }
     },
     "appointment": {

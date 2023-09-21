@@ -11,13 +11,13 @@ export const useLayoutStore = defineStore("layout", () => {
     let errorAlertMessage = ref("");
     let isLoading = ref(false);
 
-    function toggleSuccessAlert(msg) {
-        showSuccessAlert.value = true;
+    function toggleSuccessAlert(msg = '') {
+        showSuccessAlert.value = !showSuccessAlert.value;
         successAlertMessage.value = `${msg}`;
     }
 
-    function toggleErrorAlert(msg) {
-        showErrorAlert.value = true;
+    function toggleErrorAlert(msg = '') {
+        showErrorAlert.value = !showErrorAlert.value;
         errorAlertMessage.value = `${msg}`;
     }
 

@@ -1,3 +1,6 @@
+import axios from "axios";
+import {useAuthStore} from "@shared/+store/auth.store.js";
+
 /**
  * @param {Date} startDate
  * @param {Date} endDate
@@ -41,6 +44,36 @@ export function getUserFirstName(fullName) {
         return arrName[1];
     }
     return arrName[0];
+}
+
+export function updateMyProfileStore() {
+    const authStore = useAuthStore();
+    axios
+        .get(`/api/v1/me`)
+        .then((response) => {
+            authStore.$patch({
+                userFullName: response.data.user.name,
+                userEmail: response.data.user.email,
+                userId: response.data.user.id,
+                phoneNumber: response.data.user.phone_number.replace(
+                    `${import.meta.env.VITE_CALLING_CODE}`,
+                    ""
+                ),
+                userRole: response.data.role,
+
+                // patient data
+                ssn: response.data.patient_data.ssn,
+                patientId: response.data.patient_data.patient_id,
+                birthDate: response.data.patient_data.birth_date,
+                gender: response.data.patient_data.gender,
+            });
+        })
+        .catch((error) => {
+            if (error?.response?.status === 401) {
+                authStore.$reset();
+                window.location.href = `/auth/login`;
+            }
+        });
 }
 
 /**

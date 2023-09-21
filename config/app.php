@@ -209,4 +209,17 @@ return [
     'otp_with_queue' => env('APP_OTP_WITH_QUEUE', false),
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | OTP Expired In
+    |--------------------------------------------------------------------------
+    |
+    | OTP will be expired if not being used for given seconds.
+    | Default
+    |
+    */
+
+    'otp_expired_in' => env('APP_OTP_EXPIRED_IN', 1800),
+
+
 ];

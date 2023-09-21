@@ -27,7 +27,17 @@ const otpVerification = () => {
         form.reset();
         const data = response.data.data;
         if (authStore.isRegistration) {
-            router.push({ path: '/confirmation' });
+
+            if (Object.is(data.patient_data, null) && data.role === 'patient') {
+                window.location.href = "/patient/profile";
+            } else {
+                authStore.$patch({
+                    birthDate: data.patient_data.birthDate,
+                    gender: (data.patient_data.gender === "F") ? "Perempuan" : "Laki-Laki",
+                    userEmail: data.patient_data.email
+                });
+                router.push({ path: '/confirmation' });
+            }
         } else {
             if (data.role === 'patient') {
                 window.location.href = "/patient/home";
@@ -83,7 +93,7 @@ countDown();
         <form id="verification-form" @submit.prevent="otpVerification" @keydown="form.onKeydown($event)" class="mt-5">
             <div>
                 <label for="kode-otp">{{ $t('verification.otp_code') }}</label>
-                <input type="text" name="code" id="kode-otp" :placeholder="$t('verification.enter_otp_code')"
+                <input type="number" name="code" id="kode-otp" :placeholder="$t('verification.enter_otp_code')"
                     class="form-control mt-2" v-model="form.code">
                 <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('code')"
                     v-html="form.errors.get('code')" />

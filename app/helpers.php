@@ -2,6 +2,7 @@
 
 use App\Models\OtpCode;
 use App\Models\User;
+use Carbon\Carbon;
 
 if (!function_exists('user_role')) {
     function user_role(int $userid)
@@ -44,5 +45,15 @@ if (!function_exists('generate_otp')) {
             generate_otp($length);
 
         return $otp;
+    }
+}
+
+if (!function_exists('date_diff_in_second')) {
+    function date_diff_in_second($pastDate): int
+    {
+        $currentDate = Carbon::parse(date('Y-m-d H:i:s'));
+        $pastDate = Carbon::parse($pastDate);
+
+        return $currentDate->diffInSeconds($pastDate);
     }
 }

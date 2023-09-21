@@ -48,4 +48,15 @@ return [
     */
 
     'number_key' => env('WATZAP_NUMBER_KEY', 'fooBarBazz'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validate whatsApp number
+    |--------------------------------------------------------------------------
+    |
+    | Set this value to true, to validate whatsApp phone number, before send the OTP.
+    |
+    */
+
+    'validate_whatsapp_number' => env('WATZAP_VALIDATE_WHATSAPP_NUMBER', false),
 ];

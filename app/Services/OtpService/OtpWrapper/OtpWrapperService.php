@@ -21,10 +21,12 @@ class OtpWrapperService implements IotpWrapperService
     public function sendOtp(User $user): OtpCode
     {
 
-        if (!$this->otpService->isPhoneNumberValid($user)) {
-            Log::error("Phone number {phoneNumber} is not valid", ["phoneNumber" => $user->phone_number]);
-            $user->delete();
-            throw new InvalidWhatsAppPhoneNumber(__("register.errros.invalid_whatsapp_phone_number"), 500);
+        if (config("watzap.validate_whatsapp_number")) {
+            if (!$this->otpService->isPhoneNumberValid($user)) {
+                Log::error("Phone number {phoneNumber} is not valid", ["phoneNumber" => $user->phone_number]);
+                $user->delete();
+                throw new InvalidWhatsAppPhoneNumber(__("register.errros.invalid_whatsapp_phone_number"), 500);
+            }
         }
 
         $code = generate_otp(6);

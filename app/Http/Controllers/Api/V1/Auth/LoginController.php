@@ -10,6 +10,7 @@ use App\Http\Resources\Auth\AuthenticateResource;
 use App\Models\OtpCode;
 use App\Models\User;
 use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
+use App\Services\SimrsService\PatientService\IPatientService;
 use Auth;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,10 +19,12 @@ use Illuminate\Validation\ValidationException;
 class LoginController extends Controller
 {
     private IOtpWrapperService $otpService;
+    private IPatientService $patientService;
 
-    public function __construct(IOtpWrapperService $otpService)
+    public function __construct(IOtpWrapperService $otpService, IPatientService $patientService)
     {
         $this->otpService = $otpService;
+        $this->patientService = $patientService;
     }
 
     public function sendOtp(LoginRequest $loginRequest): LoginResource
@@ -46,6 +49,9 @@ class LoginController extends Controller
         if (!$userOtpCode)
             throw ValidationException::withMessages(["code" => __("login.errros.wrong_otp_code")]);
 
+        if (date_diff_in_second($userOtpCode->created_at) > config('app.otp_expired_in'))
+            throw ValidationException::withMessages(["code" => __("login.errros.otp_expired")]);
+
         $user = User::find($userOtpCode->user_id);
         if (!$user)
             throw new Exception(__("unhandled error"), 500);
@@ -65,6 +71,10 @@ class LoginController extends Controller
             $user->role = $role->name;
             break;
         }
+
+        $patientData = $this->patientService->getPatients($user)->data->first();
+
+        $user->patient_data = $patientData;
 
         return new AuthenticateResource($user);
     }

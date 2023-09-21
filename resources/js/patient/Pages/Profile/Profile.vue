@@ -6,13 +6,16 @@ import { useLayoutStore } from "@shared/+store/layout.store.js";
 import axios from "axios";
 import * as bootstrap from 'bootstrap';
 import { onMounted, reactive, ref } from 'vue';
-import { calculateAge } from "@shared/utils/helpers.js";
+import { calculateAge, updateMyProfileStore } from "@shared/utils/helpers.js";
 import Header from "@shared/Components/Header/Header.vue";
+import { storeToRefs } from "pinia";
 
 const modalState = reactive({
-    syncDataModal: null
+    syncDataModal: null,
+    logoutConfirmationModal: null
 });
 const authStore = useAuthStore();
+const { patientId, ssn, userFullName, phoneNumber, gender, userEmail, birthDate } = storeToRefs(authStore);
 const layoutStore = useLayoutStore();
 const patientAge = ref(0);
 
@@ -29,12 +32,12 @@ const syncData = () => {
         layoutStore.toggleErrorAlert(t('profile.sync.failed'));
     }).finally(() => {
         layoutStore.isFullView = false;
+        updateMyProfileStore();
     })
 }
 
 const logout = () => {
     axios.get('/api/v1/logout').then(() => {
-        authStore.$reset();
         window.location.href = "/auth/login";
     }).catch((error) => {
         layoutStore.toggleErrorAlert(t('profile.logout_failed'));
@@ -43,7 +46,8 @@ const logout = () => {
 
 onMounted(() => {
     modalState.syncDataModal = new bootstrap.Modal("#modal-sinkronisasi", {});
-    patientAge.value = calculateAge(authStore.birthDate);
+    modalState.logoutConfirmationModal = new bootstrap.Modal("#logout-modal", {});
+    patientAge.value = calculateAge(birthDate.value);
 });
 
 </script>
@@ -54,11 +58,11 @@ onMounted(() => {
             <Header :title="$t('profile.title')"></Header>
             <div class="px-4 pt-8">
                 <section class="profile-patient">
-                    <img :src="DefaultAvatar" :alt="authStore.userFullName" width="49" height="49">
+                    <img :src="DefaultAvatar" :alt="userFullName" width="49" height="49">
 
                     <div>
-                        <p class="name">{{ authStore.userFullName }}</p>
-                        <p>{{ authStore.gender }} {{ patientAge }} {{ $t('profile.year') }}</p>
+                        <p class="name">{{ userFullName }}</p>
+                        <p>{{ gender }} {{ patientAge }} {{ $t('profile.year') }}</p>
                     </div>
                 </section>
 
@@ -74,37 +78,37 @@ onMounted(() => {
                     <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                         <p class="fs-5 text-gray-600">{{ $t('profile.patient_id') }}</p>
 
-                        <p class="text-end">{{ authStore.patientId }}</p>
+                        <p class="text-end">{{ patientId }}</p>
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                         <p class="fs-5 text-gray-600">{{ $t('profile.ssn') }}</p>
 
-                        <p class="text-end">{{ authStore.ssn == 0 ? '' : authStore.ssn }}</p>
+                        <p class="text-end">{{ ssn == 0 ? '' : ssn }}</p>
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                         <p class="fs-5 text-gray-600">{{ $t('profile.phone_number') }}</p>
 
-                        <p class="text-end">{{ authStore.phoneNumber }}</p>
+                        <p class="text-end">{{ phoneNumber }}</p>
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                         <p class="fs-5 text-gray-600">{{ $t('profile.birth_date') }}</p>
 
-                        <p class="text-end">{{ authStore.birthDate }}</p>
+                        <p class="text-end">{{ birthDate }}</p>
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                         <p class="fs-5 text-gray-600">{{ $t('profile.gender') }}</p>
 
-                        <p class="text-end">{{ authStore.gender }}</p>
+                        <p class="text-end">{{ gender }}</p>
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between">
                         <p class="fs-5 text-gray-600">{{ $t('profile.email') }}</p>
 
-                        <p class="text-end">{{ authStore.userEmail }}</p>
+                        <p class="text-end">{{ userEmail }}</p>
                     </div>
                 </div>
 
@@ -112,7 +116,7 @@ onMounted(() => {
                     <button class="btn btn-green-700-rounded" type="button" @click="showSyncDataModal">{{
                         $t('profile.sync_data') }}</button>
 
-                    <a href="#" @click="logout"
+                    <a href="javascript:void(0);" @click="modalState.logoutConfirmationModal.show()"
                         class="d-block text-red-500 fw-semibold text-center text-decoration-none mt-4">{{
                             $t('profile.logout')
                         }}</a>
@@ -137,7 +141,8 @@ onMounted(() => {
                             <p>{{ $t('profile.sync_modal.message') }}</p>
                         </div>
                         <div class="modal-footer d-flex flex-nowrap">
-                            <button type="button" class="w-50 btn btn-link m-0" data-bs-dismiss="modal">{{ $t('profile.sync_modal.cancel') }}</button>
+                            <button type="button" class="w-50 btn btn-link m-0" data-bs-dismiss="modal">{{
+                                $t('profile.sync_modal.cancel') }}</button>
                             <button type="button" @click="syncData" class="w-50 btn-sinkronisasi btn btn-blue m-0">Ya
                                 {{ $t('profile.sync_modal.sync') }}</button>
                         </div>
@@ -160,6 +165,34 @@ onMounted(() => {
 
                 <h1 class="mt-2 fs-4 fw-bold">{{ $t('profile.sync.title') }}</h1>
                 <p class="mt-2 text-gray-700">{{ $t('profile.sync.subtitle') }}</p>
+            </div>
+        </div>
+
+        <div class="modal" id="logout-modal" aria-labelledby="Logout Modal" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-between">
+                        <div class="d-flex align-items-center col-gap-8">
+                            <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
+                            <h5 class="modal-title">{{ $t('profile.logout_modal.title') }}</h5>
+                        </div>
+                        <button type="button" class="btn-close" aria-label="Close"
+                            @click="modalState.logoutConfirmationModal.hide()">
+                            <i class="bi bi-x fs-2 icon-black"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ $t('profile.logout_modal.description') }}</p>
+                    </div>
+                    <div class="modal-footer flex-nowrap">
+                        <button type="button" class="w-50 btn btn-link" @click="modalState.logoutConfirmationModal.hide()">
+                            {{ $t('profile.logout_modal.cancel') }}
+                        </button>
+                        <button type="button" @click="logout" class="w-50 btn-masuk btn btn-blue">
+                            {{ $t('profile.logout_modal.yes') }}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

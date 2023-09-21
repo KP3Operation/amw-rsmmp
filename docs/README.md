@@ -226,29 +226,49 @@ Build the frontend assets by command
 $ npm run build
 ```
 
+### Upgrade Existing Aviatmobileweb
+
+If you already have existing copy of Aviatmobileweb, and already pull the latest changes from `main` branch, please run
+
+```sh
+$ composer install
+$ npm install
+$ npm run build
+```
+
+to ensure if any new composer or npm packages is installed correctly. You also may need to running the migration command
+
+```sh
+$ php artisan migrate
+```
+
+to ensure any new tables is migrated to the database.
+
 ## The Environtment `Variables`
 
 Only the following environment attributes would require your attention out of the 67 environment variables that can be configured within this web application.
 
-|           Name            |             Default Value              |                                                          Description                                                          |
-| :-----------------------: | :------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-|        `APP_NAME`         |             AviatMobileWeb             | The web app name, please dot not include any white space(s), if you want to include it, please surround it with double quotes |
-|         `APP_ENV`         |                 local                  |                                                      The app envitonment                                                      |
-|         `APP_KEY`         |                                        |                                           The web application key, can not be blank                                           |
-|        `APP_DEBUG`        |                  true                  |                                                    Show application debug                                                     |
-|         `APP_URL`         |            http://localhost            |                                                The web application 'BASE' url                                                 |
-|    `APP_CALLING_CODE`     |                 "+62"                  |                                                   The calling country code                                                    |
-|       `APP_LOCALE`        |                   id                   |                                                 The application localization                                                  |
-|   `APP_FALLBACK_LOCALE`   |                   en                   |                              The default value if the specific localization key does not exists                               |
-|   `APP_OTP_WITH_QUEUE`    |                 false                  |                              Set it to `true` if you want to send the otp message by using queue                              |
-|      `DB_CONNECTION`      |                 pgsql                  |                                                                                                                               |
-|         `DB_HOST`         |               127.0.0.1                |                                                                                                                               |
-|         `DB_PORT`         |                  5432                  |                                                                                                                               |
-|       `DB_DATABASE`       |             aviatmobileweb             |                                                                                                                               |
-|       `DB_USERNAME`       |                  dev                   |                                                                                                                               |
-|       `DB_PASSWORD`       |                  dev                   |                                                                                                                               |
-| `WATZAP_SEND_MESSAGE_URL` | https://api.watzap.id/v1/send_message  |                                                     The `WatZap` endpoint                                                     |
-|     `WATZAP_API_KEY`      |               FooBarBazz               |                                                     The `WatZap` API key                                                      |
-|    `WATZAP_NUMBER_KEY`    |               FooBarBazz               |                                                    The `WatZap` number key                                                    |
-|     `SIMRS_BASE_URL`      | http://103.111.202.214/live/WebService |                                                      The SIMRS Base URL                                                       |
-|    `SIMRS_ACCESS_KEY`     |                 MWApA                  |                                                     The SIMRS access key                                                      |
+|                 Name                  |              Default Value               |                                                          Description                                                          |
+|:-------------------------------------:|:----------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------:|
+|              `APP_NAME`               |              AviatMobileWeb              | The web app name, please dot not include any white space(s), if you want to include it, please surround it with double quotes |
+|               `APP_ENV`               |                  local                   |                                                      The app envitonment                                                      |
+|               `APP_KEY`               |                                          |                                           The web application key, can not be blank                                           |
+|              `APP_DEBUG`              |                   true                   |                                                    Show application debug                                                     |
+|               `APP_URL`               |             http://localhost             |                                                The web application 'BASE' url                                                 |
+|          `APP_CALLING_CODE`           |                  "+62"                   |                                                   The calling country code                                                    |
+|             `APP_LOCALE`              |                    id                    |                                                 The application localization                                                  |
+|         `APP_FALLBACK_LOCALE`         |                    en                    |                              The default value if the specific localization key does not exists                               |
+|         `APP_OTP_WITH_QUEUE`          |                  false                   |                              Set it to `true` if you want to send the otp message by using queue                              |
+|            `DB_CONNECTION`            |                  pgsql                   |                                                                                                                               |
+|               `DB_HOST`               |                127.0.0.1                 |                                                                                                                               |
+|               `DB_PORT`               |                   5432                   |                                                                                                                               |
+|             `DB_DATABASE`             |              aviatmobileweb              |                                                                                                                               |
+|             `DB_USERNAME`             |                   dev                    |                                                                                                                               |
+|             `DB_PASSWORD`             |                   dev                    |                                                                                                                               |
+|       `WATZAP_SEND_MESSAGE_URL`       |  https://api.watzap.id/v1/send_message   |                                              The `WatZap` send message endpoint                                               |
+|   `WATZAP_VALIDATE_WHATSAPP_NUMBER`   |                  false                   |                       Set it to `true` if you want to validate whatsapp phone number before sending OTP                       |
+| `WATZAP_VALIDATE_WHATSAPP_NUMBER_URL` | https://api.watzap.id/v1/validate_number |                                        The `WatZap` validate whatsapp number endpoint                                         |
+|           `WATZAP_API_KEY`            |                FooBarBazz                |                                                     The `WatZap` API key                                                      |
+|          `WATZAP_NUMBER_KEY`          |                FooBarBazz                |                                                    The `WatZap` number key                                                    |
+|           `SIMRS_BASE_URL`            |  http://103.111.202.214/live/WebService  |                                                      The SIMRS Base URL                                                       |
+|          `SIMRS_ACCESS_KEY`           |                  MWApA                   |                                                     The SIMRS access key                                                      |

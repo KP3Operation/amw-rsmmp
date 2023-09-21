@@ -49,6 +49,9 @@ class LoginController extends Controller
         if (!$userOtpCode)
             throw ValidationException::withMessages(["code" => __("login.errros.wrong_otp_code")]);
 
+        if (date_diff_in_second($userOtpCode->created_at) > config('app.otp_expired_in'))
+            throw ValidationException::withMessages(["code" => __("login.errros.otp_expired")]);
+
         $user = User::find($userOtpCode->user_id);
         if (!$user)
             throw new Exception(__("unhandled error"), 500);

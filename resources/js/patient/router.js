@@ -5,6 +5,8 @@ import AppointmentPage from "@patient/Pages/Appointment/Appointment.vue";
 import HistoryPage from "@patient/Pages/History/History.vue";
 import ProfilePage from "@patient/Pages/Profile/Profile.vue";
 import EditProfilePage from "@patient/Pages/EditProfile/EditProfile.vue";
+import FamilyPage from "@patient/Pages/Family/Family.vue";
+import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
@@ -34,6 +36,21 @@ const routes = [
         path: "/profile",
         name: "ProfilePage",
         component: ProfilePage,
+    },
+    {
+        path: "/family/edit/:id",
+        name: "UpsertFamilyPage",
+        component: UpsertFamilyPage,
+    },
+    {
+        path: "/family/create",
+        name: "UpsertFamilyPage",
+        component: UpsertFamilyPage,
+    },
+    {
+        path: "/family",
+        name: "FamilyPage",
+        component: FamilyPage,
     },
     { path: "/:pathMatch(.*)*", name: "NotFoundPage", component: NotFoundPage },
 ];

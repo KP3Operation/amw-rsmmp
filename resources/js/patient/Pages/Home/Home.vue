@@ -45,7 +45,7 @@ const authStore = useAuthStore();
 
                         <p class="fw-bold mt-3 text-black">{{ $t('home.doctor_schedule') }}</p>
                     </router-link>
-                    <router-link to="#" class="item family-member">
+                    <router-link to="/family" class="item family-member">
                         <div class="icon icon-pasien">
                             <img :src="UserFillWhite" alt="Icon" width="25" height="25">
                         </div>

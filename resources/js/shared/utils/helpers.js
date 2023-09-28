@@ -89,3 +89,16 @@ export function convertDateTimeToDate(datetime) {
     });
     return formattedDate;
 }
+
+/**
+ * @param {Date} datetime
+ * @returns {String}
+ */
+export function convertDateToFormField(datetime) {
+    const date = new Date(datetime);
+    let d = (date.getDate() < 10 ? '0' : '' )+ date.getDate();
+    let m = ((date.getMonth() + 1) < 10 ? '0' :'') + (date.getMonth() + 1);
+    let y = date.getFullYear();
+    let x = String(y+"-"+m+"-"+d);
+    return x;
+}

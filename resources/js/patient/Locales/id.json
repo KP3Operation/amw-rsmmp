@@ -97,5 +97,50 @@
         "family_member": "Family Member",
         "appointment": "Appointment",
         "next_consult_schedule": "Jadwal Konsultasi Akan Datang"
+    },
+    "family": {
+        "title": "Family Member",
+        "phone_number": "No. Handphone",
+        "patient_name": "Nama Pasien",
+        "ssn": "Nomor Induk Kependudukan (NIK) ",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "email": "Email",
+        "save": "Tambah Data",
+        "update": "Simpan",
+        "cancel": "Batal",
+        "male": "Laki-Laki",
+        "female": "Perempuan",
+        "required_field": "Wajib Diisi",
+        "main_user": "User Utama",
+        "create": {
+            "title": "Tambah Family Member",
+            "confirmation_modal": {
+                "title": "Konfirmasi Data",
+                "message": "Sudah Pernah Periksa di Rumah Sakit Ini?",
+                "yes": "Sudah",
+                "no": "Belum"
+            }
+        },
+        "edit": {
+            "title": "Edit Family Member",
+            "save": "Simpan"
+        },
+        "family_card": {
+            "name": "Nama Lengkap",
+            "phone_number": "No. Handphone",
+            "ssn": "No Induk Kependudukan (NIK)",
+            "birth_date": "Tanggal Lahir",
+            "edit": "Edit",
+            "delete": "Hapus"
+        },
+        "confirmation": {
+            "title": "Konfirmasi Data",
+            "verification": "Verifikasi"
+        },
+        "delete_confirmation_modal": {
+            "title": "Hapus Data Member",
+            "message": "Yakin ingin menghapus data member {name}?"
+        }
     }
 }

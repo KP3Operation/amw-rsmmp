@@ -33,6 +33,8 @@ const login = async () => {
     }).catch((error) => {
         if (error.response.status === 404) {
             modalState.notRegisteredModal.show();
+        } else {
+            layoutStore.toggleErrorAlert(`${error.response.data.message}`);
         }
     }).finally(() => {
         layoutStore.isLoading = false;

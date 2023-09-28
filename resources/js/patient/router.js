@@ -7,6 +7,7 @@ import ProfilePage from "@patient/Pages/Profile/Profile.vue";
 import EditProfilePage from "@patient/Pages/EditProfile/EditProfile.vue";
 import FamilyPage from "@patient/Pages/Family/Family.vue";
 import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
+import DataConfirmationPage from "@patient/Pages/Family/DataConfirmation.vue";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
@@ -39,12 +40,17 @@ const routes = [
     },
     {
         path: "/family/edit/:id",
-        name: "UpsertFamilyPage",
+        name: "UpdateFamilyPage",
         component: UpsertFamilyPage,
     },
     {
+        path: "/family/confirm/:id",
+        name: "FamilyDataConfirmationPage",
+        component: DataConfirmationPage,
+    },
+    {
         path: "/family/create",
-        name: "UpsertFamilyPage",
+        name: "CreateFamilyPage",
         component: UpsertFamilyPage,
     },
     {
@@ -119,7 +125,7 @@ router.beforeEach(async (to, from) => {
         });
     }
 
-    if (authStore.userRole !== 'patient') {
+    if (authStore.userRole !== "patient") {
         authStore.$reset();
         window.location.href = `/doctor/home`;
     }

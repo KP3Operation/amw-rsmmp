@@ -39,7 +39,7 @@ class PatientService implements IPatientService
         ]);
 
         if (!$response->successful()) {
-            throw new HttpClientException("Internal server error", 500);
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
         }
 
         $data = $response->json();
@@ -61,10 +61,39 @@ class PatientService implements IPatientService
         ]);
 
         if (!$response->successful()) {
-            throw new HttpClientException("Internal server error", 500);
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
         }
 
         $data = $response->json();
         return PatientVitalSignHistoryDataDto::from($data);
+    }
+
+    public function getPatientFamilies(string $ssn, string $phoneNumber): PatientDataDto
+    {
+        $ssn = $ssn;
+        $accessKey = config("simrs.access_key");
+        $phoneNumber = str_replace(config('app.calling_code'), "0", $phoneNumber);
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/V1_1/AppointmentWS.asmx/PatientSearchByField", [
+            "AccessKey" => $accessKey,
+            "MedicalNo" => "",
+            "Name" => "",
+            "DateOfBirth" => "",
+            "Address" => "",
+            "PhoneNo" => $phoneNumber,
+            "Ssn" => $ssn,
+            "Email" => ""
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+        return PatientDataDto::from($data);
     }
 }

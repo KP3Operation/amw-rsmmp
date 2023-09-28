@@ -8,7 +8,10 @@ const { patientActiveMenu,
     showSuccessAlert,
     successAlertMessage,
     showErrorAlert,
-    errorAlertMessage } = storeToRefs(layoutStore);
+    errorAlertMessage ,
+    showInfoAlert,
+    infoAlertMessage
+} = storeToRefs(layoutStore);
 
 </script>
 
@@ -48,6 +51,14 @@ const { patientActiveMenu,
             <p>{{ errorAlertMessage }}</p>
 
             <button type="button" class="btn-close" @click="layoutStore.toggleErrorAlert('')" aria-label="Close">
+                <i class="bi bi-x icon-red-600 fs-2 fw-bold"></i>
+            </button>
+        </div>
+        <div :class="showInfoAlert ? '' : 'd-none'"
+             class="alert alert-blue alert-dismissible d-flex col-gap-16 shadow fs-5 fw-semibold mt-6" role="alert">
+            <p>{{ infoAlertMessage }}</p>
+
+            <button type="button" class="btn-close" @click="layoutStore.toggleInfoAlert('')" aria-label="Close">
                 <i class="bi bi-x icon-red-600 fs-2 fw-bold"></i>
             </button>
         </div>

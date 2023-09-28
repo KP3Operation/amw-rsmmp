@@ -32,7 +32,7 @@ const fetchVitalSignHistory = () => {
             patientData: data.patient.patient_data
         });
     }).catch((error) => {
-        //
+        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;
     });

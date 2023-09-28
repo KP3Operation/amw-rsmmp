@@ -93,7 +93,7 @@ class FamilyController extends Controller
         $patientData = $response->data->first();
 
         if ($patientData == null) {
-            throw ValidationException::withMessages("Pasien tidak terdaftar di rumah sakit.");
+            throw ValidationException::withMessages(["name" => "Pasien tidak terdaftar di rumah sakit."]);
         }
 
         $family->name = $patientData->firstName . " " . $patientData->middleName . " " . $patientData->lastName;

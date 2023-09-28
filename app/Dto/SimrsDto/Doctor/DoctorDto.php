@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dto\SimrsDto;
+namespace App\Dto\SimrsDto\Doctor;
 
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;

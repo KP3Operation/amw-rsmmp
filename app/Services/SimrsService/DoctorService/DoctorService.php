@@ -2,7 +2,7 @@
 
 namespace App\Services\SimrsService\DoctorService;
 
-use App\Dto\SimrsDto\DoctorDataDto;
+use App\Dto\SimrsDto\Doctor\DoctorDataDto;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
 

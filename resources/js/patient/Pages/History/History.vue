@@ -104,46 +104,14 @@ onMounted(() => {
                 <section class="tab-pane fade show active" id="unit-vital" role="tabpanel" aria-labelledby="unit-vital"
                     tabindex="0">
                     <div id="multiselect" class="dropdown filter-sticky d-flex col-gap-20 align-items-center">
-                        <p>{{ $t('history.filter') }}</p>
-                        <button
-                            class="d-flex align-items-center w-100 px-3 py-2 border border-gray-400 rounded-3 bg-white justify-content-between text-black"
-                            type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span>{{ $t('history.all') }}</span>
-                            <i class="bi bi-chevron-down"></i>
-                        </button>
-                        <ul class="dropdown-menu px-4 py-3 shadow rounded-0 border-0 mt-2">
-                            <li>
-                                <input class="form-check-input on" type="checkbox" name="filter" value="Semua" id="semua"
-                                    checked>
-                                <label class="form-check-label" for="semua">
-                                    {{ $t('history.all') }}
-                                </label>
-                            </li>
-
-                            <li class="mt-3">
-                                <input class="form-check-input" type="checkbox" name="filter" value="Denyut Nadi"
-                                    id="denyut-nadi" checked>
-                                <label class="form-check-label" for="denyut-nadi">
-                                    {{ $t('history.pulse') }}
-                                </label>
-                            </li>
-
-                            <li class="mt-3">
-                                <input class="form-check-input" type="checkbox" name="filter" value="Suhu Tubuh"
-                                    id="suhu-tubuh" checked>
-                                <label class="form-check-label" for="suhu-tubuh">
-                                    {{ $t('history.body_temperature') }}
-                                </label>
-                            </li>
-
-                            <li class="mt-3">
-                                <input class="form-check-input" type="checkbox" name="filter" value="Tekanan Darah"
-                                    id="tekanan-darah" checked>
-                                <label class="form-check-label" for="tekanan-darah">
-                                    {{ $t('history.blood_pressure') }}
-                                </label>
-                            </li>
-                        </ul>
+                        <p>Tipe</p>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Pilih Tipe</option>
+                            <option value="BP1">Tekanan Darah Sistolik</option>
+                            <option value="BP2">Tekanan Darah Diastolik</option>
+                            <option value="TEMP">Suhu Tubuh</option>
+                            <option value="RESP">Laju Pernapasan</option>
+                        </select>
                     </div>
                     <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in patientVitalSignStore.histories">
 
@@ -177,7 +145,6 @@ onMounted(() => {
                     <div class="modal-header d-flex justify-content-between">
                         <div class="d-flex align-items-center col-gap-8">
                             <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
-
                             <h5 class="modal-title">{{ $t('history.filter.title') }}</h5>
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Dto\SimrsDto;
+namespace App\Dto\SimrsDto\Doctor;
 
-use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Normalizers\ArrayableNormalizer;
 use Spatie\LaravelData\Normalizers\ArrayNormalizer;
@@ -11,13 +11,13 @@ use Spatie\LaravelData\Normalizers\JsonNormalizer;
 use Spatie\LaravelData\Normalizers\ModelNormalizer;
 use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
-class PatientVitalSignHistoryDataDto extends Data
+class DoctorAppointmentListDataDto extends Data
 {
     public function __construct(
-        #[DataCollectionOf(PatientVitalSignHistoryDto::class)]
+        #[DataCollectionOf(DoctorAppointmentListDto::class)]
         public DataCollection $data
-    )
-    {}
+    ) {
+    }
 
     public static function normalizers(): array
     {

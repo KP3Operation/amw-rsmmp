@@ -3,8 +3,14 @@
 namespace App\Services\SimrsService\PatientService;
 
 
-use App\Dto\SimrsDto\PatientDataDto;
-use App\Dto\SimrsDto\PatientVitalSignHistoryDataDto;
+use App\Dto\SimrsDto\Patient\PatientAppointmentListDataDto;
+use App\Dto\SimrsDto\Patient\PatientAppointmentListDetailDto;
+use App\Dto\SimrsDto\Patient\PatientDataDto;
+use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
+use App\Dto\SimrsDto\Patient\PatientLabResultDetailDto;
+use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDataDto;
+use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDto;
+use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Models\User;
 use App\Models\UserPatient;
 use Illuminate\Http\Client\HttpClientException;
@@ -70,7 +76,6 @@ class PatientService implements IPatientService
 
     public function getPatientFamilies(string $ssn, string $phoneNumber): PatientDataDto
     {
-        $ssn = $ssn;
         $accessKey = config("simrs.access_key");
         $phoneNumber = str_replace(config('app.calling_code'), "0", $phoneNumber);
 
@@ -95,5 +100,35 @@ class PatientService implements IPatientService
 
         $data = $response->json();
         return PatientDataDto::from($data);
+    }
+
+    public function getPrescriptionHistory(int $count, string $medicalNo): PatientPrescriptionHistoryDataDto
+    {
+        // TODO: Implement getPrescriptionHistory() method.
+    }
+
+    public function getPrescriptionHistoryDetail(string $prescriptionNo): PatientPrescriptionHistoryDetailDto
+    {
+        // TODO: Implement getPrescriptionHistoryDetail() method.
+    }
+
+    public function getLabResult(string $medicalNo): PatientLabResultDataDto
+    {
+        // TODO: Implement getLabResult() method.
+    }
+
+    public function getLabResultDetail(string $transactionNo): PatientLabResultDetailDto
+    {
+        // TODO: Implement getLabResultDetail() method.
+    }
+
+    public function getAppointmentList(string $AppointmentNo): PatientAppointmentListDataDto
+    {
+        // TODO: Implement getAppointmentList() method.
+    }
+
+    public function getAppointmentListDetail(string $appointmentNo): PatientAppointmentListDetailDto
+    {
+        // TODO: Implement getAppointmentListDetail() method.
     }
 }

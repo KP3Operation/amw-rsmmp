@@ -10,11 +10,13 @@ use Spatie\LaravelData\Normalizers\JsonNormalizer;
 use Spatie\LaravelData\Normalizers\ModelNormalizer;
 use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
-class DoctorFeeDto extends Data
+class DoctorSummaryFeeDetailDto extends Data
 {
     public function __construct(
-        #[MapInputName('FooBar')]
-        public string $FooBar,
+        #[MapInputName('Name')]
+        public string $name,
+        #[MapInputName('Value')]
+        public string $value
     ) {
     }
 

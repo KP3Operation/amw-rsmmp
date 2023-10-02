@@ -46,7 +46,7 @@ const confirm = async () => {
                 window.location.href = `/doctor/home`;
             }
         }).catch((error) => {
-            //
+            layoutStore.toggleErrorAlert(`${error.response.data.message}`);
         }).finally(() => {
             layoutStore.isLoading = false;
         });

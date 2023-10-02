@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dto\SimrsDto;
+namespace App\Dto\SimrsDto\Patient;
 
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;

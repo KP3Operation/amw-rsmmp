@@ -1,9 +1,11 @@
 <script setup>
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import Logo from "@resources/static/images/logo.svg";
-import { ref } from "vue";
+import {useNotificationStore} from "@doctor/+store/notification.store.js";
+import {storeToRefs} from "pinia";
 
-const notifcationsCount = ref(99);
+const notificationStore = useNotificationStore();
+const { count } = storeToRefs(notificationStore);
 
 const authStore = useAuthStore();
 </script>
@@ -16,7 +18,7 @@ const authStore = useAuthStore();
         <router-link to="/notification" class="notifikasi">
             <i class="bi bi-bell-fill fs-3"></i>
 
-            <div class="info">{{ notifcationsCount }}+</div>
+            <div class="info" v-if="count > 0">{{ count }}+</div>
         </router-link>
     </div>
 </template>

@@ -3,6 +3,10 @@
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
+use App\Http\Controllers\Api\v1\Doctor\FeeController;
+use App\Http\Controllers\Api\v1\Doctor\InpatientListController;
+use App\Http\Controllers\Api\V1\Patient\FamilyController;
+use App\Http\Controllers\Api\V1\Patient\MedicalHistoryController;
 use App\Http\Controllers\Api\V1\Shared\MeController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,5 +35,23 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/me', [MeController::class, 'index']);
         Route::put('/me/{id}', [MeController::class, 'update']);
         Route::get('/me/sync', [MeController::class, 'syncData']);
+
+        Route::group(['prefix' => 'patient'], function () {
+            Route::apiResource('family', FamilyController::class);
+            Route::get('/family/fetchsimrs/{family}', [FamilyController::class, 'fetchFamilyDataInSimrs']);
+            Route::get('/medical/history/vitalsign', [MedicalHistoryController::class, 'vitalSign']);
+            Route::get('/medical/history/prescription', [MedicalHistoryController::class, 'prescriptionHistory']);
+            Route::get('/medical/history/prescription/{prescriptionNo}', [MedicalHistoryController::class, 'prescriptionHistoryDetail']);
+            Route::get('/medical/history/labresult', [MedicalHistoryController::class, 'labResult']);
+            Route::get('/medical/history/labresult/{transactionNo}', [MedicalHistoryController::class, 'labResultDetail']);
+            Route::get('/medical/history/appointment', [MedicalHistoryController::class, 'appointmentList']);
+            Route::get('/medical/history/appointment/{appointmentNo}', [MedicalHistoryController::class, 'appointmentListDetail']);
+        });
+
+        Route::group(['prefix' => 'doctor'], function () {
+           Route::get('/summary/fee', [FeeController::class, 'getOverviewSummaryFee']);
+            Route::get('/fee/bytrxdate', [FeeController::class, 'getFeeByTrxDate']);
+            Route::get('/inpatient', [InpatientListController::class, 'index']);
+        });
     });
 });

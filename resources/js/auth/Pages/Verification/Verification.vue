@@ -46,7 +46,7 @@ const otpVerification = () => {
             }
         }
     }).catch((error) => {
-        // TODO: error handling
+        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;
     });

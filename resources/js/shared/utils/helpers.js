@@ -75,3 +75,63 @@ export function updateMyProfileStore() {
             }
         });
 }
+
+/**
+ * @param {Date} datetime
+ * @returns {String}
+ */
+export function convertDateTimeToDate(datetime) {
+    const date = new Date(datetime);
+    const formattedDate = date.toLocaleDateString("id-ID", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    });
+    return formattedDate;
+}
+
+/**
+ * @param {Date} datetime
+ * @returns {String}
+ */
+export function convertDateToFormField(datetime) {
+    const date = new Date(datetime);
+    let d = (date.getDate() < 10 ? '0' : '' )+ date.getDate();
+    let m = ((date.getMonth() + 1) < 10 ? '0' :'') + (date.getMonth() + 1);
+    let y = date.getFullYear();
+    let x = String(y+"-"+m+"-"+d);
+    return x;
+}
+
+/**
+ * @returns {string}
+ */
+export function getThisMonthStartDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const startDate = new Date(year, month, 1);
+    return startDate.toISOString().split('T')[0];
+}
+
+/**
+ * @returns {string}
+ */
+export function getThisMonthEndDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const endDate = new Date(year, month + 1, 0);
+    return endDate.toISOString().split('T')[0];
+}
+
+/**
+ * @param {number} value
+ * @returns {string}
+ */
+export function toIdrFormat(value) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+    }).format(value);
+}

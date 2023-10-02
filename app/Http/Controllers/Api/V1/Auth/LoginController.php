@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\Auth\AuthenticateResource;
 use App\Models\OtpCode;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
 use App\Services\SimrsService\PatientService\IPatientService;
@@ -49,7 +50,7 @@ class LoginController extends Controller
         if (!$userOtpCode)
             throw ValidationException::withMessages(["code" => __("login.errros.wrong_otp_code")]);
 
-        if (date_diff_in_second($userOtpCode->created_at) > config('app.otp_expired_in'))
+        if (date_diff_in_second($userOtpCode->updated_at) > config('app.otp_expired_in'))
             throw ValidationException::withMessages(["code" => __("login.errros.otp_expired")]);
 
         $user = User::find($userOtpCode->user_id);
@@ -66,15 +67,17 @@ class LoginController extends Controller
         // delete old tokens first
         $user->tokens()->delete();
 
-        $user->token = $user->createToken('auth_token')->plainTextToken;
+        // NOTE: Not sure, but look like we don't need to generate token, as the authorization id done via cookies
+        // $user->token = $user->createToken('auth_token')->plainTextToken;
         foreach ($user->roles as $role) {
             $user->role = $role->name;
             break;
         }
 
-        $patientData = $this->patientService->getPatients($user)->data->first();
-
-        $user->patient_data = $patientData;
+        if (user_role($user->id) == Role::PATIENT) {
+            $patientData = $this->patientService->getPatients($user)->data->first();
+            $user->patient_data = $patientData;
+        }
 
         return new AuthenticateResource($user);
     }

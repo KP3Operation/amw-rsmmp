@@ -59,7 +59,34 @@
         "title": "Appointment"
     },
     "history": {
-        "title": "Riwayat Medis"
+        "title": "Riwayat Medis",
+        "name": "Nama",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "year": "Tahun",
+        "medical_no": "No. RM",
+        "vital_sign": "Tanda Vital",
+        "medical_prescription": "Resep Obat",
+        "lab_result": "Hasil Lab",
+        "meeting": "Pertemuan",
+        "filter": "Filter",
+        "all": "Semua",
+        "pulse": "Denyut Nadi",
+        "body_temperature": "Suhu Tubuh",
+        "blood_pressure": "Tekanan Darah",
+        "vital_sign_history": {
+            "date_created": "Tanggal Pencatatan",
+            "time_created": "Jam Pencatatan",
+            "registration_no": "No. Registrasi",
+            "unit_vital_sign": "Unit Tanda Vital",
+            "unit": "Unit"
+        },
+        "modal_filter": {
+            "title": "Filter",
+            "member": "Member",
+            "reset": "Reset",
+            "apply": "Terapkan"
+        }
     },
     "home": {
         "welcome": "Selamat Datang",
@@ -70,5 +97,50 @@
         "family_member": "Family Member",
         "appointment": "Appointment",
         "next_consult_schedule": "Jadwal Konsultasi Akan Datang"
+    },
+    "family": {
+        "title": "Family Member",
+        "phone_number": "No. Handphone",
+        "patient_name": "Nama Pasien",
+        "ssn": "Nomor Induk Kependudukan (NIK) ",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "email": "Email",
+        "save": "Tambah Data",
+        "update": "Simpan",
+        "cancel": "Batal",
+        "male": "Laki-Laki",
+        "female": "Perempuan",
+        "required_field": "Wajib Diisi",
+        "main_user": "User Utama",
+        "create": {
+            "title": "Tambah Family Member",
+            "confirmation_modal": {
+                "title": "Konfirmasi Data",
+                "message": "Sudah Pernah Periksa di Rumah Sakit Ini?",
+                "yes": "Sudah",
+                "no": "Belum"
+            }
+        },
+        "edit": {
+            "title": "Edit Family Member",
+            "save": "Simpan"
+        },
+        "family_card": {
+            "name": "Nama Lengkap",
+            "phone_number": "No. Handphone",
+            "ssn": "No Induk Kependudukan (NIK)",
+            "birth_date": "Tanggal Lahir",
+            "edit": "Edit",
+            "delete": "Hapus"
+        },
+        "confirmation": {
+            "title": "Konfirmasi Data",
+            "verification": "Verifikasi"
+        },
+        "delete_confirmation_modal": {
+            "title": "Hapus Data Member",
+            "message": "Yakin ingin menghapus data member {name}?"
+        }
     }
 }

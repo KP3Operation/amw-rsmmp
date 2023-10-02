@@ -10,6 +10,8 @@ export const useLayoutStore = defineStore("layout", () => {
     let showErrorAlert = ref(false);
     let errorAlertMessage = ref("");
     let isLoading = ref(false);
+    let showInfoAlert = ref(false);
+    let infoAlertMessage = ref("");
 
     function toggleSuccessAlert(msg = '') {
         showSuccessAlert.value = !showSuccessAlert.value;
@@ -21,6 +23,11 @@ export const useLayoutStore = defineStore("layout", () => {
         errorAlertMessage.value = `${msg}`;
     }
 
+    function toggleInfoAlert(msg = '') {
+        showInfoAlert.value = !showInfoAlert.value;
+        infoAlertMessage.value = `${msg}`;
+    }
+
     function $reset() {
         patientActiveMenu.value = "home";
         doctorActiveMenu.value = "home";
@@ -30,11 +37,14 @@ export const useLayoutStore = defineStore("layout", () => {
         showErrorAlert.value = false;
         errorAlertMessage.value = "";
         isLoading = false;
+        showInfoAlert.value = false;
+        infoAlertMessage.value = "";
     }
 
     return {
         toggleSuccessAlert,
         toggleErrorAlert,
+        toggleInfoAlert,
         $reset,
         patientActiveMenu,
         doctorActiveMenu,
@@ -44,5 +54,7 @@ export const useLayoutStore = defineStore("layout", () => {
         showErrorAlert,
         errorAlertMessage,
         isLoading,
+        showInfoAlert,
+        infoAlertMessage,
     };
 });

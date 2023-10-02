@@ -57,3 +57,11 @@ if (!function_exists('date_diff_in_second')) {
         return $currentDate->diffInSeconds($pastDate);
     }
 }
+
+if (!function_exists('convert_date_to_req_param')) {
+    function convert_date_to_req_param(string $date): string
+    {
+        $parsedDate = Carbon::parse($date);
+        return $parsedDate->format('Y-m-d');
+    }
+}

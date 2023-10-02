@@ -5,6 +5,9 @@ import AppointmentPage from "@patient/Pages/Appointment/Appointment.vue";
 import HistoryPage from "@patient/Pages/History/History.vue";
 import ProfilePage from "@patient/Pages/Profile/Profile.vue";
 import EditProfilePage from "@patient/Pages/EditProfile/EditProfile.vue";
+import FamilyPage from "@patient/Pages/Family/Family.vue";
+import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
+import DataConfirmationPage from "@patient/Pages/Family/DataConfirmation.vue";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
@@ -34,6 +37,26 @@ const routes = [
         path: "/profile",
         name: "ProfilePage",
         component: ProfilePage,
+    },
+    {
+        path: "/family/edit/:id",
+        name: "UpdateFamilyPage",
+        component: UpsertFamilyPage,
+    },
+    {
+        path: "/family/confirm/:id",
+        name: "FamilyDataConfirmationPage",
+        component: DataConfirmationPage,
+    },
+    {
+        path: "/family/create",
+        name: "CreateFamilyPage",
+        component: UpsertFamilyPage,
+    },
+    {
+        path: "/family",
+        name: "FamilyPage",
+        component: FamilyPage,
     },
     { path: "/:pathMatch(.*)*", name: "NotFoundPage", component: NotFoundPage },
 ];
@@ -88,10 +111,17 @@ router.beforeEach(async (to, from) => {
                     authStore.userRole = response.data.role;
 
                     // patient data
-                    authStore.ssn = response.data.patient_data.ssn;
-                    authStore.patientId = response.data.patient_data.patient_id;
-                    authStore.birthDate = response.data.patient_data.birth_date;
-                    authStore.gender = response.data.patient_data.gender;
+                    if (response.data.role === 'patient') {
+                        authStore.ssn = response.data.patient_data.ssn;
+                        authStore.patientId = response.data.patient_data.patient_id;
+                        authStore.birthDate = response.data.patient_data.birth_date;
+                        authStore.gender = response.data.patient_data.gender;
+                    }
+
+                    if (authStore.userRole !== "patient") {
+                        authStore.$reset();
+                        window.location.href = `/doctor/home`;
+                    }
                 })
                 .catch((error) => {
                     if (error?.response?.status === 401) {
@@ -102,10 +132,7 @@ router.beforeEach(async (to, from) => {
         });
     }
 
-    if (authStore.userRole !== 'patient') {
-        authStore.$reset();
-        window.location.href = `/doctor/home`;
-    }
+
 });
 
 export default router;

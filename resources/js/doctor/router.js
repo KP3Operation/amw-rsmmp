@@ -6,6 +6,7 @@ import AppointmentPage from "@doctor/Pages/Appointment/Appointment.vue";
 import FeePage from "@doctor/Pages/Fee/Fee.vue";
 import ProfilePage from "@doctor/Pages/Profile/Profile.vue";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
+import InpatientListPage from "@doctor/Pages/InpatientList/InpatientList.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 
@@ -30,6 +31,11 @@ const routes = [
         path: "/appointment",
         name: "AppointmentPage",
         component: AppointmentPage,
+    },
+    {
+        path: "/inpatient/list",
+        name: "InpatientListPage",
+        component: InpatientListPage,
     },
     {
         path: "/profile",
@@ -80,8 +86,15 @@ router.beforeEach(async (to, from) => {
                     authStore.userRole = response.data.role;
 
                     // doctor data
-                    authStore.doctorId = response.data.doctor_data.doctor_id;
-                    authStore.smfName = response.data.doctor_data.smf_name;
+                    if (authStore.userRole !== "doctor") {
+                        authStore.doctorId = response.data.doctor_data.doctor_id;
+                        authStore.smfName = response.data.doctor_data.smf_name;
+                    }
+
+                    if (authStore.userRole !== 'doctor') {
+                        authStore.$reset();
+                        window.location.href = `/patient/home`;
+                    }
                 })
                 .catch((error) => {
                     if (error?.response?.status === 401) {
@@ -90,11 +103,6 @@ router.beforeEach(async (to, from) => {
                     }
                 });
         });
-    }
-
-    if (authStore.userRole !== 'doctor') {
-        authStore.$reset();
-        window.location.href = `/patient/home`;
     }
 });
 

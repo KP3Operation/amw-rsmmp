@@ -48,7 +48,8 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
         Route::group(['prefix' => 'doctor'], function () {
-           Route::get('/summary/fee', [FeeController::class, 'getSummaryFee']);
+           Route::get('/summary/fee', [FeeController::class, 'getOverviewSummaryFee']);
+            Route::get('/fee/bytrxdate', [FeeController::class, 'getFeeByTrxDate']);
         });
     });
 });

@@ -3,6 +3,7 @@
 namespace App\Services\SimrsService\DoctorService;
 
 use App\Dto\SimrsDto\Doctor\DoctorDataDto;
+use App\Dto\SimrsDto\Doctor\DoctorFeeByTrxDateDataDto;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
 use App\Dto\SimrsDto\Doctor\DoctorAppointmentListDataDto;
@@ -27,7 +28,7 @@ class DoctorService implements IDoctorService
         ]);
 
         if (!$response->successful()) {
-            throw new HttpClientException("Error while connecting to SIMRS", 500);
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
         }
 
         $data = $response->json();
@@ -35,7 +36,7 @@ class DoctorService implements IDoctorService
         return DoctorDataDto::from($data);
     }
 
-    public function getSummaryFee(string $paramedicId, string $startDate, string $endDate): DoctorSummaryFeeDataDto
+    public function getOverviewSummaryFee(string $paramedicId, string $startDate, string $endDate): DoctorSummaryFeeDataDto
     {
         $accessKey = config("simrs.access_key");
         $response = Http::withHeaders([
@@ -50,11 +51,34 @@ class DoctorService implements IDoctorService
         ]);
 
         if (!$response->successful()) {
-            throw new HttpClientException("Error while connecting to SIMRS", 500);
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
         }
 
         $data = $response->json();
 
         return DoctorSummaryFeeDataDto::from($data);
+    }
+
+    public function getFeeByTrxDate(string $paramedicId, string $startDate, string $endDate): DoctorFeeByTrxDateDataDto
+    {
+        $accessKey = config("simrs.access_key");
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS.asmx/ParamedicFeeByParamedicIDTransDate", [
+            "AccessKey" => $accessKey,
+            "ParamedicID" => $paramedicId,
+            "TransactionDateStart" => convert_date_to_req_param($startDate),
+            "TransactionDateEnd" => convert_date_to_req_param($endDate)
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
+        }
+
+        $data = $response->json();
+
+        return DoctorFeeByTrxDateDataDto::from($data);
     }
 }

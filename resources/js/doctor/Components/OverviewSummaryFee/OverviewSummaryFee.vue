@@ -20,7 +20,12 @@ const period = ref("bulan ini");
 
 const filterSummaryFee = () => {
     filterForm.get('/api/v1/doctor/summary/fee').then((response) => {
-        period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.start_date)}`;
+        if (filterForm.start_date === getThisMonthStartDate() &&
+            filterForm.end_date === getThisMonthEndDate()) {
+            period.value = "Bulan ini";
+        } else {
+            period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.start_date)}`;
+        }
         const data = response.data.data;
         payout.value = toIdrFormat(data.payout);
         pending.value = data.pending;

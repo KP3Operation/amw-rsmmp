@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\Auth\AuthenticateResource;
 use App\Models\OtpCode;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
 use App\Services\SimrsService\PatientService\IPatientService;
@@ -73,9 +74,10 @@ class LoginController extends Controller
             break;
         }
 
-        $patientData = $this->patientService->getPatients($user)->data->first();
-
-        $user->patient_data = $patientData;
+        if (user_role($user->id) == Role::PATIENT) {
+            $patientData = $this->patientService->getPatients($user)->data->first();
+            $user->patient_data = $patientData;
+        }
 
         return new AuthenticateResource($user);
     }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
+use App\Http\Controllers\Api\v1\Doctor\FeeController;
 use App\Http\Controllers\Api\V1\Patient\FamilyController;
 use App\Http\Controllers\Api\V1\Patient\MedicalHistoryController;
 use App\Http\Controllers\Api\V1\Shared\MeController;
@@ -44,6 +45,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/medical/history/labresult/{transactionNo}', [MedicalHistoryController::class, 'labResultDetail']);
             Route::get('/medical/history/appointment', [MedicalHistoryController::class, 'appointmentList']);
             Route::get('/medical/history/appointment/{appointmentNo}', [MedicalHistoryController::class, 'appointmentListDetail']);
+        });
+
+        Route::group(['prefix' => 'doctor'], function () {
+           Route::get('/summary/fee', [FeeController::class, 'getSummaryFee']);
         });
     });
 });

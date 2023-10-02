@@ -102,3 +102,36 @@ export function convertDateToFormField(datetime) {
     let x = String(y+"-"+m+"-"+d);
     return x;
 }
+
+/**
+ * @returns {string}
+ */
+export function getThisMonthStartDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const startDate = new Date(year, month, 1);
+    return startDate.toISOString().split('T')[0];
+}
+
+/**
+ * @returns {string}
+ */
+export function getThisMonthEndDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const endDate = new Date(year, month + 1, 0);
+    return endDate.toISOString().split('T')[0];
+}
+
+/**
+ * @param {number} value
+ * @returns {string}
+ */
+export function toIdrFormat(value) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+    }).format(value);
+}

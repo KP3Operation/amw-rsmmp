@@ -7,6 +7,7 @@ import Banner from "@resources/static/images/banner.png";
 import { ref } from "vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { getUserFirstName } from "@shared/utils/helpers.js";
+import OverviewSummaryFee from "@doctor/Components/OverviewSummaryFee/OverviewSummaryFee.vue";
 
 const authStore = useAuthStore();
 const showSummaryFeeFilter = ref(false);
@@ -16,9 +17,7 @@ const showSummaryFeeFilter = ref(false);
     <div>
         <HomeHeader />
         <br><br><br>
-        <!-- START CONTAINER -->
         <div class="px-4 mt-5">
-            <!-- START BANNER GREETING -->
             <section class="d-flex col-gap-20 bg-blue-100 rounded-3 px-4 py-3">
                 <img :src="Doctor2" alt="Ilustrasi" width="80" height="57">
 
@@ -29,9 +28,7 @@ const showSummaryFeeFilter = ref(false);
                     <p class="mt-2 fs-6 text-gray-700">{{ $t('home.greeting') }}</p>
                 </div>
             </section>
-            <!-- END BANNER GREETING -->
 
-            <!-- START LIST MENU HOMEPAGE-->
             <section class="list-menu-homepage mt-5">
                 <router-link to="/appointment" class="item bg-blue-100">
                     <div class="icon icon-doctor bg-blue-500">
@@ -314,50 +311,7 @@ const showSummaryFeeFilter = ref(false);
             <!-- END OVERVIEW RAWAT INAP -->
 
             <!-- START OVERVIEW FEE -->
-            <!-- <section class="mt-5">
-                <div class="d-flex align-items-center justify-content-between col-gap-20 mb-3">
-                    <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_inpatient_list') }}</h2>
-                    <button class="btn btn-filter-fee p-0"
-                            :class="showSummaryFeeFilter ? 'bg-blue-500' : ''"
-                            @click="showSummaryFeeFilter = !showSummaryFeeFilter">
-                        <i class="bi bi-filter-right fs-2 icon-blue-500"
-                           :class="showSummaryFeeFilter ? 'text-white' : 'text-blue-500'"></i>
-                    </button>
-                </div>
-
-            <div class="filter-homepage-summary-fee p-0 mb-3" :class="showSummaryFeeFilter ? 'expand' : ''">
-                <form class="d-flex col-gap-8 align-items-end">
-                    <div>
-                        <label for="dari" class="fs-6 text-gray-700">{{ $t('home.to') }}</label>
-                        <input type="date" name="dari" id="dari" class="form-control mt-2">
-                    </div>
-
-                    <div>
-                        <label for="hingga" class="fs-6 text-gray-700">{{ $t('home.from') }}</label>
-                        <input type="date" name="hingga" id="hingga" class="form-control mt-2">
-                    </div>
-
-                    <button class="btn bg-green-700 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-search icon-white"></i>
-                    </button>
-                </form>
-
-                <p class="error-filter-date mt-3 text-red-500 fs-6 fw-semibold"></p>
-            </div>
-
-
-            <p class="periode mb-3">{{ $t('home.priod') }}: <span>Bulan Ini</span></p>
-
-            <div class="summary-homepage pending">
-                <p class="status">{{ $t('home.pending') }}</p>
-                <p class="amount">6 Item</p>
-            </div>
-
-            <div class="summary-homepage terbayar">
-                <p class="status">{{ $t('home.payout') }}</p>
-                <p class="amount">Rp8.500.000</p>
-            </div>
-            </section> -->
+            <OverviewSummaryFee />
             <!-- END OVERVIEW FEE -->
         </div>
         <!-- END CONTAINER -->

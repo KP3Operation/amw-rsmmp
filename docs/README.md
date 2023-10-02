@@ -117,6 +117,7 @@ Ensure you have installed one of the following Web Server.
 -   Nginx
 
 You can also use the builtin development server that `Laravel` has, instead of using Apache or Nginx.
+> Please use the laravel builtin development server only for development purpose, if you in production please use either Nginx or Apache.
 
 [Back to Top](#aviatmobileweb)
 
@@ -131,6 +132,7 @@ This is a main project of aviatmobileweb that are written on top of Laravel fram
 ```sh
 $ php install
 ```
+> You may need to re-verify the `.env` configs that has been generated.
 
 ---
 
@@ -151,6 +153,8 @@ APP_URL=
 APP_CALLING_CODE="+62"
 APP_LOCALE=
 APP_FALLBACK_LOCALE=
+APP_OTP_WITH_QUEUE=false
+APP_OTP_EXPIRED_IN=1800
 
 ...
 
@@ -163,9 +167,14 @@ DB_PASSWORD=
 
 ...
 
-WATZAP_SEND_MESSAGE_URL=
-WATZAP_API_KEY=
-WATZAP_NUMBER_KEY=
+WATZAP_SEND_MESSAGE_URL=https://api.watzap.id/v1/send_message
+WATZAP_VALIDATE_WHATSAPP_NUMBER_URL=https://api.watzap.id/v1/validate_number
+WATZAP_API_KEY=fooBarBazz
+WATZAP_NUMBER_KEY=fooBarBazz
+WATZAP_VALIDATE_WHATSAPP_NUMBER=true
+
+SIMRS_BASE_URL=http://103.111.202.214/live/WebService
+SIMRS_ACCESS_KEY=MWApA
 ```
 
 Install all composer packages by running command
@@ -207,6 +216,10 @@ $ php artisan storage:link
 You may need to clear all app caches and create a new one by running following command
 
 ```sh
+$ php artisan cache:clear
+$ php artisan route:clear
+$ php artisan view:clear
+$ php artisan config:clear
 $ php artisan optimize
 ```
 
@@ -259,6 +272,7 @@ Only the following environment attributes would require your attention out of th
 |             `APP_LOCALE`              |                    id                    |                                                 The application localization                                                  |
 |         `APP_FALLBACK_LOCALE`         |                    en                    |                              The default value if the specific localization key does not exists                               |
 |         `APP_OTP_WITH_QUEUE`          |                  false                   |                              Set it to `true` if you want to send the otp message by using queue                              |
+|         `APP_OTP_EXPIRED_IN`          |                   1800                   |                                                The OTP code expired in seconds                                                |
 |            `DB_CONNECTION`            |                  pgsql                   |                                                                                                                               |
 |               `DB_HOST`               |                127.0.0.1                 |                                                                                                                               |
 |               `DB_PORT`               |                   5432                   |                                                                                                                               |

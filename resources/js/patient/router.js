@@ -111,10 +111,17 @@ router.beforeEach(async (to, from) => {
                     authStore.userRole = response.data.role;
 
                     // patient data
-                    authStore.ssn = response.data.patient_data.ssn;
-                    authStore.patientId = response.data.patient_data.patient_id;
-                    authStore.birthDate = response.data.patient_data.birth_date;
-                    authStore.gender = response.data.patient_data.gender;
+                    if (response.data.role === 'patient') {
+                        authStore.ssn = response.data.patient_data.ssn;
+                        authStore.patientId = response.data.patient_data.patient_id;
+                        authStore.birthDate = response.data.patient_data.birth_date;
+                        authStore.gender = response.data.patient_data.gender;
+                    }
+
+                    if (authStore.userRole !== "patient") {
+                        authStore.$reset();
+                        window.location.href = `/doctor/home`;
+                    }
                 })
                 .catch((error) => {
                     if (error?.response?.status === 401) {
@@ -125,10 +132,7 @@ router.beforeEach(async (to, from) => {
         });
     }
 
-    if (authStore.userRole !== "patient") {
-        authStore.$reset();
-        window.location.href = `/doctor/home`;
-    }
+
 });
 
 export default router;

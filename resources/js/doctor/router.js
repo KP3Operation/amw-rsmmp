@@ -80,8 +80,15 @@ router.beforeEach(async (to, from) => {
                     authStore.userRole = response.data.role;
 
                     // doctor data
-                    authStore.doctorId = response.data.doctor_data.doctor_id;
-                    authStore.smfName = response.data.doctor_data.smf_name;
+                    if (authStore.userRole !== "doctor") {
+                        authStore.doctorId = response.data.doctor_data.doctor_id;
+                        authStore.smfName = response.data.doctor_data.smf_name;
+                    }
+
+                    if (authStore.userRole !== 'doctor') {
+                        authStore.$reset();
+                        window.location.href = `/patient/home`;
+                    }
                 })
                 .catch((error) => {
                     if (error?.response?.status === 401) {
@@ -90,11 +97,6 @@ router.beforeEach(async (to, from) => {
                     }
                 });
         });
-    }
-
-    if (authStore.userRole !== 'doctor') {
-        authStore.$reset();
-        window.location.href = `/patient/home`;
     }
 });
 

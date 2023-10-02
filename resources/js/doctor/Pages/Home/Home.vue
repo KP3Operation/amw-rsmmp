@@ -39,7 +39,7 @@ const showSummaryFeeFilter = ref(false);
                     <p class="fs-6 text-gray-700 mt-2">{{ $t('home.appointment_desc') }}</p>
                 </router-link>
 
-                <router-link to="#" class="item bg-green-100">
+                <router-link to="/inpatient/list" class="item bg-green-100">
                     <div class="icon icon-doctor bg-green-500">
                         <img :src="DoctorWhite" alt="Icon" width="20" height="20">
                     </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\v1\Doctor\FeeController;
+use App\Http\Controllers\Api\v1\Doctor\InpatientListController;
 use App\Http\Controllers\Api\V1\Patient\FamilyController;
 use App\Http\Controllers\Api\V1\Patient\MedicalHistoryController;
 use App\Http\Controllers\Api\V1\Shared\MeController;
@@ -50,6 +51,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'doctor'], function () {
            Route::get('/summary/fee', [FeeController::class, 'getOverviewSummaryFee']);
             Route::get('/fee/bytrxdate', [FeeController::class, 'getFeeByTrxDate']);
+            Route::get('/inpatient', [InpatientListController::class, 'index']);
         });
     });
 });

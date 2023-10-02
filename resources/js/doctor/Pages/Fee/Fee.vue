@@ -28,6 +28,7 @@ const filterForm = reactive(
 const { pendings, payouts } = storeToRefs(feeByTrxDateStore);
 
 const filterSummaryFee = () => {
+    layoutStore.isLoading = true;
     filterForm.get('/api/v1/doctor/fee/bytrxdate').then((response) => {
         period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.start_date)}`;
         const data = response.data.data;
@@ -43,7 +44,6 @@ const filterSummaryFee = () => {
 }
 
 onMounted(() => {
-    layoutStore.isLoading = true;
     filterSummaryFee();
 });
 </script>

@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "RegistrationNo": "REG/IP/230618-0002",
+            "MedicalNo": "086392",
+            "PatientName": "ALIFAH SALSABILAH",
+            "GuarantorName": "BPJS",
+            "RoomName": "ANGGREK ISOLASI TEKANAN NEGATIF (403)",
+            "ClassName": "Kelas III",
+            "EWS": {
+                "Status": 3,
+                "VitalSignName": "BP2",
+                "Value": 0,
+                "VitalSignUnit": " mmHg"
+            }
+        },
+        {
+            "RegistrationNo": "REG/IP/230622-0012",
+            "MedicalNo": "012585",
+            "PatientName": "TRIYANSA DWIYAN SAPUTRA, AN",
+            "GuarantorName": "BPJS",
+            "RoomName": "ANGGREK ISOLASI TEKANAN NEGATIF (403)",
+            "ClassName": "Kelas III",
+            "EWS": {
+                "Status": 3,
+                "VitalSignName": "BP1",
+                "Value": 160,
+                "VitalSignUnit": " mmHg"
+            }
+        }
+    ]
+}

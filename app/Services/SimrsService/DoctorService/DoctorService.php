@@ -4,6 +4,7 @@ namespace App\Services\SimrsService\DoctorService;
 
 use App\Dto\SimrsDto\Doctor\DoctorDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorFeeByTrxDateDataDto;
+use App\Dto\SimrsDto\Doctor\InpatientListDataDto;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
 use App\Dto\SimrsDto\Doctor\DoctorAppointmentListDataDto;
@@ -80,5 +81,31 @@ class DoctorService implements IDoctorService
         $data = $response->json();
 
         return DoctorFeeByTrxDateDataDto::from($data);
+    }
+
+    public function getInpatientList(string $paramedicId, int $count=10): InpatientListDataDto
+    {
+        $accessKey = config("simrs.access_key");
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS.asmx/ParamedicFeeByParamedicIDTransDate", [
+            "AccessKey" => $accessKey,
+            "GuarantorID" => "",
+            "ParamedicID" => $paramedicId,
+            "ClassID" => "",
+            "RoomID" => "",
+            "EwsStatus" => "",
+            "RecordCount" => $count,
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
+        }
+
+        $data = $response->json();
+
+        return InpatientListDataDto::from($data);
     }
 }

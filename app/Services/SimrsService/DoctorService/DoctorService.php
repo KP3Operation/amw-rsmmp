@@ -9,7 +9,9 @@ use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
 use App\Dto\SimrsDto\Doctor\DoctorAppointmentListDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorAppointmentListDetailDto;
+use App\Dto\SimrsDto\Doctor\DoctorFeeByPaymentDateDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorSummaryFeeDataDto;
+use App\Dto\SimrsDto\Doctor\PatientRegistrationCPPTDataDto;
 
 class DoctorService implements IDoctorService
 {
@@ -83,19 +85,42 @@ class DoctorService implements IDoctorService
         return DoctorFeeByTrxDateDataDto::from($data);
     }
 
-    public function getInpatientList(string $paramedicId, int $count=10): InpatientListDataDto
+    public function getFeeByPaymentDate(string $paramedicId, string $paymentDateStart, string $PaymentDateEnd): DoctorFeeByPaymentDateDataDto
     {
         $accessKey = config("simrs.access_key");
         $response = Http::withHeaders([
             'Content-Type' => ""
         ])->withOptions([
             "verify" => false
-        ])->get(config("simrs.base_url") . "/MobileWS.asmx/ParamedicFeeByParamedicIDTransDate", [
+        ])->get(config("simrs.base_url") . "/MobileWS.asmx/ParamedicFeeByParamedicIDPaymentDate", [
+            "AccessKey" => $accessKey,
+            "ParamedicID" => $paramedicId,
+            "PaymentDateStart" => convert_date_to_req_param($paymentDateStart),
+            "PaymentDateEnd" => convert_date_to_req_param($PaymentDateEnd)
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
+        }
+
+        $data = $response->json();
+
+        return DoctorFeeByPaymentDateDataDto::from($data);
+    }
+
+    public function getInpatientList(string $paramedicId, array $roomName, int $count = 10): InpatientListDataDto
+    {
+        $accessKey = config("simrs.access_key");
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS.asmx/RegistrationGetListIpByParamedicID", [
             "AccessKey" => $accessKey,
             "GuarantorID" => "",
             "ParamedicID" => $paramedicId,
             "ClassID" => "",
-            "RoomID" => "",
+            "RoomID" => (count($roomName) > 1) ? strtolower(implode(",", $roomName)) : "",
             "EwsStatus" => "",
             "RecordCount" => $count,
         ]);
@@ -107,5 +132,26 @@ class DoctorService implements IDoctorService
         $data = $response->json();
 
         return InpatientListDataDto::from($data);
+    }
+
+    public function getPatientRegistrationCPPT(string $registrationNo): PatientRegistrationCPPTDataDto
+    {
+        $accessKey = config("simrs.access_key");
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false,
+        ])->get(config("simrs.base_url") . "/MobileWS.asmx/RegistrationCPPT", [
+            "AccessKey" => $accessKey,
+            "RegistrationNo" => $registrationNo
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
+        }
+
+        $data = $response->json();
+
+        return PatientRegistrationCPPTDataDto::from($data);
     }
 }

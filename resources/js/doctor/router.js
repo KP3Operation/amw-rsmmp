@@ -92,7 +92,7 @@ router.beforeEach(async (to, from) => {
                     authStore.userRole = response.data.role;
 
                     // doctor data
-                    if (authStore.userRole !== "doctor") {
+                    if (authStore.userRole === "doctor") {
                         authStore.doctorId = response.data.doctor_data.doctor_id;
                         authStore.smfName = response.data.doctor_data.smf_name;
                     }

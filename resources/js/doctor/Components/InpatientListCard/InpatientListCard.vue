@@ -1,5 +1,5 @@
 <script setup>
-import {toRefs} from "vue";
+import { toRefs } from "vue";
 
 const props = defineProps({
     id: String,
@@ -14,8 +14,7 @@ let { id, registrationNo, medicalNo, patientName, roomName } = toRefs(props);
 </script>
 
 <template>
-    <div :id="'item-' + id"
-         class="item new-data-bg d-flex flex-column rows-gap-16 border rounded px-4 py-3">
+    <div :id="'item-' + id" class="item new-data-bg d-flex flex-column rows-gap-16 border rounded px-4 py-3">
         <div class="d-flex align-items-center justify-content-between col-gap-20">
             <div class="w-50">
                 <p class="fs-6 text-gray-700">No. Registrasi</p>
@@ -36,6 +35,6 @@ let { id, registrationNo, medicalNo, patientName, roomName } = toRefs(props);
                 <p class="mt-2">{{ roomName }}</p>
             </div>
         </div>
-        <router-link to="/inpatient/detail" class="d-block btn btn-blue-500-rounded-sm">Detail</router-link>
+        <router-link to="/inpatient/detail?" class="d-block btn btn-blue-500-rounded-sm">Detail</router-link>
     </div>
 </template>

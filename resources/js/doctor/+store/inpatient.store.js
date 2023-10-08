@@ -7,6 +7,7 @@ export const useInpatientStore = defineStore(
         let patients = ref([]);
         let selectedPatient = ref({});
         let patientCount = ref(0);
+        let selectedRegistrationNo = ref("");
 
         function setSelectedPatient (patient) {
             selectedPatient.value = patient;
@@ -16,6 +17,7 @@ export const useInpatientStore = defineStore(
             patients.value = [];
             selectedPatient.value = {};
             patientCount.value = 0;
+            selectedRegistrationNo.value = "";
         }
 
         return {
@@ -23,7 +25,8 @@ export const useInpatientStore = defineStore(
             setSelectedPatient,
             patients,
             selectedPatient,
-            patientCount
+            patientCount,
+            selectedRegistrationNo
         };
     }
 );

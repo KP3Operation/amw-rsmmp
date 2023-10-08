@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Doctor;
+namespace App\Http\Controllers\Api\V1\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Services\SimrsService\DoctorService\IDoctorService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use function Symfony\Component\Translation\t;
 
 class FeeController extends Controller
 {
@@ -25,14 +23,30 @@ class FeeController extends Controller
         ]);
 
         $user = $request->user();
-        $userDoctor = $user->userDoctorData();
+        $userDoctor = $user->userDoctorData;
 
-        //$summaryFee = $this->doctorService->getSummaryFee($userDoctor->doctor_id, $request->start_date, $request->end_date);
+        $summaryFee = $this->doctorService->getOverviewSummaryFee($userDoctor->doctor_id, $request->start_date, $request->end_date);
+        $feeByTrxDate = $this->doctorService
+            ->getFeeByTrxDate($userDoctor->doctor_id, $request->start_date, $request->end_date);
+
+        $payout = "0";
+        $pendings = [];
+        foreach ($feeByTrxDate->data as $item) {
+            if ($item->paymentPercentage != 100) {
+                $pendings[] = $item;
+            }
+        }
+
+        foreach ($summaryFee->data->data as $item) {
+            if ($item->name == "Fee4ServicePaid") {
+                $payout = $item->value;
+            }
+        }
 
         return response()->json([
             'data' => [
-                'pending' => '6',
-                'payout' => '8500000'
+                'payout' => $payout,
+                'pending' => count($pendings),
             ]
         ]);
     }
@@ -45,19 +59,34 @@ class FeeController extends Controller
         ]);
 
         $user = $request->user();
-        $userDoctor = $user->userDoctorData();
+        $userDoctor = $user->userDoctorData;
 
-//        $feeByTrxDate = $this->doctorService
-//            ->getFeeByTrxDate($userDoctor->doctor_id, $request->start_date, $request->end_date);
+        $feeByTrxDate = $this->doctorService
+            ->getFeeByTrxDate($userDoctor->doctor_id, $request->start_date, $request->end_date);
+        $feeByPaymentDate = $this->doctorService->getFeeByPaymentDate(
+            $userDoctor->doctor_id,
+            $request->start_date,
+            $request->end_date
+        );
 
-        $dummyData = file_get_contents(public_path('dummydata/feebytrxdate.json'));
-        $dummyData = json_decode($dummyData);
+        $data = [
+            'payouts' => [],
+            'pendings' => [],
+        ];
+        foreach ($feeByPaymentDate->data as $item) {
+            foreach ($item->transaction as $trx) {
+                $data['payouts'][] = $trx;
+            }
+        }
+
+        foreach ($feeByTrxDate->data as $item) {
+            if ($item->paymentPercentage < 100) {
+                $data['pendings'][] = $item;
+            }
+        }
 
         return response()->json([
-            'data' => [
-                'payouts' => $dummyData->data,
-                'pendings' => $dummyData->data
-            ]
+            'data' => $data
         ]);
     }
 }

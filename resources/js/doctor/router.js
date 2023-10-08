@@ -7,6 +7,7 @@ import FeePage from "@doctor/Pages/Fee/Fee.vue";
 import ProfilePage from "@doctor/Pages/Profile/Profile.vue";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
 import InpatientListPage from "@doctor/Pages/InpatientList/InpatientList.vue";
+import PatientDetailPage from "@doctor/Pages/InpatientList/PatientDetail.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 
@@ -36,6 +37,11 @@ const routes = [
         path: "/inpatient/list",
         name: "InpatientListPage",
         component: InpatientListPage,
+    },
+    {
+        path: "/inpatient/detail",
+        name: "PatientDetailPage",
+        component: PatientDetailPage,
     },
     {
         path: "/profile",
@@ -86,7 +92,7 @@ router.beforeEach(async (to, from) => {
                     authStore.userRole = response.data.role;
 
                     // doctor data
-                    if (authStore.userRole !== "doctor") {
+                    if (authStore.userRole === "doctor") {
                         authStore.doctorId = response.data.doctor_data.doctor_id;
                         authStore.smfName = response.data.doctor_data.smf_name;
                     }

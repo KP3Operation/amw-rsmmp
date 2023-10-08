@@ -9,26 +9,42 @@ use Spatie\LaravelData\Normalizers\ArrayNormalizer;
 use Spatie\LaravelData\Normalizers\JsonNormalizer;
 use Spatie\LaravelData\Normalizers\ModelNormalizer;
 use Spatie\LaravelData\Normalizers\ObjectNormalizer;
+use Spatie\LaravelData\Optional;
 
 class InpatientListDto extends Data
 {
     public function __construct(
         #[MapInputName('RegistrationNo')]
-        public int $status,
+        public string $registrationNo,
+
         #[MapInputName('MedicalNo')]
-        public int $medicalNo,
+        public string $medicalNo,
+
         #[MapInputName('PatientName')]
-        public int $patientName,
+        public string $patientName,
+
+        #[MapInputName('DateOfBirth')]
+        public ?string $dateOfBirth,
+
+        #[MapInputName('Age')]
+        public ?string $age,
+
+        #[MapInputName('Sex')]
+        public ?string $sex,
+
         #[MapInputName('GuarantorName')]
-        public int $guarantorName,
+        public string $guarantorName,
+
         #[MapInputName('RoomName')]
-        public int $roomName,
+        public string $roomName,
+
         #[MapInputName('ClassName')]
-        public int $className,
+        public string $className,
+
         #[MapInputName('EWS')]
         public InpatientListEwsDto $ews
-    )
-    {}
+    ) {
+    }
 
     public static function normalizers(): array
     {

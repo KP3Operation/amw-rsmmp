@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Doctor;
+namespace App\Http\Controllers\Api\V1\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Services\SimrsService\DoctorService\IDoctorService;
@@ -18,16 +18,26 @@ class InpatientListController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $userDoctor = $user->userDoctorData();
+        $userDoctor = $user->userDoctorData;
 
-//        $inpatientList = $this->doctorService
-//            ->getInpatientList($userDoctor->doctor_id, 10);
-
-        $dummyData = file_get_contents(public_path('dummydata/inpatientlist.json'));
-        $dummyData = json_decode($dummyData);
+        $inpatientList = $this->doctorService
+            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? [], 10);
 
         return response()->json([
-            'patients' => $dummyData->data
+            'patients' => $inpatientList->data
+        ]);
+    }
+
+    public function getPatientRegistrationCPPT(Request $request)
+    {
+        $request->validate([
+            'registration_no' => 'required|string'
+        ]);
+
+        $patientRegistrationCPPTs = $this->doctorService->getPatientRegistrationCPPT($request->registration_no);
+
+        return response()->json([
+            'cppts' => $patientRegistrationCPPTs->data
         ]);
     }
 }

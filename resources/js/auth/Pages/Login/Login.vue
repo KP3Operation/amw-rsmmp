@@ -6,7 +6,6 @@ import router from "@auth/router.js";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import * as bootstrap from "bootstrap";
-import axios from "axios";
 
 const modalState = reactive({
     notRegisteredModal: null,

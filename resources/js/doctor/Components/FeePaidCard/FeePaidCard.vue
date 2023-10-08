@@ -1,7 +1,7 @@
 <script setup>
 
-import {toRefs} from "vue";
-import {toIdrFormat} from "@shared/utils/helpers.js";
+import { toRefs } from "vue";
+import { toIdrFormat } from "@shared/utils/helpers.js";
 
 const props = defineProps({
     id: String,
@@ -21,9 +21,8 @@ let { id, registrationNo, medicalNo, patientName, itemName, qty, guarantorName, 
 <template>
     <div :id="'item-bayar-' + id" class="item accordion-item">
         <h2 class="accordion-header">
-            <button class="accordion-button collapsed col-gap-20" type="button"
-                    data-bs-toggle="collapse" :data-bs-target="'#terbayar-' + id" aria-expanded="false"
-                    :aria-controls="'terbayar-' + id">
+            <button class="accordion-button collapsed col-gap-20" type="button" data-bs-toggle="collapse"
+                :data-bs-target="'#terbayar-' + id" aria-expanded="false" :aria-controls="'terbayar-' + id">
 
                 <div class="w-100 d-flex align-items-center justify-content-between col-gap-8">
                     <div class="flex-fill">
@@ -59,9 +58,9 @@ let { id, registrationNo, medicalNo, patientName, itemName, qty, guarantorName, 
                 </div>
 
                 <div>
-                    <p class="text-gray-700 fs-5">Nama Pasien (No. Rekam Medis)</p>
+                    <p class="text-gray-700 fs-5">Nama Pasien</p>
 
-                    <p class="mt-1 fs-5 fw-semibold text-black">{{ patientName }} ({{ medicalNo }})</p>
+                    <p class="mt-1 fs-5 fw-semibold text-black">{{ patientName }}</p>
                 </div>
 
                 <div>

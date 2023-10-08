@@ -27,15 +27,16 @@ const otpVerification = () => {
         form.reset();
         const data = response.data.data;
         if (authStore.isRegistration) {
-
             if (Object.is(data.patient_data, null) && data.role === 'patient') {
                 window.location.href = "/patient/profile";
             } else {
-                authStore.$patch({
-                    birthDate: data.patient_data.birthDate,
-                    gender: (data.patient_data.gender === "F") ? "Perempuan" : "Laki-Laki",
-                    userEmail: data.patient_data.email
-                });
+                if (data.patient_data) {
+                    authStore.$patch({
+                        birthDate: data.patient_data.birthDate,
+                        gender: (data.patient_data.gender === "F") ? "Perempuan" : "Laki-Laki",
+                        userEmail: data.patient_data.email
+                    });
+                }
                 router.push({ path: '/confirmation' });
             }
         } else {
@@ -46,6 +47,7 @@ const otpVerification = () => {
             }
         }
     }).catch((error) => {
+        console.log(error);
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;

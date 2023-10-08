@@ -27,8 +27,8 @@ class DoctorFeeByTrxDateDto extends Data
         public string $guarantorName,
         #[MapInputName('PaymentPercentage')]
         public int $paymentPercentage
-    )
-    {}
+    ) {
+    }
 
     public static function normalizers(): array
     {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Exceptions\InvalidDoctorId;
 use App\Exceptions\UserAlreadyExistException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterDoctorRequest;
@@ -117,6 +116,7 @@ class RegisterController extends Controller
                 "doctor_id" => $request->validated('doctor_id'),
                 "smf_id" => $simrsUserDoctor->smfId,
                 "smf_name" => $simrsUserDoctor->smfName,
+                //"photo" => $simrsUserDoctor->photo64,
                 "sync_at" => Carbon::now()
             ]);
 
@@ -130,6 +130,7 @@ class RegisterController extends Controller
 
         $user->smf_name = $userDoctor->smf_name;
         $user->doctor_id = $userDoctor->doctor_id;
+        //$user->doctor_photo = $userDoctor->photo;
         $user->otp_created_at = $otpCode->created_at;
         $user->otp_updated_at = $otpCode->updated_at;
         $user->otp_timeout = 30000; // miliseconds - 10 seconds

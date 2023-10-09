@@ -2,28 +2,21 @@
 
 namespace App\Dto\SimrsDto\Patient;
 
-use Spatie\LaravelData\Attributes\MapInputName;
+use App\Dto\SimrsDto\Patient\PatientLabResultDetailDto;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Normalizers\ArrayableNormalizer;
 use Spatie\LaravelData\Normalizers\ArrayNormalizer;
 use Spatie\LaravelData\Normalizers\JsonNormalizer;
 use Spatie\LaravelData\Normalizers\ModelNormalizer;
 use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
-class PatientPrescriptionHistoryDetailDto extends Data
+class PatientLabResultDetailDataDto extends Data
 {
     public function __construct(
-        #[MapInputName('ItemID')]
-        public string $itemID,
-
-        #[MapInputName('ItemName')]
-        public string $itemName,
-
-        #[MapInputName('PrescriptionQty')]
-        public string $prescriptionQty,
-
-        #[MapInputName('ConsumeMethod')]
-        public string $consumeMethod,
+        #[DataCollectionOf(PatientLabResultDetailDto::class)]
+        public DataCollection $data,
     ) {
     }
 

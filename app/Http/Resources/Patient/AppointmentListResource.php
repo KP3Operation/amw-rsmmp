@@ -14,6 +14,12 @@ class AppointmentListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'histories' => $this->data,
+            'patient' => $this->patient,
+            'links' => [
+                'self' => null,
+            ],
+        ];
     }
 }

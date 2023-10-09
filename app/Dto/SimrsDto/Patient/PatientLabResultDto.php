@@ -13,8 +13,89 @@ use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 class PatientLabResultDto extends Data
 {
     public function __construct(
-        #[MapInputName('FooBar')]
-        public string $FooBar,
+        #[MapInputName('RegistrationNo')]
+        public string $registrationNo,
+
+        #[MapInputName('ExecutionDate')]
+        public string $executionDate,
+
+        #[MapInputName('SuperDisplaySequence')]
+        public string $superDisplaySequence,
+
+        #[MapInputName('TransactionNo')]
+        public string $transactionNo,
+
+        #[MapInputName('SequenceNo')]
+        public string $sequenceNo,
+
+        #[MapInputName('ItemID')]
+        public string $itemID,
+
+        #[MapInputName('LEVEL')]
+        public string $level,
+
+        #[MapInputName('ParentNo')]
+        public string $parentNo,
+
+        #[MapInputName('TestName')]
+        public string $testName,
+
+        #[MapInputName('Age')]
+        public string $age,
+
+        #[MapInputName('AgeType')]
+        public string $ageType,
+
+        #[MapInputName('Sex')]
+        public string $sex,
+
+        #[MapInputName('IsCito')]
+        public string $isCito,
+
+        #[MapInputName('ResultValue')]
+        public string $resultValue,
+
+        #[MapInputName('ItemUnit')]
+        public string $itemUnit,
+
+        #[MapInputName('IsDuplo')]
+        public string $isDuplo,
+
+        #[MapInputName('NormalValueMin')]
+        public string $normalValueMin,
+
+        #[MapInputName('NormalValueMax')]
+        public string $normalValueMax,
+
+        #[MapInputName('IsResultInput')]
+        public string $isResultInput,
+
+        #[MapInputName('ItemGroupName')]
+        public string $itemGroupName,
+
+        #[MapInputName('Notes')]
+        public string $notes,
+
+        #[MapInputName('IsDescriptionResult')]
+        public string $isDescriptionResult,
+
+        #[MapInputName('LV1')]
+        public ?string $lv1,
+
+        #[MapInputName('LV2')]
+        public ?string $lv2,
+
+        #[MapInputName('LV3')]
+        public ?string $lv3,
+
+        #[MapInputName('LV4')]
+        public ?string $lv4,
+
+        #[MapInputName('DisplaySequence')]
+        public ?string $displaySequence,
+
+        #[MapInputName('ExecutionDate_yMdHms')]
+        public string $executionDate_yMdHms,
     ) {
     }
 

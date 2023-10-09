@@ -7,9 +7,9 @@ use App\Dto\SimrsDto\Patient\PatientAppointmentListDataDto;
 use App\Dto\SimrsDto\Patient\PatientAppointmentListDetailDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
-use App\Dto\SimrsDto\Patient\PatientLabResultDetailDto;
+use App\Dto\SimrsDto\Patient\PatientLabResultDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDataDto;
-use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDto;
+use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Models\User;
 use App\Models\UserPatient;
@@ -52,7 +52,7 @@ class PatientService implements IPatientService
         return PatientDataDto::from($data);
     }
 
-    public function getVitalSignHistory(int $count, string $medicalNo): PatientVitalSignHistoryDataDto
+    public function getVitalSignHistory(string $type = "", int $count, string $medicalNo): PatientVitalSignHistoryDataDto
     {
         $accessKey = config("simrs.access_key");
         $response = Http::withHeaders([
@@ -62,7 +62,7 @@ class PatientService implements IPatientService
         ])->get(config("simrs.base_url") . "/MobileWS2.asmx/VitalSignByMedicalNo", [
             "AccessKey" => $accessKey,
             "MedicalNo" => $medicalNo,
-            "VitalSignType" => "",
+            "VitalSignType" => $type,
             "RecordCount" => $count,
         ]);
 
@@ -102,33 +102,102 @@ class PatientService implements IPatientService
         return PatientDataDto::from($data);
     }
 
-    public function getPrescriptionHistory(int $count, string $medicalNo): PatientPrescriptionHistoryDataDto
+    public function getPrescriptionHistory(int $count = 10, string $medicalNo): PatientPrescriptionHistoryDataDto
     {
-        // TODO: Implement getPrescriptionHistory() method.
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/PrescriptionList", [
+            "AccessKey" => $accessKey,
+            "MedicalNo" => $medicalNo,
+            "RecordCount" => $count,
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        return PatientPrescriptionHistoryDataDto::from($data);
     }
 
-    public function getPrescriptionHistoryDetail(string $prescriptionNo): PatientPrescriptionHistoryDetailDto
+    public function getPrescriptionHistoryDetail(string $prescriptionNo): PatientPrescriptionHistoryDetailDataDto
     {
-        // TODO: Implement getPrescriptionHistoryDetail() method.
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/PrescriptionDetail", [
+            "AccessKey" => $accessKey,
+            "PrescriptionNo" => $prescriptionNo
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        return PatientPrescriptionHistoryDetailDataDto::from($data);
     }
 
     public function getLabResult(string $medicalNo): PatientLabResultDataDto
     {
-        // TODO: Implement getLabResult() method.
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS.asmx/PatientLabResult", [
+            "AccessKey" => $accessKey,
+            "MedicalNo" => $medicalNo
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        return PatientLabResultDataDto::from($data);
     }
 
-    public function getLabResultDetail(string $transactionNo): PatientLabResultDetailDto
+    public function getLabResultDetail(string $transactionNo): PatientLabResultDetailDataDto
     {
-        // TODO: Implement getLabResultDetail() method.
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/PatientLabResultGetOne", [
+            "AccessKey" => $accessKey,
+            "TransactionNo" => $transactionNo
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        return PatientLabResultDetailDataDto::from($data);
     }
 
     public function getAppointmentList(string $AppointmentNo): PatientAppointmentListDataDto
     {
-        // TODO: Implement getAppointmentList() method.
+        throw new \Exception("Unimplemented");
     }
 
     public function getAppointmentListDetail(string $appointmentNo): PatientAppointmentListDetailDto
     {
-        // TODO: Implement getAppointmentListDetail() method.
+        throw new \Exception("Unimplemented");
     }
 }

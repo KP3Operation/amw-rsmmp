@@ -13,8 +13,26 @@ use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 class PatientPrescriptionHistoryDto  extends Data
 {
     public function __construct(
-        #[MapInputName('FooBar')]
-        public string $FooBar,
+        #[MapInputName('PrescriptionNo')]
+        public string $PrescriptionNo,
+
+        #[MapInputName('MedicalNo')]
+        public string $medicalNo,
+
+        #[MapInputName('RegistrationNo')]
+        public string $registrationNo,
+
+        #[MapInputName('ParamedicID')]
+        public string $paramedicId,
+
+        #[MapInputName('ParamedicName')]
+        public string $paramedicName,
+
+        #[MapInputName('PrescriptionDate')]
+        public string $prescriptionDate,
+
+        #[MapInputName('PrescriptionDate_yMdHms')]
+        public string $prescriptionDate_yMdHms
     ) {
     }
 

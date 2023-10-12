@@ -14,10 +14,15 @@ export function getSecondsLeft(startDate, endDate) {
 }
 
 /**
- * @param {Date} birthdate
- * @returns {number}
+ * @param {Date|string} birthdate
+ * @returns {number|string}
  */
 export function calculateAge(birthdate) {
+
+    if (birthdate === '-') {
+        return '-';
+    }
+
     const birthdateObj = new Date(birthdate);
     const today = new Date();
 
@@ -77,17 +82,21 @@ export function updateMyProfileStore() {
 }
 
 /**
- * @param {Date} datetime
+ * @param {Date|string} datetime
  * @returns {String}
  */
 export function convertDateTimeToDate(datetime) {
+    if (datetime === "-") {
+        return "-";
+    }
+
     const date = new Date(datetime);
-    const formattedDate = date.toLocaleDateString("id-ID", {
+
+    return date.toLocaleDateString("id-ID", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
     });
-    return formattedDate;
 }
 
 /**

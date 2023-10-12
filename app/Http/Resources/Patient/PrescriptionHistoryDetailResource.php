@@ -14,6 +14,12 @@ class PrescriptionHistoryDetailResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->data,
+            'patient' => $this->patient,
+            'links' => [
+                'self' => null,
+            ],
+        ];
     }
 }

@@ -10,6 +10,8 @@ import PatientCard from "@patient/Components/PatientCard/PatientCard.vue";
 import * as bootsrap from "bootstrap";
 import { useFamilyStore } from "@patient/+store/family.store.js";
 import { storeToRefs } from "pinia";
+import {useMedicalHistoryStore} from "@patient/+store/medical-history.store.js";
+import PrescriptionCard from "@patient/Components/PrescriptionCard/PrescriptionCard.vue";
 
 const patientVitalSignStore = usePatientVitalSignStore();
 const layoutStore = useLayoutStore();
@@ -18,25 +20,24 @@ const modalState = reactive({
     familyMemberFilterModal: null
 });
 const selectedVitalSignType = ref("");
-const prescriptionHistories = reactive([]);
 const labResults = reactive([]);
 const appointments = reactive([]);
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
+const medicalHistoriesStore = useMedicalHistoryStore();
+const { vitalSignHistories, prescriptionHistories, encounterHistories, labResultHistories, selectedPatient } = storeToRefs(medicalHistoriesStore);
 
 const fetchVitalSignHistories = () => {
     layoutStore.isLoading = true;
     patientVitalSignStore.$reset();
     axios.get(`/api/v1/patient/medical/history/vitalsign?type=${selectedVitalSignType.value}`).then((response) => {
         const data = response.data.data;
-        data.histories.forEach((history) => {
-            patientVitalSignStore.$patch((state) => {
-                state.histories.push(history);
-            });
-        });
-        patientVitalSignStore.$patch({
-            patient: data.patient,
-            patientData: data.patient.patient_data
+        medicalHistoriesStore.updateVitalSignHistories(data.histories);
+        medicalHistoriesStore.updateSelectedPatient({
+            name: data.patient.name,
+            gender: data.patient.patient_data.gender,
+            medicalNo: data.patient.patient_data.medical_no,
+            birthDate: data.patient.patient_data.birth_date
         });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
@@ -45,18 +46,12 @@ const fetchVitalSignHistories = () => {
     });
 }
 
-
 const fetchPrescriptionHistories = () => {
     layoutStore.isLoading = true;
     patientVitalSignStore.$reset();
     axios.get(`/api/v1/patient/medical/history/prescription`).then((response) => {
         const data = response.data.data;
-        prescriptionHistories.values = data.histories;
-        console.log(prescriptionHistories);
-        patientVitalSignStore.$patch({
-            patient: data.patient,
-            patientData: data.patient.patient_data
-        });
+        medicalHistoriesStore.updatePrescriptionHitories(data.histories);
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -69,12 +64,7 @@ const fetchLabResults = () => {
     patientVitalSignStore.$reset();
     axios.get(`/api/v1/patient/medical/history/labresult`).then((response) => {
         const data = response.data.data;
-        labResults.values = data.histories;
-        console.log(labResults);
-        patientVitalSignStore.$patch({
-            patient: data.patient,
-            patientData: data.patient.patient_data
-        });
+        medicalHistoriesStore.updateLabResultHistories(data.histories);
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -82,8 +72,8 @@ const fetchLabResults = () => {
     });
 }
 
-const fetchAppointment = () => {
-    console.log('fetch appointment');
+const fetchEncounterHistories = () => {
+    console.log('fetch encounters');
 }
 
 
@@ -106,7 +96,7 @@ watch(currentActiveTab, (newValue, oldValue) => {
     }
 
     if (newValue === 'pertemuan') {
-        fetchAppointment();
+        fetchEncounterHistories();
     }
 });
 
@@ -116,7 +106,7 @@ const fetchFamily = () => {
         familyStore.$patch({
             families: data.families
         });
-        console.log(families.value);
+        // console.log(families.value);
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     });
@@ -148,9 +138,9 @@ onMounted(() => {
 
     <div class="px-4 pt-7">
 
-        <PatientCard :name="patientVitalSignStore.patient.name" :gender="patientVitalSignStore.patientData.gender"
-            :medicalNo="patientVitalSignStore.patientData.medical_no"
-            :birthDate="patientVitalSignStore.patientData.birth_date" />
+        <PatientCard :name="selectedPatient.name" :gender="selectedPatient.gender"
+            :medicalNo="selectedPatient.medicalNo"
+            :birthDate="selectedPatient.birthDate" />
 
         <div class="tab-riwayat-medis nav nav-pills d-flex flex-nowrap col-gap-20 mt-4">
             <button class="nav-link unit-vital active" data-bs-toggle="pill" data-bs-target="#unit-vital" role="tab"
@@ -190,9 +180,7 @@ onMounted(() => {
             </button>
         </div>
 
-
         <div class="tab-content mt-4" id="tab-content">
-
             <section class="tab-pane fade show active" id="unit-vital" role="tabpanel" aria-labelledby="unit-vital"
                 tabindex="0">
                 <div id="multiselect" class="dropdown filter-sticky d-flex col-gap-20 align-items-center">
@@ -205,22 +193,26 @@ onMounted(() => {
                         <option value="RESP">Laju Pernapasan</option>
                     </select>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in patientVitalSignStore.histories">
-
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in vitalSignHistories">
                     <VitalSignCard :dateCreated="history.recordDate_yMdHms" :timeCreated="history.recordTime"
                         :registrationNo="history.registrationNo" :vitalSignUnit="history.vitalSignUnit"
                         :vitalSignName="history.vitalSignName" />
-
                 </div>
             </section>
 
-            <section class="tab-pane fade" id="resep-obat" role="tabpanel" aria-labelledby="unit-vital" tabindex="0">
+            <section class="tab-pane fade" id="resep-obat" role="tabpanel" aria-labelledby="resep-obat" tabindex="0">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in prescriptionHistories">
+                    <PrescriptionCard
+                        :prescription-no="history.PrescriptionNo"
+                        :prescription-date_y-md-hms="history.prescriptionDate_yMdHms"
+                        :paramedic-name="history.paramedicName" />
+                </div>
             </section>
 
-            <section class="tab-pane fade" id="hasil-lab" role="tabpanel" aria-labelledby="unit-vital" tabindex="0">
+            <section class="tab-pane fade" id="hasil-lab" role="tabpanel" aria-labelledby="hasil-lab" tabindex="0">
             </section>
 
-            <section class="tab-pane fade" id="pertemuan" role="tabpanel" aria-labelledby="unit-vital" tabindex="0">
+            <section class="tab-pane fade" id="pertemuan" role="tabpanel" aria-labelledby="pertemuan" tabindex="0">
             </section>
 
             <div class="text-center mt-3" v-if="layoutStore.isLoading">

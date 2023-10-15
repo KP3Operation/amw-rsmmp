@@ -40,12 +40,12 @@ Route::group(['prefix' => 'v1'], function () {
             Route::apiResource('family', FamilyController::class);
             Route::get('/family/fetchsimrs/{family}', [FamilyController::class, 'fetchFamilyDataInSimrs']);
             Route::get('/medical/history/vitalsign', [MedicalHistoryController::class, 'vitalSign']);
+            Route::get('/medical/history/prescriptions/detail', [MedicalHistoryController::class, 'prescriptionHistoryDetail']);
             Route::get('/medical/history/prescription', [MedicalHistoryController::class, 'prescriptionHistory']);
-            Route::get('/medical/history/prescription/{prescriptionNo}', [MedicalHistoryController::class, 'prescriptionHistoryDetail']);
+            Route::get('/medical/history/labresult/detail', [MedicalHistoryController::class, 'labResultDetail']);
             Route::get('/medical/history/labresult', [MedicalHistoryController::class, 'labResult']);
-            Route::get('/medical/history/labresult/{transactionNo}', [MedicalHistoryController::class, 'labResultDetail']);
-            Route::get('/medical/history/appointment', [MedicalHistoryController::class, 'appointmentList']);
-            Route::get('/medical/history/appointment/{appointmentNo}', [MedicalHistoryController::class, 'appointmentListDetail']);
+            Route::get('/medical/history/encounters/details', [MedicalHistoryController::class, 'encounterListDetail']);
+            Route::get('/medical/history/encounters', [MedicalHistoryController::class, 'encounterList']);
         });
 
         Route::group(['prefix' => 'doctor'], function () {

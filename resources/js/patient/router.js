@@ -9,8 +9,11 @@ import FamilyPage from "@patient/Pages/Family/Family.vue";
 import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
 import DataConfirmationPage from "@patient/Pages/Family/DataConfirmation.vue";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
+import PrescriptionDetailPage from "@patient/Pages/History/PrescriptionDetail.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
+import LabResultDetailPage from "@patient/Pages/History/LabResultDetail.vue";
+import EncounterDetailPage from "@patient/Pages/History/EncounterDetail.vue";
 
 const routes = [
     {
@@ -22,6 +25,21 @@ const routes = [
         path: "/appointment",
         name: "AppointmentPage",
         component: AppointmentPage,
+    },
+    {
+        path: "/history/labresult",
+        name: "LabResultDetailPage",
+        component: LabResultDetailPage,
+    },
+    {
+        path: "/history/prescriptions",
+        name: "PrescriptionDetailPage",
+        component: PrescriptionDetailPage,
+    },
+    {
+        path: "/history/encounters",
+        name: "EncounterDetailsPage",
+        component: EncounterDetailPage,
     },
     {
         path: "/history",

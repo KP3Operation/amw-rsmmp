@@ -65,3 +65,24 @@ if (!function_exists('convert_date_to_req_param')) {
         return $parsedDate->format('Y-m-d');
     }
 }
+
+if (!function_exists('get_current_month_start_date')) {
+    function get_current_month_start_date(): string
+    {
+        return date('Y-m-01');
+    }
+}
+
+if (!function_exists('get_current_month_date')) {
+    function get_current_month_date(): string
+    {
+        return date('Y-m-d');
+    }
+}
+
+if (!function_exists('get_current_year_start_date')) {
+    function get_current_year_start_date(): string
+    {
+        return date('Y-01-01');
+    }
+}

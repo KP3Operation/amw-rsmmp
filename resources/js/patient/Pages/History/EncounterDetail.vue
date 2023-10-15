@@ -5,7 +5,7 @@ import {storeToRefs} from "pinia";
 import {onMounted, reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import axios from "axios";
-import {convertDateTimeToDate} from "../../../shared/utils/helpers.js";
+import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 
 const layoutStore = useLayoutStore();
 const {isLoading} = storeToRefs(layoutStore);

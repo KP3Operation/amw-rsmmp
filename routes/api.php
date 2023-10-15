@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\Doctor\FeeController;
 use App\Http\Controllers\Api\V1\Doctor\InpatientListController;
+use App\Http\Controllers\Api\V1\Patient\DoctorScheduleController;
 use App\Http\Controllers\Api\V1\Patient\FamilyController;
 use App\Http\Controllers\Api\V1\Patient\MedicalHistoryController;
 use App\Http\Controllers\Api\V1\Shared\MeController;
@@ -46,6 +47,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/medical/history/labresult', [MedicalHistoryController::class, 'labResult']);
             Route::get('/medical/history/encounters/details', [MedicalHistoryController::class, 'encounterListDetail']);
             Route::get('/medical/history/encounters', [MedicalHistoryController::class, 'encounterList']);
+            Route::get('/doctor/schedules', [DoctorScheduleController::class, 'index']);
         });
 
         Route::group(['prefix' => 'doctor'], function () {

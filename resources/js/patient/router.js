@@ -14,6 +14,8 @@ import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import LabResultDetailPage from "@patient/Pages/History/LabResultDetail.vue";
 import EncounterDetailPage from "@patient/Pages/History/EncounterDetail.vue";
+import DoctorSchedulePage from "@patient/Pages/DoctorSchedule/DoctorSchedule.vue";
+import DoctorScheduleDetailPage from "@patient/Pages/DoctorSchedule/DoctorScheduleDetail.vue";
 
 const routes = [
     {
@@ -45,6 +47,17 @@ const routes = [
         path: "/history",
         name: "HistoryPage",
         component: HistoryPage,
+    },
+
+    {
+        path: "/doctor/schedules/detail",
+        name: "DoctorScheduleDetailPage",
+        component: DoctorScheduleDetailPage,
+    },
+    {
+        path: "/doctor/schedules",
+        name: "DoctorSchedulePage",
+        component: DoctorSchedulePage,
     },
     {
         path: "/profile/edit",

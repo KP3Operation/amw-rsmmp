@@ -43,6 +43,13 @@ export const useLayoutStore = defineStore("layout", () => {
         }
     }
 
+    /**
+     * @param {boolean} loading
+     */
+    function updateLoadingState (loading) {
+       isLoading.value = loading;
+    }
+
     function $reset() {
         patientActiveMenu.value = "home";
         doctorActiveMenu.value = "home";
@@ -61,6 +68,7 @@ export const useLayoutStore = defineStore("layout", () => {
         toggleErrorAlert,
         toggleInfoAlert,
         $reset,
+        updateLoadingState,
         patientActiveMenu,
         doctorActiveMenu,
         isFullView,

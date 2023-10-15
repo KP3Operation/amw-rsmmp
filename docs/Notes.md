@@ -8,6 +8,7 @@
 - [ ] struktur datanya seperti apa? Apakah ada kemungkinan response nya bisa lebih dari satu, jika iya bagaimana kita mengambil data untuk bagian card-atas, jika tidak bagian diagnosis bagaimana mengambil datanya - encounter detail page
 - [ ] tanggal keluar, jam keluar - encounter detail page
 - [ ] apakah ada kemungkinan no medis antara satu pasien dengan yang lain sama?
+- [ ] Bagaimana mendapatkan jam awal dan jam akhir untuk hari sabtu - halaman jadwal dokter
 
 ## 20231007
 

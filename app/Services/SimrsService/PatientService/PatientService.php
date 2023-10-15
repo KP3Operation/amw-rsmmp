@@ -3,8 +3,7 @@
 namespace App\Services\SimrsService\PatientService;
 
 
-use App\Dto\SimrsDto\Patient\PatientAppointmentListDataDto;
-use App\Dto\SimrsDto\Patient\PatientAppointmentListDetailDto;
+use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDataDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDetailDataDto;
@@ -13,6 +12,7 @@ use App\Dto\SimrsDto\Patient\PatientLabResultDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDataDto;
 use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
+use App\Dto\SimrsDto\Patient\ServiceUnitDataDto;
 use App\Models\User;
 use App\Models\UserPatient;
 use Illuminate\Http\Client\HttpClientException;
@@ -241,5 +241,53 @@ class PatientService implements IPatientService
         $data = $response->json();
 
         return PatientEncounterDetailDataDto::from($data);
+    }
+
+    public function getDoctorSchedule(string $dateStart, string $dateEnd, string $serviceUnitID, string $paramedicID): DoctorScheduleDataDto
+    {
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/ParamedicScheduleDateGetList", [
+            "AccessKey" => $accessKey,
+            "DateStart" => $dateStart,
+            "DateEnd" => $dateEnd,
+            "ServiceUnitID" => $serviceUnitID,
+            "ParamedicID" => $paramedicID
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        return DoctorScheduleDataDto::from($data);
+    }
+
+    public function getServiceUnitList(string $serviceUnitId, string $serviceUnitName): ServiceUnitDataDto
+    {
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/ServiceUnitGetList", [
+            "AccessKey" => $accessKey,
+            "ServiceUnitID" => $serviceUnitId,
+            "ServiceUnitName" => $serviceUnitId
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        return ServiceUnitDataDto::from($data);
     }
 }

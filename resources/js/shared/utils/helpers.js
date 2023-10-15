@@ -108,8 +108,7 @@ export function convertDateToFormField(datetime) {
     let d = (date.getDate() < 10 ? '0' : '' )+ date.getDate();
     let m = ((date.getMonth() + 1) < 10 ? '0' :'') + (date.getMonth() + 1);
     let y = date.getFullYear();
-    let x = String(y+"-"+m+"-"+d);
-    return x;
+    return String(y + "-" + m + "-" + d);
 }
 
 /**
@@ -164,4 +163,15 @@ export function convertDateTimeToDateTime(datetime) {
         hour: "numeric",
         minute: "numeric",
     });
+}
+
+/**
+ * @returns {string}
+ */
+export function getCurrentDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + day;
 }

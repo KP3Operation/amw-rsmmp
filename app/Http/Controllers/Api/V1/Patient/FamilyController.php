@@ -74,7 +74,8 @@ class FamilyController extends Controller
 
         if ($request->has('medical_no')) {
             $family->update([
-                'patient_id' => $request->medical_no
+                'patient_id' => $request->medical_no,
+                'medical_no' => $request->medical_no
             ]);
         }
 

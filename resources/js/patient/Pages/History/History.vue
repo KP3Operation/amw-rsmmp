@@ -3,7 +3,6 @@ import MicroscopeWhite from "@resources/static/icons/microscope-white.svg";
 import Header from "@shared/Components/Header/Header.vue";
 import axios from "axios";
 import { onMounted, reactive, ref, watch } from "vue";
-import { usePatientVitalSignStore } from "@patient/+store/patient-vital-sign.store";
 import { useLayoutStore } from "@shared/+store/layout.store";
 import VitalSignCard from "@patient/Components/VitalSignCard/VitalSignCard.vue";
 import PatientCard from "@patient/Components/PatientCard/PatientCard.vue";
@@ -12,32 +11,31 @@ import { useFamilyStore } from "@patient/+store/family.store.js";
 import { storeToRefs } from "pinia";
 import {useMedicalHistoryStore} from "@patient/+store/medical-history.store.js";
 import PrescriptionCard from "@patient/Components/PrescriptionCard/PrescriptionCard.vue";
+import LabResultCard from "@patient/Components/LabResultCard/LabResultCard.vue";
+import EncounterCard from "@patient/Components/EncounterCard/EncounterCard.vue";
 
-const patientVitalSignStore = usePatientVitalSignStore();
 const layoutStore = useLayoutStore();
-const currentActiveTab = ref('unit-vital');
 const modalState = reactive({
     familyMemberFilterModal: null
 });
 const selectedVitalSignType = ref("");
-const labResults = reactive([]);
-const appointments = reactive([]);
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
 const medicalHistoriesStore = useMedicalHistoryStore();
-const { vitalSignHistories, prescriptionHistories, encounterHistories, labResultHistories, selectedPatient } = storeToRefs(medicalHistoriesStore);
+const { vitalSignHistories, prescriptionHistories, encounterHistories,
+    labResultHistories, selectedPatient, selectedTab, selectedFamilyMemberId } = storeToRefs(medicalHistoriesStore);
 
 const fetchVitalSignHistories = () => {
+    medicalHistoriesStore.updateVitalSignHistories([]);
     layoutStore.isLoading = true;
-    patientVitalSignStore.$reset();
-    axios.get(`/api/v1/patient/medical/history/vitalsign?type=${selectedVitalSignType.value}`).then((response) => {
-        const data = response.data.data;
+    axios.get(`/api/v1/patient/medical/history/vitalsign?type=${selectedVitalSignType.value}&family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+        const data = response.data;
         medicalHistoriesStore.updateVitalSignHistories(data.histories);
         medicalHistoriesStore.updateSelectedPatient({
             name: data.patient.name,
-            gender: data.patient.patient_data.gender,
-            medicalNo: data.patient.patient_data.medical_no,
-            birthDate: data.patient.patient_data.birth_date
+            gender: data.patient.gender,
+            medicalNo: data.patient.medical_no,
+            birthDate: data.patient.birth_date
         });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
@@ -47,10 +45,10 @@ const fetchVitalSignHistories = () => {
 }
 
 const fetchPrescriptionHistories = () => {
+    medicalHistoriesStore.updatePrescriptionHitories([]);
     layoutStore.isLoading = true;
-    patientVitalSignStore.$reset();
-    axios.get(`/api/v1/patient/medical/history/prescription`).then((response) => {
-        const data = response.data.data;
+    axios.get(`/api/v1/patient/medical/history/prescription?family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+        const data = response.data;
         medicalHistoriesStore.updatePrescriptionHitories(data.histories);
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
@@ -60,10 +58,10 @@ const fetchPrescriptionHistories = () => {
 }
 
 const fetchLabResults = () => {
+    medicalHistoriesStore.updateLabResultHistories([]);
     layoutStore.isLoading = true;
-    patientVitalSignStore.$reset();
-    axios.get(`/api/v1/patient/medical/history/labresult`).then((response) => {
-        const data = response.data.data;
+    axios.get(`/api/v1/patient/medical/history/labresult?family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+        const data = response.data;
         medicalHistoriesStore.updateLabResultHistories(data.histories);
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
@@ -73,16 +71,28 @@ const fetchLabResults = () => {
 }
 
 const fetchEncounterHistories = () => {
-    console.log('fetch encounters');
+    medicalHistoriesStore.updateEncounterHistories([]);
+    layoutStore.isLoading = true;
+    axios.get(`/api/v1/patient/medical/history/encounters?family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+        const data = response.data;
+        medicalHistoriesStore.updateEncounterHistories(data.histories);
+    }).catch((error) => {
+        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+    }).finally(() => {
+        layoutStore.isLoading = false;
+    });
 }
 
+const onTabChange = (tab) => {
+    medicalHistoriesStore.updateSelectedTab(tab);
+}
 
 watch(selectedVitalSignType, (newValue, oldValue) => {
     selectedVitalSignType.value = newValue;
     fetchVitalSignHistories();
 });
 
-watch(currentActiveTab, (newValue, oldValue) => {
+watch(selectedTab, (newValue, oldValue) => {
     if (newValue === 'unit-vital') {
         fetchVitalSignHistories();
     }
@@ -106,10 +116,11 @@ const fetchFamily = () => {
         familyStore.$patch({
             families: data.families
         });
-        // console.log(families.value);
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
-    });
+    }).finally(() => {
+        layoutStore.isLoading = false;
+    })
 }
 
 const resetFamilyFilter = () => {
@@ -117,11 +128,39 @@ const resetFamilyFilter = () => {
 }
 
 const filterByFamily = () => {
-    console.log('filter');
+    const selectedFamilyMember = families.value.find((family) => family.id === selectedFamilyMemberId.value);
+    medicalHistoriesStore.updateSelectedPatient({
+        name: selectedFamilyMember.name,
+        gender: selectedFamilyMember.gender,
+        medicalNo: selectedFamilyMember.medical_no,
+        birthDate: selectedFamilyMember.birth_date
+    });
+
+    medicalHistoriesStore.updateSelectedFamilyMemberId(selectedFamilyMember.id);
+
+    if (selectedTab.value === 'unit-vital') {
+        fetchVitalSignHistories();
+    }
+
+    if (selectedTab.value === 'resep-obat') {
+        fetchPrescriptionHistories();
+    }
+
+    if (selectedTab.value === 'hasil-lab') {
+        fetchLabResults();
+    }
+
+    if (selectedTab.value === 'pertemuan') {
+        fetchEncounterHistories();
+    }
+
 }
 
 onMounted(() => {
-    fetchVitalSignHistories();
+    if (selectedTab.value === '') {
+        medicalHistoriesStore.updateSelectedTab('unit-vital');
+    }
+
     fetchFamily();
     modalState.familyMemberFilterModal = new bootsrap.Modal("#modal-filter");
 });
@@ -135,53 +174,43 @@ onMounted(() => {
             <i class="bi bi-filter-left fs-2"></i>
         </button>
     </Header>
-
     <div class="px-4 pt-7">
-
         <PatientCard :name="selectedPatient.name" :gender="selectedPatient.gender"
             :medicalNo="selectedPatient.medicalNo"
             :birthDate="selectedPatient.birthDate" />
-
         <div class="tab-riwayat-medis nav nav-pills d-flex flex-nowrap col-gap-20 mt-4">
-            <button class="nav-link unit-vital active" data-bs-toggle="pill" data-bs-target="#unit-vital" role="tab"
-                aria-controls="unit-vital" aria-selected="true" @click="currentActiveTab = 'unit-vital'">
+            <button class="nav-link unit-vital" :class="selectedTab === 'unit-vital' ? 'active' : ''" data-bs-toggle="pill" data-bs-target="#unit-vital" role="tab"
+                aria-controls="unit-vital" aria-selected="true" @click="onTabChange('unit-vital')">
                 <div class="icon">
                     <i class="bi bi-heart-pulse-fill"></i>
                 </div>
-
                 <p>{{ $t('history.vital_sign') }}</p>
             </button>
-
-            <button class="nav-link resep-obat" data-bs-toggle="pill" data-bs-target="#resep-obat" role="tab"
-                aria-controls="resep-obat" aria-selected="true" @click="currentActiveTab = 'resep-obat'">
+            <button class="nav-link resep-obat" :class="selectedTab === 'resep-obat' ? 'active' : ''" data-bs-toggle="pill" data-bs-target="#resep-obat" role="tab"
+                aria-controls="resep-obat" aria-selected="true" @click="onTabChange('resep-obat')">
                 <div class="icon">
                     <i class="bi bi-capsule"></i>
                 </div>
-
                 <p>{{ $t('history.medical_prescription') }}</p>
             </button>
-
-            <button class="nav-link hasil-lab" data-bs-toggle="pill" data-bs-target="#hasil-lab" role="tab"
-                aria-controls="hasil-lab" aria-selected="true" @click="currentActiveTab = 'hasil-lab'">
+            <button class="nav-link hasil-lab" :class="selectedTab === 'hasil-lab' ? 'active' : ''" data-bs-toggle="pill" data-bs-target="#hasil-lab" role="tab"
+                aria-controls="hasil-lab" aria-selected="true" @click="onTabChange('hasil-lab')">
                 <div class="icon">
                     <img :src="MicroscopeWhite" alt="Icon" width="16" height="16">
                 </div>
-
                 <p>{{ $t('history.lab_result') }}</p>
             </button>
-
-            <button class="nav-link pertemuan" data-bs-toggle="pill" data-bs-target="#pertemuan" role="tab"
-                aria-controls="pertemuan" aria-selected="true" @click="currentActiveTab = 'pertemuan'">
+            <button class="nav-link pertemuan" :class="selectedTab === 'pertemuan' ? 'active' : ''" data-bs-toggle="pill" data-bs-target="#pertemuan" role="tab"
+                aria-controls="pertemuan" aria-selected="true" @click="onTabChange('pertemuan')" form="#">
                 <div class="icon">
                     <i class="bi bi-clipboard-heart-fill"></i>
                 </div>
-
                 <p>{{ $t('history.meeting') }}</p>
             </button>
         </div>
-
         <div class="tab-content mt-4" id="tab-content">
-            <section class="tab-pane fade show active" id="unit-vital" role="tabpanel" aria-labelledby="unit-vital"
+            <section class="tab-pane fade"
+                     :class="selectedTab === 'unit-vital' ? 'show active' : ''" id="unit-vital" role="tabpanel" aria-labelledby="unit-vital"
                 tabindex="0">
                 <div id="multiselect" class="dropdown filter-sticky d-flex col-gap-20 align-items-center">
                     <p>Tipe</p>
@@ -199,8 +228,7 @@ onMounted(() => {
                         :vitalSignName="history.vitalSignName" />
                 </div>
             </section>
-
-            <section class="tab-pane fade" id="resep-obat" role="tabpanel" aria-labelledby="resep-obat" tabindex="0">
+            <section class="tab-pane fade" :class="selectedTab === 'resep-obat' ? 'show active' : ''" id="resep-obat" role="tabpanel" aria-labelledby="resep-obat" tabindex="0">
                 <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in prescriptionHistories">
                     <PrescriptionCard
                         :prescription-no="history.PrescriptionNo"
@@ -208,13 +236,25 @@ onMounted(() => {
                         :paramedic-name="history.paramedicName" />
                 </div>
             </section>
-
-            <section class="tab-pane fade" id="hasil-lab" role="tabpanel" aria-labelledby="hasil-lab" tabindex="0">
+            <section class="tab-pane fade" :class="selectedTab === 'hasil-lab' ? 'show active' : ''" id="hasil-lab" role="tabpanel" aria-labelledby="hasil-lab" tabindex="0">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in labResultHistories">
+                    <LabResultCard
+                        paramedic-name="-"
+                        :sequence-no="result.sequenceNo"
+                        :date="result.executionDate_yMdHms"
+                        :transaction-no="result.transactionNo"
+                        :age="result.age"
+                        :sex="result.sex"/>
+                </div>
             </section>
-
-            <section class="tab-pane fade" id="pertemuan" role="tabpanel" aria-labelledby="pertemuan" tabindex="0">
+            <section class="tab-pane fade" :class="selectedTab === 'pertemuan' ? 'show active' : ''" id="pertemuan" role="tabpanel" aria-labelledby="pertemuan" tabindex="0">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in encounterHistories">
+                    <EncounterCard
+                        :registration-no="result.registrationNo"
+                        :date="result.registrationDate_yMdHms"
+                        :paramedic-name="result.paramedicName"/>
+                </div>
             </section>
-
             <div class="text-center mt-3" v-if="layoutStore.isLoading">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
@@ -239,22 +279,18 @@ onMounted(() => {
                     <form action="" class="d-flex flex-column rows-gap-16">
                         <div>
                             <label for="member" class="d-block text-start">{{ $t('history.modal_filter.member') }}</label>
-                            <select name="member" id="member" class="form-select mt-2">
+                            <select v-model="selectedFamilyMemberId" name="member" id="member" class="form-select mt-2">
                                 <option v-for="(member, index) in families" :value="member.id">{{ member.name }}</option>
                             </select>
                         </div>
-
                         <div class="d-flex col-gap-20">
-
                             <button type="reset" @click="resetFamilyFilter" class="w-50 btn btn-red-500-rounded"
                                 data-bs-dismiss="modal">{{
                                     $t('history.modal_filter.reset') }}</button>
-
-                            <button type="button" @click="filterByFamily" class="w-50 btn btn-blue-500-rounded"
+                            <button type="button" @click="filterByFamily" class="w-50 btn btn-blue-500-rounded" :class="selectedFamilyMemberId === 0 ? 'disabled' : ''"
                                 data-bs-dismiss="modal">{{
                                     $t('history.modal_filter.apply') }}</button>
                         </div>
-
                     </form>
                 </div>
             </div>

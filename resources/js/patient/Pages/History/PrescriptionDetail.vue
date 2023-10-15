@@ -6,7 +6,7 @@ import axios from "axios";
 import {useLayoutStore} from "@shared/+store/layout.store.js";
 import {storeToRefs} from "pinia";
 import {useMedicalHistoryStore} from "@patient/+store/medical-history.store.js";
-import {convertDateTimeToDate} from "../../../shared/utils/helpers.js";
+import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 
 /**
  * @type {Ref<UnwrapRef<string>>}

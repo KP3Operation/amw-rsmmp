@@ -2,6 +2,12 @@
 
 ### Questions
 - [ ] Bagaimana cara mendapatkan 'Dosis Obat' pada halaman detail resep obat
+- [ ] Bagaimana cara mendapatkan nama 'Dokter Pemeriksa' pada tab halaman hasil lab
+- [ ] Response data simrs untuk labResult tidak sama antara response asli dengan response contoh
+- [ ] if it is possible please provide the response type for every property for easy data type parsing
+- [ ] struktur datanya seperti apa? Apakah ada kemungkinan response nya bisa lebih dari satu, jika iya bagaimana kita mengambil data untuk bagian card-atas, jika tidak bagian diagnosis bagaimana mengambil datanya - encounter detail page
+- [ ] tanggal keluar, jam keluar - encounter detail page
+- [ ] apakah ada kemungkinan no medis antara satu pasien dengan yang lain sama?
 
 ## 20231007
 

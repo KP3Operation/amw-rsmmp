@@ -6,6 +6,9 @@ namespace App\Services\SimrsService\PatientService;
 use App\Dto\SimrsDto\Patient\PatientAppointmentListDataDto;
 use App\Dto\SimrsDto\Patient\PatientAppointmentListDetailDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
+use App\Dto\SimrsDto\Patient\PatientEncounterDataDto;
+use App\Dto\SimrsDto\Patient\PatientEncounterDetailDataDto;
+use App\Dto\SimrsDto\Patient\PatientEncounterDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDataDto;
@@ -22,6 +25,6 @@ interface IPatientService
     public function getPrescriptionHistoryDetail(string $prescriptionNo): PatientPrescriptionHistoryDetailDataDto;
     public function getLabResult(string $medicalNo): PatientLabResultDataDto;
     public function getLabResultDetail(string $transactionNo): PatientLabResultDetailDataDto;
-    public function getAppointmentList(string $AppointmentNo): PatientAppointmentListDataDto;
-    public function getAppointmentListDetail(string $appointmentNo): PatientAppointmentListDetailDto;
+    public function getEncounterList(string $medicalNo, string $serviceUniId, string $paramedicId, string $dateStart, string $dateEnd): PatientEncounterDataDto;
+    public function getEncounterListDetail(string $registrationNo, string $serviceUniId, string $paramedicId): PatientEncounterDetailDataDto;
 }

@@ -16,16 +16,31 @@ export const useLayoutStore = defineStore("layout", () => {
     function toggleSuccessAlert(msg = '') {
         showSuccessAlert.value = !showSuccessAlert.value;
         successAlertMessage.value = `${msg}`;
+        if (showSuccessAlert.value) {
+            setTimeout(() => {
+                toggleSuccessAlert();
+            }, 3000);
+        }
     }
 
     function toggleErrorAlert(msg = '') {
         showErrorAlert.value = !showErrorAlert.value;
         errorAlertMessage.value = `${msg}`;
+        if (showErrorAlert.value) {
+            setTimeout(() => {
+                toggleErrorAlert();
+            }, 3000);
+        }
     }
 
     function toggleInfoAlert(msg = '') {
         showInfoAlert.value = !showInfoAlert.value;
         infoAlertMessage.value = `${msg}`;
+        if (showInfoAlert.value) {
+            setTimeout(() => {
+                toggleInfoAlert();
+            }, 3000);
+        }
     }
 
     function $reset() {

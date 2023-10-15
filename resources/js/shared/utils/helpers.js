@@ -144,3 +144,24 @@ export function toIdrFormat(value) {
         currency: 'IDR',
     }).format(value);
 }
+
+
+/**
+ * @param {Date|string} datetime
+ * @returns {String}
+ */
+export function convertDateTimeToDateTime(datetime) {
+    if (datetime === "-") {
+        return "-";
+    }
+
+    const date = new Date(datetime);
+
+    return date.toLocaleTimeString("id-ID", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "numeric",
+        minute: "numeric",
+    });
+}

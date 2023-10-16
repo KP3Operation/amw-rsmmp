@@ -21,7 +21,7 @@ class InpatientListController extends Controller
         $userDoctor = $user->userDoctorData;
 
         $inpatientList = $this->doctorService
-            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? [], 10);
+            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? "", 10);
 
         return response()->json([
             'patients' => $inpatientList->data

@@ -3,7 +3,13 @@ import { useAuthStore } from "@shared/+store/auth.store.js";
 import { onMounted, reactive, ref } from "vue";
 import Form from "vform";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
-import { convertDateTimeToDate, getThisMonthEndDate, getThisMonthStartDate, toIdrFormat } from "@shared/utils/helpers.js";
+import {
+    convertDateTimeToDate,
+    getCurrentDate,
+    getThisMonthEndDate,
+    getThisMonthStartDate,
+    toIdrFormat
+} from "@shared/utils/helpers.js";
 import { storeToRefs } from "pinia";
 
 const authStore = useAuthStore();
@@ -13,7 +19,7 @@ const showFilter = ref(false);
 const filterForm = reactive(
     new Form({
         start_date: getThisMonthStartDate(),
-        end_date: getThisMonthEndDate()
+        end_date: getCurrentDate()
     })
 );
 const pending = ref(0);
@@ -31,7 +37,7 @@ const filterSummaryFee = () => {
     }).finally(() => {
         layoutStore.isLoading = false;
         if (filterForm.start_date === getThisMonthStartDate() &&
-            filterForm.end_date === getThisMonthEndDate()) {
+            filterForm.end_date === getCurrentDate()) {
             period.value = "Bulan ini";
         } else {
             period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.end_date)}`;

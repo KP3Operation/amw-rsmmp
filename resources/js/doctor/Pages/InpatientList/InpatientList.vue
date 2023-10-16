@@ -1,6 +1,6 @@
 <script setup>
 import Header from "@shared/Components/Header/Header.vue";
-import { onMounted, reactive, ref } from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import Form from "vform";
 import InpatientListCard from "@doctor/Components/InpatientListCard/InpatientListCard.vue";
@@ -12,11 +12,13 @@ const inpatientStore = useInpatientStore();
 const { patients, patientCount, selectedRegistrationNo } = storeToRefs(inpatientStore);
 const filterForm = reactive(
     new Form({
-        room_name: []
+        room_name: ""
     })
 );
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
+const selectedRoomName = ref("");
+
 const filterInpatientList = () => {
     layoutStore.isLoading = true;
     filterForm.get('/api/v1/doctor/inpatient').then((response) => {
@@ -30,23 +32,12 @@ const filterInpatientList = () => {
     })
 }
 
-const onFilterChange = (event) => {
-    if (event.target.value === "Semua") {
-        if (filterForm.room_name.includes('Semua')) {
-            filterForm.fill({
-                room_name: ['Anggrek', 'Melati', 'ICU', 'Semua']
-            });
-        } else {
-            filterForm.fill({
-                room_name: []
-            });
-        }
-    } else {
-        filterForm.room_name = filterForm.room_name.filter(target => target !== 'Semua');
-    }
-
+watch(selectedRoomName, (newValue, oldValue) => {
+    filterForm.fill({
+        room_name: newValue
+    });
     filterInpatientList();
-}
+});
 
 const setSelectedPatient = (patient) => {
     selectedRegistrationNo.value = patient.registrationNo;
@@ -57,7 +48,6 @@ onMounted(() => {
     inpatientStore.$reset();
     filterInpatientList();
 });
-
 </script>
 
 <template>
@@ -66,43 +56,12 @@ onMounted(() => {
         class="filter-inpatient filter-sticky-2 d-flex align-items-center justify-content-between col-gap-20 p-4 mt-6 bg-white position-sticky">
         <p class="w-50"><span v-if="patientCount !== 0">{{ patientCount }} Data Pasien</span></p>
         <div id="multiselect" class="w-50 dropdown filter-sticky d-flex col-gap-20 align-items-center p-0">
-            <button
-                class="d-flex align-items-center w-100 px-3 py-2 border border-gray-400 rounded-3 bg-white justify-content-between text-black"
-                type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span v-if="patientCount !== 0">Semua Ruangan</span>
-                <span v-if="patientCount === 0">Tidak Ada Data</span>
-                <i class="bi bi-chevron-down"></i>
-            </button>
-            <ul class="dropdown-menu px-4 py-3 shadow rounded-0 border-0 mt-2">
-                <li>
-                    <input v-model="filterForm.room_name" @change="onFilterChange($event)" class="form-check-input on"
-                        type="checkbox" name="filter" value="Semua" id="semua">
-                    <label class="form-check-label" for="semua">
-                        Semua Ruangan
-                    </label>
-                </li>
-                <li class="mt-3">
-                    <input v-model="filterForm.room_name" @change="onFilterChange($event)" class="form-check-input"
-                        type="checkbox" name="filter" value="Anggrek" id="anggrek">
-                    <label class="form-check-label" for="anggrek">
-                        Anggrek
-                    </label>
-                </li>
-                <li class="mt-3">
-                    <input v-model="filterForm.room_name" @change="onFilterChange($event)" class="form-check-input"
-                        type="checkbox" name="filter" value="Melati" id="melati">
-                    <label class="form-check-label" for="melati">
-                        Melati
-                    </label>
-                </li>
-                <li class="mt-3">
-                    <input v-model="filterForm.room_name" @change="onFilterChange($event)" class="form-check-input"
-                        type="checkbox" name="filter" value="ICU" id="icu">
-                    <label class="form-check-label" for="icu">
-                        ICU
-                    </label>
-                </li>
-            </ul>
+            <select class="form-select" aria-label="Tipe" v-model="selectedRoomName">
+                <option value="" selected>Semua Ruangan</option>
+                <option value="anggrek">Anggrek</option>
+                <option value="melati">Melati</option>
+                <option value="icu">ICU</option>
+            </select>
         </div>
     </section>
     <div class="text-center mt-5" v-if="isLoading">

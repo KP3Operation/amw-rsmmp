@@ -2,13 +2,13 @@
 
 namespace App\Services\SimrsService\DoctorService;
 
+use App\Dto\SimrsDto\Doctor\AppointmentDataDto;
+use App\Dto\SimrsDto\Doctor\AppointmentDetailDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorFeeByTrxDateDataDto;
 use App\Dto\SimrsDto\Doctor\InpatientListDataDto;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
-use App\Dto\SimrsDto\Doctor\DoctorAppointmentListDataDto;
-use App\Dto\SimrsDto\Doctor\DoctorAppointmentListDetailDto;
 use App\Dto\SimrsDto\Doctor\DoctorFeeByPaymentDateDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorSummaryFeeDataDto;
 use App\Dto\SimrsDto\Doctor\PatientRegistrationCPPTDataDto;
@@ -108,7 +108,7 @@ class DoctorService implements IDoctorService
         return DoctorFeeByPaymentDateDataDto::from($data);
     }
 
-    public function getInpatientList(string $paramedicId, array $roomName, int $count = 10): InpatientListDataDto
+    public function getInpatientList(string $paramedicId, string $roomName, int $count = 10): InpatientListDataDto
     {
         $accessKey = config("simrs.access_key");
         $response = Http::withHeaders([
@@ -120,7 +120,7 @@ class DoctorService implements IDoctorService
             "GuarantorID" => "",
             "ParamedicID" => $paramedicId,
             "ClassID" => "",
-            "RoomID" => (count($roomName) > 1) ? strtolower(implode(",", $roomName)) : "",
+            "RoomID" => $roomName,
             "EwsStatus" => "",
             "RecordCount" => $count,
         ]);
@@ -153,5 +153,48 @@ class DoctorService implements IDoctorService
         $data = $response->json();
 
         return PatientRegistrationCPPTDataDto::from($data);
+    }
+
+    public function getAppointments(string $paramedicId, string $appointmentDate): AppointmentDataDto
+    {
+        $accessKey = config("simrs.access_key");
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false,
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/AppointmentGetListByParamedicIDAppointmentDate", [
+            "AccessKey" => $accessKey,
+            "ParamedicID" => $paramedicId,
+            "AppointmentDate" => $appointmentDate
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
+        }
+
+        $data = $response->json();
+
+        return AppointmentDataDto::from($data);
+    }
+
+    public function getAppointmentDetail(string $appointmentNo): AppointmentDetailDataDto
+    {
+        $accessKey = config("simrs.access_key");
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false,
+        ])->get(config("simrs.base_url") . "/V1_1/AppointmentWS.asmx/AppointmentGetOne", [
+            "AccessKey" => $accessKey,
+            "AppointmentNo" => $appointmentNo
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Failed connecting to SIMRS", 500);
+        }
+
+        $data = $response->json();
+
+        return AppointmentDetailDataDto::from($data);
     }
 }

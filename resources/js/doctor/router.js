@@ -10,6 +10,7 @@ import InpatientListPage from "@doctor/Pages/InpatientList/InpatientList.vue";
 import PatientDetailPage from "@doctor/Pages/InpatientList/PatientDetail.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
+import AppointmentDetailPage from "@doctor/Pages/Appointment/AppointmentDetail.vue";
 
 
 const routes = [
@@ -29,6 +30,10 @@ const routes = [
         component: FeePage,
     },
     {
+        path: "/appointment/detail",
+        name: "AppointmentDetailPage",
+        component: AppointmentDetailPage,
+    },    {
         path: "/appointment",
         name: "AppointmentPage",
         component: AppointmentPage,

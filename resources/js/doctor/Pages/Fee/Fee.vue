@@ -6,7 +6,7 @@ import { onMounted, reactive, ref } from "vue";
 import Form from "vform";
 import {
     convertDateTimeToDate,
-    convertDateToFormField,
+    convertDateToFormField, getCurrentDate,
     getThisMonthEndDate,
     getThisMonthStartDate
 } from "@shared/utils/helpers.js";
@@ -21,7 +21,7 @@ const feeByTrxDateStore = useFeeByTrxDateStore();
 const filterForm = reactive(
     new Form({
         start_date: convertDateToFormField(new Date(getThisMonthStartDate())),
-        end_date: convertDateToFormField(new Date(getThisMonthEndDate()))
+        end_date: getCurrentDate()
     })
 );
 
@@ -60,19 +60,16 @@ onMounted(() => {
                 <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('start_date')"
                     v-html="filterForm.errors.get('start_date')"></small>
             </div>
-
             <div>
                 <label for="hingga" class="fs-6 text-gray-700">Hingga</label>
                 <input type="date" name="hingga" id="hingga" class="form-control mt-2" v-model="filterForm.end_date">
                 <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('start_date')"
                     v-html="filterForm.errors.get('start_date')"></small>
             </div>
-
             <button type="submit" class="btn bg-green-700 d-flex align-items-center justify-content-center">
                 <i class="bi bi-search icon-white"></i>
             </button>
         </form>
-
         <p class="error-filter mt-3 text-red-500 fs-6 fw-semibold"></p>
     </div>
     <section class="tab-periode mt-4">

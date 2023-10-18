@@ -368,6 +368,10 @@ class PatientService implements IPatientService
     {
         $accessKey = config("simrs.access_key");
 
+        if (!$medicalNo) {
+            throw new \Exception("Pasien tidak memiliki No. RM");
+        }
+
         $response = Http::withHeaders([
             'Content-Type' => ""
         ])->withOptions([

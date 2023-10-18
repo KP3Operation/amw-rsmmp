@@ -13,6 +13,10 @@ import {useMedicalHistoryStore} from "@patient/+store/medical-history.store.js";
 import PrescriptionCard from "@patient/Components/PrescriptionCard/PrescriptionCard.vue";
 import LabResultCard from "@patient/Components/LabResultCard/LabResultCard.vue";
 import EncounterCard from "@patient/Components/EncounterCard/EncounterCard.vue";
+import NotFoundImage from "@resources/static/images/not-found.png";
+import DoctorImage from "@resources/static/images/doctor.png";
+import LabImage from "@resources/static/images/lab.png";
+import Doctor2Image from "@resources/static/images/doctor-2.png";
 
 const layoutStore = useLayoutStore();
 const modalState = reactive({
@@ -112,7 +116,7 @@ watch(selectedTab, (newValue, oldValue) => {
 
 const fetchFamily = () => {
     axios.get(`/api/v1/patient/family`).then((response) => {
-        const data = response.data.data;
+        const data = response.data;
         familyStore.$patch({
             families: data.families
         });
@@ -222,10 +226,15 @@ onMounted(() => {
                         <option value="RESP">Laju Pernapasan</option>
                     </select>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in vitalSignHistories">
+                <div v-if="vitalSignHistories.length > 0" class="d-flex flex-column rows-gap-16 mt-4" v-for="history in vitalSignHistories">
                     <VitalSignCard :dateCreated="history.recordDate_yMdHms" :timeCreated="history.recordTime"
                         :registrationNo="history.registrationNo" :vitalSignUnit="history.vitalSignUnit"
                         :vitalSignName="history.vitalSignName" />
+                </div>
+                <div class="text-center" v-if="vitalSignHistories.length < 1 && !layoutStore.isLoading">
+                    <img :src="NotFoundImage" alt="Ilustrasi Tidak Ada Data"
+                         width="238" height="198" class="d-inline-block">
+                    <p class="mt-3 fs-3 fw-bold">Anda Belum Memiliki <br> Hasil Tanda Unit Vital</p>
                 </div>
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'resep-obat' ? 'show active' : ''" id="resep-obat" role="tabpanel" aria-labelledby="resep-obat" tabindex="0">
@@ -234,6 +243,11 @@ onMounted(() => {
                         :prescription-no="history.PrescriptionNo"
                         :prescription-date_y-md-hms="history.prescriptionDate_yMdHms"
                         :paramedic-name="history.paramedicName" />
+                </div>
+                <div class="text-center mt-3" v-if="prescriptionHistories.length < 1 && !layoutStore.isLoading">
+                    <img :src="DoctorImage" alt="Ilustrasi Tidak Ada Data"
+                         width="238" height="198" class="d-inline-block">
+                    <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki Resep Obat</p>
                 </div>
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'hasil-lab' ? 'show active' : ''" id="hasil-lab" role="tabpanel" aria-labelledby="hasil-lab" tabindex="0">
@@ -246,6 +260,12 @@ onMounted(() => {
                         :age="result.age"
                         :sex="result.sex"/>
                 </div>
+                <div class="text-center mt-3" v-if="labResultHistories.length < 1 && !layoutStore.isLoading">
+                    <img :src="LabImage" alt="Ilustrasi Tidak Ada Data"
+                         width="238" height="198" class="d-inline-block">
+                    <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki <br>
+                        Riwayat Hasil Lab</p>
+                </div>
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'pertemuan' ? 'show active' : ''" id="pertemuan" role="tabpanel" aria-labelledby="pertemuan" tabindex="0">
                 <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in encounterHistories">
@@ -253,6 +273,12 @@ onMounted(() => {
                         :registration-no="result.registrationNo"
                         :date="result.registrationDate_yMdHms"
                         :paramedic-name="result.paramedicName"/>
+                </div>
+                <div class="text-center mt-3" v-if="encounterHistories.length < 1 && !layoutStore.isLoading">
+                    <img :src="Doctor2Image" alt="Ilustrasi Tidak Ada Data"
+                         width="238" height="198" class="d-inline-block">
+                    <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki
+                        Pertemuan</p>
                 </div>
             </section>
             <div class="text-center mt-3" v-if="layoutStore.isLoading">

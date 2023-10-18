@@ -10,22 +10,31 @@ use App\Http\Resources\Patient\StoreFamilyResource;
 use App\Http\Resources\Patient\UpdateFamilyResource;
 use App\Models\Family;
 use App\Models\User;
+use App\Services\SimrsService\DoctorService\IDoctorService;
 use App\Services\SimrsService\PatientService\IPatientService;
 use Illuminate\Validation\ValidationException;
 
 class FamilyController extends Controller
 {
     private IPatientService $patientService;
+    private IDoctorService $doctorService;
 
-    public function __construct(IPatientService $patientService)
+    public function __construct(IPatientService $patientService, IDoctorService $doctorService)
     {
         $this->patientService = $patientService;
+        $this->doctorService = $doctorService;
     }
 
-    public function index(): FamilyResource
+    public function index()
     {
         $user = User::findOrFail(auth()->user()->id);
-        return new FamilyResource($user->families);
+        $serviceUnitLists = $this->patientService->getServiceUnitList('', '');
+        $paramedics = $this->doctorService->getDoctors('');
+        return response()->json([
+            'families' => $user->families,
+            'service_units' => $serviceUnitLists->data,
+            'paramedics' => $paramedics->data
+        ]);
     }
 
     public function store(StoreFamilyRequest $request): StoreFamilyResource
@@ -55,6 +64,13 @@ class FamilyController extends Controller
 
     public function update(UpdateFamilyRequest $request, Family $family): UpdateFamilyResource
     {
+        $familySimrsData = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
+        $familyData = $familySimrsData->data->first();
+
+        if (!$familyData) {
+            throw  new \Exception("Data keluarga tidak sesuai dengan data pada SIMRS");
+        }
+
         $family->update($request->only(
             "ssn",
             "name",
@@ -93,7 +109,7 @@ class FamilyController extends Controller
         $response = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
         $patientData = $response->data->first();
 
-        if ($patientData == null) {
+        if (!$patientData) {
             throw ValidationException::withMessages(["name" => "Pasien tidak terdaftar di rumah sakit."]);
         }
 

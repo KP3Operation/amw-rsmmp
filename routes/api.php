@@ -49,6 +49,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/medical/history/encounters/details', [MedicalHistoryController::class, 'encounterListDetail']);
             Route::get('/medical/history/encounters', [MedicalHistoryController::class, 'encounterList']);
             Route::get('/doctor/schedules', [DoctorScheduleController::class, 'index']);
+            Route::post('/appointments/store', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'store']);
+            Route::delete('/appointments', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'destroy']);
+            Route::get('/appointments', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'index']);
         });
 
         Route::group(['prefix' => 'doctor'], function () {

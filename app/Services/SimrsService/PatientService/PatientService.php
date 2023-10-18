@@ -3,6 +3,8 @@
 namespace App\Services\SimrsService\PatientService;
 
 
+use App\Dto\SimrsDto\Patient\AppointmentDataDto;
+use App\Dto\SimrsDto\Patient\CreateAppointmentDataDto;
 use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDataDto;
@@ -13,6 +15,7 @@ use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDataDto;
 use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Dto\SimrsDto\Patient\ServiceUnitDataDto;
+use App\Models\Simrs\Patient\CreateAppointment;
 use App\Models\User;
 use App\Models\UserPatient;
 use Illuminate\Http\Client\HttpClientException;
@@ -289,5 +292,102 @@ class PatientService implements IPatientService
         $data = $response->json();
 
         return ServiceUnitDataDto::from($data);
+    }
+
+    public function createAppointment(CreateAppointment $createAppointment): CreateAppointmentDataDto
+    {
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/V1_1/AppointmentWS.asmx/AppointmentCreate", [
+            "AccessKey" => $accessKey,
+            "ServiceUnitID" => $createAppointment->serviceUnitID,
+            "ParamedicID" => $createAppointment->paramedicID,
+            "AppointmentDate" => $createAppointment->appointmentDate,
+            "AppointmentTime" => $createAppointment->appointmentTime,
+            "PatientID" => $createAppointment->patientID,
+            "FirstName" => $createAppointment->firstName,
+            "MiddleName" => $createAppointment->middleName != null ? $createAppointment->middleName : "",
+            "LastName" => $createAppointment->lastName != null ? $createAppointment->lastName : "",
+            "DateOfBirth" => $createAppointment->dateOfBirth,
+            "Sex" => $createAppointment->sex,
+            "StreetName" => $createAppointment->streetName != null ? $createAppointment->streetName : "",
+            "Email" => $createAppointment->email,
+            "GuarantorID" => $createAppointment->guarantorID,
+            "District" => $createAppointment->district != null ? $createAppointment->district :  "",
+            "County" => $createAppointment->county != null ? $createAppointment->county :  "",
+            "City" => $createAppointment->city != null ? $createAppointment->city :  "",
+            "State" => $createAppointment->state != null ? $createAppointment->state :  "",
+            "ZipCode" => $createAppointment->zipCode != null ? $createAppointment->zipCode :  "",
+            "PhoneNo" => $createAppointment->phoneNo != null ? $createAppointment->phoneNo : "",
+            "Notes" => $createAppointment->notes != null ? $createAppointment->notes :  "",
+            "BirthPlace" => $createAppointment->birthPlace != null ? $createAppointment->birthPlace : "",
+            "Ssn" => $createAppointment->ssn != null ? $createAppointment->ssn :  "",
+            "MobilePhoneNo" => $createAppointment->mobilePhoneNo != null ? $createAppointment->mobilePhoneNo :  "",
+        ]);
+
+        // TODO: Need to show error message from SIMRS
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        if ($data['status'] == 'ERR') {
+            throw new \Exception($data['data']);
+        }
+
+        return CreateAppointmentDataDto::from($data);
+    }
+
+    public function deleteAppointment(string $appointmentNo): bool
+    {
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/AppointmentCancel", [
+            "AccessKey" => $accessKey,
+            "AppointmentNo" => $appointmentNo,
+        ]);
+
+        // TODO: Need to show error message from SIMRS
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        return true;
+    }
+
+    public function getAppointments(string $medicalNo): AppointmentDataDto
+    {
+        $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/AppointmentWS.asmx/AppointmentGetListByMedicalNo", [
+            "AccessKey" => $accessKey,
+            "MedicalNo" => $medicalNo, // "087463" -> test data
+        ]);
+
+        // TODO: Need to show error message from SIMRS
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        if ($data['status'] == 'ERR') {
+            throw new \Exception($data['data']);
+        }
+
+        return AppointmentDataDto::from($data);
     }
 }

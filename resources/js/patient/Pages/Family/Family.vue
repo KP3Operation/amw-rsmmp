@@ -20,7 +20,7 @@ const modalState = reactive({
 
 const fetchFamily = () => {
     axios.get(`/api/v1/patient/family`).then((response) => {
-        const data = response.data.data;
+        const data = response.data;
         familyStore.$patch({
             families: data.families
         });

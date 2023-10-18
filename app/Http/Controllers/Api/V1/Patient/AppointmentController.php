@@ -29,6 +29,10 @@ class AppointmentController extends Controller
             $medicalNo = $request->medical_no;
         }
 
+        if (!$medicalNo || $medicalNo === '') {
+            throw new \Exception("Pasien tidak memiliki No. RM");
+        }
+
         $appointments = $this->patientService->getAppointments($medicalNo);
 
         $response = new \stdClass();

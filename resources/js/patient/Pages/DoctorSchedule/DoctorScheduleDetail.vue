@@ -5,11 +5,14 @@ import {storeToRefs} from "pinia";
 import axios from "axios";
 import {useLayoutStore} from "@shared/+store/layout.store.js";
 import {onMounted, ref} from "vue";
+import router from "@patient/router.js";
+import {useAppointmentStore} from "@patient/+store/appointment.store.js";
 
 const layoutStore = useLayoutStore();
 const {isLoading} = storeToRefs(layoutStore);
 const doctorScheduleStore = useDoctorScheduleStore();
 const { schedules, selectedParamedicId, selectedDate, selectedServiceUnitId} = storeToRefs(doctorScheduleStore);
+const appointmentStore = useAppointmentStore();
 let selectedSchedule = ref({});
 
 const fetchDoctorScheduleDetail = () => {
@@ -29,6 +32,12 @@ const fetchDoctorScheduleDetail = () => {
     }).finally(() => {
         layoutStore.updateLoadingState(false);
     });
+}
+
+const navigateToCreateAppointment = () => {
+    appointmentStore.updateSelectedParamedicId(selectedSchedule.value.paramedicID);
+    appointmentStore.updateSelectedServiceUnitId(selectedSchedule.value.serviceUnitID);
+    router.push({name: 'CreateAppointmentPage'});
 }
 
 onMounted(() => {
@@ -72,7 +81,7 @@ onMounted(() => {
                     <p class="text-end">-</p>
                 </div>
             </div>
-            <a href="#" class="d-block btn btn-blue-500-rounded mt-4">Buat Jadwal Konsultasi</a>
+            <a href="#" @click="navigateToCreateAppointment" class="d-block btn btn-blue-500-rounded mt-4">Buat Jadwal Konsultasi</a>
         </section>
     </div>
 </template>

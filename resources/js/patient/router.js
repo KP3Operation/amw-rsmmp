@@ -16,12 +16,18 @@ import LabResultDetailPage from "@patient/Pages/History/LabResultDetail.vue";
 import EncounterDetailPage from "@patient/Pages/History/EncounterDetail.vue";
 import DoctorSchedulePage from "@patient/Pages/DoctorSchedule/DoctorSchedule.vue";
 import DoctorScheduleDetailPage from "@patient/Pages/DoctorSchedule/DoctorScheduleDetail.vue";
+import CreateAppointmentPage from "@patient/Pages/Appointment/CreateAppointment.vue";
 
 const routes = [
     {
         path: "/home",
         name: "HomePage",
         component: HomePage,
+    },
+    {
+        path: "/appointment/create",
+        name: "CreateAppointmentPage",
+        component: CreateAppointmentPage,
     },
     {
         path: "/appointment",

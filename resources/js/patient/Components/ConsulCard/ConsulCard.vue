@@ -1,19 +1,26 @@
 <script setup>
-import { toRefs } from "vue";
+import {onMounted, ref, toRefs} from "vue";
 
 const props = defineProps({
     doctor: String,
     unit: String,
     date: String,
     time: String,
-    id: String
+    id: Number
 });
+let { doctor, unit, date, time, id } = toRefs(props);
 
-let { doctor, unit, date, time } = toRefs(props);
+const isActive = ref(false);
+
+onMounted(() => {
+    if (id.value === 1) {
+        isActive.value = true;
+    }
+})
 </script>
 
 <template>
-    <div class="carousel-item active rounded-3 bg-blue-500 text-white p-4">
+    <div class="carousel-item rounded-3 bg-blue-500 text-white p-4" :class="isActive ? 'active' : ''">
         <p class="fw-bold">{{ doctor }}</p>
         <div class="mt-2 d-flex col-gap-20 fs-5">
             <div class="d-flex col-gap-8 align-items-center">

@@ -6,12 +6,17 @@ export const useFamilyStore = defineStore(
     () => {
         let families = ref([]);
 
+        function updateFamilies (familiesData) {
+            families.value = familiesData;
+        }
+
         function $reset() {
             families.value = [];
         }
 
         return {
             $reset,
+            updateFamilies,
             families,
         };
     }

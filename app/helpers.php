@@ -86,3 +86,25 @@ if (!function_exists('get_current_year_start_date')) {
         return date('Y-01-01');
     }
 }
+
+if (!function_exists('get_time_from_datetime')) {
+    /**
+     * @throws Exception
+     */
+    function get_time_from_datetime(string $datetime): string
+    {
+        $dateTime = new DateTime($datetime);
+        return $dateTime->format('H:i');
+    }
+}
+
+if (!function_exists('get_date_from_datetime')) {
+    /**
+     * @throws Exception
+     */
+    function get_date_from_datetime(string $datetime): string
+    {
+        $dateTime = new DateTime($datetime);
+        return $dateTime->format('Y-m-d');
+    }
+}

@@ -23,7 +23,7 @@ const fetchEncounterHistoryDetail = (registrationNo) => {
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
-        layoutStore.isLoading = true;
+        layoutStore.isLoading = false;
     });
 }
 
@@ -77,12 +77,12 @@ onMounted(() => {
                 <div class="d-flex justify-content-between pb-3 border-bottom border-gray-400">
                     <div class="w-50">
                         <p class="fs-6 text-gray-700">Tanggal Keluar</p>
-                        <p class="mt-2">-</p>
+                        <p class="mt-2">{{ (encounterDetail.dischargeDate_yMdHms === null) ? '-' :  convertDateTimeToDate(encounterDetail.dischargeDate_yMdHms)}}</p>
                     </div>
 
                     <div class="w-50 text-end">
                         <p class="fs-6 text-gray-700">Jam Keluar</p>
-                        <p class="mt-2">-</p>
+                        <p class="mt-2">{{ (encounterDetail.dischargeTime === null) ? '-' :  encounterDetail.dischargeTime}}</p>
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@ onMounted(() => {
                 <div class="pb-3">
                     <p class="fs-6 text-gray-700">Diagnosis</p>
 
-                    <div class="accordion d-flex flex-column rows-gap-16 mt-3" id="accordion" v-for="(encounter, index) in encountersDetail">
+                    <div v-if="!isLoading" class="accordion d-flex flex-column rows-gap-16 mt-3" id="accordion" v-for="(encounter, index) in encountersDetail">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#diagnosis-'+index" aria-expanded="false" aria-controls="diagnosis-1">
@@ -111,6 +111,12 @@ onMounted(() => {
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3" v-if="isLoading">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 </div>

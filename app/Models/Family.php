@@ -21,6 +21,8 @@ class Family extends Model
         "email",
         "patient_id",
         "medical_no",
+        "guarantor_id",
+        "guarantor_name",
     ];
 
     protected function phoneNumber(): Attribute

@@ -64,11 +64,16 @@ class FamilyController extends Controller
 
     public function update(UpdateFamilyRequest $request, Family $family): UpdateFamilyResource
     {
-        $familySimrsData = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
-        $familyData = $familySimrsData->data->first();
+        $familySimrsDataFirstAttempt = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
+        $familyData = $familySimrsDataFirstAttempt->data->first();
 
         if (!$familyData) {
-            throw  new \Exception("Data keluarga tidak sesuai dengan data pada SIMRS");
+            $familySimrsDataSecondAttempt = $this->patientService->getPatientFamilies($family->ssn, '');
+            $familyData = $familySimrsDataSecondAttempt->data->first();
+
+            if (!$familyData) {
+                throw  new \Exception("Data keluarga tidak sesuai dengan data pada SIMRS");
+            }
         }
 
         $family->update($request->only(
@@ -79,21 +84,24 @@ class FamilyController extends Controller
             "birth_date",
             "email"
         ) + [
-            "user_id" => auth()->user()->id
+                "user_id" => auth()->user()->id,
+                "guarantor_id" => $familyData->guarantorId,
+                "guarantor_name" => null, // for now we only save null
+                "patient_id" => $familyData->patientId,
+                "medical_no" => $familyData->medicalNo
         ]);
 
-        if ($request->has('patient_id')) {
-            $family->update([
-                'patient_id' => $request->patient_id
-            ]);
-        }
-
-        if ($request->has('medical_no')) {
-            $family->update([
-                'patient_id' => $request->medical_no,
-                'medical_no' => $request->medical_no
-            ]);
-        }
+//        if ($request->has('patient_id')) {
+//            $family->update([
+//                'patient_id' => $request->patient_id
+//            ]);
+//        }
+//
+//        if ($request->has('medical_no')) {
+//            $family->update([
+//                'medical_no' => $request->medical_no
+//            ]);
+//        }
 
         return new UpdateFamilyResource($family);
     }
@@ -106,11 +114,17 @@ class FamilyController extends Controller
 
     public function fetchFamilyDataInSimrs(Family $family)
     {
-        $response = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
-        $patientData = $response->data->first();
+        $responseFirstAttempt = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
+        $patientData = $responseFirstAttempt->data->first();
 
         if (!$patientData) {
-            throw ValidationException::withMessages(["name" => "Pasien tidak terdaftar di rumah sakit."]);
+            // TODO: Are need to check the patient with only phone number
+            $responseSecondtAttempt = $this->patientService->getPatientFamilies($family->ssn, '');
+            $patientData = $responseSecondtAttempt->data->first();
+
+            if (!$patientData) {
+                throw ValidationException::withMessages(["name" => "Pasien tidak terdaftar di rumah sakit."]);
+            }
         }
 
         $family->name = $patientData->firstName . " " . $patientData->middleName . " " . $patientData->lastName;

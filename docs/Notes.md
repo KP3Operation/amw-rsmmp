@@ -1,7 +1,13 @@
 ## 20231017
 
 ### Notes
-- Appointment Logic -> local db save appointmentNo, appointmentDate, serviceUnitId, -> sync request with simrs
+- Appointment Logic -> local db save appointmentNo, appointmentDate, serviceUnitId, -> sync request with simrs,
+id,related_user_id,appointment_date,service_unit_id,appointment_no,user_id,is_family_member
+1,2,2023/12/10,v1.0b2,APY-002323,1,true
+
+- [x] Need to add guarantorID and guarantorName to user_patient and family_members table
+- [ ] Need to update how alert showing and state in vue
+- [ ] Add condition if the family members is not registered in the simrs when adding a new family member
 
 ## 20231009
 

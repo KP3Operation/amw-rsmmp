@@ -1,6 +1,6 @@
 <script setup>
 import Header from "@shared/Components/Header/Header.vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import {useLayoutStore} from "@shared/+store/layout.store.js";
 import {storeToRefs} from "pinia";
@@ -89,6 +89,14 @@ const resetFilter = () => {
     appointmentStore.$reset();
     fetchAppointments();
 }
+
+watch(selectedFamilyId, (newValue, oldValue) => {
+    families.value.map(family => {
+      if (family.id === newValue) {
+          appointmentStore.updateSelectedMedicalNo(family.medical_no);
+      }
+    });
+});
 
 onMounted(() => {
     if (selectedMedicalNo === "") {
@@ -256,8 +264,8 @@ onMounted(() => {
                     <form action="" class="d-flex flex-column rows-gap-16">
                         <div>
                             <label for="member" class="d-block text-start">Member</label>
-                            <select name="member" id="member" class="form-select mt-2">
-                                <option v-for="family in families" :value="family.patient_id">{{ family.name }}</option>
+                            <select name="member" id="member" class="form-select mt-2" v-model="selectedFamilyId">
+                                <option v-for="family in families" :value="family.id">{{ family.name }}</option>
                             </select>
                         </div>
                         <div class="status-filter d-none">

@@ -39,7 +39,7 @@ onMounted(() => {
         <div class="d-flex flex-column rows-gap-16 mt-2">
             <div class="pb-3 border-bottom border-gray-400">
                 <p class="fs-6 text-gray-700">No. Pemeriksaan</p>
-                <p class="mt-2">{{ selectedLabResult.sequenceNo }}</p>
+                <p class="mt-2">{{ selectedLabResult.transactionNo }}</p>
             </div>
 
             <div class="pb-3 border-bottom border-gray-400">
@@ -60,7 +60,7 @@ onMounted(() => {
             <div class="pb-3">
                 <p class="fs-6 text-gray-700">Hasil Pemeriksaan</p>
 
-                <div class="accordion d-flex flex-column rows-gap-16 mt-3" id="accordion" v-for="(result, index) in labResultDetails">
+                <div v-if="!isLoading" class="accordion d-flex flex-column rows-gap-16 mt-3" id="accordion" v-for="(result, index) in labResultDetails">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#hasil-tes-' + index" aria-expanded="false" aria-controls="hasil-tes-1">
@@ -71,11 +71,7 @@ onMounted(() => {
                         <div :id="'hasil-tes-'+index" class="accordion-collapse collapse" :data-bs-parent="'#hasil-tes-'+index">
                             <div class="accordion-body">
                                 <div class="accordion-divider"></div>
-<!--                                <div class="d-flex justify-content-between mt-3 fs-5">-->
-<!--                                    <p class="w-50 text-gray-700">Hitung Sel Darah Merah (RBC)</p>-->
-
-<!--                                    <p class="w-50 text-end">4.5 juta sel/mcL</p>-->
-<!--                                </div>-->
+                                <p>{{ result.resultValue }}</p>
                                 <div class="accordion-divider my-3"></div>
 
                                 <p class="fs-5 text-gray-700">Catatan</p>
@@ -83,6 +79,12 @@ onMounted(() => {
                                 <p class="mt-2 fs-5">{{ result.notes }}</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3" v-if="isLoading">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             </div>

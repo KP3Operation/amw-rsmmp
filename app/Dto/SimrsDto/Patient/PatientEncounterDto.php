@@ -27,7 +27,7 @@ class PatientEncounterDto extends Data
         public string $registrationTime,
 
         #[MapInputName('RegistrationQue')]
-        public string $registrationQue,
+        public ?string $registrationQue,
 
         #[MapInputName('ActualVisitDate')]
         public ?string $actualVisitDate,
@@ -51,10 +51,10 @@ class PatientEncounterDto extends Data
         public string $serviceUnitName,
 
         #[MapInputName('VisitTypeID')]
-        public string $visitTypeID,
+        public ?string $visitTypeID,
 
         #[MapInputName('VisitTypeName')]
-        public string $visitTypeName,
+        public ?string $visitTypeName,
 
         #[MapInputName('Notes')]
         public string $notes,

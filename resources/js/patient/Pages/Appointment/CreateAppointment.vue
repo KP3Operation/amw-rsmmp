@@ -45,7 +45,7 @@ const storeAppointment = () => {
         if (error.response) {
             layoutStore.toggleErrorAlert(`Jadwal Konsultasi Gagal Disimpan. Error: ${error.response.data.message}`);
             if (error.response.status !== 422) {
-                router.push({ name: 'AppointmentPage' });
+                // router.push({ name: 'AppointmentPage' });
             }
         } else {
             layoutStore.toggleErrorAlert(`${error}`);

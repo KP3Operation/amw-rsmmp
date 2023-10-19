@@ -72,7 +72,9 @@ class MeController extends Controller
                     "birth_date" => $patientData->birthDate,
                     "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki",
                     "medical_no" => $patientData->medicalNo,
-                    "sync_at" => Carbon::now()
+                    "sync_at" => Carbon::now(),
+                    "guarantor_id" => $patientData->guarantorId,
+                    "guarantor_name" => null // only save null for now
                 ]);
             }
         });

@@ -9,106 +9,106 @@ class AppointmentDto extends Data
 {
     public function __construct(
         #[MapInputName('ServiceUnitID')]
-        public string $ServiceUnitID,
+        public ?string $serviceUnitID,
 
         #[MapInputName('ServiceUnitName')]
-        public string $serviceUnitName,
+        public ?string $serviceUnitName,
 
         #[MapInputName('ParamedicID')]
-        public string $paramedicID,
+        public ?string $paramedicID,
 
         #[MapInputName('ParamedicName')]
-        public string $paramedicName,
+        public ?string $paramedicName,
 
         #[MapInputName('AppointmentDate')]
-        public string $appointmentDate,
+        public ?string $appointmentDate,
 
         #[MapInputName('AppointmentTime')]
-        public string $appointmentTime,
+        public ?string $appointmentTime,
 
         #[MapInputName('AppointmentQue')]
-        public string $appointmentQue,
+        public ?string $appointmentQue,
 
         #[MapInputName('AppointmentNo')]
-        public string $appointmentNo,
+        public ?string $appointmentNo,
 
         #[MapInputName('PatientID')]
-        public string $patientID,
+        public ?string $patientID,
 
         #[MapInputName('FirstName')]
-        public string $firstName,
+        public ?string $firstName,
 
         #[MapInputName('MiddleName')]
-        public string $middleName,
+        public ?string $middleName,
 
         #[MapInputName('LastName')]
-        public string $lastName,
+        public ?string $lastName,
 
         #[MapInputName('DateOfBirth')]
         public ?string $dateOfBirth,
 
         #[MapInputName('StreetName')]
-        public string $streetName,
+        public ?string $streetName,
 
         #[MapInputName('District')]
-        public string $district,
+        public ?string $district,
 
         #[MapInputName('City')]
-        public string $city,
+        public ?string $city,
 
         #[MapInputName('County')]
-        public string $county,
+        public ?string $county,
 
         #[MapInputName('State')]
-        public string $state,
+        public ?string $state,
 
         #[MapInputName('ZipCode')]
-        public string $zipCode,
+        public ?string $zipCode,
 
         #[MapInputName('PhoneNo')]
-        public string $phoneNo,
+        public ?string $phoneNo,
 
         #[MapInputName('Email')]
-        public string $email,
+        public ?string $email,
 
         #[MapInputName('GuarantorID')]
-        public string $guarantorID,
+        public ?string $guarantorID,
 
         #[MapInputName('GuarantorName')]
-        public string $guarantorName,
+        public ?string $guarantorName,
 
         #[MapInputName('Notes')]
-        public string $notes,
+        public ?string $notes,
 
         #[MapInputName('AppointmentStatus')]
-        public string $appointmentStatus,
+        public ?string $appointmentStatus,
 
         #[MapInputName('AppointmentStatusName')]
-        public string $appointmentStatusName,
+        public ?string $appointmentStatusName,
 
         #[MapInputName('MedicalNo')]
-        public string $medicalNo,
+        public ?string $medicalNo,
 
         #[MapInputName('BirthPlace')]
-        public string $birthPlace,
+        public ?string $birthPlace,
 
         #[MapInputName('Sex')]
-        public string $sex,
+        public ?string $sex,
 
         #[MapInputName('Ssn')]
-        public string $ssn,
+        public ?string $ssn,
 
         #[MapInputName('MobilePhoneNo')]
         public ?string $mobilePhoneNo,
 
         #[MapInputName('AppointmentQueFormattedNo')]
-        public string $appointmentQueFormattedNo,
+        public ?string $appointmentQueFormattedNo,
 
         #[MapInputName('AppointmentDate_yMdHms')]
-        public string $appointmentDate_yMdHms,
+        public ?string $appointmentDate_yMdHms,
 
         #[MapInputName('DateOfBirth_yMdHms')]
-        public string $dateOfBirth_yMdHms
+        public ?string $dateOfBirth_yMdHms
     )
     {}
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
 use App\Http\Requests\Patient\GetAppointmentsRequest;
 use App\Http\Requests\Patient\StoreAppointmentRequest;
+use App\Models\Appointment;
 use App\Models\Family;
 use App\Models\Simrs\Patient\CreateAppointment;
 use App\Models\User;
@@ -59,6 +60,9 @@ class AppointmentController extends Controller
         ]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function store(StoreAppointmentRequest $request)
     {
         $user = User::findOrFail(auth()->user()->id);
@@ -94,8 +98,20 @@ class AppointmentController extends Controller
             $createdAppointment = $this->patientService->createAppointment($appointmentData);
             $appoinment = $createdAppointment->data;
 
-            // TODO: Need to save to local db
-            dd($appoinment);
+            $localAppoinment = Appointment::create([
+                'user_id' => auth()->user()->id,
+                'related_user_id' => $user->id,
+                'service_unit_id' => $appoinment->serviceUnitID,
+                'appointment_no' => $appoinment->appointmentNo,
+                'is_family_member' => true,
+                'appointment_date' => $request->appointment_date
+            ]);
+
+            return response()->json([
+                'appointment' => $localAppoinment
+            ]);
+
+
         } else { // register family member
             $family = Family::where('patient_id', '=', $request->patient_id)->first();
             if (!$family) {
@@ -131,8 +147,18 @@ class AppointmentController extends Controller
             $createdAppointment = $this->patientService->createAppointment($appointmentData);
             $appoinment = $createdAppointment->data;
 
-            // TODO: Need to save to local db
-            dd($appoinment);
+            $localAppoinment = Appointment::create([
+                'user_id' => auth()->user()->id,
+                'related_user_id' => $family->id,
+                'service_unit_id' => $appoinment->serviceUnitID,
+                'appointment_no' => $appoinment->appointmentNo,
+                'is_family_member' => true,
+                'appointment_date' => $request->appointment_date
+            ]);
+
+            return response()->json([
+                'appointment' => $localAppoinment
+            ]);
         }
     }
 

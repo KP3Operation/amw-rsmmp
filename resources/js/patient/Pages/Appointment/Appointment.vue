@@ -17,19 +17,25 @@ const modalState = reactive({
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
 const appointmentStore = useAppointmentStore();
-const { openAppointments, closeAppointments, selectedMedicalNo, selectedDate } = storeToRefs(appointmentStore);
+const { openAppointments, closeAppointments,
+    selectedMedicalNo, selectedStartDate, selectedEndDate, selectedServiceUnitId  } = storeToRefs(appointmentStore);
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
 const serviceUnits = ref([]);
 const selectedAppointmentNo = ref();
 const selectedFamilyId = ref("");
-const selectedServiceId = ref("");
+const serviceUnitIdFilter = ref("");
+const dateStartFilter = ref("");
+const dateEndFilter = ref("");
 
 const fetchAppointments = () => {
     layoutStore.updateLoadingState(true);
     axios.get(`/api/v1/patient/appointments`, {
         params: {
-            medical_no: selectedMedicalNo.value
+            medical_no: selectedMedicalNo.value,
+            service_unit_id: selectedServiceUnitId.value,
+            start_date: selectedStartDate.value,
+            end_date: selectedEndDate.value
         }
     }).then((response) => {
         const data = response.data;
@@ -96,6 +102,18 @@ watch(selectedFamilyId, (newValue, oldValue) => {
           appointmentStore.updateSelectedMedicalNo(family.medical_no);
       }
     });
+});
+
+watch(dateStartFilter, (newValue, oldValue) => {
+    appointmentStore.updateSelectedStartDate(newValue);
+});
+
+watch(dateEndFilter, (newValue, oldValue) => {
+    appointmentStore.updateSelectedEndDate(newValue);
+});
+
+watch(serviceUnitIdFilter, (newValue, oldValue) => {
+    appointmentStore.updateSelectedServiceUnitId(newValue);
 });
 
 onMounted(() => {
@@ -268,17 +286,9 @@ onMounted(() => {
                                 <option v-for="family in families" :value="family.id">{{ family.name }}</option>
                             </select>
                         </div>
-                        <div class="status-filter d-none">
-                            <label for="status" class="d-block text-start">Status</label>
-                            <select name="status" id="status" class="form-select mt-2">
-                                <option value="" selected="">Semua</option>
-                                <option value="Dibatalkan">Dibatalkan</option>
-                                <option value="Selesai">Selesai</option>
-                            </select>
-                        </div>
                         <div>
                             <label for="unit" class="d-block text-start">Unit</label>
-                            <select name="unit" id="unit" class="form-select mt-2">
+                            <select name="unit" id="unit" class="form-select mt-2" v-model="serviceUnitIdFilter">
                                 <option value="" selected>Semua</option>
                                 <option v-for="unit in serviceUnits" :value="unit.serviceUnitID">
                                     {{ unit.serviceUnitName }}</option>
@@ -286,11 +296,11 @@ onMounted(() => {
                         </div>
                         <div>
                             <label for="from" class="d-block text-start">Dari</label>
-                            <input type="date" name="from" id="from" class="form-control mt-2">
+                            <input type="date" name="from" id="from" class="form-control mt-2" v-model="dateStartFilter">
                         </div>
                         <div>
                             <label for="to" class="d-block text-start">Hingga</label>
-                            <input type="date" name="to" id="to" class="form-control mt-2">
+                            <input type="date" name="to" id="to" class="form-control mt-2" v-model="dateEndFilter">
                         </div>
                         <div class="d-flex col-gap-20">
                             <button type="reset" class="w-50 btn btn-red-500-rounded" data-bs-dismiss="modal"

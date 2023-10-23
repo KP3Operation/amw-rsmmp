@@ -73,8 +73,8 @@ onMounted(() => {
                     <p class="fs-6">Alamat</p>
                     <p>
                         {{ appointmentDetail.streetName }}
-                        {{ appointmentDetail.district }}
                         {{ appointmentDetail.city }}
+                      {{ appointmentDetail.country }}
                         {{ appointmentDetail.zipCode }}
                     </p>
                 </div>

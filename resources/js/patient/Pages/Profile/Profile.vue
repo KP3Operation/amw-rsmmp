@@ -5,7 +5,7 @@ import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import axios from "axios";
 import * as bootstrap from 'bootstrap';
-import { onMounted, reactive, ref } from 'vue';
+import {onMounted, reactive, ref, watch} from 'vue';
 import { calculateAge, updateMyProfileStore } from "@shared/utils/helpers.js";
 import Header from "@shared/Components/Header/Header.vue";
 import { storeToRefs } from "pinia";
@@ -43,6 +43,10 @@ const logout = () => {
         layoutStore.toggleErrorAlert(t('profile.logout_failed'));
     });
 }
+
+watch(birthDate, (newValue, oldValue) => {
+    patientAge.value = calculateAge(newValue);
+});
 
 onMounted(() => {
     modalState.syncDataModal = new bootstrap.Modal("#modal-sinkronisasi", {});

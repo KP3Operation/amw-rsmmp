@@ -61,7 +61,7 @@ onMounted(() => {
                 <label for="no-hp">{{ $t('login.phone_number') }}</label>
                 <div class="input-group flex-nowrap mt-2">
                     <span class="input-group-text">{{ callingCode }}</span>
-                    <input type="tel" name="phone_number" id="no-hp" placeholder="8123940183020" class="form-control"
+                    <input type="number" name="phone_number" id="no-hp" placeholder="8123940183020" class="form-control"
                         v-model="form.phone_number">
                 </div>
                 <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('phone_number')"

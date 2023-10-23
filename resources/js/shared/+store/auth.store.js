@@ -25,6 +25,10 @@ export const useAuthStore = defineStore("auth", () => {
     // registration specific value
     let isRegistration = ref(false);
 
+    function updateBirthDate (date) {
+        birthDate.value = date;
+    }
+
     function $reset() {
         // user data
         otpCreatedAt.value = null;
@@ -52,6 +56,7 @@ export const useAuthStore = defineStore("auth", () => {
 
     return {
         $reset,
+        updateBirthDate,
         otpCreatedAt,
         otpTimeout,
         userEmail,

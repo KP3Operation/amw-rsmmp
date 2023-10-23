@@ -23,7 +23,7 @@ class RegisterPatientRequest extends FormRequest
     {
         return [
             "phone_number" => "required|min:10|max:13",
-            "ssn" => "required|min:16|max:16",
+            "ssn" => "required|min:16|max:16|unique:users,ssn",
             "name" => "required|string",
             "role" => "required"
         ];

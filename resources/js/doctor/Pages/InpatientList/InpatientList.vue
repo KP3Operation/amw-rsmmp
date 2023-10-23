@@ -58,9 +58,9 @@ onMounted(() => {
         <div id="multiselect" class="w-50 dropdown filter-sticky d-flex col-gap-20 align-items-center p-0">
             <select class="form-select" aria-label="Tipe" v-model="selectedRoomName">
                 <option value="" selected>Semua Ruangan</option>
-                <option value="anggrek">Anggrek</option>
-                <option value="melati">Melati</option>
-                <option value="icu">ICU</option>
+<!--                <option value="anggrek">Anggrek</option>-->
+<!--                <option value="melati">Melati</option>-->
+<!--                <option value="icu">ICU</option>-->
             </select>
         </div>
     </section>

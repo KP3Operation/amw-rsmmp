@@ -9,6 +9,7 @@ use App\Http\Requests\Patient\GetAppointmentsRequest;
 use App\Http\Requests\Patient\StoreAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Family;
+use App\Models\Notification;
 use App\Models\Simrs\Patient\CreateAppointment;
 use App\Models\User;
 use App\Services\SimrsService\PatientService\IPatientService;
@@ -116,6 +117,7 @@ class AppointmentController extends Controller
     {
         $user = User::findOrFail(auth()->user()->id);
 
+        // TODO: need to use db transaction
         // register it self
         if ($request->patient_id == $user->userPatientData->patient_id) {
             $appointmentData = new CreateAppointment(
@@ -154,6 +156,12 @@ class AppointmentController extends Controller
                 'appointment_no' => $appoinment->appointmentNo,
                 'is_family_member' => true,
                 'appointment_date' => $request->appointment_date
+            ]);
+
+            Notification::create([
+                'doctor_id' => $request->paramedic_id,
+                'context' => Notification::APPOINTMENT,
+                'message' => 'Anda mendapatkan janji temu baru'
             ]);
 
             return response()->json([
@@ -195,6 +203,12 @@ class AppointmentController extends Controller
 
             $createdAppointment = $this->patientService->createAppointment($appointmentData);
             $appoinment = $createdAppointment->data;
+
+            Notification::create([
+                'doctor_id' => $request->paramedic_id,
+                'context' => Notification::APPOINTMENT,
+                'message' => 'Anda mendapatkan janji temu baru'
+            ]);
 
             $localAppoinment = Appointment::create([
                 'user_id' => auth()->user()->id,

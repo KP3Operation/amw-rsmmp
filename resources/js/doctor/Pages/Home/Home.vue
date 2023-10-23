@@ -4,15 +4,33 @@ import Doctor2 from "@resources/static/images/doctor-2.png";
 import DoctorWhite from "@resources/static/icons/doctor-white.svg";
 import MoneyWhite from "@resources/static/icons/money-white.svg";
 import Banner from "@resources/static/images/banner.png";
-import { ref } from "vue";
+import {onMounted, ref, watch} from "vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { getUserFirstName } from "@shared/utils/helpers.js";
 import OverviewSummaryFee from "@doctor/Components/OverviewSummaryFee/OverviewSummaryFee.vue";
 import OverviewConsultationScheduleEmpty from "@doctor/Components/OverviewConsultationSchedule/OverviewConsultationScheduleEmpty.vue";
 import OverviewInpatientEmpty from "@doctor/Components/OverviewInpatient/OverviewInpatientEmpty.vue";
+import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
+import {storeToRefs} from "pinia";
+import axios from "axios";
 
+const appointmentStore = useAppointmentStore();
+const {selectedDate, doctorAppointments} = storeToRefs(appointmentStore);
 const authStore = useAuthStore();
 const showSummaryFeeFilter = ref(false);
+
+const fetchAppointments = () => {
+  axios.get('/api/v1/doctor/appointments', {
+    params: {date: selectedDate.value}
+  }).then((response) => {
+    const data = response.data;
+    appointmentStore.updateAppointments(data.appointments);
+  }).catch((error) => {}).finally(() => {});
+}
+
+onMounted(() => {
+  // fetchAppointments();
+});
 </script>
 
 <template>
@@ -72,12 +90,74 @@ const showSummaryFeeFilter = ref(false);
 
         <section class="mt-5">
             <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_consult_schedule') }}</h2>
-            <OverviewConsultationScheduleEmpty />
+            <OverviewConsultationScheduleEmpty v-if="doctorAppointments.length < 1" />
+
+<!--            <div v-if="doctorAppointments.length >= 1" id="overview-jadwal-konsultasi" class="carousel slide mt-3" data-bs-touch="true" data-bs-ride="carousel">-->
+<!--              <div class="carousel-inner d-flex flex-nowrap col-gap-20">-->
+<!--                <div class="carousel-item">-->
+<!--                  <div class="d-flex col-gap-20">-->
+<!--                    <div class="overview-slider-doctor">-->
+<!--                      <div class="date">-->
+<!--                        <div>-->
+<!--                          <i class="bi bi-calendar-event-fill"></i>-->
+
+<!--                          <p>12 Jun 2023</p>-->
+<!--                        </div>-->
+
+<!--                      </div>-->
+
+<!--                      <div class="patient">-->
+<!--                        <i class="bi bi-heart-pulse-fill fs-1 icon-blue-200"></i>-->
+
+<!--                        <p>-->
+<!--                          <span>3230</span>-->
+<!--                          <br>-->
+<!--                          Pasien-->
+<!--                        </p>-->
+<!--                      </div>-->
+
+<!--                      <p class="location">Unit Kecantikan dan Estetika</p>-->
+<!--                    </div>-->
+
+<!--                    <div class="overview-slider-doctor">-->
+<!--                      <div class="date">-->
+<!--                        <div>-->
+<!--                          <i class="bi bi-calendar-event-fill"></i>-->
+
+<!--                          <p>14 Jun 2023</p>-->
+<!--                        </div>-->
+
+<!--                      </div>-->
+
+<!--                      <div class="patient">-->
+<!--                        <i class="bi bi-heart-pulse-fill fs-1 icon-blue-200"></i>-->
+
+<!--                        <p>-->
+<!--                          <span>230</span>-->
+<!--                          <br>-->
+<!--                          Pasien-->
+<!--                        </p>-->
+<!--                      </div>-->
+
+<!--                      <p class="location">Unit Kejiwaan dan Konseling</p>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--              </div>-->
+
+<!--              <div class="carousel-indicators position-static mb-0">-->
+<!--                <button type="button" data-bs-target="#overview-jadwal-konsultasi" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>-->
+
+<!--                <button type="button" data-bs-target="#overview-jadwal-konsultasi" data-bs-slide-to="1" aria-label="Slide 2" class="active" aria-current="true"></button>-->
+<!--              </div>-->
+<!--            </div>-->
+
         </section>
-        <section class="mt-5">
-            <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_inpatient_list') }}</h2>
-            <OverviewInpatientEmpty />
-        </section>
+<!--        <section class="mt-5">-->
+<!--            <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_inpatient_list') }}</h2>-->
+<!--            <OverviewInpatientEmpty />-->
+<!--        </section>-->
         <OverviewSummaryFee />
     </div>
 </template>

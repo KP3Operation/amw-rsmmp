@@ -3,11 +3,32 @@ import { useAuthStore } from "@shared/+store/auth.store.js";
 import Logo from "@resources/static/images/logo.svg";
 import {useNotificationStore} from "@doctor/+store/notification.store.js";
 import {storeToRefs} from "pinia";
+import axios from "axios";
+import {onMounted, watch} from "vue";
 
 const notificationStore = useNotificationStore();
 const { count } = storeToRefs(notificationStore);
-
 const authStore = useAuthStore();
+const {doctorId} = storeToRefs(authStore);
+
+const fetchNotifications = () => {
+  axios.get('/api/v1/doctor/notifications', {
+    params: {doctor_id: doctorId.value}
+  }).then((response) => {
+    const data = response.data;
+    notificationStore.updateCount(data.count);
+    notificationStore.updateNotifications(data.notifications);
+  }).catch(() => {}).finally(() => {});
+}
+
+watch(doctorId, (newValue, oldValue) => {
+  fetchNotifications();
+});
+
+onMounted(() => {
+  fetchNotifications();
+});
+
 </script>
 
 <template>

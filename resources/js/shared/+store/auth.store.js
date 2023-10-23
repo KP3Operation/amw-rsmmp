@@ -29,6 +29,10 @@ export const useAuthStore = defineStore("auth", () => {
         birthDate.value = date;
     }
 
+    function updateDoctorId (id) {
+        doctorId.value = id;
+    }
+
     function $reset() {
         // user data
         otpCreatedAt.value = null;
@@ -57,6 +61,7 @@ export const useAuthStore = defineStore("auth", () => {
     return {
         $reset,
         updateBirthDate,
+        updateDoctorId,
         otpCreatedAt,
         otpTimeout,
         userEmail,

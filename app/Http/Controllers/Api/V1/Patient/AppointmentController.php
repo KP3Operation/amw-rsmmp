@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Patient;
 
+use App\Dto\SimrsDto\Patient\AppointmentDataDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
 use App\Http\Requests\Patient\GetAppointmentsRequest;
@@ -25,6 +26,10 @@ class AppointmentController extends Controller
     {
         $user = User::findOrFail(auth()->user()->id);
         $medicalNo = $user->userPatientData->medical_no;
+        $serviceUnitId = '';
+        $startDate = '';
+        $endDate = '';
+        $response = [];
 
         if ($request->has('medical_no') && $request->medical_no != '') {
             $medicalNo = $request->medical_no;
@@ -36,15 +41,59 @@ class AppointmentController extends Controller
 
         $appointments = $this->patientService->getAppointments($medicalNo);
 
-        $response = new \stdClass();
+        $newAppointments = $appointments->data->toArray();
+
+        if ($request->has('service_unit_id') && $request->service_unit_id != '') {
+            $serviceUnitId = $request->service_unit_id;
+
+            foreach ($newAppointments as $appointment) {
+                if ($appointment['serviceUnitID'] == $serviceUnitId) {
+                    if (!in_array($appointment, $response)) {
+                        $response[] = $appointment;
+                    }
+                }
+            }
+        }
+
+        if ($request->has('start_date') && $request->start_date != '') {
+            $startDate = date('Y-m-d', strtotime($request->start_date));
+
+            foreach ($newAppointments as $appointment) {
+                if (convert_date_to_req_param($appointment['appointmentDate_yMdHms']) >= $startDate) {
+                    if (!in_array($appointment, $response)) {
+                        $response[] = $appointment;
+                    }
+                }
+            }
+        }
+
+        if ($request->has('end_date') && $request->end_date != '') {
+            $endDate = date('Y-m-d', strtotime($request->end_date));
+
+            foreach ($newAppointments as $appointment) {
+                if (convert_date_to_req_param($appointment['appointmentDate_yMdHms']) <= $endDate) {
+                    if (!in_array($appointment, $response)) {
+                        $response[] = $appointment;
+                    }
+                }
+            }
+        }
+
+        if ($serviceUnitId == '' &&
+            $startDate == '' &&
+            $endDate == '' &&
+            count($response) < 1) {
+            $response = $newAppointments;
+        }
+
         $opens = [];
         $cancels = [];
         $dones = [];
 
-        foreach ($appointments->data as $appointment) {
-            if ($appointment->appointmentStatus == '01') { // open
+        foreach ($response as $appointment) {
+            if ($appointment['appointmentStatus'] == '01') { // open
                 $opens[] = $appointment;
-            } else if ($appointment->appointmentStatus == '02') { // done
+            } else if ($appointment['appointmentStatus'] == '02') { // done
                 $dones[] = $appointment;
             } else { // cancel
                 $cancels[] = $appointment;

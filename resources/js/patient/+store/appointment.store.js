@@ -13,6 +13,8 @@ export const useAppointmentStore = defineStore(
         let selectedDate = ref(getCurrentDate());
         let selectedParamedicId = ref("");
         let selectedServiceUnitId = ref("");
+        let selectedStartDate = ref("");
+        let selectedEndDate = ref("");
 
 
         function updateOpenAppointments (data) {
@@ -50,6 +52,14 @@ export const useAppointmentStore = defineStore(
             selectedServiceUnitId.value = id;
         }
 
+        function updateSelectedStartDate (date) {
+            selectedStartDate.value = date;
+        }
+
+        function updateSelectedEndDate (date) {
+            selectedEndDate.value = date;
+        }
+
         function $reset() {
             openAppointments.value = [];
             doneAppointments.value = [];
@@ -58,7 +68,11 @@ export const useAppointmentStore = defineStore(
             selectedDate.value = getCurrentDate();
             selectedParamedicId.value = "";
             selectedServiceUnitId.value = "";
+            selectedStartDate.value = "";
+            selectedEndDate.value = "";
+            selectedEndDate.value = "";
         }
+
 
         return {
             $reset,
@@ -70,6 +84,8 @@ export const useAppointmentStore = defineStore(
             updateCloseAppointments,
             updateSelectedParamedicId,
             updateSelectedServiceUnitId,
+            updateSelectedStartDate,
+            updateSelectedEndDate,
             doneAppointments,
             cancelAppointments,
             openAppointments,
@@ -77,7 +93,9 @@ export const useAppointmentStore = defineStore(
             selectedDate,
             closeAppointments,
             selectedParamedicId,
-            selectedServiceUnitId
+            selectedServiceUnitId,
+            selectedStartDate,
+            selectedEndDate
         };
     }
 );

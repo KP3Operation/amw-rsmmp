@@ -11,13 +11,16 @@ import {useAuthStore} from "@shared/+store/auth.store.js";
 import {useRoute} from "vue-router";
 import router from "@patient/router.js";
 import {useAppointmentStore} from "@patient/+store/appointment.store.js";
+import {useDoctorScheduleStore} from "@patient/+store/doctor-schedule.store.js";
 
+const doctorScheduleStore = useDoctorScheduleStore();
+const { schedules, selectedDate} = storeToRefs(doctorScheduleStore);
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
 const authStore = useAuthStore();
-const { patientId, userFullName} = storeToRefs(authStore);
+const { patientId, userFullName, birthDate, gender} = storeToRefs(authStore);
 const appointmentStore = useAppointmentStore();
 const { selectedServiceUnitId, selectedParamedicId } = storeToRefs(appointmentStore);
 const form = reactive(
@@ -35,6 +38,7 @@ const paramedics = ref([]);
 const serviceUnits = ref([]);
 const route = useRoute();
 const isReadonly = ref(false);
+const isFromDoctorSchedulePage = ref(false);
 
 const storeAppointment = () => {
     layoutStore.updateLoadingState(true);
@@ -60,28 +64,69 @@ const fetchFamily = () => {
     axios.get(`/api/v1/patient/family`).then((response) => {
         const data = response.data;
         familyStore.updateFamilies(data.families);
-        serviceUnits.value = data.service_units;
-        paramedics.value = data.paramedics;
+        if (isFromDoctorSchedulePage.value) {
+            serviceUnits.value = data.service_units;
+            paramedics.value = data.paramedics;
+        }
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     });
 }
 
+const fetchDoctorSchedules = () => {
+    axios.get(`/api/v1/patient/doctor/schedules/format`, {
+        params: {
+            date: `${selectedDate.value}`,
+            // service_unit_id: `${selectedServiceUnitId.value}`
+        }
+    }).then((response) => {
+        const data = response.data;
+        serviceUnits.value = data.schedules;
+    }).catch((error) => {
+        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+    }).finally(() => {
+        //
+    });
+}
+
 watch(form, (newValue, oldValue) => {
     if (newValue.patient_name === patientId.value) {
-        form.patient_id = patientId;
+        form.patient_id = patientId.value;
+        form.birth_date = birthDate.value;
+        form.gender = gender.value;
     } else {
         families.value.map((family) => {
            if (family.patient_id === newValue.patient_name) {
                form.patient_id = family.patient_id;
+               form.patient_name = newValue.patient_name;
+               form.birth_date = family.birth_date;
+               form.gender = family.gender;
            }
         });
+    }
+
+    if (newValue.appointment_date) {
+        if (!isFromDoctorSchedulePage.value) {
+            doctorScheduleStore.updateSelectedDate(newValue.appointment_date);
+            fetchDoctorSchedules();
+        }
+    }
+
+    if (newValue.service_unit_id) {
+        if (!isFromDoctorSchedulePage.value) {
+            serviceUnits.value.map((serviceUnit) => {
+                if (serviceUnit['serviceUnitID'] === newValue.service_unit_id) {
+                    paramedics.value = serviceUnit['doctors'];
+                }
+            });
+        }
     }
 });
 
 onMounted(() => {
     if (selectedParamedicId.value !== '') {
         isReadonly.value = true;
+        isFromDoctorSchedulePage.value = true;
     }
     fetchFamily();
 })
@@ -134,30 +179,60 @@ onMounted(() => {
                 <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('gender')"
                      v-html="form.errors.get('gender')" />
             </div>
-            <p class="fs-3 fw-bold">Konsultasi</p>
-            <div>
-                <label for="date">Tanggal Konsultasi <span class="text-red-500 fw-semibold">*</span></label>
-                <input v-model="form.appointment_date" type="datetime-local" name="date" id="date" class="form-control mt-2">
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('appointment_date')"
-                     v-html="form.errors.get('appointment_date')" />
+            <div v-if="!isFromDoctorSchedulePage">
+                <p class="fs-3 fw-bold">Konsultasi</p>
+                <div class="mt-3">
+                    <label for="date">Tanggal Konsultasi <span class="text-red-500 fw-semibold">*</span></label>
+                    <input v-model="form.appointment_date" type="date" name="date" id="date" class="form-control mt-2">
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('appointment_date')"
+                         v-html="form.errors.get('appointment_date')" />
+                </div>
+                <div class="mt-3">
+                    <label for="unit">Pilih Unit <span class="text-red-500 fw-semibold">*</span></label>
+                    <select name="unit" id="unit" class="form-select mt-2" v-model="form.service_unit_id" :disabled="serviceUnits.length < 1">
+                        <option value="" selected>Pilih Unit</option>
+                        <option v-for="unit in serviceUnits" :value="unit.serviceUnitID">{{ unit.serviceUnitName }}</option>
+                    </select>
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('service_unit_id')"
+                         v-html="form.errors.get('service_unit_id')" />
+                </div>
+                <div class="mt-3">
+                    <label for="paramedis">Pilih Dokter <span class="text-red-500 fw-semibold">*</span></label>
+                    <select name="paramedis" id="paramedis" class="form-select mt-2" v-model="form.paramedic_id" :disabled="paramedics.length < 1">
+                        <option value="" selected>Pilih Dokter</option>
+                        <option v-for="paramedic in paramedics" :value="paramedic.paramedicId">{{ paramedic.paramedicName }}</option>
+                    </select>
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('paramedic_id')"
+                         v-html="form.errors.get('paramedic_id')" />
+                </div>
             </div>
-            <div>
-                <label for="unit">Pilih Unit <span class="text-red-500 fw-semibold">*</span></label>
-                <select name="unit" id="unit" class="form-select mt-2" v-model="form.service_unit_id" :disabled="isReadonly">
-                    <option value="" selected>Pilih Unit</option>
-                    <option v-for="unit in serviceUnits" :value="unit.serviceUnitID">{{ unit.serviceUnitName }}</option>
-                </select>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('service_unit_id')"
-                     v-html="form.errors.get('service_unit_id')" />
-            </div>
-            <div>
-                <label for="paramedis">Pilih Dokter <span class="text-red-500 fw-semibold">*</span></label>
-                <select name="paramedis" id="paramedis" class="form-select mt-2" v-model="form.paramedic_id" :disabled="isReadonly">
-                    <option value="" selected>Pilih Dokter</option>
-                    <option v-for="paramedic in paramedics" :value="paramedic.paramedicId">{{ paramedic.paramedicName }}</option>
-                </select>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('paramedic_id')"
-                     v-html="form.errors.get('paramedic_id')" />
+
+            <div v-if="isFromDoctorSchedulePage">
+                <p class="fs-3 fw-bold">Konsultasi</p>
+                <div class="mt-3">
+                    <label for="unit">Pilih Unit <span class="text-red-500 fw-semibold">*</span></label>
+                    <select name="unit" id="unit" class="form-select mt-2" v-model="form.service_unit_id" :disabled="isReadonly">
+                        <option value="" selected>Pilih Unit</option>
+                        <option v-for="unit in serviceUnits" :value="unit.serviceUnitID">{{ unit.serviceUnitName }}</option>
+                    </select>
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('service_unit_id')"
+                         v-html="form.errors.get('service_unit_id')" />
+                </div>
+                <div class="mt-3">
+                    <label for="paramedis">Pilih Dokter <span class="text-red-500 fw-semibold">*</span></label>
+                    <select name="paramedis" id="paramedis" class="form-select mt-2" v-model="form.paramedic_id" :disabled="isReadonly">
+                        <option value="" selected>Pilih Dokter</option>
+                        <option v-for="paramedic in paramedics" :value="paramedic.paramedicId">{{ paramedic.paramedicName }}</option>
+                    </select>
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('paramedic_id')"
+                         v-html="form.errors.get('paramedic_id')" />
+                </div>
+                <div class="mt-3">
+                    <label for="date">Tanggal Konsultasi <span class="text-red-500 fw-semibold">*</span></label>
+                    <input v-model="form.appointment_date" type="date" name="date" id="date" class="form-control mt-2">
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('appointment_date')"
+                         v-html="form.errors.get('appointment_date')" />
+                </div>
             </div>
             <SubmitButton className="btn-blue-500-rounded"
                           text="Simpan" />

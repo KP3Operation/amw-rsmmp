@@ -158,6 +158,12 @@ class AppointmentController extends Controller
                 'appointment_date' => $request->appointment_date
             ]);
 
+            if (!$user->userPatientData->medical_no) {
+                $user->update([
+                    'medical_no' => $appoinment->medicalNo
+                ]);
+            }
+
             Notification::create([
                 'doctor_id' => $request->paramedic_id,
                 'context' => Notification::APPOINTMENT,
@@ -218,6 +224,13 @@ class AppointmentController extends Controller
                 'is_family_member' => true,
                 'appointment_date' => $request->appointment_date
             ]);
+
+
+            if (!$family->medical_no) {
+                $user->update([
+                    'medical_no' => $appoinment->medicalNo
+                ]);
+            }
 
             return response()->json([
                 'appointment' => $localAppoinment

@@ -39,9 +39,17 @@ const serviceUnits = ref([]);
 const route = useRoute();
 const isReadonly = ref(false);
 const isFromDoctorSchedulePage = ref(false);
+const tempPatientName = ref("");
 
 const storeAppointment = () => {
     layoutStore.updateLoadingState(true);
+
+    console.log(tempPatientName);
+
+    if (form.patient_name === null && tempPatientName.value !== "") {
+        form.patient_name = tempPatientName.value;
+    }
+
     form.post('/api/v1/patient/appointments/store').then((response) => {
         layoutStore.toggleSuccessAlert('Jadwal Konsultasi Berhasil Disimpan');
         router.push({ name: 'AppointmentPage' });
@@ -94,6 +102,7 @@ watch(form, (newValue, oldValue) => {
         form.patient_id = patientId.value;
         form.birth_date = birthDate.value;
         form.gender = gender.value;
+        tempPatientName.value = userFullName;
     } else {
         families.value.map((family) => {
            if (family.patient_id === newValue.patient_name) {
@@ -101,6 +110,7 @@ watch(form, (newValue, oldValue) => {
                form.patient_name = newValue.patient_name;
                form.birth_date = family.birth_date;
                form.gender = family.gender;
+               tempPatientName.value = family.name;
            }
         });
     }

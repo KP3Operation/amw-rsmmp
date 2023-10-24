@@ -48,4 +48,57 @@ class DoctorScheduleController extends Controller
 
         return response()->json($response);
     }
+
+    public function getAndFormatDoctorSchedules(Request $request)
+    {
+        $paramedicId = "";
+        $date = "";
+        $serviceUnitId = "";
+        $response = new stdClass();
+
+        if ($request->has('paramedic_id')) {
+            $paramedicId = $request->paramedic_id;
+        }
+
+        if ($request->has('date')) {
+            $date = $request->date;
+        }
+
+        if ($request->has('service_unit_id')) {
+            $serviceUnitId = $request->service_unit_id;
+        }
+
+        $doctorSchedules = $this->patientService->getDoctorSchedule(
+            $date,
+            $date,
+            $serviceUnitId ?? "",
+            $paramedicId ?? ""
+        );
+
+        $schedules = [];
+        $doctorSchedulesData = $doctorSchedules->data;
+        foreach ($doctorSchedulesData as $schedule) {
+            $schedules[$schedule->serviceUnitID] = [
+                'serviceUnitID' => $schedule->serviceUnitID,
+                'serviceUnitName' => $schedule->serviceUnitName,
+            ];
+        }
+
+        foreach ($doctorSchedulesData as $scheduleData) {
+            foreach ($schedules as $schedule) {
+                if ($scheduleData->serviceUnitID == $schedule['serviceUnitID']) {
+                    $schedules[$schedule['serviceUnitID']]['doctors'][] = [
+                      'paramedicName' => $scheduleData->paramedicName,
+                      'paramedicId' => $scheduleData->paramedicID
+                    ];
+                }
+            }
+        }
+
+        $schedules = array_values($schedules);
+
+        $response->schedules = $schedules;
+
+        return response()->json($response);
+    }
 }

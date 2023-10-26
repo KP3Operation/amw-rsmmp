@@ -4,13 +4,13 @@ import DoctorPatient from "@resources/static/images/doctor-2-pasien.png";
 import DoctorWhite from "@resources/static/icons/doctor-white.svg";
 import UserFillWhite from "@resources/static/icons/users-fill-white.svg";
 import { useAuthStore } from "@shared/+store/auth.store.js";
-import {convertDateTimeToDate, getUserFirstName} from "@shared/utils/helpers.js";
+import { convertDateTimeToDate, getUserFirstName } from "@shared/utils/helpers.js";
 import ConsulCard from "@patient/Components/ConsulCard/ConsulCard.vue";
-import {useAppointmentStore} from "@patient/+store/appointment.store.js";
-import {storeToRefs} from "pinia";
+import { useAppointmentStore } from "@patient/+store/appointment.store.js";
+import { storeToRefs } from "pinia";
 import axios from "axios";
-import {useLayoutStore} from "@shared/+store/layout.store.js";
-import {onMounted, ref} from "vue";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
+import { onMounted, ref } from "vue";
 
 const authStore = useAuthStore();
 const layoutStore = useLayoutStore();
@@ -27,11 +27,7 @@ const fetchAppointments = () => {
         const data = response.data;
         appointmentStore.updateOpenAppointments(data.appointments.opens);
     }).catch((error) => {
-        if (error.response) {
-            layoutStore.toggleErrorAlert(`${error.response.data.message}`);
-        } else {
-            layoutStore.toggleErrorAlert(`${error}`);
-        }
+        throw error;
     }).finally(() => {
         layoutStore.updateLoadingState(false);
     });
@@ -68,7 +64,7 @@ onMounted(() => {
 
                     <p class="fw-bold mt-3 text-black">{{ $t('home.history') }}</p>
                 </router-link>
-                <router-link :to="{name: 'DoctorSchedulePage'}" class="item doctor-schedule bg-green-100">
+                <router-link :to="{ name: 'DoctorSchedulePage' }" class="item doctor-schedule bg-green-100">
                     <div class="icon icon-pasien bg-green-500">
                         <img :src="DoctorWhite" alt="Icon" width="25" height="25">
                     </div>
@@ -92,27 +88,35 @@ onMounted(() => {
         <section class="mt-6">
             <h2 class="fs-3 fw-bold text-black">{{ $t('home.next_consult_schedule') }}</h2>
             <div v-if="openAppointments.length > 0" id="jadwal-konsultasi" class="carousel slide mt-2"
-                 data-bs-interval="5000" data-bs-touch="true" data-bs-ride="carousel">
+                data-bs-interval="5000" data-bs-touch="true" data-bs-ride="carousel">
                 <div class="carousel-inner d-flex flex-nowrap col-gap-20" v-for="(appointment, index) in openAppointments">
-                    <ConsulCard
-                        :doctor="appointment.paramedicName"
-                        :unit="appointment.serviceUnitName"
+                    <ConsulCard :doctor="appointment.paramedicName" :unit="appointment.serviceUnitName"
                         :date="convertDateTimeToDate(appointment.appointmentDate_yMdHms)"
-                        :time="appointment.appointmentTime"
-                        :id="index + 1" />
+                        :time="appointment.appointmentTime" :id="index + 1" />
 
                 </div>
 
                 <div class="carousel-indicators position-static mt-2 mb-0">
-                    <button v-for="(appointment, index) in openAppointments"
-                            type="button" data-bs-target="#jadwal-konsultasi"
-                            :data-bs-slide-to="index + 1" class="" :aria-label="'Slide ' + index" form="#"></button>
+                    <button v-for="(appointment, index) in openAppointments" type="button"
+                        data-bs-target="#jadwal-konsultasi" :data-bs-slide-to="index + 1" class=""
+                        :aria-label="'Slide ' + index" form="#"></button>
                 </div>
             </div>
-            <div class="mt-2 px-4 py-3 bg-blue-100 rounded-3 text-center" v-if="openAppointments.length < 1 && !isLoading">
+            <div class="mt-2 px-4 py-3 bg-blue-100 rounded-3 text-center"
+                v-if="openAppointments.length < 1 && !isLoading && selectedMedicalNo !== ''">
                 <p class="fw-bold">Anda Tidak Memiliki Jadwal Konsultasi</p>
                 <p class="mt-2 text-gray-700 fs-5">Buat Jadwal Konsultasi Baru Dengan Mentap Tombol “Buat Jadwal”</p>
-                <router-link :to="{name: 'CreateAppointmentPage'}" class="d-block btn btn-blue-500-rounded-sm mt-4 fw-semibold">Buat Jadwal</router-link>
+                <router-link :to="{ name: 'CreateAppointmentPage' }"
+                    class="d-block btn btn-blue-500-rounded-sm mt-4 fw-semibold">Buat Jadwal</router-link>
+            </div>
+            <div class="mt-2 px-4 py-3 bg-blue-100 rounded-3 text-center"
+                v-if="openAppointments.length < 1 && !isLoading && selectedMedicalNo === ''">
+                <p class="fw-bold">Mulai Sinkronisasi Data Anda</p>
+                <p class="mt-2 text-gray-700 fs-5">Mulai Sinkronisasi Data Anda untuk Mulai Jadwal Konsultasi dengan Tap
+                    tombol Sinkronisasi dibawah.</p>
+
+                <router-link :to="{ name: 'ProfilePage' }"
+                    class="d-block btn btn-blue-500-rounded-sm mt-4 fw-semibold">Sinkronisasi</router-link>
             </div>
         </section>
     </div>

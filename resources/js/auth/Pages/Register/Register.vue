@@ -1,6 +1,6 @@
 <script setup>
 import * as bootstrap from 'bootstrap';
-import { onMounted, reactive } from 'vue';
+import {onMounted, reactive, watch} from 'vue';
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import router from "@auth/router.js";
 import Form from "vform";
@@ -23,10 +23,6 @@ const form = reactive(
         doctor_id: null
     })
 );
-
-onMounted(() => {
-    modalState.alreadyRegisteredModal = new bootstrap.Modal("#modal-register", {});
-});
 
 const showAlreadyRegisteredModal = () => {
     modalState.alreadyRegisteredModal.show();
@@ -83,6 +79,29 @@ const navigateToLogin = async () => {
     router.push({ path: '/verification' });
 }
 
+watch(form, (newValue, oldValue) => {
+    if (newValue.ssn !== null) {
+        if (newValue.role === '1' && (newValue.ssn.toString().length < 16 || newValue.ssn.toString().length > 16)) {
+            form.errors.set({ssn: 'Panjang NIK harus 16 digit'});
+        } else {
+            form.errors.set({ssn: ''});
+        }
+    }
+
+    if (newValue.phone_number !== null) {
+        if (newValue.phone_number.toString().length < 10) {
+            form.errors.set({phone_number: 'No. Handphone Lebih Dari 10 Digit'});
+        } else if (newValue.phone_number.toString().length > 13) {
+            form.errors.set({phone_number: 'No. Handphone Lebih Dari 13 Digit'});
+        }
+        else {
+            form.errors.set({ssn: ''});
+        }
+    }
+});
+onMounted(() => {
+    modalState.alreadyRegisteredModal = new bootstrap.Modal("#modal-register", {});
+});
 </script>
 <template>
     <h1 class="fs-1 lh-150 fw-bolder mt-4 mb-0">{{ $t('welcome_message') }}</h1>

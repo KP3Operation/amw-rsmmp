@@ -23,7 +23,7 @@ class RegisterDoctorRequest extends FormRequest
     {
         return [
             "phone_number" => "required|min:10|max:13",
-            "doctor_id" => "required",
+            "doctor_id" => "required|unique:user_doctors,doctor_id",
             "role" => "required"
         ];
     }

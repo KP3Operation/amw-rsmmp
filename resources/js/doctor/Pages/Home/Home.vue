@@ -6,7 +6,7 @@ import MoneyWhite from "@resources/static/icons/money-white.svg";
 import Banner from "@resources/static/images/banner.png";
 import {onMounted, ref, watch} from "vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
-import { getUserFirstName } from "@shared/utils/helpers.js";
+import {convertDateTimeToDate, getUserFirstName} from "@shared/utils/helpers.js";
 import OverviewSummaryFee from "@doctor/Components/OverviewSummaryFee/OverviewSummaryFee.vue";
 import OverviewConsultationScheduleEmpty from "@doctor/Components/OverviewConsultationSchedule/OverviewConsultationScheduleEmpty.vue";
 import OverviewInpatientEmpty from "@doctor/Components/OverviewInpatient/OverviewInpatientEmpty.vue";
@@ -18,18 +18,19 @@ const appointmentStore = useAppointmentStore();
 const {selectedDate, doctorAppointments} = storeToRefs(appointmentStore);
 const authStore = useAuthStore();
 const showSummaryFeeFilter = ref(false);
+const overviewAppointments = ref([]);
 
 const fetchAppointments = () => {
-  axios.get('/api/v1/doctor/appointments', {
+  axios.get('/api/v1/doctor/appointments/group', {
     params: {date: selectedDate.value}
   }).then((response) => {
     const data = response.data;
-    appointmentStore.updateAppointments(data.appointments);
+    overviewAppointments.value = data.appointments;
   }).catch((error) => {}).finally(() => {});
 }
 
 onMounted(() => {
-  // fetchAppointments();
+  fetchAppointments();
 });
 </script>
 
@@ -90,68 +91,38 @@ onMounted(() => {
 
         <section class="mt-5">
             <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_consult_schedule') }}</h2>
-            <OverviewConsultationScheduleEmpty v-if="doctorAppointments.length < 1" />
+            <OverviewConsultationScheduleEmpty v-if="overviewAppointments.length < 1" />
 
-<!--            <div v-if="doctorAppointments.length >= 1" id="overview-jadwal-konsultasi" class="carousel slide mt-3" data-bs-touch="true" data-bs-ride="carousel">-->
-<!--              <div class="carousel-inner d-flex flex-nowrap col-gap-20">-->
-<!--                <div class="carousel-item">-->
-<!--                  <div class="d-flex col-gap-20">-->
-<!--                    <div class="overview-slider-doctor">-->
-<!--                      <div class="date">-->
-<!--                        <div>-->
-<!--                          <i class="bi bi-calendar-event-fill"></i>-->
+            <div v-if="overviewAppointments.length >= 1" id="overview-jadwal-konsultasi" class="carousel slide mt-3" data-bs-touch="true" data-bs-ride="carousel">
+              <div class="carousel-inner d-flex flex-nowrap col-gap-20">
+                <div class="carousel-item" :class="index === 0 ? 'active' : ''" v-for="(appointment, index) in overviewAppointments">
+                  <div class="d-flex col-gap-20">
+                    <div class="overview-slider-doctor">
+                      <div class="date">
+                        <div>
+                          <i class="bi bi-calendar-event-fill"></i>
+                          <p>{{ convertDateTimeToDate(appointment.date) }}</p>
+                        </div>
+                      </div>
+                      <div class="patient">
+                        <i class="bi bi-heart-pulse-fill fs-1 icon-blue-200"></i>
+                        <p>
+                          <span>{{ appointment.count }}</span>
+                          <br>
+                          Pasien
+                        </p>
+                      </div>
+                      <p class="location">{{ appointment.serviceUnitName }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-<!--                          <p>12 Jun 2023</p>-->
-<!--                        </div>-->
-
-<!--                      </div>-->
-
-<!--                      <div class="patient">-->
-<!--                        <i class="bi bi-heart-pulse-fill fs-1 icon-blue-200"></i>-->
-
-<!--                        <p>-->
-<!--                          <span>3230</span>-->
-<!--                          <br>-->
-<!--                          Pasien-->
-<!--                        </p>-->
-<!--                      </div>-->
-
-<!--                      <p class="location">Unit Kecantikan dan Estetika</p>-->
-<!--                    </div>-->
-
-<!--                    <div class="overview-slider-doctor">-->
-<!--                      <div class="date">-->
-<!--                        <div>-->
-<!--                          <i class="bi bi-calendar-event-fill"></i>-->
-
-<!--                          <p>14 Jun 2023</p>-->
-<!--                        </div>-->
-
-<!--                      </div>-->
-
-<!--                      <div class="patient">-->
-<!--                        <i class="bi bi-heart-pulse-fill fs-1 icon-blue-200"></i>-->
-
-<!--                        <p>-->
-<!--                          <span>230</span>-->
-<!--                          <br>-->
-<!--                          Pasien-->
-<!--                        </p>-->
-<!--                      </div>-->
-
-<!--                      <p class="location">Unit Kejiwaan dan Konseling</p>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-
-<!--              </div>-->
-
-<!--              <div class="carousel-indicators position-static mb-0">-->
-<!--                <button type="button" data-bs-target="#overview-jadwal-konsultasi" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>-->
-
-<!--                <button type="button" data-bs-target="#overview-jadwal-konsultasi" data-bs-slide-to="1" aria-label="Slide 2" class="active" aria-current="true"></button>-->
-<!--              </div>-->
-<!--            </div>-->
+              <div class="carousel-indicators position-static mb-0">
+                <button v-for="(appointment, index) in overviewAppointments" type="button" data-bs-target="#overview-jadwal-konsultasi"
+                        :data-bs-slide-to="index" class="" aria-label="Slide 1"></button>
+              </div>
+            </div>
 
         </section>
 <!--        <section class="mt-5">-->

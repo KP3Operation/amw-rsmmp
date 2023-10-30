@@ -10,9 +10,11 @@ import NotFoundImage from "@resources/static/images/not-found.png";
 
 const inpatientStore = useInpatientStore();
 const { patients, patientCount, selectedRegistrationNo } = storeToRefs(inpatientStore);
+const prevData = ref([]);
 const filterForm = reactive(
     new Form({
-        room_name: ""
+        room_name: "",
+        prev_data: prevData.value
     })
 );
 const layoutStore = useLayoutStore();
@@ -23,13 +25,24 @@ const filterInpatientList = () => {
     layoutStore.isLoading = true;
     filterForm.get('/api/v1/doctor/inpatient').then((response) => {
         const data = response.data;
-        patients.value = data.patients;
-        patientCount.value = patients.value.length;
+        data.patients.map((patient) => {
+            if (!prevData.value.includes(patient.medicalNo)) {
+                patients.value.push(patient);
+                patientCount.value += 1;
+            }
+        });
+        patients.value.map((patient) => {
+           prevData.value.push(patient.medicalNo);
+        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;
     })
+}
+
+const loadMore = () => {
+    filterInpatientList();
 }
 
 watch(selectedRoomName, (newValue, oldValue) => {
@@ -58,9 +71,6 @@ onMounted(() => {
         <div id="multiselect" class="w-50 dropdown filter-sticky d-flex col-gap-20 align-items-center p-0">
             <select class="form-select" aria-label="Tipe" v-model="selectedRoomName">
                 <option value="" selected>Semua Ruangan</option>
-<!--                <option value="anggrek">Anggrek</option>-->
-<!--                <option value="melati">Melati</option>-->
-<!--                <option value="icu">ICU</option>-->
             </select>
         </div>
     </section>
@@ -83,20 +93,8 @@ onMounted(() => {
                 Pasien Rawat Inap</p>
         </div>
     </div>
-    <!-- TODO: Need to use pagination -->
-    <!--        <div aria-label="Page navigation">-->
-    <!--            <ul class="pagination justify-content-center mt-3">-->
-    <!--                <li class="page-item disabled">-->
-    <!--                    <a class="page-link">-->
-    <!--                        Prev-->
-    <!--                    </a>-->
-    <!--                </li>-->
-    <!--                <li class="page-item active"><a class="page-link" href="#">1</a></li>-->
-    <!--                <li class="page-item"><a class="page-link" href="#">2</a></li>-->
-    <!--                <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-    <!--                <li class="page-item">-->
-    <!--                    <a class="page-link" href="#">Next</a>-->
-    <!--                </li>-->
-    <!--            </ul>-->
-    <!--        </div>-->
+
+    <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!isLoading" @click="loadMore">
+        <button type="button" class="btn btn-default">Load More</button>
+    </div>
 </template>

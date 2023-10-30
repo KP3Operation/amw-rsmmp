@@ -19,12 +19,36 @@ class InpatientListController extends Controller
     {
         $user = $request->user();
         $userDoctor = $user->userDoctorData;
+        $prevData = [];
+        $response = [];
+        if ($request->has('prev_data')) {
+            $prevData = $request->get('prev_data');
+        }
 
         $inpatientList = $this->doctorService
-            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? "", 10);
+            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? "", 150);
+
+        if (count($prevData) >= 10) {
+            foreach ($inpatientList->data as $patient) {
+                if (!in_array($patient->medicalNo, $prevData)) {
+                    $response[] = $patient;
+                }
+
+                if (count($response) > (count($prevData) + count($response))) {
+                    break;
+                }
+            }
+        } else {
+            foreach ($inpatientList->data as $patient) {
+                $response[] = $patient;
+                if (count($response) >= 10) {
+                    break;
+                }
+            }
+        }
 
         return response()->json([
-            'patients' => $inpatientList->data
+            'patients' => $response
         ]);
     }
 

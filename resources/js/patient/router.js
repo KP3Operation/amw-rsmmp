@@ -153,6 +153,7 @@ router.beforeEach(async (to, from) => {
                         authStore.patientId = response.data.patient_data.patient_id;
                         authStore.birthDate = response.data.patient_data.birth_date;
                         authStore.gender = response.data.patient_data.gender;
+                        authStore.medicalNo = response.data.patient_data.medical_no;
                     }
 
                     if (authStore.userRole !== "patient") {
@@ -161,7 +162,7 @@ router.beforeEach(async (to, from) => {
                     }
                 })
                 .catch((error) => {
-                    if (error?.response?.status === 401) {
+                    if (error.response && error.response.status && error.response.status === 401) {
                         authStore.$reset();
                         window.location.href = `/auth/login`;
                     }

@@ -16,6 +16,7 @@ class Notification extends Model
     protected $fillable = [
         'doctor_id',
         'context',
-        'is_read'
+        'is_read',
+        'appointment_date'
     ];
 }

@@ -14,32 +14,44 @@ export const useLayoutStore = defineStore("layout", () => {
     let infoAlertMessage = ref("");
 
     function toggleSuccessAlert(msg = '') {
-        showSuccessAlert.value = !showSuccessAlert.value;
-        successAlertMessage.value = `${msg}`;
-        if (showSuccessAlert.value) {
-            setTimeout(() => {
-                toggleSuccessAlert();
-            }, 3000);
+        if (msg !== '') {
+            showSuccessAlert.value = !showSuccessAlert.value;
+            successAlertMessage.value = `${msg}`;
+            if (showSuccessAlert.value) {
+                setTimeout(() => {
+                    toggleSuccessAlert();
+                }, 3000);
+            }
+        } else {
+            showSuccessAlert.value = false;
         }
     }
 
     function toggleErrorAlert(msg = '') {
-        showErrorAlert.value = !showErrorAlert.value;
-        errorAlertMessage.value = `${msg}`;
-        if (showErrorAlert.value) {
-            setTimeout(() => {
-                toggleErrorAlert();
-            }, 3000);
+        if (msg !== '') {
+            showErrorAlert.value = !showErrorAlert.value;
+            errorAlertMessage.value = `${msg}`;
+            if (showErrorAlert.value) {
+                setTimeout(() => {
+                    toggleErrorAlert();
+                }, 3000);
+            }
+        } else {
+            showErrorAlert.value = false;
         }
     }
 
     function toggleInfoAlert(msg = '') {
-        showInfoAlert.value = !showInfoAlert.value;
-        infoAlertMessage.value = `${msg}`;
-        if (showInfoAlert.value) {
-            setTimeout(() => {
-                toggleInfoAlert();
-            }, 3000);
+        if (msg !== '') {
+            showInfoAlert.value = !showInfoAlert.value;
+            infoAlertMessage.value = `${msg}`;
+            if (showInfoAlert.value) {
+                setTimeout(() => {
+                    toggleInfoAlert();
+                }, 3000);
+            }
+        } else {
+            showInfoAlert.value = false;
         }
     }
 

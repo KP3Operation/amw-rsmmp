@@ -5,10 +5,16 @@ import axios from "axios";
 import Header from "@shared/Components/Header/Header.vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { storeToRefs } from "pinia";
+import {onMounted, reactive} from "vue";
+import * as bootstrap from "bootstrap";
+import {calculateAge} from "@shared/utils/helpers.js";
 
 const authStore = useAuthStore();
 const { userFullName, doctorId, phoneNumber, smfName } = storeToRefs(authStore);
 const layoutStore = useLayoutStore();
+const modalState = reactive({
+    logoutConfirmationModal: null
+});
 
 const logout = () => {
     axios.get('/api/v1/logout').then(() => {
@@ -18,6 +24,10 @@ const logout = () => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     });
 }
+
+onMounted(() => {
+    modalState.logoutConfirmationModal = new bootstrap.Modal("#logout-modal", {});
+});
 </script>
 
 <template>
@@ -49,7 +59,35 @@ const logout = () => {
             <p class="w-50 text-end fw-semibold">{{ smfName }}</p>
         </div>
 
-        <a href="#" @click="logout" class="d-block btn btn-outline-red-500 rounded-pill mt-4 text-decoration-none">{{
+        <a href="#" @click="modalState.logoutConfirmationModal.show()" class="d-block btn btn-outline-red-500 rounded-pill mt-4 text-decoration-none">{{
             $t('profile.logout') }}</a>
+    </div>
+
+    <div class="modal" id="logout-modal" aria-labelledby="Logout Modal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between">
+                    <div class="d-flex align-items-center col-gap-8">
+                        <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
+                        <h5 class="modal-title">Konfirmasi Logout</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"
+                            @click="modalState.logoutConfirmationModal.hide()">
+                        <i class="bi bi-x fs-2 icon-black"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Anda akan logout dari Aviat Mobile Web</p>
+                </div>
+                <div class="modal-footer flex-nowrap">
+                    <button type="button" class="w-50 btn btn-link" @click="modalState.logoutConfirmationModal.hide()">
+                        Batal
+                    </button>
+                    <button type="button" @click="logout" class="w-50 btn-masuk btn btn-blue">
+                        Ya
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

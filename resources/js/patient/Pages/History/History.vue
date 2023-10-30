@@ -18,6 +18,10 @@ import DoctorImage from "@resources/static/images/doctor.png";
 import LabImage from "@resources/static/images/lab.png";
 import Doctor2Image from "@resources/static/images/doctor-2.png";
 
+const prevVitalSignData = ref([]);
+const prevPrescriptionData = ref([]);
+const prevLabResultData = ref([]);
+const prevEncounterData = ref([]);
 const layoutStore = useLayoutStore();
 const modalState = reactive({
     familyMemberFilterModal: null
@@ -32,9 +36,19 @@ const { vitalSignHistories, prescriptionHistories, encounterHistories,
 const fetchVitalSignHistories = () => {
     medicalHistoriesStore.updateVitalSignHistories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/vitalsign?type=${selectedVitalSignType.value}&family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+    axios.get(`/api/v1/patient/medical/history/vitalsign`, {
+        params: {
+            type: selectedVitalSignType.value,
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
+            prev_data: prevVitalSignData.value
+        }
+    }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updateVitalSignHistories(data.histories);
+
+        data.histories.map((history) => {
+           prevVitalSignData.value.push(history.registrationNo);
+        });
         medicalHistoriesStore.updateSelectedPatient({
             name: data.patient.name,
             gender: data.patient.gender,
@@ -51,9 +65,17 @@ const fetchVitalSignHistories = () => {
 const fetchPrescriptionHistories = () => {
     medicalHistoriesStore.updatePrescriptionHitories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/prescription?family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+    axios.get(`/api/v1/patient/medical/history/prescription`, {
+        params: {
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
+            prev_data: prevPrescriptionData.value
+        }
+    }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updatePrescriptionHitories(data.histories);
+        data.histories.map((history) => {
+            prevPrescriptionData.value.push(history.PrescriptionNo);
+        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -64,9 +86,17 @@ const fetchPrescriptionHistories = () => {
 const fetchLabResults = () => {
     medicalHistoriesStore.updateLabResultHistories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/labresult?family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+    axios.get(`/api/v1/patient/medical/history/labresult`, {
+        params: {
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
+            prev_data: prevLabResultData.value
+        }
+    }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updateLabResultHistories(data.histories);
+        data.histories.map((history) => {
+            prevLabResultData.value.push(history.registrationNo);
+        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -77,9 +107,17 @@ const fetchLabResults = () => {
 const fetchEncounterHistories = () => {
     medicalHistoriesStore.updateEncounterHistories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/encounters?family_member_id=${selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value}`).then((response) => {
+    axios.get(`/api/v1/patient/medical/history/encounters`, {
+        params: {
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
+            prev_data: prevEncounterData.value
+        }
+    }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updateEncounterHistories(data.histories);
+        data.histories.map((history) => {
+            prevEncounterData.value.push(history.registrationNo);
+        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -160,6 +198,24 @@ const filterByFamily = () => {
 
 }
 
+const loadMore = () => {
+    if (selectedTab.value === 'unit-vital') {
+        fetchVitalSignHistories();
+    }
+
+    if (selectedTab.value === 'resep-obat') {
+        fetchPrescriptionHistories();
+    }
+
+    if (selectedTab.value === 'hasil-lab') {
+        fetchLabResults();
+    }
+
+    if (selectedTab.value === 'pertemuan') {
+        fetchEncounterHistories();
+    }
+}
+
 onMounted(() => {
     if (selectedTab.value === '') {
         medicalHistoriesStore.updateSelectedTab('unit-vital');
@@ -236,6 +292,11 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-3 fs-3 fw-bold">Anda Belum Memiliki <br> Hasil Tanda Unit Vital</p>
                 </div>
+
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading" @click="loadMore">
+                    <button type="button" class="btn btn-default">Load More</button>
+                </div>
+
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'resep-obat' ? 'show active' : ''" id="resep-obat" role="tabpanel" aria-labelledby="resep-obat" tabindex="0">
                 <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in prescriptionHistories">
@@ -248,6 +309,9 @@ onMounted(() => {
                     <img :src="DoctorImage" alt="Ilustrasi Tidak Ada Data"
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki Resep Obat</p>
+                </div>
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading" @click="loadMore">
+                    <button type="button" class="btn btn-default">Load More</button>
                 </div>
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'hasil-lab' ? 'show active' : ''" id="hasil-lab" role="tabpanel" aria-labelledby="hasil-lab" tabindex="0">
@@ -266,6 +330,9 @@ onMounted(() => {
                     <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki <br>
                         Riwayat Hasil Lab</p>
                 </div>
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading" @click="loadMore">
+                    <button type="button" class="btn btn-default">Load More</button>
+                </div>
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'pertemuan' ? 'show active' : ''" id="pertemuan" role="tabpanel" aria-labelledby="pertemuan" tabindex="0">
                 <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in encounterHistories">
@@ -279,6 +346,9 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki
                         Pertemuan</p>
+                </div>
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading" @click="loadMore">
+                    <button type="button" class="btn btn-default">Load More</button>
                 </div>
             </section>
             <div class="text-center mt-3" v-if="layoutStore.isLoading">

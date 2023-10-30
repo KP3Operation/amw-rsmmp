@@ -17,6 +17,7 @@ const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
 const appointmentStore = useAppointmentStore();
 const { openAppointments, selectedMedicalNo } = storeToRefs(appointmentStore);
+const { medicalNo } = storeToRefs(authStore);
 
 const fetchAppointments = () => {
     axios.get(`/api/v1/patient/appointments`, {
@@ -35,6 +36,7 @@ const fetchAppointments = () => {
 
 onMounted(() => {
     appointmentStore.$reset();
+    appointmentStore.updateSelectedMedicalNo(medicalNo.value);
     fetchAppointments();
 });
 </script>
@@ -110,7 +112,7 @@ onMounted(() => {
                     class="d-block btn btn-blue-500-rounded-sm mt-4 fw-semibold">Buat Jadwal</router-link>
             </div>
             <div class="mt-2 px-4 py-3 bg-blue-100 rounded-3 text-center"
-                v-if="openAppointments.length < 1 && !isLoading && selectedMedicalNo === ''">
+                v-if="!isLoading && selectedMedicalNo === ''">
                 <p class="fw-bold">Mulai Sinkronisasi Data Anda</p>
                 <p class="mt-2 text-gray-700 fs-5">Mulai Sinkronisasi Data Anda untuk Mulai Jadwal Konsultasi dengan Tap
                     tombol Sinkronisasi dibawah.</p>

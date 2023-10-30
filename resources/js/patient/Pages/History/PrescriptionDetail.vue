@@ -85,13 +85,6 @@ onMounted(() => {
                         </div>
 
                         <div class="mt-2">
-                            <p class="fs-6 text-gray-700">Dosis Obat</p>
-                            <p class="mt-2">
-
-                            </p>
-                        </div>
-
-                        <div class="mt-2">
                             <p class="fs-6 text-gray-700">Petunjuk</p>
                             <p class="mt-2">{{ prescription.consumeMethod }}</p>
                         </div>

@@ -13,6 +13,8 @@ import router from "@patient/router.js";
 import {useAppointmentStore} from "@patient/+store/appointment.store.js";
 import {useDoctorScheduleStore} from "@patient/+store/doctor-schedule.store.js";
 
+const authStore = useAuthStore();
+const {} = storeToRefs(authStore);
 const doctorScheduleStore = useDoctorScheduleStore();
 const { schedules, selectedDate} = storeToRefs(doctorScheduleStore);
 const layoutStore = useLayoutStore();
@@ -40,6 +42,8 @@ const route = useRoute();
 const isReadonly = ref(false);
 const isFromDoctorSchedulePage = ref(false);
 const tempPatientName = ref("");
+const appointmentDateChanged = ref(true);
+const serviceUnitChanged = ref(true);
 
 const storeAppointment = () => {
     layoutStore.updateLoadingState(true);
@@ -131,6 +135,12 @@ watch(form, (newValue, oldValue) => {
             });
         }
     }
+});
+
+watch(appointmentDateChanged, (newValue, oldValue) => {
+    form.paramedic_id = '';
+    form.service_unit_id = '';
+   appointmentDateChanged.value = false;
 });
 
 onMounted(() => {

@@ -6,6 +6,7 @@ import {onMounted, reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import axios from "axios";
 import {convertDateTimeToDate} from "@shared/utils/helpers.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const layoutStore = useLayoutStore();
 const {isLoading} = storeToRefs(layoutStore);
@@ -16,7 +17,7 @@ const route = useRoute();
 
 const fetchEncounterHistoryDetail = (registrationNo) => {
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/encounters/details?registration_no=${registrationNo}`).then((response) => {
+    apiRequest.get(`/api/v1/patient/medical/history/encounters/details?registration_no=${registrationNo}`).then((response) => {
         const data = response.data;
         encounterDetail.value = data.details[0];
         encountersDetail.value = data.details;

@@ -8,6 +8,7 @@ import { useRoute } from 'vue-router'
 import router from "@patient/router.js";
 import { convertDateToFormField } from "@shared/utils/helpers.js";
 import axios from "axios";
+import apiRequest from "@shared/utils/axios.js";
 
 const callingCode = import.meta.env.VITE_APP_CALLING_CODE;
 const layoutStore = useLayoutStore();
@@ -31,7 +32,7 @@ const form = reactive(
 
 const fetchFamily = () => {
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/family/fetchsimrs/${route.params.id}`).then((response) => {
+    apiRequest.get(`/api/v1/patient/family/fetchsimrs/${route.params.id}`).then((response) => {
         const data = response.data;
         form.id = data.family.id;
         form.name = data.family.name;

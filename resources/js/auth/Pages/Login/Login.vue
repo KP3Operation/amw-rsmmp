@@ -1,6 +1,6 @@
 <script setup>
 import Form from "vform";
-import { onMounted, reactive } from "vue";
+import {onMounted, reactive, watch} from "vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import router from "@auth/router.js";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
@@ -46,6 +46,21 @@ const navigateToRegister = async () => {
     modalState.notRegisteredModal.hide();
     router.push({ path: '/register' });
 }
+
+watch(form, (newValue) => {
+    let regExp = /^\d*[.]?\d*$/;
+    if (newValue.phone_number !== null) {
+        if (regExp.test(newValue.phone_number) === false) {
+            form.errors.set({phone_number: 'No. Handphone Hanya Boleh Diisi Angka'});
+        } else if (newValue.phone_number.toString().length > 1 && newValue.phone_number.toString().length < 10) {
+            form.errors.set({phone_number: 'No. Handphone Kurang Dari 10 Digit'});
+        } else if (newValue.phone_number.toString().length > 13) {
+            form.errors.set({phone_number: 'No. Handphone Lebih Dari 13 Digit'});
+        } else if (newValue.phone_number.toString().length == 0) {
+            form.errors.set({phone_number: 'No. Handphone Wajib Diisi'});
+        }
+    }
+});
 
 onMounted(() => {
     modalState.notRegisteredModal = new bootstrap.Modal("#modal-register");

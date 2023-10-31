@@ -15,10 +15,10 @@ class ServiceUnitDto extends Data
 
     public function __construct(
         #[MapInputName('ServiceUnitID')]
-        public string $serviceUnitID,
+        public ?string $serviceUnitID,
 
         #[MapInputName('ServiceUnitName')]
-        public string $serviceUnitName,
+        public ?string $serviceUnitName,
 
     ) {}
 

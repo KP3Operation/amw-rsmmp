@@ -14,27 +14,38 @@ class PatientVitalSignHistoryDto  extends Data
 {
     public function __construct(
         #[MapInputName('QuestionAnswerText')]
-        public string $questionAnswerText,
+        public ?string $questionAnswerText,
+
         #[MapInputName('QuestionAnswerText2')]
-        public string $questionAnswerText2,
+        public ?string $questionAnswerText2,
+
         #[MapInputName('RecordDate')]
-        public string $recordDate,
+        public ?string $recordDate,
+
         #[MapInputName('RecordTime')]
-        public string $recordTime,
+        public ?string $recordTime,
+
         #[MapInputName('QuestionAnswerNum')]
-        public string|null $questionAnswerNum,
+        public ?string $questionAnswerNum,
+
         #[MapInputName('QuestionAnswerPrefix')]
-        public string $questionAnswerPrefix,
+        public ?string $questionAnswerPrefix,
+
         #[MapInputName('RegistrationNo')]
-        public string $registrationNo,
+        public ?string $registrationNo,
+
         #[MapInputName('VitalSignID')]
-        public string $vitalSignId,
+        public ?string $vitalSignId,
+
         #[MapInputName('VitalSignName')]
-        public string|null $vitalSignName,
+        public ?string $vitalSignName,
+
         #[MapInputName('VitalSignUnit')]
-        public string|null $vitalSignUnit,
+        public ?string $vitalSignUnit,
+
         #[MapInputName('RecordDate_yMdHms')]
-        public string $recordDate_yMdHms,
+        public ?string $recordDate_yMdHms,
+
     ) {}
 
     public static function normalizers(): array

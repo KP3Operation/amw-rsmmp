@@ -125,6 +125,8 @@ class DoctorService implements IDoctorService
             "RecordCount" => $count,
         ]);
 
+        // dd($response->json()); -> There is no dateOfBirth
+
         if (!$response->successful()) {
             throw new HttpClientException("Failed connecting to SIMRS", 500);
         }

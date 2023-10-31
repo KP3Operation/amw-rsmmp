@@ -17,6 +17,7 @@ export const useAuthStore = defineStore("auth", () => {
     let patientId = ref(null);
     let birthDate = ref(null);
     let gender = ref(null);
+    let medicalNo = ref(null);
 
     // doctor
     let doctorId = ref(null);
@@ -31,6 +32,10 @@ export const useAuthStore = defineStore("auth", () => {
 
     function updateDoctorId (id) {
         doctorId.value = id;
+    }
+
+    function updateMedicalNo (no) {
+        medicalNo.value = no;
     }
 
     function $reset() {
@@ -49,6 +54,7 @@ export const useAuthStore = defineStore("auth", () => {
         patientId.value = null;
         birthDate.value = null;
         gender.value = null;
+        medicalNo.value = null;
 
         //doctor
         doctorId.value = null;
@@ -62,6 +68,7 @@ export const useAuthStore = defineStore("auth", () => {
         $reset,
         updateBirthDate,
         updateDoctorId,
+        updateMedicalNo,
         otpCreatedAt,
         otpTimeout,
         userEmail,
@@ -74,6 +81,7 @@ export const useAuthStore = defineStore("auth", () => {
         patientId,
         birthDate,
         gender,
+        medicalNo,
         doctorId,
         smfName,
         isRegistration,

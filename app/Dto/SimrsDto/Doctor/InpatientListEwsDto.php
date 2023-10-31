@@ -15,14 +15,19 @@ class InpatientListEwsDto extends Data
     public function __construct(
         #[MapInputName('Status')]
         public int $status,
+
         #[MapInputName('VitalSignInitial')]
-        public string $vitalSignInitial,
+        public ?string $vitalSignInitial,
+
         #[MapInputName('VitalSignName')]
-        public string $vitalSignName,
+        public ?string $vitalSignName,
+
         #[MapInputName('Value')]
         public int $value,
+
         #[MapInputName('VitalSignUnit')]
-        public string $vitalSignUnit,
+        public ?string $vitalSignUnit,
+
     ) {
     }
 

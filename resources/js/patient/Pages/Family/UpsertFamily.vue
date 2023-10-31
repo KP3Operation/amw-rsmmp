@@ -9,6 +9,7 @@ import router from "@patient/router.js";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { convertDateToFormField } from "@shared/utils/helpers.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const callingCode = import.meta.env.VITE_APP_CALLING_CODE;
 const layoutStore = useLayoutStore();
@@ -54,6 +55,9 @@ const storeFamily = () => {
         newFamilyId.value = data.family.id;
         modalState.familyDataConfirmation.show();
     }).catch((error) => {
+        if (error.response.status === 401) {
+            window.location.href = '/auth/login';
+        }
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;
@@ -67,6 +71,9 @@ const updateFamily = () => {
         layoutStore.toggleInfoAlert(`Berhasil Mengubah Data Member ${data.family.name}`);
         router.push({ path: '/family' });
     }).catch((error) => {
+        if (error.response.status === 401) {
+            window.location.href = '/auth/login';
+        }
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;
@@ -75,7 +82,7 @@ const updateFamily = () => {
 
 const fetchFamily = () => {
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/family/${route.params.id}`).then((response) => {
+    apiRequest.get(`/api/v1/patient/family/${route.params.id}`).then((response) => {
         const data = response.data;
         form.id = data.family.id;
         form.name = data.family.name;

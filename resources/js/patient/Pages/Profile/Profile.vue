@@ -9,6 +9,7 @@ import {onMounted, reactive, ref, watch} from 'vue';
 import { calculateAge, updateMyProfileStore } from "@shared/utils/helpers.js";
 import Header from "@shared/Components/Header/Header.vue";
 import { storeToRefs } from "pinia";
+import apiRequest from "@shared/utils/axios.js";
 
 const modalState = reactive({
     syncDataModal: null,
@@ -26,7 +27,7 @@ const showSyncDataModal = () => {
 const syncData = () => {
     modalState.syncDataModal.hide();
     layoutStore.isFullView = true;
-    axios.get("/api/v1/me/sync").then(() => {
+    apiRequest.get("/api/v1/me/sync").then(() => {
         layoutStore.toggleSuccessAlert(t('profile.sync.success'));
     }).catch((error) => {
         layoutStore.toggleErrorAlert(t('profile.sync.failed'));
@@ -37,7 +38,7 @@ const syncData = () => {
 }
 
 const logout = () => {
-    axios.get('/api/v1/logout').then(() => {
+    apiRequest.get('/api/v1/logout').then(() => {
         window.location.href = "/auth/login";
     }).catch((error) => {
         layoutStore.toggleErrorAlert(t('profile.logout_failed'));

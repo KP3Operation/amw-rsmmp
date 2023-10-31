@@ -36,6 +36,9 @@ const filterSummaryFee = () => {
             payouts: data.payouts
         });
     }).catch((error) => {
+        if (error.response.status === 401) {
+            window.location.href = '/auth/login';
+        }
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;

@@ -8,6 +8,7 @@ import { storeToRefs } from "pinia";
 import FamilyMemberCard from "@patient/Components/FamilyMemberCard/FamilyMemberCard.vue";
 import * as bootstrap from "bootstrap";
 import NotFoundImage from "@resources/static/images/not-found.png";
+import apiRequest from "@shared/utils/axios.js";
 
 const layoutStore = useLayoutStore();
 const familyStore = useFamilyStore();
@@ -19,7 +20,7 @@ const modalState = reactive({
 });
 
 const fetchFamily = () => {
-    axios.get(`/api/v1/patient/family`).then((response) => {
+    apiRequest.get(`/api/v1/patient/family`).then((response) => {
         const data = response.data;
         familyStore.$patch({
             families: data.families
@@ -37,7 +38,7 @@ const handleDeleteFamilyMember = (event) => {
 
 const handleDeleteFamily = () => {
     layoutStore.isLoading = true;
-    axios.delete(`/api/v1/patient/family/${selectedFamilyMemberId.value}`).then((response) => {
+    apiRequest.delete(`/api/v1/patient/family/${selectedFamilyMemberId.value}`).then((response) => {
         layoutStore.toggleInfoAlert(`Berhasil Hapus Data ${selectedFamilyMemberName.value}`);
         selectedFamilyMemberId.value = 0;
         selectedFamilyMemberName.value = '';

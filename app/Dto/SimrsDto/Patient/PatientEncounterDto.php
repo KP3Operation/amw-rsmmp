@@ -15,16 +15,16 @@ class PatientEncounterDto extends Data
 
     public function __construct(
         #[MapInputName('RegistrationNo')]
-        public string $registrationNo,
+        public ?string $registrationNo,
 
         #[MapInputName('SRRegistrationType')]
-        public string $sRRegistrationType,
+        public ?string $sRRegistrationType,
 
         #[MapInputName('RegistrationDate')]
-        public string $registrationDate,
+        public ?string $registrationDate,
 
         #[MapInputName('RegistrationTime')]
-        public string $registrationTime,
+        public ?string $registrationTime,
 
         #[MapInputName('RegistrationQue')]
         public ?string $registrationQue,
@@ -33,22 +33,22 @@ class PatientEncounterDto extends Data
         public ?string $actualVisitDate,
 
         #[MapInputName('RegistrationNo1')]
-        public string $registrationNo1,
+        public ?string $registrationNo1,
 
         #[MapInputName('FromRegistrationNo')]
-        public string $fromRegistrationNo,
+        public ?string $fromRegistrationNo,
 
         #[MapInputName('ParamedicID')]
-        public string $paramedicID,
+        public ?string $paramedicID,
 
         #[MapInputName('ParamedicName')]
-        public string $paramedicName,
+        public ?string $paramedicName,
 
         #[MapInputName('ServiceUnitID')]
-        public string $serviceUnitID,
+        public ?string $serviceUnitID,
 
         #[MapInputName('ServiceUnitName')]
-        public string $serviceUnitName,
+        public ?string $serviceUnitName,
 
         #[MapInputName('VisitTypeID')]
         public ?string $visitTypeID,
@@ -57,7 +57,7 @@ class PatientEncounterDto extends Data
         public ?string $visitTypeName,
 
         #[MapInputName('Notes')]
-        public string $notes,
+        public ?string $notes,
 
         #[MapInputName('DiagnoseID')]
         public ?string $diagnoseID,
@@ -75,10 +75,10 @@ class PatientEncounterDto extends Data
         public ?string $dischargeNotes,
 
         #[MapInputName('DischargeMedicalNotes')]
-        public string $dischargeMedicalNotes,
+        public ?string $dischargeMedicalNotes,
 
         #[MapInputName('RegistrationDate_yMdHms')]
-        public string $registrationDate_yMdHms,
+        public ?string $registrationDate_yMdHms,
 
         #[MapInputName('ActualVisitDate_yMdHms')]
         public ?string $actualVisitDate_yMdHms

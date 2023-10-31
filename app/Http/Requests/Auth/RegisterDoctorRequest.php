@@ -22,8 +22,8 @@ class RegisterDoctorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "phone_number" => "required|min:10|max:13",
-            "doctor_id" => "required",
+            "phone_number" => "required|min:10|max:13|unique:users,phone_number",
+            "doctor_id" => "required|unique:user_doctors,doctor_id",
             "role" => "required"
         ];
     }

@@ -12,6 +12,7 @@ import {useRoute} from "vue-router";
 import router from "@patient/router.js";
 import {useAppointmentStore} from "@patient/+store/appointment.store.js";
 import {useDoctorScheduleStore} from "@patient/+store/doctor-schedule.store.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const doctorScheduleStore = useDoctorScheduleStore();
 const { schedules, selectedDate} = storeToRefs(doctorScheduleStore);
@@ -40,20 +41,24 @@ const route = useRoute();
 const isReadonly = ref(false);
 const isFromDoctorSchedulePage = ref(false);
 const tempPatientName = ref("");
+const appointmentDateChanged = ref(true);
+const serviceUnitChanged = ref(true);
 
 const storeAppointment = () => {
     layoutStore.updateLoadingState(true);
-
-    console.log(tempPatientName);
 
     if (form.patient_name === null && tempPatientName.value !== "") {
         form.patient_name = tempPatientName.value;
     }
 
-    form.post('/api/v1/patient/appointments/store').then((response) => {
+    form.post('/api/v1/patient/appointments/storezz').then((response) => {
         layoutStore.toggleSuccessAlert('Jadwal Konsultasi Berhasil Disimpan');
         router.push({ name: 'AppointmentPage' });
     }).catch((error) => {
+        if (error.response.status === 401) {
+            window.location.href = '/auth/login';
+        }
+
         if (error.response) {
             layoutStore.toggleErrorAlert(`Jadwal Konsultasi Gagal Disimpan. Error: ${error.response.data.message}`);
             if (error.response.status !== 422) {
@@ -69,7 +74,7 @@ const storeAppointment = () => {
 }
 
 const fetchFamily = () => {
-    axios.get(`/api/v1/patient/family`).then((response) => {
+    apiRequest.get(`/api/v1/patient/family`).then((response) => {
         const data = response.data;
         familyStore.updateFamilies(data.families);
         if (isFromDoctorSchedulePage.value) {
@@ -82,7 +87,7 @@ const fetchFamily = () => {
 }
 
 const fetchDoctorSchedules = () => {
-    axios.get(`/api/v1/patient/doctor/schedules/format`, {
+    apiRequest.get(`/api/v1/patient/doctor/schedules/format`, {
         params: {
             date: `${selectedDate.value}`,
             // service_unit_id: `${selectedServiceUnitId.value}`
@@ -133,7 +138,14 @@ watch(form, (newValue, oldValue) => {
     }
 });
 
+watch(appointmentDateChanged, (newValue, oldValue) => {
+    form.paramedic_id = '';
+    form.service_unit_id = '';
+   appointmentDateChanged.value = false;
+});
+
 onMounted(() => {
+    form.patient_name = patientId;
     if (selectedParamedicId.value !== '') {
         isReadonly.value = true;
         isFromDoctorSchedulePage.value = true;

@@ -155,7 +155,7 @@ class AppointmentController extends Controller
                 'service_unit_id' => $appoinment->serviceUnitID,
                 'appointment_no' => $appoinment->appointmentNo,
                 'is_family_member' => true,
-                'appointment_date' => $request->appointment_date
+                'appointment_date' =>  get_date_from_datetime($request->appointment_date),
             ]);
 
             if (!$user->userPatientData->medical_no) {
@@ -167,7 +167,8 @@ class AppointmentController extends Controller
             Notification::create([
                 'doctor_id' => $request->paramedic_id,
                 'context' => Notification::APPOINTMENT,
-                'message' => 'Anda mendapatkan janji temu baru'
+                'message' => 'Anda mendapatkan janji temu baru',
+                'appointment_date' => $request->appointment_date
             ]);
 
             return response()->json([

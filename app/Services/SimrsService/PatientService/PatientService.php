@@ -54,6 +54,26 @@ class PatientService implements IPatientService
         }
 
         $data = $response->json();
+
+        if( count($data['data']) < 1) {
+            $response = Http::withHeaders([
+                'Content-Type' => ""
+            ])->withOptions([
+                "verify" => false
+            ])->get(config("simrs.base_url") . "/V1_1/AppointmentWS.asmx/PatientSearchByField", [
+                "AccessKey" => $accessKey,
+                "MedicalNo" => "",
+                "Name" => "",
+                "DateOfBirth" => "",
+                "Address" => "",
+                "PhoneNo" => "",
+                "Ssn" => $ssn,
+                "Email" => ""
+            ]);
+        }
+
+        $data = $response->json();
+
         return PatientDataDto::from($data);
     }
 

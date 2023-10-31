@@ -7,14 +7,19 @@ import {useAuthStore} from "@shared/+store/auth.store.js";
 import axios from "axios";
 import {onMounted, watch} from "vue";
 import {convertDateTimeToDateTime} from "../../../shared/utils/helpers.js";
+import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
+import router from "@doctor/router.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const notificationStore = useNotificationStore();
 const { count, notifications } = storeToRefs(notificationStore);
+const appoinmentStore = useAppointmentStore();
+const { selectedDate } = storeToRefs(appoinmentStore);
 const authStore = useAuthStore();
 const {doctorId} = storeToRefs(authStore);
 
 const fetchNotifications = () => {
-  axios.get('/api/v1/doctor/notifications', {
+  apiRequest.get('/api/v1/doctor/notifications', {
     params: {doctor_id: doctorId.value}
   }).then((response) => {
     const data = response.data;
@@ -23,8 +28,13 @@ const fetchNotifications = () => {
   }).catch(() => {}).finally(() => {});
 }
 
-const markAsRead = (notificationId) => {
-  axios.put(`/api/v1/doctor/notifications/${notificationId}`);
+const markAsRead = (notification) => {
+  apiRequest.put(`/api/v1/doctor/notifications/${notification.id}`).then((response) => {
+      if (notification.context === '3') {
+          appoinmentStore.updateSelectedDate(notification.appointment_date);
+          router.push({name: 'AppointmentPage'});
+      }
+  });
 }
 
 watch(doctorId, (newValue, oldValue) => {
@@ -51,8 +61,8 @@ onMounted(() => {
             <p>{{ notification.message }}</p>
             <p class="fs-6 mt-2 text-gray-700">{{ convertDateTimeToDateTime(notification.created_at) }}</p>
           </div>
-          <router-link @click="markAsRead(notification.id)" v-if="notification.context === '3'" :to="{name: 'AppointmentPage'}"
-                       class="d-flex align-items-center text-blue-500 text-end text-decoration-none fw-semibold">Lihat</router-link>
+          <a href="#" @click="markAsRead(notification)"
+                       class="d-flex align-items-center text-blue-500 text-end text-decoration-none fw-semibold">Lihat</a>
         </div>
       </div>
   </main>

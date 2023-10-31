@@ -14,25 +14,25 @@ class PatientPrescriptionHistoryDto  extends Data
 {
     public function __construct(
         #[MapInputName('PrescriptionNo')]
-        public string $PrescriptionNo,
+        public ?string $PrescriptionNo,
 
         #[MapInputName('MedicalNo')]
-        public string $medicalNo,
+        public ?string $medicalNo,
 
         #[MapInputName('RegistrationNo')]
-        public string $registrationNo,
+        public ?string $registrationNo,
 
         #[MapInputName('ParamedicID')]
-        public string $paramedicId,
+        public ?string $paramedicId,
 
         #[MapInputName('ParamedicName')]
-        public string $paramedicName,
+        public ?string $paramedicName,
 
         #[MapInputName('PrescriptionDate')]
-        public string $prescriptionDate,
+        public ?string $prescriptionDate,
 
         #[MapInputName('PrescriptionDate_yMdHms')]
-        public string $prescriptionDate_yMdHms
+        public ?string $prescriptionDate_yMdHms
     ) {
     }
 

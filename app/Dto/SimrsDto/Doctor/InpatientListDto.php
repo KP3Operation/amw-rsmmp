@@ -15,13 +15,13 @@ class InpatientListDto extends Data
 {
     public function __construct(
         #[MapInputName('RegistrationNo')]
-        public string $registrationNo,
+        public ?string $registrationNo,
 
         #[MapInputName('MedicalNo')]
-        public string $medicalNo,
+        public ?string $medicalNo,
 
         #[MapInputName('PatientName')]
-        public string $patientName,
+        public ?string $patientName,
 
         #[MapInputName('DateOfBirth')]
         public ?string $dateOfBirth,
@@ -33,13 +33,13 @@ class InpatientListDto extends Data
         public ?string $sex,
 
         #[MapInputName('GuarantorName')]
-        public string $guarantorName,
+        public ?string $guarantorName,
 
         #[MapInputName('RoomName')]
-        public string $roomName,
+        public ?string $roomName,
 
         #[MapInputName('ClassName')]
-        public string $className,
+        public ?string $className,
 
         #[MapInputName('EWS')]
         public InpatientListEwsDto $ews

@@ -22,6 +22,11 @@ class MedicalHistoryController extends Controller
     public function vitalSign(Request $request)
     {
         $response = new stdClass();
+        $prevData = [];
+        if ($request->has('prev_data')) {
+            $prevData = $request->get('prev_data');
+        }
+
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (!$user->medical_no) {
@@ -40,7 +45,7 @@ class MedicalHistoryController extends Controller
             }
 
             $vitalSignHistoryData = $this->patientService
-                ->getVitalSignHistory($request->type ?? "", 10, $user->userPatientData->medical_no);
+                ->getVitalSignHistory($request->type ?? "", 999, $user->userPatientData->medical_no);
 
             $response->histories = $vitalSignHistoryData->data;
             $response->patient = $user;
@@ -49,12 +54,38 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
         }
 
+        $paginatedHistories = [];
+        if (count($prevData) >= 10) {
+            foreach ($response->histories as $patient) {
+                if (!in_array($patient->registrationNo, $prevData)) {
+                    $paginatedHistories[] = $patient;
+                }
+
+                if (count($paginatedHistories) == (count($prevData) + 10)) {
+                    break;
+                }
+            }
+        } else {
+            foreach ($response->histories as $patient) {
+                $paginatedHistories[] = $patient;
+                if (count($paginatedHistories) == 10) {
+                    break;
+                }
+            }
+        }
+
+        $response->histories = $paginatedHistories;
+
         return response()->json($response);
     }
 
     public function prescriptionHistory(Request $request)
     {
         $response = new stdClass();
+        $prevData = [];
+        if ($request->has('prev_data')) {
+            $prevData = $request->get('prev_data');
+        }
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (!$user->medical_no) {
@@ -82,6 +113,28 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
         }
 
+        $paginatedHistories = [];
+        if (count($prevData) >= 10) {
+            foreach ($response->histories as $patient) {
+                if (!in_array($patient->PrescriptionNo, $prevData)) {
+                    $paginatedHistories[] = $patient;
+                }
+
+                if (count($paginatedHistories) == (count($prevData) + 10)) {
+                    break;
+                }
+            }
+        } else {
+            foreach ($response->histories as $patient) {
+                $paginatedHistories[] = $patient;
+                if (count($paginatedHistories) == 10) {
+                    break;
+                }
+            }
+        }
+
+        $response->histories = $paginatedHistories;
+
         return response()->json($response);
     }
 
@@ -108,6 +161,10 @@ class MedicalHistoryController extends Controller
     public function labResult(Request $request)
     {
         $response = new stdClass();
+        $prevData = [];
+        if ($request->has('prev_data')) {
+            $prevData = $request->get('prev_data');
+        }
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (!$user->medical_no) {
@@ -134,6 +191,28 @@ class MedicalHistoryController extends Controller
 
         }
 
+        $paginatedHistories = [];
+        if (count($prevData) >= 10) {
+            foreach ($response->histories as $patient) {
+                if (!in_array($patient->registrationNo, $prevData)) {
+                    $paginatedHistories[] = $patient;
+                }
+
+                if (count($paginatedHistories) == (count($prevData) + 10)) {
+                    break;
+                }
+            }
+        } else {
+            foreach ($response->histories as $patient) {
+                $paginatedHistories[] = $patient;
+                if (count($paginatedHistories) == 10) {
+                    break;
+                }
+            }
+        }
+
+        $response->histories = $paginatedHistories;
+
         return response()->json($response);
     }
 
@@ -159,6 +238,10 @@ class MedicalHistoryController extends Controller
     public function encounterList(Request $request)
     {
         $response = new stdClass();
+        $prevData = [];
+        if ($request->has('prev_data')) {
+            $prevData = $request->get('prev_data');
+        }
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (!$user->medical_no) {
@@ -195,6 +278,28 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
 
         }
+
+        $paginatedHistories = [];
+        if (count($prevData) >= 10) {
+            foreach ($response->histories as $patient) {
+                if (!in_array($patient->registrationNo, $prevData)) {
+                    $paginatedHistories[] = $patient;
+                }
+
+                if (count($paginatedHistories) == (count($prevData) + 10)) {
+                    break;
+                }
+            }
+        } else {
+            foreach ($response->histories as $patient) {
+                $paginatedHistories[] = $patient;
+                if (count($paginatedHistories) == 10) {
+                    break;
+                }
+            }
+        }
+
+        $response->histories = $paginatedHistories;
 
         return response()->json($response);
     }

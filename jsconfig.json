@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "target": "es6",
+        "paths": {
+            "*": [
+                "node_modules"
+            ],
+            "@resources/*": [
+                "resources/*"
+            ],
+            "@auth/*": [
+                "resources/js/auth/*"
+            ],
+            "@shared/*": [
+                "resources/js/shared/*"
+            ],
+            "@patient/*": [
+                "resources/js/patient/*"
+            ],
+            "@doctor/*": [
+                "resources/js/doctor/*"
+            ],
+        }
+    }
+}

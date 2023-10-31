@@ -14,21 +14,21 @@ class DoctorFeeByPaymentDateDto extends Data
 {
     public function __construct(
         #[MapInputName('RegistrationNo')]
-        public string $registrationNo,
+        public ?string $registrationNo,
 
         #[MapInputName('MedicalNo')]
-        public string $medicalNo,
+        public ?string $medicalNo,
         #[MapInputName('PatientName')]
-        public string $patientName,
+        public ?string $patientName,
 
         #[MapInputName('ItemName')]
-        public string $itemName,
+        public ?string $itemName,
 
         #[MapInputName('Qty')]
         public int $qty,
 
         #[MapInputName('GuarantorName')]
-        public string $guarantorName,
+        public ?string $guarantorName,
 
         #[MapInputName('Amount')]
         public int $amount

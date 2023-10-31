@@ -1,6 +1,6 @@
 <script setup>
 import * as bootstrap from 'bootstrap';
-import { onMounted, reactive } from 'vue';
+import {onMounted, reactive, watch} from 'vue';
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import router from "@auth/router.js";
 import Form from "vform";
@@ -23,10 +23,6 @@ const form = reactive(
         doctor_id: null
     })
 );
-
-onMounted(() => {
-    modalState.alreadyRegisteredModal = new bootstrap.Modal("#modal-register", {});
-});
 
 const showAlreadyRegisteredModal = () => {
     modalState.alreadyRegisteredModal.show();
@@ -52,6 +48,10 @@ const register = () => {
         form.reset();
         router.push({ path: '/verification' });
     }).catch((error) => {
+        if (error.response.status > 409 && error.response.status < 499) {
+            layoutStore.toggleErrorAlert(error.response.data.message);
+        }
+
         if (error.response.status === 409) {
             showAlreadyRegisteredModal();
         }
@@ -65,6 +65,7 @@ const register = () => {
 }
 
 const navigateToLogin = async () => {
+    layoutStore.updateLoadingState(true);
     const response = await axios.post('/api/v1/login', {
         "phone_number": form.phone_number
     });
@@ -80,9 +81,33 @@ const navigateToLogin = async () => {
 
     form.reset();
     modalState.alreadyRegisteredModal.hide();
+    layoutStore.updateLoadingState(false);
     router.push({ path: '/verification' });
 }
 
+watch(form, (newValue) => {
+    if (newValue.ssn !== null) {
+        if (newValue.role === '1' && (newValue.ssn.toString().length < 16 || newValue.ssn.toString().length > 16)) {
+            form.errors.set({ssn: 'Panjang NIK harus 16 digit'});
+        } else {
+            form.errors.set({ssn: ''});
+        }
+    }
+
+    if (newValue.phone_number !== null) {
+        if (newValue.phone_number.toString().length < 10) {
+            form.errors.set({phone_number: 'No. Handphone Lebih Dari 10 Digit'});
+        } else if (newValue.phone_number.toString().length > 13) {
+            form.errors.set({phone_number: 'No. Handphone Lebih Dari 13 Digit'});
+        }
+        else {
+            form.errors.set({ssn: ''});
+        }
+    }
+});
+onMounted(() => {
+    modalState.alreadyRegisteredModal = new bootstrap.Modal("#modal-register", {});
+});
 </script>
 <template>
     <h1 class="fs-1 lh-150 fw-bolder mt-4 mb-0">{{ $t('welcome_message') }}</h1>
@@ -172,7 +197,8 @@ const navigateToLogin = async () => {
                 <div class="modal-footer flex-nowrap">
                     <button type="button" class="w-50 btn btn-link" data-bs-dismiss="modal">{{ $t('register.cancel')
                     }}</button>
-                    <button type="button" @click="navigateToLogin" class="w-50 btn-masuk btn btn-blue">{{
+                    <button type="button" @click="navigateToLogin" class="w-50 btn-masuk btn btn-blue"
+                        :class="layoutStore.isLoading ? 'disabled' : ''">{{
                         $t('register.login') }}</button>
                 </div>
             </div>

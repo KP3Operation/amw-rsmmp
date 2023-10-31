@@ -6,6 +6,8 @@ import { storeToRefs } from "pinia";
 import { onMounted, reactive, watch } from "vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { convertDateTimeToDate } from "@shared/utils/helpers.js"
+import apiRequest from "@shared/utils/axios.js";
+// import router from "@doctor/router.js";
 
 const inpatientStore = useInpatientStore();
 const { selectedPatient, selectedRegistrationNo } = storeToRefs(inpatientStore);
@@ -15,7 +17,7 @@ const cppts = reactive([]);
 
 const fetchPatientRegistrationCPPTs = () => {
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/doctor/inpatient/cppt/registrations?registration_no=${selectedRegistrationNo.value}`).then((response) => {
+    apiRequest.get(`/api/v1/doctor/inpatient/cppt/registrations?registration_no=${selectedRegistrationNo.value}`).then((response) => {
         cppts.values = response.data.cppts;
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
@@ -35,7 +37,7 @@ onMounted(() => {
     if (selectedRegistrationNo.value !== "") {
         fetchPatientRegistrationCPPTs();
     }
-    // NOTE: Do we really need to check if thereis a selected patient in store(?)
+    // NOTE: We need to check if thereis a selected patient in store(?)
     // if (Object.keys(selectedPatient.value).length === 0 && selectedRegistrationNo.value === "") {
     //     router.push({ name: "InpatientListPage" });
     // }
@@ -92,29 +94,30 @@ onMounted(() => {
                             <button class="accordion-button collapsed col-gap-20" type="button" data-bs-toggle="collapse"
                                 :data-bs-target="'#riwayat-medis-' + index" aria-expanded="false"
                                 aria-controls="riwayat-medis-1">
-                                <div class="d-flex justify-content-between">
-                                    <div class="w-75 d-flex flex-column rows-gap-16 fs-6">
-                                        <div>
-                                            <p class="fw-bold">Tanggal</p>
-                                            <p class="fw-normal">{{ convertDateTimeToDate(cppt.dateTimeInfo_yMdHms) }}
-                                            </p>
-                                        </div>
+                                <div class="cppt-wrapper">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="w-100 d-flex flex-column rows-gap-16 fs-6">
+                                            <div>
+                                                <p class="fw-bold">Tanggal</p>
+                                                <p class="fw-normal">{{ convertDateTimeToDate(cppt.dateTimeInfo_yMdHms) }}
+                                                </p>
+                                            </div>
 
-                                        <div>
-                                            <p class="fw-bold">No. Registrasi</p>
-                                            <p class="fw-normal">{{ cppt.registrationNo }}</p>
-                                        </div>
+                                            <div>
+                                                <p class="fw-bold">No. Registrasi</p>
+                                                <p class="fw-normal">{{ cppt.registrationNo }}</p>
+                                            </div>
 
-                                        <div>
-                                            <p class="fw-bold">Dibuat Oleh</p>
-                                            <p class="fw-normal">{{ cppt.createdByUserID }}</p>
+                                            <div>
+                                                <p class="fw-bold">Dibuat Oleh</p>
+                                                <p class="fw-normal">{{ cppt.createdByUserID }}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="w-25 text-end">
+                                    <div class="w-25 text-end">
                                     <p class="fs-6 text-gray-700">Tipe CPPT</p>
                                     <p class="fs-3 fw-bold">{{ cppt.sRMedicalNotesInputType }}</p>
+                                </div>
                                 </div>
                             </button>
                         </h2>
@@ -124,6 +127,11 @@ onMounted(() => {
                             <div class="accordion-body">
                                 <div class="accordion-divider"></div>
 
+                                <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'Notes' && !cppt.info1.includes('TTV')">
+                                    <li>implementasi: {{ cppt.info1 }}</li>
+                                    <li>Respond/Result: {{ cppt.info2 }}</li>
+                                </ul>
+
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SOAP'">
                                     <li>S: {{ cppt.info1 }}</li>
                                     <li>O: {{ cppt.info2 }}</li>
@@ -131,19 +139,19 @@ onMounted(() => {
                                     <li>P: {{ cppt.info4 }}</li>
                                 </ul>
 
-                                <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'Notes'">
-                                    <li>N: {{ cppt.info1 }}</li>
-                                    <li>O: {{ cppt.info2 }}</li>
-                                    <li>T: {{ cppt.info3 }}</li>
-                                    <li>E: {{ cppt.info4 }}</li>
-                                    <li>S: {{ cppt.info5 }}</li>
-                                </ul>
-
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SBAR'">
                                     <li>S: {{ cppt.info1 }}</li>
                                     <li>B: {{ cppt.info2 }}</li>
                                     <li>A: {{ cppt.info3 }}</li>
                                     <li>R: {{ cppt.info4 }}</li>
+                                </ul>
+
+                                <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'ADIME'">
+                                    <li>A: {{ cppt.info1 }}</li>
+                                    <li>D: {{ cppt.info2 }}</li>
+                                    <li>I: {{ cppt.info3 }}</li>
+                                    <li>M: {{ cppt.info4 }}</li>
+                                    <li>E: {{ cppt.info5 }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -153,3 +161,11 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.cppt-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+</style>

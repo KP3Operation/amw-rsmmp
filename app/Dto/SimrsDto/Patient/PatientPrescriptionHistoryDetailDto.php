@@ -14,16 +14,16 @@ class PatientPrescriptionHistoryDetailDto extends Data
 {
     public function __construct(
         #[MapInputName('ItemID')]
-        public string $itemID,
+        public ?string $itemID,
 
         #[MapInputName('ItemName')]
-        public string $itemName,
+        public ?string $itemName,
 
         #[MapInputName('PrescriptionQty')]
-        public string $prescriptionQty,
+        public ?string $prescriptionQty,
 
         #[MapInputName('ConsumeMethod')]
-        public string $consumeMethod,
+        public ?string $consumeMethod,
     ) {
     }
 

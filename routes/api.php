@@ -61,6 +61,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/fee/bytrxdate', [FeeController::class, 'getFeeByTrxDate']);
             Route::get('/inpatient/cppt/registrations', [InpatientListController::class, 'getPatientRegistrationCPPT']);
             Route::get('/inpatient', [InpatientListController::class, 'index']);
+            Route::get('/appointments/group', [AppointmentController::class, 'getGroupAppointment']);
             Route::get('/appointments/detail', [AppointmentController::class, 'show']);
             Route::get('/appointments', [AppointmentController::class, 'index']);
             Route::get('/notifications', [NotificationController::class, 'index']);

@@ -51,7 +51,7 @@ const storeAppointment = () => {
         form.patient_name = tempPatientName.value;
     }
 
-    form.post('/api/v1/patient/appointments/storezz').then((response) => {
+    form.post('/api/v1/patient/appointments/store').then((response) => {
         layoutStore.toggleSuccessAlert('Jadwal Konsultasi Berhasil Disimpan');
         router.push({ name: 'AppointmentPage' });
     }).catch((error) => {

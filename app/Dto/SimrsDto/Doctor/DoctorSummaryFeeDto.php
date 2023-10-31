@@ -16,9 +16,11 @@ class DoctorSummaryFeeDto extends Data
 {
     public function __construct(
         #[MapInputName('Title')]
-        public string $title,
+        public ?string $title,
+
         #[MapInputName('Data')]
         #[DataCollectionOf(DoctorSummaryFeeDetailDto::class)]
+
         public DataCollection $data
     ) {
     }

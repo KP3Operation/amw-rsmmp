@@ -7,6 +7,7 @@ import {useLayoutStore} from "@shared/+store/layout.store.js";
 import {onMounted, ref} from "vue";
 import router from "@patient/router.js";
 import {useAppointmentStore} from "@patient/+store/appointment.store.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const layoutStore = useLayoutStore();
 const {isLoading} = storeToRefs(layoutStore);
@@ -17,7 +18,7 @@ let selectedSchedule = ref({});
 
 const fetchDoctorScheduleDetail = () => {
     layoutStore.updateLoadingState(true);
-    axios.get(`/api/v1/patient/doctor/schedules`, {
+    apiRequest.get(`/api/v1/patient/doctor/schedules`, {
         params: {
             date: `${selectedDate.value}`,
             service_unit_id: `${selectedServiceUnitId.value}`,

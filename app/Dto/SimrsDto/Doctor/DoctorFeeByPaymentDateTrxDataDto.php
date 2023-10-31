@@ -17,10 +17,10 @@ class DoctorFeeByPaymentDateTrxDataDto extends Data
 
     public function __construct(
         #[MapInputName('PaymentGroup')]
-        public string $paymentGroup,
+        public ?string $paymentGroup,
 
         #[MapInputName('PaymentDate')]
-        public string $paymentDate,
+        public ?string $paymentDate,
 
         #[DataCollectionOf(DoctorFeeByPaymentDateDto::class)]
         #[MapInputName('Transaction')]

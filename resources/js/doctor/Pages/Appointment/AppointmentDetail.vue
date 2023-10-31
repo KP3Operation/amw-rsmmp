@@ -1,6 +1,5 @@
 <script setup>
 import Header from "@shared/Components/Header/Header.vue";
-import axios from "axios";
 import {convertDateTimeToDate, getCurrentDate} from "@shared/utils/helpers.js";
 import {onMounted, ref, watch} from "vue";
 import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
@@ -9,6 +8,7 @@ import {useLayoutStore} from "@shared/+store/layout.store.js";
 import AppointmentPage from "@doctor/Pages/Appointment/Appointment.vue";
 import DoctorBlue from "@resources/static/icons/doctor-blue.svg";
 import {useRoute} from "vue-router";
+import apiRequest from "@shared/utils/axios.js";
 
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
@@ -20,7 +20,7 @@ const appointmentDetail = ref({});
 
 const fetchAppointmentDetail = () => {
     layoutStore.updateLoadingState(true);
-    axios.get('/api/v1/doctor/appointments/detail', {
+    apiRequest.get('/api/v1/doctor/appointments/detail', {
         params: {
             appointment_no: appointmentNo.value
         }

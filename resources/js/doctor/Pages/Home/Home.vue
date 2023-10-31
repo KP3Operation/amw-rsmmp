@@ -13,6 +13,7 @@ import OverviewInpatientEmpty from "@doctor/Components/OverviewInpatient/Overvie
 import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
 import {storeToRefs} from "pinia";
 import axios from "axios";
+import apiRequest from "@shared/utils/axios.js";
 
 const appointmentStore = useAppointmentStore();
 const {selectedDate, doctorAppointments} = storeToRefs(appointmentStore);
@@ -21,7 +22,7 @@ const showSummaryFeeFilter = ref(false);
 const overviewAppointments = ref([]);
 
 const fetchAppointments = () => {
-  axios.get('/api/v1/doctor/appointments/group', {
+  apiRequest.get('/api/v1/doctor/appointments/group', {
     params: {date: selectedDate.value}
   }).then((response) => {
     const data = response.data;

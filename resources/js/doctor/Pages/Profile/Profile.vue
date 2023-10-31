@@ -8,6 +8,7 @@ import { storeToRefs } from "pinia";
 import {onMounted, reactive} from "vue";
 import * as bootstrap from "bootstrap";
 import {calculateAge} from "@shared/utils/helpers.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const authStore = useAuthStore();
 const { userFullName, doctorId, phoneNumber, smfName } = storeToRefs(authStore);
@@ -17,7 +18,7 @@ const modalState = reactive({
 });
 
 const logout = () => {
-    axios.get('/api/v1/logout').then(() => {
+    apiRequestget('/api/v1/logout').then(() => {
         authStore.$reset();
         window.location.href = "/auth/login";
     }).catch((error) => {

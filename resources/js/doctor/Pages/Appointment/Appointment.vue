@@ -6,6 +6,7 @@ import {onMounted, watch} from "vue";
 import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
 import {storeToRefs} from "pinia";
 import {useLayoutStore} from "@shared/+store/layout.store.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
@@ -14,7 +15,7 @@ const {selectedDate, doctorAppointments} = storeToRefs(appointmentStore);
 
 const fetchAppointments = () => {
     layoutStore.updateLoadingState(true);
-    axios.get('/api/v1/doctor/appointments', {
+    apiRequest.get('/api/v1/doctor/appointments', {
         params: {
             date: selectedDate.value
         }

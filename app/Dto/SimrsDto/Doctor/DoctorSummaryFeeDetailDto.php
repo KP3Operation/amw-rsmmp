@@ -14,9 +14,10 @@ class DoctorSummaryFeeDetailDto extends Data
 {
     public function __construct(
         #[MapInputName('Name')]
-        public string $name,
+        public ?string $name,
+
         #[MapInputName('Value')]
-        public string $value
+        public ?string $value
     ) {
     }
 

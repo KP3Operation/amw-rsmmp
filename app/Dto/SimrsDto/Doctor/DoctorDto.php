@@ -9,22 +9,22 @@ class DoctorDto extends Data
 {
     public function __construct(
         #[MapInputName('ParamedicID')]
-        public string $paramedicId,
+        public ?string $paramedicId,
 
         #[MapInputName('ParamedicName')]
-        public string $paramedicName,
+        public ?string $paramedicName,
 
         #[MapInputName('SmfID')]
-        public string $smfId,
+        public ?string $smfId,
 
         #[MapInputName('SmfName')]
-        public string $smfName,
+        public ?string $smfName,
 
         #[MapInputName('UserID')]
-        public string|null $userId,
+        public ?string $userId,
 
         #[MapInputName('Foto64')]
-        public string|null $photo64
+        public ?string $photo64
     )
     {}
 }

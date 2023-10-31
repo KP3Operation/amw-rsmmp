@@ -7,6 +7,7 @@ import {useLayoutStore} from "@shared/+store/layout.store.js";
 import {storeToRefs} from "pinia";
 import {useMedicalHistoryStore} from "@patient/+store/medical-history.store.js";
 import {convertDateTimeToDate} from "@shared/utils/helpers.js";
+import apiRequest from "@shared/utils/axios.js";
 
 /**
  * @type {Ref<UnwrapRef<string>>}
@@ -32,7 +33,7 @@ const { selectedPrescription } = storeToRefs(medicalHistoryStore);
 const prescriptions = ref([]);
 const fetchPrescriptionHistoryDetail = (prescriptionNo) => {
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/prescriptions/detail?prescription_no=${prescriptionNo}`).then((response) => {
+    apiRequest.get(`/api/v1/patient/medical/history/prescriptions/detail?prescription_no=${prescriptionNo}`).then((response) => {
         prescriptions.value = response.data.data;
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);

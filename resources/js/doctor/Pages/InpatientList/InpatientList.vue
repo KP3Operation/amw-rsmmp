@@ -35,6 +35,9 @@ const filterInpatientList = () => {
            prevData.value.push(patient.medicalNo);
         });
     }).catch((error) => {
+        if (error.response.status === 401) {
+            window.location.href = '/auth/login';
+        }
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
         layoutStore.isLoading = false;

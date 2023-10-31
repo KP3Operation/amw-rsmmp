@@ -15,19 +15,19 @@ class PatientRegistrationCPPTDto extends Data
 {
     public function __construct(
         #[MapInputName('RegistrationNo')]
-        public string $registrationNo,
+        public ?string $registrationNo,
 
         #[MapInputName('DateTimeInfo')]
-        public string $dateTimeInfo,
+        public ?string $dateTimeInfo,
 
         #[MapInputName('CreatedByUserID')]
-        public string $createdByUserID,
+        public ?string $createdByUserID,
 
         #[MapInputName('ServiceUnitName')]
-        public string $serviceUnitName,
+        public ?string $serviceUnitName,
 
         #[MapInputName('SRMedicalNotesInputType')]
-        public string $sRMedicalNotesInputType,
+        public ?string $sRMedicalNotesInputType,
 
         #[MapInputName('Info1')]
         public ?string $info1,
@@ -54,7 +54,7 @@ class PatientRegistrationCPPTDto extends Data
         public ?bool $isDeleted,
 
         #[MapInputName('DateTimeInfo_yMdHms')]
-        public string $dateTimeInfo_yMdHms
+        public ?string $dateTimeInfo_yMdHms
     ) {
     }
 

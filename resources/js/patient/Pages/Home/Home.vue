@@ -11,6 +11,7 @@ import { storeToRefs } from "pinia";
 import axios from "axios";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { onMounted, ref } from "vue";
+import apiRequest from "@shared/utils/axios.js";
 
 const authStore = useAuthStore();
 const layoutStore = useLayoutStore();
@@ -20,7 +21,7 @@ const { openAppointments, selectedMedicalNo } = storeToRefs(appointmentStore);
 const { medicalNo } = storeToRefs(authStore);
 
 const fetchAppointments = () => {
-    axios.get(`/api/v1/patient/appointments`, {
+    apiRequest.get(`/api/v1/patient/appointments`, {
         params: {
             medical_no: selectedMedicalNo.value
         }

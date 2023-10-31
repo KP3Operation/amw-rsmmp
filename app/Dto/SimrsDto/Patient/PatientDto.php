@@ -9,34 +9,34 @@ class PatientDto extends Data
 {
     public function __construct(
         #[MapInputName('PatientID')]
-        public string $patientId,
+        public ?string $patientId,
 
         #[MapInputName('MedicalNo')]
-        public string $medicalNo,
+        public ?string $medicalNo,
 
         #[MapInputName('FirstName')]
-        public string $firstName,
+        public ?string $firstName,
 
         #[MapInputName('MiddleName')]
-        public string $middleName,
+        public ?string $middleName,
 
         #[MapInputName('LastName')]
-        public string $lastName,
+        public ?string $lastName,
 
         #[MapInputName('DateOfBirth_yMdHms')]
-        public string $birthDate,
+        public ?string $birthDate,
 
         #[MapInputName('Email')]
-        public string $email,
+        public ?string $email,
 
         #[MapInputName('Ssn')]
-        public string $ssn,
+        public ?string $ssn,
 
         #[MapInputName('Sex')]
-        public string $gender,
+        public ?string $gender,
 
         #[MapInputName('GuarantorID')]
-        public string $guarantorId
+        public ?string $guarantorId
     )
     {}
 }

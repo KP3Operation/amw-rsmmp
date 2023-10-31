@@ -17,6 +17,7 @@ import NotFoundImage from "@resources/static/images/not-found.png";
 import DoctorImage from "@resources/static/images/doctor.png";
 import LabImage from "@resources/static/images/lab.png";
 import Doctor2Image from "@resources/static/images/doctor-2.png";
+import apiRequest from "@shared/utils/axios.js";
 
 const prevVitalSignData = ref([]);
 const prevPrescriptionData = ref([]);
@@ -36,7 +37,7 @@ const { vitalSignHistories, prescriptionHistories, encounterHistories,
 const fetchVitalSignHistories = () => {
     medicalHistoriesStore.updateVitalSignHistories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/vitalsign`, {
+    apiRequest.get(`/api/v1/patient/medical/history/vitalsign`, {
         params: {
             type: selectedVitalSignType.value,
             family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
@@ -65,7 +66,7 @@ const fetchVitalSignHistories = () => {
 const fetchPrescriptionHistories = () => {
     medicalHistoriesStore.updatePrescriptionHitories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/prescription`, {
+    apiRequest.get(`/api/v1/patient/medical/history/prescription`, {
         params: {
             family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
             prev_data: prevPrescriptionData.value
@@ -86,7 +87,7 @@ const fetchPrescriptionHistories = () => {
 const fetchLabResults = () => {
     medicalHistoriesStore.updateLabResultHistories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/labresult`, {
+    apiRequest.get(`/api/v1/patient/medical/history/labresult`, {
         params: {
             family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
             prev_data: prevLabResultData.value
@@ -107,7 +108,7 @@ const fetchLabResults = () => {
 const fetchEncounterHistories = () => {
     medicalHistoriesStore.updateEncounterHistories([]);
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/encounters`, {
+    apiRequest.get(`/api/v1/patient/medical/history/encounters`, {
         params: {
             family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
             prev_data: prevEncounterData.value
@@ -153,7 +154,7 @@ watch(selectedTab, (newValue, oldValue) => {
 });
 
 const fetchFamily = () => {
-    axios.get(`/api/v1/patient/family`).then((response) => {
+    apiRequest.get(`/api/v1/patient/family`).then((response) => {
         const data = response.data;
         familyStore.$patch({
             families: data.families

@@ -7,6 +7,7 @@ import {useRoute} from "vue-router";
 import axios from "axios";
 import {useLayoutStore} from "@shared/+store/layout.store.js";
 import {convertDateTimeToDateTime} from "@shared/utils/helpers.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const layoutStore = useLayoutStore();
 const {isLoading} = storeToRefs(layoutStore);
@@ -18,7 +19,7 @@ const {selectedLabResult} = storeToRefs(medicalHistoryStore);
 
 const fetchLabResultDetail = () => {
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/patient/medical/history/labresult/detail?transaction_no=${transactionNo.value}`).then((response) => {
+    apiRequest.get(`/api/v1/patient/medical/history/labresult/detail?transaction_no=${transactionNo.value}`).then((response) => {
         labResultDetails.value = response.data.data;
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);

@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { onMounted, reactive, watch } from "vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { convertDateTimeToDate } from "@shared/utils/helpers.js"
+import apiRequest from "@shared/utils/axios.js";
 // import router from "@doctor/router.js";
 
 const inpatientStore = useInpatientStore();
@@ -16,7 +17,7 @@ const cppts = reactive([]);
 
 const fetchPatientRegistrationCPPTs = () => {
     layoutStore.isLoading = true;
-    axios.get(`/api/v1/doctor/inpatient/cppt/registrations?registration_no=${selectedRegistrationNo.value}`).then((response) => {
+    apiRequest.get(`/api/v1/doctor/inpatient/cppt/registrations?registration_no=${selectedRegistrationNo.value}`).then((response) => {
         cppts.values = response.data.cppts;
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);

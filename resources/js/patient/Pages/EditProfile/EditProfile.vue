@@ -30,6 +30,9 @@ const updateProfile = () => {
         layoutStore.toggleSuccessAlert(t('profile.edit.success'));
         router.push({ path: '/profile' });
     }).catch(() => {
+        if (error.response.status === 401) {
+            window.location.href = '/auth/login';
+        }
         layoutStore.toggleSuccessAlert(t('profile.edit.failed'));
     }).finally(() => {
         layoutStore.isLoading = false;

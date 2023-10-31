@@ -15,43 +15,43 @@ class DoctorScheduleDto extends Data
 
     public function __construct(
         #[MapInputName('ServiceUnitID')]
-        public string $serviceUnitID,
+        public ?string $serviceUnitID,
 
         #[MapInputName('ServiceUnitName')]
-        public string $serviceUnitName,
+        public ?string $serviceUnitName,
 
         #[MapInputName('ParamedicID')]
-        public string $paramedicID,
+        public ?string $paramedicID,
 
         #[MapInputName('ParamedicName')]
-        public string $paramedicName,
+        public ?string $paramedicName,
 
         #[MapInputName('ScheduleDate')]
-        public string $scheduleDate,
+        public ?string $scheduleDate,
 
         #[MapInputName('OperationalTimeName')]
-        public string $operationalTimeName,
+        public ?string $operationalTimeName,
 
         #[MapInputName('StartTime1')]
-        public string $startTime1,
+        public ?string $startTime1,
 
         #[MapInputName('EndTime1')]
-        public string $endTime1,
+        public ?string $endTime1,
 
         #[MapInputName('StartTime2')]
-        public string $startTime2,
+        public ?string $startTime2,
 
         #[MapInputName('EndTime3')]
-        public string $endTime3,
+        public ?string $endTime3,
 
         #[MapInputName('StartTime4')]
-        public string $startTime4,
+        public ?string $startTime4,
 
         #[MapInputName('EndTime5')]
-        public string $endTime5,
+        public ?string $endTime5,
 
         #[MapInputName('ScheduleDate_yMdHms')]
-        public string $ScheduleDate_yMdHms,
+        public ?string $ScheduleDate_yMdHms,
 
     ) {}
 

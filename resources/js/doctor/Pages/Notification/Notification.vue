@@ -9,6 +9,7 @@ import {onMounted, watch} from "vue";
 import {convertDateTimeToDateTime} from "../../../shared/utils/helpers.js";
 import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
 import router from "@doctor/router.js";
+import apiRequest from "@shared/utils/axios.js";
 
 const notificationStore = useNotificationStore();
 const { count, notifications } = storeToRefs(notificationStore);
@@ -18,7 +19,7 @@ const authStore = useAuthStore();
 const {doctorId} = storeToRefs(authStore);
 
 const fetchNotifications = () => {
-  axios.get('/api/v1/doctor/notifications', {
+  apiRequest.get('/api/v1/doctor/notifications', {
     params: {doctor_id: doctorId.value}
   }).then((response) => {
     const data = response.data;
@@ -28,7 +29,7 @@ const fetchNotifications = () => {
 }
 
 const markAsRead = (notification) => {
-  axios.put(`/api/v1/doctor/notifications/${notification.id}`).then((response) => {
+  apiRequest.put(`/api/v1/doctor/notifications/${notification.id}`).then((response) => {
       if (notification.context === '3') {
           appoinmentStore.updateSelectedDate(notification.appointment_date);
           router.push({name: 'AppointmentPage'});

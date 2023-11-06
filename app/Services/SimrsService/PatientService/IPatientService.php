@@ -21,7 +21,7 @@ use App\Models\User;
 
 interface IPatientService
 {
-    public function getPatients(User $user): PatientDataDto;
+    public function getPatients(string $phoneNumber, string $ssn): PatientDataDto;
     public function getVitalSignHistory(string $type = "", int $count, string $medicalNo): PatientVitalSignHistoryDataDto;
     public function getPatientFamilies(string $ssn, string $phoneNumber): PatientDataDto;
     public function getPrescriptionHistory(int $count = 10, string $medicalNo): PatientPrescriptionHistoryDataDto;

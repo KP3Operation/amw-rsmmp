@@ -1,118 +1,227 @@
-<script setup>
-import Form from "vform";
-import { reactive } from "vue";
-import { useAuthStore } from "@shared/+store/auth.store.js";
-import DefaultAvatar from "@resources/static/images/avatar-default.png";
+<script>
+
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
-import { useLayoutStore } from "@shared/+store/layout.store.js";
-import { storeToRefs } from "pinia";
+import useVuelidate from "@vuelidate/core";
+import {helpers, maxLength, minLength, required} from "@vuelidate/validators";
+import {mapActions, mapState, mapStores} from "pinia";
+import {useAuthStore} from "@shared/+store/auth.store.js";
+import {useLayoutStore} from "@shared/+store/layout.store.js";
+import DefaultAvatar from "@resources/static/images/avatar-default.png";
+import {convertDateToFormField} from "@shared/utils/helpers.js";
+import apiRequest from "@shared/utils/axios.js";
 
-const authStore = useAuthStore();
-const { phoneNumber, ssn, userFullName, gender, birthDate, userEmail, doctorId, smfName, userRole }  = storeToRefs(authStore);
-const layoutStore = useLayoutStore();
-const callingCode = import.meta.env.VITE_APP_CALLING_CODE;
-const form = reactive(
-    new Form({
-        phone_number: phoneNumber.value.replace(callingCode, ""),
-        ssn: ssn.value,
-        name: userFullName,
-        gender: gender,
-        birth_date: birthDate,
-        email: userEmail,
-        doctor_id: doctorId,
-        smf_name: smfName
-    })
-);
+export default {
+    components: {
+        SubmitButton,
+        DefaultAvatar
+    },
+    computed: {
+        ...mapState(useAuthStore, {
+            userData: 'userData',
+            userPatientData: 'userPatientData',
+            userDoctorData: 'userDoctorData'
+        }),
+        ...mapState(useLayoutStore, {
+            isLoading: 'isLoading'
+        })
+    },
+    setup() {
+        return {
+            v$: useVuelidate(),
+        }
+    },
+    data() {
+        return {
+            confirmationForm: {
+                phoneNumber: null,
+                ssn: null,
+                name: null,
+                gender: null,
+                birthDate: null,
+                email: null,
+                doctorId: null,
+                smfName: null,
+            },
+            patientConfirmationForm: {
 
-const confirm = async () => {
-    layoutStore.isLoading = true;
-    const doctorUrl = `/api/v1/register/doctor/${phoneNumber.value.replace(callingCode, "")}`;
-    const patientUrl = `/api/v1/register/patient/${phoneNumber.value.replace(callingCode, "")}`;
-    form.put(userRole.value === 'patient' ? patientUrl : doctorUrl)
-        .then((response) => {
-            form.reset();
-            const data = response.data.data;
-            authStore.$patch({
-                otpCreatedAt: data.otp_created_at,
-                otpUpdatedAt: data.otp_updated_at,
-                otpTimeout: data.otp_timeout,
-                phoneNumber: data.phone_number
+            },
+            doctorConfirmationForm: {
+
+            },
+            callingCode: '',
+            userRole: 'patient'
+        }
+    },
+    validations() {
+        return {
+            confirmationForm: {
+                phoneNumber: {
+                    requiredIf: this.userData.userRole === 'patient'
+                },
+                ssn: {
+                    requiredIf: this.userData.userRole === 'patient'
+                },
+                name: { required },
+                gender: {
+                    requiredIf: this.userData.userRole === 'patient'
+                },
+                birthDate: {
+                    requiredIf: this.userData.userRole === 'patient'
+                },
+                email: { },
+                doctorId: {
+                    requiredIf: this.userData.userRole === 'doctor'
+                },
+                smfName: {
+                    requiredIf: this.userData.userRole === 'doctor'
+                },
+            }
+        }
+    },
+    methods: {
+        ...mapActions(useLayoutStore, {
+            updateLoadingState: 'updateLoadingState',
+            toggleErrorAlert: 'toggleErrorAlert'
+        }),
+        updateConfirmationForm(data) {
+            Object.assign(this.confirmationForm, data);
+        },
+        async confirm() {
+            this.updateLoadingState(true);
+            const confirmationFormValid = await this.v$.$validate();
+            if (!confirmationFormValid) {
+                console.log('validation error');
+                this.updateLoadingState(false);
+                return;
+            }
+
+            apiRequest.put(
+                `/api/v1/register/${this.userData.userRole === 'patient' ? 'patient' : 'doctor'}/${this.confirmationForm.phoneNumber.replace(this.callingCode, "")}`, {
+                    ...this.confirmationForm
+                }
+            ).then((response) => {
+                if (this.userRole === 'patient') {
+                    window.location.href = '/patient/home';
+                } else {
+                    window.location.href = '/doctor/home';
+                }
+            }).catch((error) => {
+                if (error.response.data.message) {
+                    this.toggleErrorAlert(error.response.data.message);
+                } else {
+                    this.toggleErrorAlert(error);
+                }
+            }).finally(() => {
+                this.updateLoadingState(false);
             });
-            if (userRole.value === 'patient') {
-                window.location.href = `/patient/home`;
-            }
+        }
+    },
+    mounted() {
+        this.callingCode = import.meta.env.VITE_APP_CALLING_CODE;
+        this.userRole = this.userData.userRole;
 
-            if (userRole.value === 'doctor') {
-                window.location.href = `/doctor/home`;
-            }
-        }).catch((error) => {
-            layoutStore.toggleErrorAlert(`${error.response.data.message}`);
-        }).finally(() => {
-            layoutStore.isLoading = false;
+        this.updateConfirmationForm({
+            name: this.userData.userFullName,
+            phoneNumber: this.userData.phoneNumber,
         });
-}
 
+        if (this.userData.userRole === 'patient') {
+            this.updateConfirmationForm({
+                ssn: this.userPatientData.ssn,
+                gender: this.userPatientData.gender,
+                birthDate: new Date(this.userPatientData.birthDate)
+                    .toISOString().split('T')[0],
+                email: this.userData.userEmail
+            });
+        } else {
+            this.updateConfirmationForm({
+                doctorId: this.userDoctorData.doctorId,
+                smfName: this.userDoctorData.smfName,
+            });
+        }
+    }
+}
 </script>
 
 <template>
     <div>
-        <h1 class="fs-2 lh-150 fw-bolder mt-4 mb-0" v-if="userRole === 'patient'">{{
-            $t('confirmation.title.patient') }}</h1>
-        <h1 class="fs-2 lh-150 fw-bolder mt-4 mb-0" v-if="userRole === 'doctor'">{{
-            $t('confirmation.title.doctor') }}</h1>
-        <p class="fs-5 mt-4 text-red-200" v-if="userRole === 'patient'">{{ $t('confirmation.subtitle') }}
+        <h1 class="fs-2 lh-150 fw-bolder mt-4 mb-0" v-if="userData.userRole === 'patient'">
+            {{ $t('confirmation.title.patient') }}
+        </h1>
+        <h1 class="fs-2 lh-150 fw-bolder mt-4 mb-0" v-if="userData.userRole === 'doctor'">
+            {{ $t('confirmation.title.doctor') }}
+        </h1>
+        <p class="fs-5 mt-4 text-red-200" v-if="userData.userRole === 'patient'">
+            {{ $t('confirmation.subtitle') }}
         </p>
-        <form @submit.prevent="confirm" @keydown="form.onKeydown($event)" class="mt-4">
-
-            <div v-if="userRole === 'doctor'">
-                <img :src="DefaultAvatar" alt="Foto Dokter" width="60" height="60"
+        <form @submit.prevent="confirm" class="mt-4">
+            <div v-if="userData.userRole === 'doctor'">
+                <img src="@resources/static/images/avatar-default.png" alt="Foto Dokter" width="60" height="60"
                     class="rounded-pill border border-1 border-white">
             </div>
-
-            <div class="mt-3" v-if="userRole === 'doctor'">
+            <div :class="{ error: v$.confirmationForm.doctorId.$errors.length }"
+                class="mt-3"
+                 v-if="userData.userRole === 'doctor'">
                 <label for="email">{{ $t('confirmation.doctor_id') }}</label>
-                <input type="text" name="text" id="smf_name" class="form-control mt-2" v-model="form.doctor_id" readonly>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('doctor_id')"
-                    v-html="form.errors.get('doctor_id')" />
+                <input type="text"
+                       name="doctorId"
+                       id="smf_name"
+                       class="form-control mt-2"
+                       v-model="confirmationForm.doctorId"
+                       readonly>
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.doctorId.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
 
-            <div v-if="userRole === 'patient'">
+            <div v-if="userData.userRole === 'patient'"
+                 :class="{ error: v$.confirmationForm.phoneNumber.$errors.length }">
                 <label for="phone_number">{{ $t('confirmation.phone_number') }}<span
                         class="text-red-200 fw-semibold">*</span></label>
                 <div class="input-group flex-nowrap mt-2">
                     <span class="input-group-text">{{ callingCode }}</span>
                     <input type="tel" name="phone_number" id="phone_number" placeholder="8123940183020" class="form-control"
-                        v-model="form.phone_number" readonly>
+                        v-model="confirmationForm.phoneNumber" readonly>
                 </div>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('phone_number')"
-                    v-html="form.errors.get('phone_number')" />
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.phoneNumber.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
-            <div class="mt-3" v-if="userRole === 'patient'">
+            <div class="mt-3" v-if="userData.userRole === 'patient'"
+                :class="{ error: v$.confirmationForm.ssn.$errors.length }">
                 <label for="ssn">{{ $t('confirmation.ssn') }}<span class="text-red-200 fw-semibold">*</span></label>
                 <input type="number" name="ssn" id="ssn" placeholder="3829380183984920" class="form-control mt-2"
-                    v-model="form.ssn" readonly>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('ssn')"
-                    v-html="form.errors.get('ssn')" />
+                    v-model="confirmationForm.ssn" readonly>
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.ssn.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
-            <div class="mt-3">
-                <label for="name" v-if="userRole === 'patient'">{{ $t('confirmation.full_name.patient')
-                }}<span class="text-red-200 fw-semibold">*</span></label>
-                <label for="name" v-if="userRole === 'doctor'">{{ $t('confirmation.full_name.doctor')
-                }}</label>
-                <input type="text" name="name" id="name" placeholder="Muhammad Denis Adiswara" class="form-control mt-2"
-                    v-model="form.name" :readonly="userRole === 'doctor'">
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('name')"
-                    v-html="form.errors.get('name')" />
+            <div class="mt-3"
+                 :class="{ error: v$.confirmationForm.name.$errors.length }">
+                <label for="name" v-if="userData.userRole === 'patient'">
+                    {{ $t('confirmation.full_name.patient') }}<span class="text-red-200 fw-semibold">*</span>
+                </label>
+                <label for="name" v-if="userData.userRole === 'doctor'">
+                    {{ $t('confirmation.full_name.doctor') }}<span class="text-red-200 fw-semibold">*</span>
+                </label>
+                <input type="text" name="name" id="name" placeholder="Muhammad Denis Adiswara"
+                       class="form-control mt-2"
+                        v-model="confirmationForm.name" :readonly="userData.userRole === 'doctor'">
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.name.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
-            <div class="mt-3" v-if="userRole === 'patient'">
+            <div class="mt-3" v-if="userData.userRole === 'patient'"
+                 :class="{ error: v$.confirmationForm.gender.$errors.length }">
                 <label for="gender">{{ $t('confirmation.gender') }}<span class="text-red-200 fw-semibold">*</span></label>
                 <div class="d-flex col-gap-20 mt-2">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="gender" :id="$t('confirmation.male')"
-                            :value="$t('confirmation.male')" v-model="form.gender">
+                            :value="$t('confirmation.male')" v-model="confirmationForm.gender">
                         <label class="form-check-label" :for="$t('confirmation.male')">
                             {{ $t('confirmation.male') }}
                         </label>
@@ -120,44 +229,52 @@ const confirm = async () => {
 
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="gender" :id="$t('confirmation.female')"
-                            :value="$t('confirmation.female')" v-model="form.gender">
+                            :value="$t('confirmation.female')" v-model="confirmationForm.gender">
                         <label class="form-check-label" :for="$t('confirmation.female')">
                             {{ $t('confirmation.female') }}
                         </label>
                     </div>
                 </div>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('gender')"
-                    v-html="form.errors.get('gender')" />
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.gender.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
-            <div class="mt-3" v-if="userRole === 'patient'">
+            <div class="mt-3" v-if="userData.userRole === 'patient'"
+                 :class="{ error: v$.confirmationForm.birthDate.$errors.length }">
                 <label for="birth_date">{{ $t('confirmation.birth_date') }} <span
                         class="text-red-200 fw-semibold">*</span></label>
-                <input type="date" name="birth_date" id="birth_date" class="form-control mt-2" v-model="form.birth_date">
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('birth_date')"
-                    v-html="form.errors.get('birth_date')" />
+                <input type="date" name="birth_date" id="birth_date" class="form-control mt-2" v-model="confirmationForm.birthDate">
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.birthDate.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
-            <div class="mt-3" v-if="userRole === 'patient'">
+            <div class="mt-3" v-if="userData.userRole === 'patient'"
+                 :class="{ error: v$.confirmationForm.email.$errors.length }">
                 <label for="email">{{ $t('confirmation.email') }}</label>
                 <input type="email" name="email" id="email" placeholder="johndoe@example.com" class="form-control mt-2"
-                    v-model="form.email">
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('email')"
-                    v-html="form.errors.get('email')" />
+                    v-model="confirmationForm.email">
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.email.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
-            <div class="mt-3" v-if="userRole === 'doctor'">
+            <div class="mt-3" v-if="userData.userRole === 'doctor'"
+                 :class="{ error: v$.confirmationForm.smfName.$errors.length }">
                 <label for="email">{{ $t('confirmation.smf_name') }}</label>
-                <input type="text" name="text" id="smf_name" class="form-control mt-2" v-model="form.smf_name" readonly>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('smf_name')"
-                    v-html="form.errors.get('smf_name')" />
+                <input type="text" name="text" id="smf_name" class="form-control mt-2" v-model="confirmationForm.smfName" readonly>
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.confirmationForm.email.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
             <div class="mt-3 d-flex flex-column">
                 <SubmitButton :text="$t('confirmation.save')" className="btn-blue-700-rounded" />
-                <router-link to="/register"
-                    class="rounded-pill mt-3 border-white text-white px-3 py-2 text-center text-decoration-none border border-1">{{
-                        $t('confirmation.cancel') }}</router-link>
+                <router-link v-show="!isLoading" :to="{name: 'RegisterPage'}"
+                    class="rounded-pill mt-3 border-white text-white px-3 py-2 text-center text-decoration-none border border-1">
+                    {{ $t('confirmation.cancel') }}
+                </router-link>
             </div>
         </form>
     </div>

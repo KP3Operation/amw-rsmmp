@@ -2,6 +2,7 @@
 
 namespace App\Services\OtpService\Watzap;
 
+use App\Dto\WatzapDto\CheckApiKeyDto;
 use App\Dto\WatzapDto\CheckNumberDto;
 use App\Dto\WatzapDto\SendMessageDto;
 use App\Models\User;
@@ -62,5 +63,37 @@ class WatzapOtpService implements IWatzapOtpService
         }
 
         return true;
+    }
+
+    /**
+     * @throws HttpClientException
+     * @throws \Exception
+     */
+    public function isApiKeyValid(): CheckApiKeyDto
+    {
+        Log::info("Checking is api key valid", [config("watzap.api_key")]);
+
+        $response = Http::withHeaders([
+            'Content-Type' => "application/json"
+        ])->withOptions([
+            "verify" => false
+        ])->post(config("watzap.validate_api_key_url"), [
+            "api_key" => config("watzap.api_key")
+        ]);
+
+        if (!$response->successful()) {
+            Log::error("Error while communicating with watzap service", [$response->status(), $response->body()]);
+            throw new HttpClientException("Unexpected error while communicating with watzap service", 500);
+        }
+
+        $data = $response->json();
+        $result = CheckApiKeyDto::from($data);
+
+        if (!$result->status) {
+            // TODO: trigger slack notification, email, etc...
+            throw new \Exception("WatZap API KEY is not valid", 500);
+        }
+
+        return $result;
     }
 }

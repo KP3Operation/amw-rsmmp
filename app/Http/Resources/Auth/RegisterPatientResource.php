@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class RegisterPatientResource extends JsonResource
 {
+    public static $wrap = null;
+
     /**
      * Transform the resource into an array.
      *
@@ -15,10 +17,12 @@ class RegisterPatientResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->resource,
-            'links' => [
-                'self' => null,
-            ],
+            'id' => $this->resource->userId,
+            'name' => $this->resource->name,
+            'ssn' => $this->resource->ssn,
+            'otpCreatedAt' => $this->resource->otpCreatedAt,
+            'otpUpdatedAt' => $this->resource->otpUpdatedAt,
+            'otpTimeout' => $this->resource->otpTimeout,
         ];
     }
 }

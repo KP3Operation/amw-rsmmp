@@ -1,89 +1,167 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import {reactive, ref} from "vue";
 
 export const useAuthStore = defineStore("auth", () => {
-    // user data
-    let otpCreatedAt = ref(null);
-    let otpUpdatedAt = ref(null);
-    let phoneNumber = ref(null);
-    let otpTimeout = ref(0);
-    let userEmail = ref(null);
-    let userId = ref(0);
-    let userFullName = ref("");
-    let userRole = ref("patient");
+    /**
+     * @typedef {Object} UserData
+     * @property {number} userId
+     * @property {string} userFullName
+     * @property {string} userEmail
+     * @property {string} userRole
+     * @property {string} phoneNumber
+     *
+     * @type {Ref<UnwrapRef<UserData>>}
+     */
+    let userData = ref({
+        userId: 0,
+        userFullName: '',
+        userEmail: '',
+        userRole: 'patient',
+        phoneNumber: '',
+    });
 
-    // patient
-    let ssn = ref(0);
-    let patientId = ref(null);
-    let birthDate = ref(null);
-    let gender = ref(null);
-    let medicalNo = ref(null);
+    /**
+     * @typedef {Object} OtpData
+     * @property {string} otpCreatedAt
+     * @property {string} otpUpdatedAt
+     * @property {number} otpTimeout
+     *
+     * @type {Ref<UnwrapRef<OtpData>>}
+     */
+    let otpData = ref({
+        otpCreatedAt: '',
+        otpUpdatedAt: '',
+        otpTimeout: 0,
+    });
 
-    // doctor
-    let doctorId = ref(null);
-    let smfName = ref(null);
+    /**
+     * @typedef {Object} UserPatientData
+     * @property {string} ssn
+     * @property {string} patientId
+     * @property {string} birthDate
+     * @property {string} gender
+     * @property {string} medicalNo
+     *
+     * @type {Ref<UnwrapRef<UserPatientData>>}
+     */
+    let userPatientData = ref({
+         ssn:  '',
+         patientId:  '',
+         birthDate:  '',
+         gender:  '',
+         medicalNo:  '',
+    });
 
-    // registration specific value
+    /**
+     * @typedef {Object} UserDoctorData
+     * @property {string} doctorId
+     * @property {string} smfName
+     *
+     * @type {Ref<UnwrapRef<UserDoctorData>>}
+     */
+    let userDoctorData = ref({
+        smfName: '',
+        doctorId: '',
+    });
+
+    /**
+     * @type {Ref<UnwrapRef<boolean>>}
+     */
     let isRegistration = ref(false);
 
-    function updateBirthDate (date) {
-        birthDate.value = date;
+
+    /**
+     * @param {UserData} data
+     */
+    function updateUserData (data) {
+        // userData.value.userId = data.userId;
+        // userData.value.userFullName = data.userFullName;
+        // userData.value.userEmail = data.userEmail;
+        // userData.value.userRole = data.userRole;
+        // userData.value.phoneNumber = data.phoneNumber;
+        Object.assign(userData.value, data);
     }
 
-    function updateDoctorId (id) {
-        doctorId.value = id;
+    /**
+     * @param {OtpData} data
+     */
+    function updateOtpData (data) {
+        // otpData.value.otpCreatedAt = data.otpCreatedAt;
+        // otpData.value.otpUpdatedAt = data.otpUpdatedAt;
+        // otpData.value.otpTimeout = data.otpTimeout;
+        Object.assign(otpData.value, data);
     }
 
-    function updateMedicalNo (no) {
-        medicalNo.value = no;
+    /**
+     * @param {UserPatientData} patient
+     */
+    function updateUserPatientData (patient) {
+        // userPatientData.value.ssn = patient.ssn;
+        // userPatientData.value.patientId = patient.patientId;
+        // userPatientData.value.medicalNo = patient.medicalNo;
+        // userPatientData.value.gender = patient.gender;
+        // userPatientData.value.birthDate = patient.birthDate;
+        Object.assign(userPatientData.value, patient);
+    }
+
+    /**
+     * @param {UserDoctorData} data
+     */
+    function updateUserDoctorData (data) {
+        // userDoctorData.value.doctorId = data.doctorId;
+        // userDoctorData.value.smfName = data.smfName;
+        Object.assign(userDoctorData.value, data);
+    }
+
+    /**
+     * @param {boolean} status
+     */
+    function updateRegistrationFlag (status) {
+        isRegistration.value = status;
     }
 
     function $reset() {
-        // user data
-        otpCreatedAt.value = null;
-        otpUpdatedAt.value = null;
-        otpTimeout.value = 0;
-        phoneNumber.value = null;
-        userEmail.value = null;
-        userFullName.value = "";
-        userId.value = 0;
-        userRole.value = "patient";
-
-        // patient
-        ssn.value = 0;
-        patientId.value = null;
-        birthDate.value = null;
-        gender.value = null;
-        medicalNo.value = null;
-
-        //doctor
-        doctorId.value = null;
-        smfName.value = null;
-
-        // registration specific value
         isRegistration.value = false;
+
+        updateUserData({
+            userId: 0,
+            userFullName: '',
+            userEmail: '',
+            userRole: 'patient',
+            phoneNumber: '',
+        });
+
+        updateOtpData({
+            otpCreatedAt: '',
+            otpUpdatedAt: '',
+            otpTimeout: 0,
+        });
+
+        updateUserPatientData({
+            ssn:  '',
+            patientId:  '',
+            birthDate:  '',
+            gender:  '',
+            medicalNo:  '',
+        });
+
+        updateUserDoctorData({
+            doctorId: '',
+            smfName: '',
+        });
     }
 
     return {
         $reset,
-        updateBirthDate,
-        updateDoctorId,
-        updateMedicalNo,
-        otpCreatedAt,
-        otpTimeout,
-        userEmail,
-        phoneNumber,
-        userId,
-        otpUpdatedAt,
-        userFullName,
-        userRole,
-        ssn,
-        patientId,
-        birthDate,
-        gender,
-        medicalNo,
-        doctorId,
-        smfName,
+        updateUserData,
+        updateOtpData,
+        updateUserPatientData,
+        updateUserDoctorData,
+        updateRegistrationFlag,
+        userData,
+        otpData,
+        userPatientData,
+        userDoctorData,
         isRegistration,
     };
 });

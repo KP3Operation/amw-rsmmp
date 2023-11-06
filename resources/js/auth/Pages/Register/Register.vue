@@ -1,205 +1,249 @@
-<script setup>
+<script>
 import * as bootstrap from 'bootstrap';
-import {onMounted, reactive, watch} from 'vue';
-import { useAuthStore } from "@shared/+store/auth.store.js";
-import router from "@auth/router.js";
-import Form from "vform";
-import axios from 'axios';
+import useVuelidate from "@vuelidate/core";
+import { helpers, maxLength, minLength, required, requiredIf } from "@vuelidate/validators";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
-import { useLayoutStore } from "@shared/+store/layout.store.js";
+import {mapActions, mapState, mapStores} from "pinia";
+import { useAuthStore } from "@shared/+store/auth.store.js";
+import axios from "axios";
+import {useLayoutStore} from "@shared/+store/layout.store.js";
 
-const authStore = useAuthStore();
-const layoutStore = useLayoutStore();
-const callingCode = import.meta.env.VITE_APP_CALLING_CODE;
-const modalState = reactive({
-    alreadyRegisteredModal: null
-});
-const form = reactive(
-    new Form({
-        phone_number: authStore.phoneNumber,
-        name: null,
-        ssn: null,
-        role: '1',
-        doctor_id: null
-    })
-);
-
-const showAlreadyRegisteredModal = () => {
-    modalState.alreadyRegisteredModal.show();
-}
-
-const register = () => {
-    layoutStore.isLoading = true;
-    form.post((form.role === '1') ? '/api/v1/register/patient' : '/api/v1/register/doctor').then((response) => {
-        const user = response.data.data;
-        authStore.$patch({
-            otpCreatedAt: user.otp_created_at,
-            otpUpdatedAt: user.otp_updated_at,
-            otpTimeout: user.otp_timeout,
-            phoneNumber: user.phone_number,
-            ssn: user.ssn,
-            doctorId: user.doctor_id,
-            smfName: user.smf_name,
-            userFullName: user.name,
-            isRegistration: true,
-            userRole: (form.role === '1') ? 'patient' : 'doctor'
-        });
-
-        form.reset();
-        router.push({ path: '/verification' });
-    }).catch((error) => {
-        if (error.response.status > 409 && error.response.status < 499) {
-            layoutStore.toggleErrorAlert(error.response.data.message);
+export default {
+    components: { SubmitButton },
+    computed: {
+        ...mapStores(useAuthStore),
+        ...mapState(useLayoutStore, ['isLoading'])
+    },
+    setup() {
+        return {
+            v$: useVuelidate()
         }
-
-        if (error.response.status === 409) {
-            showAlreadyRegisteredModal();
+    },
+    data() {
+        return {
+            registerForm: {
+                // TODO: Need to delete
+                phoneNumber: '81383048097',
+                role: '2',
+                doctorId: 'MD-00014',
+                name: '',
+                ssn: '',
+            },
+            callingCode: import.meta.env.VITE_APP_CALLING_CODE,
+            modalState: {
+                alreadyRegisteredModal: null
+            }
         }
-
-        if (error.response.status > 499) {
-            layoutStore.toggleErrorAlert(error.response.data.message);
+    },
+    validations() {
+        return {
+            registerForm: {
+                phoneNumber: {
+                    required: helpers.withMessage("No Hp tidak boleh kosong", required),
+                    minLength: helpers.withMessage("No Hp kurang dari 10 digit", minLength(10)),
+                    maxLength: helpers.withMessage("No Hp lebih dari 13 digit", maxLength(13)),
+                },
+                role: { required },
+                doctorId: {
+                    requiredIf: helpers.withMessage("ID Dokter tidak boleh kosong",
+                        requiredIf(this.registerForm.role === '2')),
+                },
+                name: {
+                    requiredIf: helpers.withMessage(
+                        "Nama Lengkap tidak boleh kosong",
+                        requiredIf(this.registerForm.role === '1')),
+                },
+                ssn: {
+                    requiredIf: helpers.withMessage("NIK tidak boleh kosong",
+                        requiredIf(this.registerForm.role === '1')),
+                    minLength: helpers.withMessage("NIK kurang dari 16 digit", minLength(16)),
+                    maxLength: helpers.withMessage("NIK lebih dari 16 digit", maxLength(16)),
+                },
+            }
         }
-    }).finally(() => {
-        layoutStore.isLoading = false;
-    });
-}
+    },
+    methods: {
+        useLayoutStore,
+        ...mapActions(useAuthStore, {
+            updateOtpData: "updateOtpData",
+            updateUserData: "updateUserData",
+            updateUserPatientData: "updateUserPatientData",
+            updateUserDoctorData: "updateUserDoctorData",
+            updateRegistrationFlag: "updateRegistrationFlag"
+        }),
+        ...mapActions(useLayoutStore, {
+            toggleErrorAlert: "toggleErrorAlert",
+            updateLoadingState: "updateLoadingState"
+        }),
+        async register() {
+            const formValid = await this.v$.$validate();
+            if (!formValid) {
+                return;
+            }
+            this.updateLoadingState(true);
+            axios.post((this.registerForm.role === '1') ?
+                '/api/v1/register/patient' :
+                '/api/v1/register/doctor', this.registerForm).then((response) => {
+                    this.updateRegistrationFlag(true);
+                    this.updateOtpData({
+                        otpCreatedAt: response.data.otpCreatedAt,
+                        otpUpdatedAt: response.data.otpUpdatedAt,
+                        otpTimeout: response.data.otpTimeout,
+                    });
 
-const navigateToLogin = async () => {
-    layoutStore.updateLoadingState(true);
-    const response = await axios.post('/api/v1/login', {
-        "phone_number": form.phone_number
-    });
+                    this.updateUserData({
+                        userId: response.data.id,
+                        userFullName: response.data.name,
+                        phoneNumber: this.registerForm.phoneNumber,
+                        userRole: (this.registerForm.role === '1') ? 'patient' : 'doctor'
+                    });
 
-    const otpData = response.data.data;
+                    if (this.registerForm.role === '1') {
+                       // Patient
+                        this.updateUserPatientData({
+                            ssn: response.data.ssn
+                        });
+                    } else {
+                        // Doctor
+                        this.updateUserDoctorData({
+                            doctorId: response.data.doctorId,
+                            smfName: response.data.smfName,
+                        });
+                    }
 
-    authStore.$patch({
-        otpCreatedAt: otpData.otp_created_at,
-        otpUpdatedAt: otpData.otp_updated_at,
-        otpTimeout: otpData.otp_timeout,
-        phoneNumber: otpData.phone_number,
-    });
-
-    form.reset();
-    modalState.alreadyRegisteredModal.hide();
-    layoutStore.updateLoadingState(false);
-    router.push({ path: '/verification' });
-}
-
-watch(form, (newValue) => {
-    if (newValue.ssn !== null) {
-        if (newValue.role === '1' && (newValue.ssn.toString().length < 16 || newValue.ssn.toString().length > 16)) {
-            form.errors.set({ssn: 'Panjang NIK harus 16 digit'});
-        } else {
-            form.errors.set({ssn: ''});
+                    this.$router.push({ name: 'VerificationPage' });
+            }).catch((error) => {
+                if (error.response.status === 409) {
+                    this.modalState.alreadyRegisteredModal.show();
+                } else {
+                    if (error.response.data.message) {
+                        this.toggleErrorAlert(error.response.data.message);
+                    } else {
+                        this.toggleErrorAlert(error);
+                    }
+                }
+            }).finally(() => {
+                this.updateLoadingState(false);
+            });
+        },
+        navigateToLogin() {
+            this.updateLoadingState(true);
+            axios.post('/api/v1/login', {
+                phoneNumber: this.registerForm.phoneNumber
+            }).then((response) => {
+                this.updateOtpData(response.data);
+                this.modalState.alreadyRegisteredModal.hide();
+                this.updateUserData({phoneNumber: this.registerForm.phoneNumber});
+                this.$router.push({ name: 'VerificationPage' });
+            }).catch((error) => {
+                if (error.response.data.message) {
+                    this.toggleErrorAlert(error.response.data.message);
+                } else {
+                    this.toggleErrorAlert(error);
+                }
+            }).finally(() => {
+                this.updateLoadingState(false);
+            });
         }
+    },
+    mounted() {
+        this.modalState.alreadyRegisteredModal = new bootstrap.Modal("#modal-register", {});
     }
-
-    if (newValue.phone_number !== null) {
-        if (newValue.phone_number.toString().length < 10) {
-            form.errors.set({phone_number: 'No. Handphone Lebih Dari 10 Digit'});
-        } else if (newValue.phone_number.toString().length > 13) {
-            form.errors.set({phone_number: 'No. Handphone Lebih Dari 13 Digit'});
-        }
-        else {
-            form.errors.set({ssn: ''});
-        }
-    }
-});
-onMounted(() => {
-    modalState.alreadyRegisteredModal = new bootstrap.Modal("#modal-register", {});
-});
+}
 </script>
 <template>
     <h1 class="fs-1 lh-150 fw-bolder mt-4 mb-0">{{ $t('welcome_message') }}</h1>
     <p class="fs-3 fw-bold mt-4">{{ $t('register.title') }}</p>
-    <form id="register-form" class="mt-4" @submit.prevent="register" @keydown="form.onKeydown($event)">
-        <div>
+    <form id="register-form" class="mt-4" @submit.prevent="register">
+        <div :class="{ error: v$.registerForm.phoneNumber.$errors.length }">
             <label for="phone_number">{{ $t('register.phone_number') }}</label>
-
             <div class="input-group flex-nowrap mt-2">
                 <span class="input-group-text">{{ callingCode }}</span>
-                <input type="number" name="phone_number" id="phone_number" placeholder="8123940183020" class="form-control"
-                    v-model="form.phone_number">
+                <input type="number" name="phone_number" id="phone_number" @input="v$.$touch()" placeholder="8123940183020"
+                       class="form-control" v-model="registerForm.phoneNumber">
             </div>
-            <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('phone_number')"
-                v-html="form.errors.get('phone_number')" />
+            <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.phoneNumber.$errors"
+                 :key="error.$uid">
+                {{ error.$message }}
+            </div>
         </div>
-
-        <div class="mt-3">
+        <div class="mt-3" :class="{ error: v$.registerForm.role.$errors.length }">
             <label for="role">{{ $t('register.register_as') }}</label>
-            <select name="role" id="role" class="form-select mt-2" v-model="form.role">
+            <select name="role" id="role" class="form-select mt-2" v-model="registerForm.role">
                 <option value="1">{{ $t('register.patient') }}</option>
                 <option value="2">{{ $t('register.doctor') }}</option>
             </select>
-            <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('role')"
-                v-html="form.errors.get('role')" />
+            <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.role.$errors"
+                 :key="error.$uid">
+                {{ error.$message }}
+            </div>
         </div>
-
-        <div class="mt-3" v-if="form.role === '1'">
+        <div class="mt-3" :class="{ error: v$.registerForm.ssn.$errors.length }" v-if="registerForm.role === '1'">
             <label for="ssn">{{ $t('register.ssn') }}</label>
             <input type="number" name="ssn" id="ssn" placeholder="3829380183984920" class="form-control mt-2"
-                v-model="form.ssn">
-            <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('ssn')"
-                v-html="form.errors.get('ssn')" />
+                   @input="v$.$touch()" v-model="registerForm.ssn">
+            <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.ssn.$errors"
+                 :key="error.$uid">
+                {{ error.$message }}
+            </div>
         </div>
-
-        <div class="mt-3" v-if="form.role === '1'">
+        <div class="mt-3" :class="{ error: v$.registerForm.name.$errors.length }" v-if="registerForm.role === '1'">
             <label for="name">{{ $t('register.full_name') }}</label>
             <input type="text" name="name" id="name" placeholder="Muhammad Denis Adiswara" class="form-control mt-2"
-                v-model="form.name">
-            <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('name')"
-                v-html="form.errors.get('name')" />
+                   @input="v$.$touch()" v-model="registerForm.name">
+            <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.name.$errors"
+                 :key="error.$uid">
+                {{ error.$message }}
+            </div>
         </div>
-
-        <div class="mt-3" v-if="form.role === '2'">
+        <div class="mt-3" :class="{ error: v$.registerForm.doctorId.$errors.length }" v-if="registerForm.role === '2'">
             <label for="doctor_id">{{ $t('register.doctor_id') }}</label>
             <input type="text" name="doctor_id" id="doctor_id" placeholder="3829380183984920" class="form-control mt-2"
-                v-model="form.doctor_id">
-            <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('doctor_id')"
-                v-html="form.errors.get('doctor_id')" />
+                   @input="v$.$touch()" v-model="registerForm.doctorId">
+            <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.doctorId.$errors"
+                 :key="error.$uid">
+                {{ error.$message }}
+            </div>
         </div>
-
         <div class="mt-3 d-flex flex-column">
             <SubmitButton :text="$t('register.register')" className="btn-blue-700-rounded" />
-
             <router-link to="/login"
-                class="rounded-pill mt-3 border-white text-white px-3 py-2 text-center text-decoration-none border border-1">{{
-                    $t('register.cancel') }}</router-link>
+                         class="rounded-pill mt-3 border-white text-white px-3 py-2 text-center text-decoration-none border border-1"
+                         v-show="!isLoading">
+                {{ $t('register.cancel') }}
+            </router-link>
         </div>
     </form>
-
-    <div class="mt-4 text-center">
+    <div class="mt-4 text-center"
+         v-show="!isLoading">
         <p>{{ $t('register.already_have_an_account') }}
             <router-link to="/login" class="fw-bold text-white text-decoration-none">{{ $t('register.login')
-            }}</router-link>
+                }}</router-link>
         </p>
     </div>
-
     <div class="modal" id="modal-register" aria-labelledby="Register Modal" data-bs-backdrop="static" aria-hidden="true"
-        tabindex="-1">
+         tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-
                 <div class="modal-header d-flex justify-content-between">
                     <div class="d-flex align-items-center col-gap-8">
                         <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
-
                         <h5 class="modal-title">{{ $t('register.phone_number_already_registered') }}</h5>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" form="#">
                         <i class="bi bi-x fs-2 icon-black"></i>
                     </button>
                 </div>
                 <div class="modal-body">
                     <p>{{ $t('register.phone_number_already_registered_desc') }}</p>
                 </div>
-
                 <div class="modal-footer flex-nowrap">
-                    <button type="button" class="w-50 btn btn-link" data-bs-dismiss="modal">{{ $t('register.cancel')
-                    }}</button>
-                    <button type="button" @click="navigateToLogin" class="w-50 btn-masuk btn btn-blue"
-                        :class="layoutStore.isLoading ? 'disabled' : ''">{{
-                        $t('register.login') }}</button>
+                    <button type="button" class="w-50 btn btn-link" :class="isLoading ? 'disabled' : ''" data-bs-dismiss="modal" form="#">
+                        {{ $t('register.cancel') }}
+                    </button>
+                    <button type="button" @click="navigateToLogin" class="w-50 btn-masuk btn btn-blue" :class="isLoading ? 'disabled' : ''" form="#">
+                        {{ $t('register.login') }}
+                    </button>
                 </div>
             </div>
         </div>

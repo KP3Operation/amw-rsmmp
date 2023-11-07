@@ -26,9 +26,9 @@ class UpdateDoctorRequest extends FormRequest
         $userDoctor = UserDoctor::where('user_id', '=', $user->id)->first();
 
         return [
-            "doctor_id" => "required|unique:user_doctors,doctor_id," . $userDoctor->id,
+            "doctorId" => "required|unique:user_doctors,doctor_id," . $userDoctor->id,
             "name" => "required",
-            "smf_name" => "required"
+            "smfName" => "required"
         ];
     }
 }

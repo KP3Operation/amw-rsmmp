@@ -7,9 +7,9 @@ use Spatie\LaravelData\Data;
 class CheckNumberDto extends Data
 {
     public function __construct(
-        public string $status,
+        public ?string $status,
         public ?string $message,
-        public string $ack
+        public ?string $ack
     ) {
     }
 }

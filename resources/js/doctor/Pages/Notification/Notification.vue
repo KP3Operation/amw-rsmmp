@@ -1,56 +1,65 @@
-<script setup>
+<script>
 import Header from "@shared/Components/Header/Header.vue";
-import NoNotifications from "@resources/static/images/not-found.png";
 import { useNotificationStore } from "@doctor/+store/notification.store.js";
-import { storeToRefs } from "pinia";
+import {mapActions, mapState, storeToRefs} from "pinia";
 import {useAuthStore} from "@shared/+store/auth.store.js";
-import axios from "axios";
-import {onMounted, watch} from "vue";
-import {convertDateTimeToDateTime} from "../../../shared/utils/helpers.js";
 import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
 import router from "@doctor/router.js";
 import apiRequest from "@shared/utils/axios.js";
 
-const notificationStore = useNotificationStore();
-const { count, notifications } = storeToRefs(notificationStore);
-const appoinmentStore = useAppointmentStore();
-const { selectedDate } = storeToRefs(appoinmentStore);
-const authStore = useAuthStore();
-const {doctorId} = storeToRefs(authStore);
+export default {
+    name: 'Notifications',
+    components: {Header},
+    computed: {
+        ...mapState(useNotificationStore, {
+            count: 'count',
+            notifications: 'notifications'
+        }),
+        ...mapState(useAppointmentStore, {
+            selectedDate: 'selectedDate'
+        }),
+        ...mapState(useAuthStore, {
+            userDoctorData: 'userDoctorData'
+        }),
+    },
+    methods: {
+        ...mapActions(useNotificationStore, {
+            updateCount: 'updateCount',
+            updateNotifications: 'updateNotifications',
+        }),
+        ...mapActions(useAppointmentStore, {
+            updateSelectedDate: 'updateSelectedDate'
+        }),
+        getNotifications() {
+            apiRequest.get('/api/v1/doctor/notifications', {
+                params: {doctor_id: this.userDoctorData.doctorId}
+            }).then((response) => {
+                const data = response.data;
+                this.updateCount(data.count);
+                this.updateNotifications(data.notifications);
+            }).catch(() => {}).finally(() => {});
 
-const fetchNotifications = () => {
-  apiRequest.get('/api/v1/doctor/notifications', {
-    params: {doctor_id: doctorId.value}
-  }).then((response) => {
-    const data = response.data;
-    notificationStore.updateCount(data.count);
-    notificationStore.updateNotifications(data.notifications);
-  }).catch(() => {}).finally(() => {});
+        },
+        markAsRead (notification) {
+            apiRequest.put(`/api/v1/doctor/notifications/${notification.id}`).then((response) => {
+                if (notification.context === '3') {
+                    this.updateSelectedDate(notification.appointment_date);
+                    router.push({name: 'AppointmentPage'});
+                }
+            });
+        }
+    },
+    mounted() {
+        this.getNotifications();
+    }
 }
-
-const markAsRead = (notification) => {
-  apiRequest.put(`/api/v1/doctor/notifications/${notification.id}`).then((response) => {
-      if (notification.context === '3') {
-          appoinmentStore.updateSelectedDate(notification.appointment_date);
-          router.push({name: 'AppointmentPage'});
-      }
-  });
-}
-
-watch(doctorId, (newValue, oldValue) => {
-  fetchNotifications();
-});
-
-onMounted(() => {
-  fetchNotifications();
-});
 </script>
 
 <template>
     <Header :title="$t('notification.title')" :with-back-url="true"></Header>
     <div class="d-flex flex-column rows-gap-16 px-4 pt-8" v-if="count < 1">
         <div class="text-center mt-5">
-            <img :src="NoNotifications" alt="Ilustrasi Not Found" width="280" height="209" class="d-inline-block">
+            <img src="@resources/static/images/not-found.png" alt="Ilustrasi Not Found" width="280" height="209" class="d-inline-block">
             <p class="fw-bold fs-4 mt-3">Anda Tidak Memiliki Notifikasi</p>
         </div>
     </div>

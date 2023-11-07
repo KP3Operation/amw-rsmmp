@@ -59,4 +59,15 @@ return [
     */
 
     'validate_whatsapp_number' => env('WATZAP_VALIDATE_WHATSAPP_NUMBER', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validate WatZap API KEY url
+    |--------------------------------------------------------------------------
+    |
+    | Set this value to true, to validate WatZap API KEY, before send the OTP.
+    |
+    */
+
+    'validate_api_key_url' => env('WATZAP_VALIDATE_API_KEY_URL', 'https://api.watzap.id/v1/validate_number'),
 ];

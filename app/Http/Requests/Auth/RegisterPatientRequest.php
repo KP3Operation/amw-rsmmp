@@ -22,8 +22,10 @@ class RegisterPatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "phone_number" => "required|min:10|max:13|unique:users,phone_number",
-            "ssn" => "required|min:16|max:16|unique:user_patients,ssn",
+//            "phone_number" => "required|min:10|max:13|unique:users,phone_number",
+            "phoneNumber" => "required|min:10|max:13",
+//            "ssn" => "required|min:16|max:16|unique:user_patients,ssn",
+            "ssn" => "required|min:16|max:16",
             "name" => "required|string",
             "role" => "required"
         ];

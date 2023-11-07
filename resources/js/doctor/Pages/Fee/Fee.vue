@@ -7,7 +7,6 @@ import Form from "vform";
 import {
     convertDateTimeToDate,
     convertDateToFormField, getCurrentDate,
-    getThisMonthEndDate,
     getThisMonthStartDate
 } from "@shared/utils/helpers.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
@@ -15,6 +14,7 @@ import { useFeeByTrxDateStore } from "@doctor/+store/fee-by-trx-date.store.js";
 import { storeToRefs } from "pinia";
 import NotFoundImage from "@resources/static/images/not-found.png";
 
+const activeTab = ref('pending');
 const period = ref("bulan ini");
 const layoutStore = useLayoutStore();
 const feeByTrxDateStore = useFeeByTrxDateStore();
@@ -46,6 +46,10 @@ const filterSummaryFee = () => {
     });
 }
 
+const updateActiveTab = (tab) => {
+    activeTab.value = tab;
+}
+
 onMounted(() => {
     filterSummaryFee();
 });
@@ -53,7 +57,6 @@ onMounted(() => {
 
 <template>
     <Header :title="$t('fee.title')" :with-back-url="true" custom-heading-class="fs-4"></Header>
-
     <div class="filter-summary-fee mt-4 pt-8">
         <form class="d-flex col-gap-8 align-items-end" @submit.prevent="filterSummaryFee"
             @keydown="filterForm.onKeydown($event)">
@@ -77,23 +80,22 @@ onMounted(() => {
     </div>
     <section class="tab-periode mt-4">
         <p class="periode">Periode: <span>{{ period }}</span></p>
-
         <div class="tab-summary-fee nav nav-pills nav-justified d-flex col-gap-20 mt-4">
             <button class="nav-link w-50 active" data-bs-toggle="pill" data-bs-target="#pending" role="tab"
-                aria-controls="pending" aria-selected="true">
+                aria-controls="pending" aria-selected="true" @click="updateActiveTab('pending')">
                 <p>Pending</p>
             </button>
 
             <button class="nav-link w-50" data-bs-toggle="pill" data-bs-target="#terbayar" role="tab"
-                aria-controls="terbayar" aria-selected="true">
-
+                aria-controls="terbayar" aria-selected="true" @click="updateActiveTab('terbayar')">
                 <p>Terbayar</p>
             </button>
         </div>
     </section>
 
     <div v-if="!layoutStore.isLoading" class="tab-content mt-4 px-4" id="tab-content">
-        <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending" tabindex="0">
+        <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending" tabindex="0"
+             v-show="activeTab === 'pending'">
             <div class="accordion d-flex flex-column rows-gap-20 mt-3" id="accordion">
                 <div v-for="(pendingFee, index) in pendings">
                     <FeePendingCard :id="index.toString()" :registrationNo="pendingFee.registrationNo"
@@ -102,23 +104,22 @@ onMounted(() => {
                         :paymentPercentage="pendingFee.paymentPercentage" />
                 </div>
             </div>
-
-            <div class="text-center" v-if="pendings.length < 1">
+            <div class="text-center" v-if="pendings.length === 0">
                 <img :src="NotFoundImage" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3">
                 <p class="mt-4 fw-semibold">Anda Belum Memiliki Pembayaran Pending</p>
             </div>
         </div>
 
-        <div class="tab-pane fade" id="terbayar" role="tabpanel" aria-labelledby="terbayar" tabindex="0">
+        <div class="tab-pane fade" id="terbayar" role="tabpanel" aria-labelledby="terbayar" tabindex="0"
+             v-show="activeTab === 'terbayar'">
             <div class="accordion d-flex flex-column rows-gap-20 mt-3" id="accordion">
-
                 <div v-for="(payoutFee, index) in payouts">
                     <FeePaidCard :id="index.toString()" :registrationNo="payoutFee.registrationNo"
                         :medicalNo="payoutFee.medicalNo" :patientName="payoutFee.patientName" :itemName="payoutFee.itemName"
                         :qty="payoutFee.qty" :guarantorName="payoutFee.guarantorName" :paidAmount="payoutFee.amount" />
                 </div>
             </div>
-            <div class="text-center" v-if="payouts.length < 1">
+            <div class="text-center" v-if="payouts.length === 0">
                 <img :src="NotFoundImage" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3" />
                 <p class="mt-4 fw-semibold">Anda Tidak Memiliki Pembayaran</p>
             </div>

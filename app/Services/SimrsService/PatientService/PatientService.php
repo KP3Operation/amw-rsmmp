@@ -23,16 +23,10 @@ use Illuminate\Support\Facades\Http;
 
 class PatientService implements IPatientService
 {
-    public function getPatients(User $user): PatientDataDto
+    public function getPatients(string $phoneNumber, string $ssn): PatientDataDto
     {
-        $ssn = "";
         $accessKey = config("simrs.access_key");
-        $phoneNumber = str_replace(config('app.calling_code'), "0", $user->phone_number);
-
-        $userPatientData = UserPatient::where("user_id", "=", $user->id)->first();
-        if ($userPatientData && $userPatientData->ssn != null) {
-            $ssn = $userPatientData->ssn;
-        }
+        $phoneNumber = str_replace(config('app.calling_code'), "0", $phoneNumber);
 
         $response = Http::withHeaders([
             'Content-Type' => ""

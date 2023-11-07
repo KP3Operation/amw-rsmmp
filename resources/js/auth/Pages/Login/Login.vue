@@ -1,96 +1,133 @@
-<script setup>
-import Form from "vform";
-import {onMounted, reactive, watch} from "vue";
-import { useAuthStore } from "@shared/+store/auth.store.js";
-import router from "@auth/router.js";
+<script>
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
-import { useLayoutStore } from "@shared/+store/layout.store.js";
+import useVuelidate from "@vuelidate/core";
+import {helpers, maxLength, minLength, required} from "@vuelidate/validators";
+import {mapActions, mapState} from "pinia";
+import {useLayoutStore} from "@shared/+store/layout.store.js";
+import {useAuthStore} from "@shared/+store/auth.store.js";
 import * as bootstrap from "bootstrap";
+import axios from "@shared/utils/axios.js";
 
-const modalState = reactive({
-    notRegisteredModal: null,
-});
-const authStore = useAuthStore();
-const layoutStore = useLayoutStore();
-const callingCode = import.meta.env.VITE_APP_CALLING_CODE;
-const form = reactive(
-    new Form({
-        phone_number: null
-    })
-);
-
-const login = async () => {
-    layoutStore.isLoading = true;
-    form.post('/api/v1/login').then((response) => {
-        const data = response.data.data;
-        form.reset();
-        authStore.phoneNumber = data.phone_number;
-        authStore.otpCreatedAt = data.otp_created_at;
-        authStore.otpUpdatedAt = data.otp_updated_at;
-        authStore.otpTimeout = data.otp_timeout;
-        router.push({ path: '/verification' });
-    }).catch((error) => {
-        if (error.response.status === 404) {
-            modalState.notRegisteredModal.show();
-        } else {
-            layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+export default {
+    name: 'LoginPage',
+    components: { SubmitButton },
+    setup() {
+      return {
+          v$: useVuelidate()
+      }
+    },
+    computed: {
+        ...mapState(useLayoutStore, {
+            isLoading: 'isLoading'
+        }),
+        ...mapState(useAuthStore, {
+           userData: "userData"
+        }),
+    },
+    data() {
+        return {
+            loginForm: {
+                phoneNumber: null
+            },
+            callingCode: '',
+            modalState: {
+                notRegisteredModal: null
+            }
         }
-    }).finally(() => {
-        layoutStore.isLoading = false;
-    });
-}
-
-const navigateToRegister = async () => {
-    authStore.phoneNumber = form.phone_number;
-    form.reset();
-    modalState.notRegisteredModal.hide();
-    router.push({ path: '/register' });
-}
-
-watch(form, (newValue) => {
-    let regExp = /^\d*[.]?\d*$/;
-    if (newValue.phone_number !== null) {
-        if (regExp.test(newValue.phone_number) === false) {
-            form.errors.set({phone_number: 'No. Handphone Hanya Boleh Diisi Angka'});
-        } else if (newValue.phone_number.toString().length > 1 && newValue.phone_number.toString().length < 10) {
-            form.errors.set({phone_number: 'No. Handphone Kurang Dari 10 Digit'});
-        } else if (newValue.phone_number.toString().length > 13) {
-            form.errors.set({phone_number: 'No. Handphone Lebih Dari 13 Digit'});
-        } else if (newValue.phone_number.toString().length == 0) {
-            form.errors.set({phone_number: 'No. Handphone Wajib Diisi'});
+    },
+    validations() {
+        return {
+            loginForm: {
+                phoneNumber: {
+                    required: helpers.withMessage("No Hp tidak boleh kosong", required),
+                    minLength: helpers.withMessage("No Hp kurang dari 10 digit", minLength(10)),
+                    maxLength: helpers.withMessage("No Hp lebih dari 13 digit", maxLength(13)),
+                }
+            }
         }
+    },
+    methods: {
+        ...mapActions(useLayoutStore, {
+            toggleErrorAler: 'toggleErrorAlert',
+            updateLoadingState: 'updateLoadingState'
+        }),
+        ...mapActions(useAuthStore, {
+            updateUserData: 'updateUserData',
+            updateOtpData: 'updateOtpData'
+        }),
+        async login() {
+            this.updateLoadingState(true);
+            const formValid = await this.v$.$validate();
+            if (!formValid) {
+                this.updateLoadingState(false);
+                return;
+            }
+
+            axios.post('/api/v1/login', this.loginForm).then((response) => {
+
+                this.updateOtpData({
+                    otpCreatedAt: response.data.otpCreatedAt,
+                    otpUpdatedAt: response.data.otpUpdatedAt,
+                    otpTimeout: response.data.otpTimeout,
+                });
+
+                this.updateUserData({
+                    phoneNumber: this.loginForm.phoneNumber
+                });
+            }).catch((error) => {
+                if (error.response.status === 404) {
+                    this.modalState.notRegisteredModal.show();
+                } else {
+                    this.toggleErrorAlert(`${error.response.data.message}`);
+                }
+            }).finally(() => {
+                this.updateLoadingState(false);
+            });
+
+        },
+        navigateToRegister() {
+            this.modalState.notRegisteredModal.hide();
+            this.updateUserData({phoneNumber: this.loginForm.phoneNumber});
+            this.$router.push({name: 'RegisterPage'});
+        }
+    },
+    mounted() {
+        this.callingCode = import.meta.env.VITE_APP_CALLING_CODE;
+        this.loginForm.phoneNumber = this.userData.phoneNumber;
+        this.modalState.notRegisteredModal = new bootstrap.Modal("#modal-register", {});
     }
-});
-
-onMounted(() => {
-    modalState.notRegisteredModal = new bootstrap.Modal("#modal-register");
-});
+}
 </script>
 
 <template>
     <div>
         <h1 class="fs-1 mt-6 fw-bold">{{ $t('welcome_message') }}</h1>
         <h2 class="mt-6 fs-3 fw-bold">{{ $t('login.login_to_account') }}</h2>
-        <form id="login-form" class="mt-6" @submit.prevent="login" @keydown="form.onKeydown($event)">
-            <div>
+        <form id="login-form" class="mt-6" @submit.prevent="login">
+            <div :class="{ error: v$.loginForm.phoneNumber.$errors.length }">
                 <label for="no-hp">{{ $t('login.phone_number') }}</label>
                 <div class="input-group flex-nowrap mt-2">
                     <span class="input-group-text">{{ callingCode }}</span>
-                    <input type="number" name="phone_number" id="no-hp" placeholder="8123940183020" class="form-control"
-                        v-model="form.phone_number">
+                    <input type="number"
+                           name="phone_number"
+                           id="no-hp" placeholder="8123940183020"
+                           class="form-control"
+                           @input="v$.$touch()"
+                           v-model="loginForm.phoneNumber">
                 </div>
-                <div class="error mt-2 fs-6 fw-bold text-red-200" v-if="form.errors.has('phone_number')"
-                    v-html="form.errors.get('phone_number')" />
+                <div class="error mt-2 fs-6 fw-bold text-red-200"
+                     v-for="error of v$.loginForm.phoneNumber.$errors"
+                     :key="error.$uid">
+                    {{ error.$message }}
+                </div>
             </div>
-
             <div class="mt-4 d-flex flex-column">
                 <SubmitButton :text="$t('login.login')" className="btn-blue-700-rounded" />
             </div>
         </form>
-
         <p class="mt-4 text-center">
             {{ $t('login.does_not_have_account') }}
-            <router-link to="/register" class="fw-bold text-decoration-none text-white">
+            <router-link :to="{name: 'RegisterPage'}" class="fw-bold text-decoration-none text-white">
                 {{ $t('login.register') }}
             </router-link>
         </p>
@@ -116,8 +153,9 @@ onMounted(() => {
                 </div>
 
                 <div class="modal-footer flex-nowrap">
-                    <button type="button" class="w-50 btn btn-link" data-bs-dismiss="modal">{{ $t('register.cancel')
-                    }}</button>
+                    <button type="button" class="w-50 btn btn-link" data-bs-dismiss="modal">
+                        {{ $t('register.cancel') }}
+                    </button>
                     <button type="button" @click="navigateToRegister" class="w-50 btn-masuk btn btn-blue">
                         {{ $t('login.yes') }},
                         {{ $t('login.register') }}

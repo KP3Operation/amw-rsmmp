@@ -11,7 +11,7 @@ import {calculateAge} from "@shared/utils/helpers.js";
 import apiRequest from "@shared/utils/axios.js";
 
 const authStore = useAuthStore();
-const { userFullName, doctorId, phoneNumber, smfName } = storeToRefs(authStore);
+const { userData, userDoctorData } = storeToRefs(authStore);
 const layoutStore = useLayoutStore();
 const modalState = reactive({
     logoutConfirmationModal: null
@@ -36,8 +36,8 @@ onMounted(() => {
     <section class="profile-doctor pt-6">
         <img :src="DefaultAvatar" :alt="userFullName" width="49" height="49">
 
-        <p class="fw-bold mt-4">{{ userFullName }}</p>
-        <p class="mt-2 fs-6">{{ doctorId }}</p>
+        <p class="fw-bold mt-4">{{ userData.userFullName }}</p>
+        <p class="mt-2 fs-6">{{ userDoctorData.doctorId }}</p>
     </section>
     <div class="px-4 mt-4">
         <div class="d-flex justify-content-between align-items-center pb-3 border-bottom border-gray-400">
@@ -47,7 +47,7 @@ onMounted(() => {
                 <span class="fs-6 text-gray-700">{{ $t('profile.phone_number') }}</span>
             </div>
 
-            <p class="w-50 text-end fw-semibold">{{ phoneNumber }}</p>
+            <p class="w-50 text-end fw-semibold">{{ userData.phoneNumber }}</p>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mt-4 pb-3 border-bottom border-gray-400">
@@ -57,10 +57,10 @@ onMounted(() => {
                 <span class="fs-6 text-gray-700">{{ $t('profile.smf') }}</span>
             </div>
 
-            <p class="w-50 text-end fw-semibold">{{ smfName }}</p>
+            <p class="w-50 text-end fw-semibold">{{ userDoctorData.smfName }}</p>
         </div>
 
-        <a href="#" @click="modalState.logoutConfirmationModal.show()" class="d-block btn btn-outline-red-500 rounded-pill mt-4 text-decoration-none">{{
+        <a href="javascript:void(0);" @click="modalState.logoutConfirmationModal.show()" class="d-block btn btn-outline-red-500 rounded-pill mt-4 text-decoration-none">{{
             $t('profile.logout') }}</a>
     </div>
 

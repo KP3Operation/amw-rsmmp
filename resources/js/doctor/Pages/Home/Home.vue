@@ -18,6 +18,7 @@ import apiRequest from "@shared/utils/axios.js";
 const appointmentStore = useAppointmentStore();
 const {selectedDate, doctorAppointments} = storeToRefs(appointmentStore);
 const authStore = useAuthStore();
+const { userData } = storeToRefs(authStore);
 const showSummaryFeeFilter = ref(false);
 const overviewAppointments = ref([]);
 
@@ -44,7 +45,7 @@ onMounted(() => {
 
             <div>
                 <h1 class="fs-4 fw-bold">{{ $t('home.welcome') }} <br /> <span
-                        v-text="getUserFirstName(authStore.userFullName)"></span></h1>
+                        v-text="getUserFirstName(userData.userFullName)"></span></h1>
 
                 <p class="mt-2 fs-6 text-gray-700">{{ $t('home.greeting') }}</p>
             </div>

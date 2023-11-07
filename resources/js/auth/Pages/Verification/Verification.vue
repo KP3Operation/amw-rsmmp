@@ -175,7 +175,7 @@ export default {
         }
     },
     mounted() {
-        if (this.userData.phoneNumber.trim().length === 0 ||
+        if (this.userData.phoneNumber.toString().trim().length === 0 ||
             this.otpData.otpTimeout === 0) {
             this.$router.push({name: 'LoginPage'});
         }

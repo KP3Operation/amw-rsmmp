@@ -96,7 +96,7 @@ export default {
             }
 
             apiRequest.put(
-                `/api/v1/register/${this.userData.userRole === 'patient' ? 'patient' : 'doctor'}/${this.confirmationForm.phoneNumber.replace(this.callingCode, "")}`, {
+                `/api/v1/register/${this.userData.userRole === 'patient' ? 'patient' : 'doctor'}/${this.confirmationForm.phoneNumber.toString().replace(this.callingCode, "")}`, {
                     ...this.confirmationForm
                 }
             ).then((response) => {

@@ -130,7 +130,8 @@ This is a main project of aviatmobileweb that are written on top of Laravel fram
 3. Run the command line installer.
 
 ```sh
-$ php install
+$ chmod +x ./install.sh
+$ ./install.sh
 ```
 > You may need to re-verify the `.env` configs that has been generated.
 

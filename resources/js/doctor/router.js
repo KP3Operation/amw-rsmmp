@@ -11,6 +11,7 @@ import PatientDetailPage from "@doctor/Pages/InpatientList/PatientDetail.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import AppointmentDetailPage from "@doctor/Pages/Appointment/AppointmentDetail.vue";
+import apiRequest from "@shared/utils/axios.js";
 
 
 const routes = [
@@ -82,8 +83,8 @@ router.beforeEach(async (to, from) => {
     }
 
     if (authStore.userData.phoneNumber === null || authStore.userData.userId === 0) {
-        axios.get("/sanctum/csrf-cookie").then(() => {
-            axios
+        apiRequest.get("/sanctum/csrf-cookie").then(() => {
+            apiRequest
                 .get(`/api/v1/me`)
                 .then((response) => {
                     authStore.updateUserData({

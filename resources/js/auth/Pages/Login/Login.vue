@@ -74,6 +74,8 @@ export default {
                 this.updateUserData({
                     phoneNumber: this.loginForm.phoneNumber
                 });
+
+                this.$router.push({name: 'VerificationPage'});
             }).catch((error) => {
                 if (error.response.status === 404) {
                     this.modalState.notRegisteredModal.show();

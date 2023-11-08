@@ -14,11 +14,11 @@ import { onMounted, ref } from "vue";
 import apiRequest from "@shared/utils/axios.js";
 
 const authStore = useAuthStore();
+const { userData, userPatientData } = storeToRefs(authStore);
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
 const appointmentStore = useAppointmentStore();
 const { openAppointments, selectedMedicalNo } = storeToRefs(appointmentStore);
-const { medicalNo } = storeToRefs(authStore);
 
 const fetchAppointments = () => {
     apiRequest.get(`/api/v1/patient/appointments`, {
@@ -37,7 +37,7 @@ const fetchAppointments = () => {
 
 onMounted(() => {
     appointmentStore.$reset();
-    appointmentStore.updateSelectedMedicalNo(medicalNo.value);
+    appointmentStore.updateSelectedMedicalNo(userPatientData.value.medicalNo);
     fetchAppointments();
 });
 </script>
@@ -47,7 +47,7 @@ onMounted(() => {
         <router-link to="/home">
             <img :src="LogoWhite" alt="Logo Aviat" width="33" height="33">
         </router-link>
-        <p>{{ $t('header.greeting') }}, <span v-text="getUserFirstName(authStore.userFullName)"></span></p>
+        <p>{{ $t('header.greeting') }}, <span v-text="getUserFirstName(userData.userFullName)"></span></p>
     </div>
     <div class="mt-4 px-4 pt-8">
         <section class="rounded-3 d-flex col-gap-20 bg-blue-500 p-4 text-white">
@@ -92,16 +92,17 @@ onMounted(() => {
             <h2 class="fs-3 fw-bold text-black">{{ $t('home.next_consult_schedule') }}</h2>
             <div v-if="openAppointments.length > 0" id="jadwal-konsultasi" class="carousel slide mt-2"
                 data-bs-interval="5000" data-bs-touch="true" data-bs-ride="carousel">
-                <div class="carousel-inner d-flex flex-nowrap col-gap-20" v-for="(appointment, index) in openAppointments">
-                    <ConsulCard :doctor="appointment.paramedicName" :unit="appointment.serviceUnitName"
+                <div class="carousel-inner d-flex flex-nowrap col-gap-20">
+                    <ConsulCard
+                        v-for="(appointment, index) in openAppointments"
+                        :doctor="appointment.paramedicName" :unit="appointment.serviceUnitName"
                         :date="convertDateTimeToDate(appointment.appointmentDate_yMdHms)"
-                        :time="appointment.appointmentTime" :id="index + 1" />
-
+                        :time="appointment.appointmentTime" :id="index" />
                 </div>
 
                 <div class="carousel-indicators position-static mt-2 mb-0">
                     <button v-for="(appointment, index) in openAppointments" type="button"
-                        data-bs-target="#jadwal-konsultasi" :data-bs-slide-to="index + 1" class=""
+                        data-bs-target="#jadwal-konsultasi" :data-bs-slide-to="index + 1" :class="index === 0?'active': ''"
                         :aria-label="'Slide ' + index" form="#"></button>
                 </div>
             </div>
@@ -113,7 +114,7 @@ onMounted(() => {
                     class="d-block btn btn-blue-500-rounded-sm mt-4 fw-semibold">Buat Jadwal</router-link>
             </div>
             <div class="mt-2 px-4 py-3 bg-blue-100 rounded-3 text-center"
-                v-if="!isLoading && selectedMedicalNo === ''">
+                v-if="!isLoading && selectedMedicalNo === '' && openAppointments.length < 1">
                 <p class="fw-bold">Mulai Sinkronisasi Data Anda</p>
                 <p class="mt-2 text-gray-700 fs-5">Mulai Sinkronisasi Data Anda untuk Mulai Jadwal Konsultasi dengan Tap
                     tombol Sinkronisasi dibawah.</p>

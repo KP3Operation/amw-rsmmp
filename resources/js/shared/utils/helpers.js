@@ -1,6 +1,72 @@
 import axios from "axios";
 import {useAuthStore} from "@shared/+store/auth.store.js";
 
+const plugins = {
+    install(app) {
+        app.config.globalProperties.$getUserFirstName = (fullName) => {
+            const arrName = fullName.split(" ");
+            if (arrName[0] === "dr." || arrName[0] === "drg.") {
+                return arrName[1];
+            }
+            return arrName[0];
+        },
+            app.config.globalProperties.$convertDateTimeToDate = (datetime) => {
+                if (datetime === "-") {
+                    return "-";
+                }
+
+                const date = new Date(datetime);
+
+                return date.toLocaleDateString("id-ID", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                });
+            },
+            app.config.globalProperties.$getSecondsLeft = (startDate, endDate) => {
+                const startTimestamp = startDate.getTime();
+                const endTimestamp = endDate.getTime();
+                const millisecondsDiff = endTimestamp - startTimestamp;
+                return Math.floor(millisecondsDiff / 1000);
+            },
+            app.config.globalProperties.$calculateAge = (birthdate) => {
+                if (birthdate === '-') {
+                    return '-';
+                }
+
+                const birthdateObj = new Date(birthdate);
+                const today = new Date();
+
+                let age = today.getFullYear() - birthdateObj.getFullYear();
+                const monthDiff = today.getMonth() - birthdateObj.getMonth();
+
+                if (
+                    monthDiff < 0 ||
+                    (monthDiff === 0 && today.getDate() < birthdateObj.getDate())
+                ) {
+                    age--;
+                }
+
+                return age;
+            },
+            app.config.globalProperties.$convertDateTimeToDateTime = (datetime) => {
+            if (datetime === "-") {
+                return "-";
+            }
+
+            const date = new Date(datetime);
+
+            return date.toLocaleTimeString("id-ID", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "numeric",
+                minute: "numeric",
+            });
+        }
+    }
+};
+
 /**
  * @param {Date} startDate
  * @param {Date} endDate
@@ -175,3 +241,6 @@ export function getCurrentDate() {
     const day = String(currentDate.getDate()).padStart(2, '0');
     return year + '-' + month + '-' + day;
 }
+
+
+export default plugins;

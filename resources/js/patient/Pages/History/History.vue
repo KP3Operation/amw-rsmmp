@@ -294,7 +294,8 @@ onMounted(() => {
                     <p class="mt-3 fs-3 fw-bold">Anda Belum Memiliki <br> Hasil Tanda Unit Vital</p>
                 </div>
 
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 1" @click="loadMore">
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4"
+                     v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
                     <button type="button" class="btn btn-default">Load More</button>
                 </div>
 
@@ -311,7 +312,7 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki Resep Obat</p>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 1" @click="loadMore">
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
                     <button type="button" class="btn btn-default">Load More</button>
                 </div>
             </section>
@@ -331,7 +332,7 @@ onMounted(() => {
                     <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki <br>
                         Riwayat Hasil Lab</p>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 1" @click="loadMore">
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
                     <button type="button" class="btn btn-default">Load More</button>
                 </div>
             </section>
@@ -348,7 +349,7 @@ onMounted(() => {
                     <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki
                         Pertemuan</p>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 1" @click="loadMore">
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
                     <button type="button" class="btn btn-default">Load More</button>
                 </div>
             </section>

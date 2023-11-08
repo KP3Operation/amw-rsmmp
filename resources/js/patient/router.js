@@ -132,31 +132,34 @@ router.beforeEach(async (to, from) => {
         layoutStore.isFullView = true;
     }
 
-    if (authStore.phoneNumber === null || authStore.userId === 0) {
+    if (authStore.userData.phoneNumber === null || authStore.userData.userId === 0) {
         axios.get("/sanctum/csrf-cookie").then(() => {
             axios
                 .get(`/api/v1/me`)
                 .then((response) => {
-                    authStore.userFullName = response.data.user.name;
-                    authStore.userEmail = response.data.user.email;
-                    authStore.userId = response.data.user.id;
-                    authStore.phoneNumber =
-                        response.data.user.phone_number.replace(
+                    authStore.updateUserData({
+                        userFullName: response.data.user.name,
+                        userEmail: response.data.user.email,
+                        userId: response.data.user.id,
+                        phoneNumber: response.data.user.phone_number.toString().replace(
                             `${import.meta.env.VITE_CALLING_CODE}`,
                             ""
-                        );
-                    authStore.userRole = response.data.role;
+                        ),
+                        userRole: response.data.role,
+                    });
 
                     // patient data
                     if (response.data.role === 'patient') {
-                        authStore.ssn = response.data.patient_data.ssn;
-                        authStore.patientId = response.data.patient_data.patient_id;
-                        authStore.birthDate = response.data.patient_data.birth_date;
-                        authStore.gender = response.data.patient_data.gender;
-                        authStore.medicalNo = response.data.patient_data.medical_no;
+                        authStore.updateUserPatientData({
+                           ssn: response.data.patient_data.ssn,
+                           patientId: response.data.patient_data.patient_id,
+                           birthDate: response.data.patient_data.birth_date,
+                           gender: response.data.patient_data.gender,
+                           medicalNo: response.data.patient_data.medical_no,
+                        });
                     }
 
-                    if (authStore.userRole !== "patient") {
+                    if (authStore.userData.userRole !== "patient") {
                         authStore.$reset();
                         window.location.href = `/doctor/home`;
                     }

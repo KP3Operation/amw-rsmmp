@@ -16,7 +16,7 @@ const modalState = reactive({
     logoutConfirmationModal: null
 });
 const authStore = useAuthStore();
-const { patientId, ssn, userFullName, phoneNumber, gender, userEmail, birthDate } = storeToRefs(authStore);
+const { userData, userPatientData } = storeToRefs(authStore);
 const layoutStore = useLayoutStore();
 const patientAge = ref(0);
 
@@ -45,14 +45,14 @@ const logout = () => {
     });
 }
 
-watch(birthDate, (newValue, oldValue) => {
-    patientAge.value = calculateAge(newValue);
+watch(userPatientData.value, (newValue, oldValue) => {
+    patientAge.value = calculateAge(newValue['birthDate']);
 });
 
 onMounted(() => {
     modalState.syncDataModal = new bootstrap.Modal("#modal-sinkronisasi", {});
     modalState.logoutConfirmationModal = new bootstrap.Modal("#logout-modal", {});
-    patientAge.value = calculateAge(birthDate.value);
+    patientAge.value = calculateAge(userPatientData.value.birthDate);
 });
 
 </script>
@@ -62,11 +62,11 @@ onMounted(() => {
         <Header :title="$t('profile.title')"></Header>
         <div class="px-4 pt-8">
             <section class="profile-patient">
-                <img :src="DefaultAvatar" :alt="userFullName" width="49" height="49">
+                <img :src="DefaultAvatar" :alt="userData.userFullName" width="49" height="49">
 
                 <div>
-                    <p class="name">{{ userFullName }}</p>
-                    <p>{{ gender }} {{ patientAge }} {{ $t('profile.year') }}</p>
+                    <p class="name">{{ userData.userFullName }}</p>
+                    <p>{{ userPatientData.gender }} {{ patientAge }} {{ $t('profile.year') }}</p>
                 </div>
             </section>
 
@@ -82,37 +82,37 @@ onMounted(() => {
                 <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                     <p class="fs-5 text-gray-600">{{ $t('profile.patient_id') }}</p>
 
-                    <p class="text-end">{{ patientId }}</p>
+                    <p class="text-end">{{ userPatientData.patientId }}</p>
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                     <p class="fs-5 text-gray-600">{{ $t('profile.ssn') }}</p>
 
-                    <p class="text-end">{{ ssn == 0 ? '' : ssn }}</p>
+                    <p class="text-end">{{ userPatientData.ssn == 0 ? '' : userPatientData.ssn }}</p>
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                     <p class="fs-5 text-gray-600">{{ $t('profile.phone_number') }}</p>
 
-                    <p class="text-end">{{ phoneNumber }}</p>
+                    <p class="text-end">{{ userData.phoneNumber }}</p>
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                     <p class="fs-5 text-gray-600">{{ $t('profile.birth_date') }}</p>
 
-                    <p class="text-end">{{ birthDate }}</p>
+                    <p class="text-end">{{ userPatientData.birthDate }}</p>
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between pb-3 border-bottom border-gray-400">
                     <p class="fs-5 text-gray-600">{{ $t('profile.gender') }}</p>
 
-                    <p class="text-end">{{ gender }}</p>
+                    <p class="text-end">{{ userPatientData.gender }}</p>
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between">
                     <p class="fs-5 text-gray-600">{{ $t('profile.email') }}</p>
 
-                    <p class="text-end">{{ userEmail }}</p>
+                    <p class="text-end">{{ userData.userEmail }}</p>
                 </div>
             </div>
 

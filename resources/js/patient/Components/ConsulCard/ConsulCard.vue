@@ -13,14 +13,14 @@ let { doctor, unit, date, time, id } = toRefs(props);
 const isActive = ref(false);
 
 onMounted(() => {
-    if (id.value === 1) {
+    if (id.value === 0) {
         isActive.value = true;
     }
 })
 </script>
 
 <template>
-    <div class="carousel-item rounded-3 bg-blue-500 text-white p-4" :class="isActive ? 'active' : ''">
+    <div class="carousel-item rounded-3 bg-blue-500 text-white p-4" :key="id" :class="isActive ? 'active' : ''">
         <p class="fw-bold">{{ doctor }}</p>
         <div class="mt-2 d-flex col-gap-20 fs-5">
             <div class="d-flex col-gap-8 align-items-center">

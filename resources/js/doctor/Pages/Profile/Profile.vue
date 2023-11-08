@@ -18,7 +18,7 @@ const modalState = reactive({
 });
 
 const logout = () => {
-    apiRequestget('/api/v1/logout').then(() => {
+    apiRequest.get('/api/v1/logout').then(() => {
         authStore.$reset();
         window.location.href = "/auth/login";
     }).catch((error) => {
@@ -34,7 +34,7 @@ onMounted(() => {
 <template>
     <Header :title="$t('profile.title')" :with-back-url="false"></Header>
     <section class="profile-doctor pt-6">
-        <img :src="DefaultAvatar" :alt="userFullName" width="49" height="49">
+        <img :src="DefaultAvatar" :alt="userData.userFullName" width="49" height="49">
 
         <p class="fw-bold mt-4">{{ userData.userFullName }}</p>
         <p class="mt-2 fs-6">{{ userDoctorData.doctorId }}</p>

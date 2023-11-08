@@ -72,12 +72,20 @@ onMounted(() => {
                         <div :id="'hasil-tes-'+index" class="accordion-collapse collapse" :data-bs-parent="'#hasil-tes-'+index">
                             <div class="accordion-body">
                                 <div class="accordion-divider"></div>
-                                <p>{{ result.resultValue }}</p>
+                                <div class="py-3">
+                                  <p v-if="result.resultValue === '' || result.resultValue === null">
+                                    <small><i>Hasil pemeriksaan belum tersedia</i></small>
+                                  </p>
+                                  <p v-if="result.resultValue !== '' || result.resultValue !== null">{{ result.resultValue }}</p>
+                                </div>
                                 <div class="accordion-divider my-3"></div>
 
                                 <p class="fs-5 text-gray-700">Catatan</p>
 
-                                <p class="mt-2 fs-5">{{ result.notes }}</p>
+                                <p class="mt-2 fs-5" v-if="result.notes !== '' || result.notes !== null">{{ result.notes }}</p>
+                                <p class="mt-2 fs-5" v-if="result.notes === '' || result.notes === null">
+                                  <small><i>Tidak ada catatan</i></small>
+                                </p>
                             </div>
                         </div>
                     </div>

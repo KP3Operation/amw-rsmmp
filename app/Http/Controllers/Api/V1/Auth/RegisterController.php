@@ -175,7 +175,7 @@ class RegisterController extends Controller
 
         $user->smf_name = $user->userDoctorData->smf_name;
         $user->doctor_id = $user->userDoctorData->doctor_id;
-        //$user->doctor_photo = $user->userDoctorData->photo;
+        $user->doctor_photo = $user->userDoctorData->photo64;
         $user->otp_created_at = $otpCode->created_at;
         $user->otp_updated_at = $otpCode->updated_at;
         $user->otp_timeout = 30000; // miliseconds - 10 seconds

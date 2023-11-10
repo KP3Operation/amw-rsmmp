@@ -46,7 +46,7 @@ class MeController extends Controller
     {
         $user = User::where('id', '=', $request->user()->id)->first();
 
-        $response = $this->patientService->getPatients($user);
+        $response = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn);
 
         DB::transaction(function () use ($response, $user) {
             $patientData = $response->data->first();

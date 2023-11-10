@@ -22,10 +22,9 @@ export default {
     data() {
         return {
             registerForm: {
-                // TODO: Need to delete
-                phoneNumber: '81383048097',
-                role: '2',
-                doctorId: 'MD-00014',
+                phoneNumber: '',
+                role: '1',
+                doctorId: '',
                 name: '',
                 ssn: '',
             },

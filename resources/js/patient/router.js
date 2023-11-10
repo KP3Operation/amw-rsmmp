@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import HomePage from "@patient/Pages/Home/Home.vue";
 import AppointmentPage from "@patient/Pages/Appointment/Appointment.vue";
-import HistoryPage from "@patient/Pages/History/History.vue";
-import ProfilePage from "@patient/Pages/Profile/Profile.vue";
-import EditProfilePage from "@patient/Pages/EditProfile/EditProfile.vue";
-import FamilyPage from "@patient/Pages/Family/Family.vue";
-import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
-import DataConfirmationPage from "@patient/Pages/Family/DataConfirmation.vue";
-import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
-import PrescriptionDetailPage from "@patient/Pages/History/PrescriptionDetail.vue";
-import { useAuthStore } from "@shared/+store/auth.store.js";
-import { useLayoutStore } from "@shared/+store/layout.store.js";
-import LabResultDetailPage from "@patient/Pages/History/LabResultDetail.vue";
-import EncounterDetailPage from "@patient/Pages/History/EncounterDetail.vue";
+import CreateAppointmentPage from "@patient/Pages/Appointment/CreateAppointment.vue";
 import DoctorSchedulePage from "@patient/Pages/DoctorSchedule/DoctorSchedule.vue";
 import DoctorScheduleDetailPage from "@patient/Pages/DoctorSchedule/DoctorScheduleDetail.vue";
-import CreateAppointmentPage from "@patient/Pages/Appointment/CreateAppointment.vue";
+import EditProfilePage from "@patient/Pages/EditProfile/EditProfile.vue";
+import DataConfirmationPage from "@patient/Pages/Family/DataConfirmation.vue";
+import FamilyPage from "@patient/Pages/Family/Family.vue";
+import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
+import EncounterDetailPage from "@patient/Pages/History/EncounterDetail.vue";
+import HistoryPage from "@patient/Pages/History/History.vue";
+import LabResultDetailPage from "@patient/Pages/History/LabResultDetail.vue";
+import PrescriptionDetailPage from "@patient/Pages/History/PrescriptionDetail.vue";
+import HomePage from "@patient/Pages/Home/Home.vue";
+import ProfilePage from "@patient/Pages/Profile/Profile.vue";
+import { useAuthStore } from "@shared/+store/auth.store.js";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
+import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
 
 const routes = [
     {
@@ -103,9 +103,106 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
     const layoutStore = useLayoutStore();
+
+    // if (
+    //     authStore.userData.phoneNumber === null ||
+    //     authStore.userData.userId === 0
+    // ) {
+    //     axios.get("/sanctum/csrf-cookie").then(() => {
+    //         axios
+    //             .get(`/api/v1/me`)
+    //             .then((response) => {
+    //                 authStore.updateUserData({
+    //                     userFullName: response.data.user.name,
+    //                     userEmail: response.data.user.email,
+    //                     userId: response.data.user.id,
+    //                     phoneNumber: response.data.user.phone_number
+    //                         .toString()
+    //                         .replace(
+    //                             `${import.meta.env.VITE_CALLING_CODE}`,
+    //                             ""
+    //                         ),
+    //                     userRole: response.data.role,
+    //                 });
+
+    //                 // patient data
+    //                 if (response.data.role === "patient") {
+    //                     authStore.updateUserPatientData({
+    //                         ssn: response.data.patient_data.ssn,
+    //                         patientId: response.data.patient_data.patient_id,
+    //                         birthDate: response.data.patient_data.birth_date,
+    //                         gender: response.data.patient_data.gender,
+    //                         medicalNo: response.data.patient_data.medical_no,
+    //                     });
+    //                 }
+
+    //                 if (authStore.userData.userRole !== "patient") {
+    //                     authStore.$reset();
+    //                     window.location.href = `/doctor/home`;
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 if (
+    //                     error.response &&
+    //                     error.response.status &&
+    //                     error.response.status === 401
+    //                 ) {
+    //                     authStore.$reset();
+    //                     window.location.href = `/auth/login`;
+    //                 }
+    //             });
+    //     });
+    // }
+
+    if (
+        authStore.userData.phoneNumber === null ||
+        authStore.userData.userId === 0
+    ) {
+        try {
+            await axios.get("/sanctum/csrf-cookie");
+
+            const response = await axios.get(`/api/v1/me`);
+            authStore.updateUserData({
+                userFullName: response.data.user.name,
+                userEmail: response.data.user.email,
+                userId: response.data.user.id,
+                phoneNumber: response.data.user.phone_number
+                    .toString()
+                    .replace(`${import.meta.env.VITE_CALLING_CODE}`, ""),
+                userRole: response.data.role,
+            });
+
+            // Update patient data if user role is 'patient'
+            if (response.data.role === "patient") {
+                authStore.updateUserPatientData({
+                    ssn: response.data.patient_data.ssn,
+                    patientId: response.data.patient_data.patient_id,
+                    birthDate: response.data.patient_data.birth_date,
+                    gender: response.data.patient_data.gender,
+                    medicalNo: response.data.patient_data.medical_no,
+                });
+            }
+
+            if (authStore.userData.userRole !== "patient") {
+                authStore.$reset();
+                window.location.href = `/doctor/home`;
+                return;
+            }
+        } catch (error) {
+            if (
+                error.response &&
+                error.response.status &&
+                error.response.status === 401
+            ) {
+                authStore.$reset();
+                window.location.href = `/auth/login`;
+                return;
+            }
+        }
+    }
 
     if (to.name === "HomePage") {
         layoutStore.patientActiveMenu = "home";
@@ -132,45 +229,7 @@ router.beforeEach(async (to, from) => {
         layoutStore.isFullView = true;
     }
 
-    if (authStore.phoneNumber === null || authStore.userId === 0) {
-        axios.get("/sanctum/csrf-cookie").then(() => {
-            axios
-                .get(`/api/v1/me`)
-                .then((response) => {
-                    authStore.userFullName = response.data.user.name;
-                    authStore.userEmail = response.data.user.email;
-                    authStore.userId = response.data.user.id;
-                    authStore.phoneNumber =
-                        response.data.user.phone_number.replace(
-                            `${import.meta.env.VITE_CALLING_CODE}`,
-                            ""
-                        );
-                    authStore.userRole = response.data.role;
-
-                    // patient data
-                    if (response.data.role === 'patient') {
-                        authStore.ssn = response.data.patient_data.ssn;
-                        authStore.patientId = response.data.patient_data.patient_id;
-                        authStore.birthDate = response.data.patient_data.birth_date;
-                        authStore.gender = response.data.patient_data.gender;
-                        authStore.medicalNo = response.data.patient_data.medical_no;
-                    }
-
-                    if (authStore.userRole !== "patient") {
-                        authStore.$reset();
-                        window.location.href = `/doctor/home`;
-                    }
-                })
-                .catch((error) => {
-                    if (error.response && error.response.status && error.response.status === 401) {
-                        authStore.$reset();
-                        window.location.href = `/auth/login`;
-                    }
-                });
-        });
-    }
-
-
+    next();
 });
 
 export default router;

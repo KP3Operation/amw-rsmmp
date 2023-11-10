@@ -93,6 +93,10 @@ const cancelAppointment = () => {
 
 const resetFilter = () => {
     appointmentStore.$reset();
+    selectedFamilyId.value = "";
+    serviceUnitIdFilter.value = "";
+    dateStartFilter.value = "";
+    dateEndFilter.value = "";
     fetchAppointments();
 }
 

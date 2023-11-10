@@ -130,7 +130,8 @@ This is a main project of aviatmobileweb that are written on top of Laravel fram
 3. Run the command line installer.
 
 ```sh
-$ php install
+$ chmod +x ./install.sh
+$ ./install.sh
 ```
 > You may need to re-verify the `.env` configs that has been generated.
 
@@ -223,6 +224,9 @@ $ php artisan config:clear
 $ php artisan optimize
 ```
 
+
+[Back to Top](#aviatmobileweb)
+
 #### Frontend Setup
 
 Make sure [Prerequesites and One-Time Setup](#prerequesites-and-one-time-setup) has been setup properly.
@@ -257,6 +261,8 @@ $ php artisan migrate
 
 to ensure any new tables is migrated to the database.
 
+[Back to Top](#aviatmobileweb)
+
 ## The Environtment `Variables`
 
 Only the following environment attributes would require your attention out of the 67 environment variables that can be configured within this web application.
@@ -286,3 +292,49 @@ Only the following environment attributes would require your attention out of th
 |          `WATZAP_NUMBER_KEY`          |                FooBarBazz                |                                                    The `WatZap` number key                                                    |
 |           `SIMRS_BASE_URL`            |  http://103.111.202.214/live/WebService  |                                                      The SIMRS Base URL                                                       |
 |          `SIMRS_ACCESS_KEY`           |                  MWApA                   |                                                     The SIMRS access key                                                      |
+
+
+[Back to Top](#aviatmobileweb)
+
+## Minimum Server Specifications:
+#### 1. Processor:
+- Dual-core processor or higher (e.g., Intel Core i3 or equivalent)
+
+#### 2.RAM (Memory):
+- 4 GB RAM or more (Recommended: 8 GB RAM for better performance)
+
+#### 3.Storage:
+- SSD (Solid State Drive) with at least 20 GB of free space for the operating system and applications. Additional storage space for your application data and files.
+
+#### 4.Network:
+- Stable internet connection for package installations, updates, and accessing external APIs (Minimum: 10 Mbps recommended)
+
+#### 5. Operating System:
+- Linux-based OS (e.g., Ubuntu 20.04 LTS) is recommended for stability and performance. However, Laravel can also run on Windows and macOS.
+
+#### 6. Web Server:
+- Nginx 1.19 or Apache 2.4 (or later versions) with URL rewriting enabled.
+
+#### 7. PHP:
+- PHP 8.2 (or later) with necessary extensions installed (pdo, pdo_pgsql, openssl, mbstring, tokenizer, json, xml).
+
+#### 8. Database:
+- PostgreSQL 9.6 or later. Ensure the server has enough space for the database storage.
+
+#### 10. Node.js:
+- Node.js LTS (Long Term Support) version. You can check the LTS version on the Node.js [official website](https://nodejs.org/).
+
+
+[Back to Top](#aviatmobileweb)
+
+### Additional Considerations:
+- Backup System: Implement a regular backup system to prevent data loss.
+- Security: Configure firewalls, intrusion detection systems, and SSL certificates for secure communication.
+- Monitoring: Set up server monitoring tools to track server performance, uptime, and resource usage.
+- Load Balancing (For High Traffic): If you expect high traffic, consider implementing load balancing techniques.
+- Caching: Utilize caching mechanisms (e.g., Redis) to optimize database and application performance.
+
+
+Remember that these specifications are for small to medium-sized applications. For large-scale or high-traffic applications, you might need to invest in more powerful hardware and consider additional technologies like load balancers, distributed databases, and content delivery networks (CDNs) for optimal performance and scalability.
+
+[Back to Top](#aviatmobileweb)

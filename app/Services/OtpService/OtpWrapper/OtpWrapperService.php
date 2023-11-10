@@ -36,9 +36,9 @@ class OtpWrapperService implements IotpWrapperService
 
         $code = generate_otp(6);
 
-        if (config('app.env') == 'local') {
-            $code = 12345;
-        }
+        // if (config('app.env') == 'local') {
+        //     $code = 12345;
+        // }
 
         if (config("app.otp_with_queue")) {
             SendWatzapOtp::dispatch($user->phone_number, $code);

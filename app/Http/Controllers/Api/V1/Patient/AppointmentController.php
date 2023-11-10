@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Patient;
 
 use App\Dto\SimrsDto\Patient\AppointmentDataDto;
+use App\Exceptions\RestApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
 use App\Http\Requests\Patient\GetAppointmentsRequest;
@@ -14,6 +15,7 @@ use App\Models\Simrs\Patient\CreateAppointment;
 use App\Models\User;
 use App\Services\SimrsService\PatientService\IPatientService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
@@ -112,131 +114,134 @@ class AppointmentController extends Controller
 
     /**
      * @throws \Exception
+     * @throws \Throwable
      */
     public function store(StoreAppointmentRequest $request)
     {
         $user = User::findOrFail(auth()->user()->id);
 
-        // TODO: need to use db transaction
-        // register it self
-        if ($request->patient_id == $user->userPatientData->patient_id) {
-            $appointmentData = new CreateAppointment(
-                $request->service_unit_id,
-                $request->paramedic_id,
-                get_date_from_datetime($request->appointment_date),
-                'AUTO',
-                $user->userPatientData->patient_id ?? "",
-                $request->patient_name,
-                '',
-                '',
-                $request->birth_date,
-                $request->gender === 'Perempuan' ? 'F' : 'M',
-                '',
-                $user->email,
-                'SELF', // TODO: Need to update family to save the guarantor id & name
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-            );
+        DB::transaction(function () use ($request, $user) {
+            // register it self
+            if ($request->patient_id == $user->userPatientData->patient_id) {
+                $appointmentData = new CreateAppointment(
+                    $request->service_unit_id,
+                    $request->paramedic_id,
+                    get_date_from_datetime($request->appointment_date),
+                    'AUTO',
+                    $user->userPatientData->patient_id ?? "",
+                    $request->patient_name,
+                    '',
+                    '',
+                    $request->birth_date,
+                    $request->gender === 'Perempuan' ? 'F' : 'M',
+                    '',
+                    $user->email ?? '',
+                    'SELF', // TODO: Need to update family to save the guarantor id & name
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
 
-            $createdAppointment = $this->patientService->createAppointment($appointmentData);
-            $appoinment = $createdAppointment->data;
+                $createdAppointment = $this->patientService->createAppointment($appointmentData);
+                $appoinment = $createdAppointment->data;
 
-            $localAppoinment = Appointment::create([
-                'user_id' => auth()->user()->id,
-                'related_user_id' => $user->id,
-                'service_unit_id' => $appoinment->serviceUnitID,
-                'appointment_no' => $appoinment->appointmentNo,
-                'is_family_member' => true,
-                'appointment_date' =>  get_date_from_datetime($request->appointment_date),
-            ]);
+                $localAppoinment = Appointment::create([
+                    'user_id' => auth()->user()->id,
+                    'related_user_id' => $user->id,
+                    'service_unit_id' => $appoinment->serviceUnitID,
+                    'appointment_no' => $appoinment->appointmentNo,
+                    'is_family_member' => true,
+                    'appointment_date' =>  get_date_from_datetime($request->appointment_date),
+                ]);
 
-            if (!$user->userPatientData->medical_no) {
-                $user->update([
-                    'medical_no' => $appoinment->medicalNo
+                if (!$user->userPatientData->medical_no) {
+                    $user->update([
+                        'medical_no' => $appoinment->medicalNo
+                    ]);
+                }
+
+                Notification::create([
+                    'doctor_id' => $request->paramedic_id,
+                    'context' => Notification::APPOINTMENT,
+                    'message' => 'Anda mendapatkan janji temu baru',
+                    'appointment_date' => $request->appointment_date
+                ]);
+
+                return response()->json([
+                    'appointment' => $localAppoinment
+                ]);
+
+
+            } else { // register family member
+                $family = Family::where('patient_id', '=', $request->patient_id)->first();
+                if (!$family) {
+                    throw new \Exception("Gagal mengambil data family member");
+                }
+
+                $appointmentData = new CreateAppointment(
+                    $request->service_unit_id,
+                    $request->paramedic_id,
+                    get_date_from_datetime($request->appointment_date),
+                    'AUTO',
+                    $request->patient_id ?? '',
+                    $request->patient_name,
+                    '',
+                    '',
+                    $request->birth_date,
+                    $request->gender === 'Perempuan' ? 'F' : 'M',
+                    '',
+                    $family->email ?? '',
+                    'SELF', // TODO: Need to update family to save the guarantor id & name
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
+
+                $createdAppointment = $this->patientService->createAppointment($appointmentData);
+                $appoinment = $createdAppointment->data;
+
+                Notification::create([
+                    'doctor_id' => $request->paramedic_id,
+                    'context' => Notification::APPOINTMENT,
+                    'message' => 'Anda mendapatkan janji temu baru'
+                ]);
+
+                $localAppoinment = Appointment::create([
+                    'user_id' => auth()->user()->id,
+                    'related_user_id' => $family->id,
+                    'service_unit_id' => $appoinment->serviceUnitID,
+                    'appointment_no' => $appoinment->appointmentNo,
+                    'is_family_member' => true,
+                    'appointment_date' => $request->appointment_date
+                ]);
+
+
+                if (!$family->medical_no) {
+                    $user->update([
+                        'medical_no' => $appoinment->medicalNo
+                    ]);
+                }
+
+
+                return response()->json([
+                    'appointment' => $localAppoinment
                 ]);
             }
-
-            Notification::create([
-                'doctor_id' => $request->paramedic_id,
-                'context' => Notification::APPOINTMENT,
-                'message' => 'Anda mendapatkan janji temu baru',
-                'appointment_date' => $request->appointment_date
-            ]);
-
-            return response()->json([
-                'appointment' => $localAppoinment
-            ]);
-
-
-        } else { // register family member
-            $family = Family::where('patient_id', '=', $request->patient_id)->first();
-            if (!$family) {
-                throw new \Exception("Gagal mengambil data family member");
-            }
-
-            $appointmentData = new CreateAppointment(
-                $request->service_unit_id,
-                $request->paramedic_id,
-                get_date_from_datetime($request->appointment_date),
-                'AUTO',
-                $request->patient_id ?? '',
-                $request->patient_name,
-                '',
-                '',
-                $request->birth_date,
-                $request->gender === 'Perempuan' ? 'F' : 'M',
-                '',
-                $family->email,
-                'SELF', // TODO: Need to update family to save the guarantor id & name
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-            );
-
-            $createdAppointment = $this->patientService->createAppointment($appointmentData);
-            $appoinment = $createdAppointment->data;
-
-            Notification::create([
-                'doctor_id' => $request->paramedic_id,
-                'context' => Notification::APPOINTMENT,
-                'message' => 'Anda mendapatkan janji temu baru'
-            ]);
-
-            $localAppoinment = Appointment::create([
-                'user_id' => auth()->user()->id,
-                'related_user_id' => $family->id,
-                'service_unit_id' => $appoinment->serviceUnitID,
-                'appointment_no' => $appoinment->appointmentNo,
-                'is_family_member' => true,
-                'appointment_date' => $request->appointment_date
-            ]);
-
-
-            if (!$family->medical_no) {
-                $user->update([
-                    'medical_no' => $appoinment->medicalNo
-                ]);
-            }
-
-            return response()->json([
-                'appointment' => $localAppoinment
-            ]);
-        }
+        });
     }
 
     public function destroy(DestroyAppointmentRequest $request): \Illuminate\Http\JsonResponse

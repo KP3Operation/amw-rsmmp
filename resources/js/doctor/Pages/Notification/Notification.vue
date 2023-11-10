@@ -68,7 +68,7 @@ export default {
         <div class="d-flex col-gap-20 bg-white rounded-3 px-4 py-3" v-for="notification in notifications">
           <div>
             <p>{{ notification.message }}</p>
-            <p class="fs-6 mt-2 text-gray-700">{{ convertDateTimeToDateTime(notification.created_at) }}</p>
+            <p class="fs-6 mt-2 text-gray-700">{{ $convertDateTimeToDateTime(notification.created_at) }}</p>
           </div>
           <a href="#" @click="markAsRead(notification)"
                        class="d-flex align-items-center text-blue-500 text-end text-decoration-none fw-semibold">Lihat</a>

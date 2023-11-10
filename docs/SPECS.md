@@ -57,7 +57,7 @@ This document serves as a design/technical draft outlining a proposal for implem
 ## Technologies
 
 | Name      | Type                  | Role                                                                                            | Notes |
-| --------- | --------------------- | ----------------------------------------------------------------------------------------------- | ----- |
+|-----------|-----------------------|-------------------------------------------------------------------------------------------------|-------|
 | Laravel   | Fullstack framework   | The main development framework for the portal. Act as define, store, & manipulating portal data |       |
 | Postgres  | Relational Database   | Data persistence                                                                                |       |
 | Vue.js    | Front-end library     | Provide reactive DOM manipulation                                                               |       |

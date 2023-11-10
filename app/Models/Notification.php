@@ -17,6 +17,7 @@ class Notification extends Model
         'doctor_id',
         'context',
         'is_read',
-        'appointment_date'
+        'appointment_date',
+        'message'
     ];
 }

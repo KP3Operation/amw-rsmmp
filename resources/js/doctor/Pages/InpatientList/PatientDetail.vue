@@ -133,25 +133,25 @@ onMounted(() => {
                                 </ul>
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SOAP'">
-                                    <li>S: {{ cppt.info1 }}</li>
-                                    <li>O: {{ cppt.info2 }}</li>
-                                    <li>A: {{ cppt.info3 }}</li>
-                                    <li>P: {{ cppt.info4 }}</li>
+                                    <li><b>S</b>: {{ cppt.info1 }}</li>
+                                    <li><b>O</b>: {{ cppt.info2 }}</li>
+                                    <li><b>A</b>: {{ cppt.info3 }}</li>
+                                    <li><b>P</b>: {{ cppt.info4 }}</li>
                                 </ul>
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SBAR'">
-                                    <li>S: {{ cppt.info1 }}</li>
-                                    <li>B: {{ cppt.info2 }}</li>
-                                    <li>A: {{ cppt.info3 }}</li>
-                                    <li>R: {{ cppt.info4 }}</li>
+                                    <li><b>S</b>: {{ cppt.info1 }}</li>
+                                    <li><b>B</b>: {{ cppt.info2 }}</li>
+                                    <li><b>A</b>: {{ cppt.info3 }}</li>
+                                    <li><b>R</b>: {{ cppt.info4 }}</li>
                                 </ul>
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'ADIME'">
-                                    <li>A: {{ cppt.info1 }}</li>
-                                    <li>D: {{ cppt.info2 }}</li>
-                                    <li>I: {{ cppt.info3 }}</li>
-                                    <li>M: {{ cppt.info4 }}</li>
-                                    <li>E: {{ cppt.info5 }}</li>
+                                    <li><b>A</b>: {{ cppt.info1 }}</li>
+                                    <li><b>D</b>: {{ cppt.info2 }}</li>
+                                    <li><b>I</b>: {{ cppt.info3 }}</li>
+                                    <li><b>M</b>: {{ cppt.info4 }}</li>
+                                    <li><b>E</b>: {{ cppt.info5 }}</li>
                                 </ul>
                             </div>
                         </div>

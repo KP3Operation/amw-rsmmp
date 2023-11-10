@@ -36,7 +36,13 @@ class PatientDto extends Data
         public ?string $gender,
 
         #[MapInputName('GuarantorID')]
-        public ?string $guarantorId
+        public ?string $guarantorId,
+
+        #[MapInputName('PhoneNo')]
+        public ?string $phoneNo,
+
+        #[MapInputName('Sex')]
+        public ?string $sex
     )
     {}
 }

@@ -97,7 +97,7 @@ onMounted(() => {
         </div>
     </div>
 
-    <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!isLoading" @click="loadMore">
+    <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!isLoading && patients.length >= 10" @click="loadMore">
         <button type="button" class="btn btn-default">Load More</button>
     </div>
 </template>

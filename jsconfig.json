@@ -1,7 +1,16 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "./",
         "target": "es6",
+        "moduleResolution": "node",
+        "strict": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "types": [
+            "vite/client"
+        ],
         "paths": {
             "*": [
                 "node_modules"
@@ -20,7 +29,11 @@
             ],
             "@doctor/*": [
                 "resources/js/doctor/*"
-            ],
+            ]
         }
-    }
+    },
+    "include": [
+        "resources/**/*.js",
+        "resources/**/*.vue"
+    ]
 }

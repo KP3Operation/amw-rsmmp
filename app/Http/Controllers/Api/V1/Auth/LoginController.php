@@ -95,7 +95,7 @@ class LoginController extends Controller
             $resource['userPatient']['medicalNo'] = $patientData->medicalNo ?? "";
             $resource['userPatient']['gender'] = $patientData->gender ?? "";
             $resource['userPatient']['birthDate'] = $patientData->birthDate ?? "";
-            $resource['userPatient']['ssn'] = $patientData->ssn;
+            $resource['userPatient']['ssn'] = $patientData->ssn ?? "";
             $resource['userPatient']['userEmail'] = $user->email;
         } else {
             $userDoctorData = UserDoctor::where('user_id', '=', $user->id)->first();

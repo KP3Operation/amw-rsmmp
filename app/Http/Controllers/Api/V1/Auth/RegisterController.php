@@ -48,10 +48,10 @@ class RegisterController extends Controller
             throw new RestApiException("No. Handphone sudah terdaftar", 409);
         }
 
-        if (!is_null($user) && !is_null($user->userPatientData)) {
-             if ($request->validated('ssn') == $user->userPatientData->ssn) {
-                 throw new RestApiException("NIK sudah terdaftar", 409);
-             }
+        $userPatientBySsn = UserPatient::where('ssn', $request->validated('ssn'))->first();
+
+        if ($userPatientBySsn) {
+            throw new RestApiException("NIK sudah terdaftar", 402);
         }
 
         DB::transaction(function () use ($request) {
@@ -111,7 +111,7 @@ class RegisterController extends Controller
             ]);
         });
 
-        $user = User::with('userPatientData')->where('id', '=',$user->id)->first();
+        $user = User::with('userPatientData')->where('id', '=', $user->id)->first();
 
         if (!$user) {
             throw new RestApiException("Terjadi kesalahan sistem. Mohon kontak tim support kami", 500);

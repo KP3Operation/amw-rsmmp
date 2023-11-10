@@ -91,13 +91,12 @@ class LoginController extends Controller
 
             $patientData = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn)->data->first();
 
-            $resource['userPatient']['patientId'] = $patientData->patientId;
-            $resource['userPatient']['medicalNo'] = $patientData->medicalNo;
-            $resource['userPatient']['gender'] = $patientData->gender;
-            $resource['userPatient']['birthDate'] = $patientData->birthDate;
+            $resource['userPatient']['patientId'] = $patientData->patientId ?? "";
+            $resource['userPatient']['medicalNo'] = $patientData->medicalNo ?? "";
+            $resource['userPatient']['gender'] = $patientData->gender ?? "";
+            $resource['userPatient']['birthDate'] = $patientData->birthDate ?? "";
             $resource['userPatient']['ssn'] = $patientData->ssn;
             $resource['userPatient']['userEmail'] = $user->email;
-
         } else {
             $userDoctorData = UserDoctor::where('user_id', '=', $user->id)->first();
             $resource['userDoctor']['doctorId'] = $userDoctorData->doctor_id;

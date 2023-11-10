@@ -73,18 +73,21 @@ onMounted(() => {
                             <div class="accordion-body">
                                 <div class="accordion-divider"></div>
                                 <div class="py-3">
-                                  <p v-if="result.resultValue === '' || result.resultValue === null">
-                                    <small><i>Hasil pemeriksaan belum tersedia</i></small>
+                                  <p v-if="result.resultValue === ''">
+                                    <i>Hasil pemeriksaan belum tersedia</i>
                                   </p>
-                                  <p v-if="result.resultValue !== '' || result.resultValue !== null">{{ result.resultValue }}</p>
+                                  <p v-if="result.resultValue !== ''">
+                                      <span class="me-3">Hasil</span>: {{ result.resultValue }}<br>
+                                      <span class="me-3">Nilai Normal</span>:{{ result.normalValueMin }} - {{ result.normalValueMax }}
+                                  </p>
                                 </div>
                                 <div class="accordion-divider my-3"></div>
 
                                 <p class="fs-5 text-gray-700">Catatan</p>
 
-                                <p class="mt-2 fs-5" v-if="result.notes !== '' || result.notes !== null">{{ result.notes }}</p>
-                                <p class="mt-2 fs-5" v-if="result.notes === '' || result.notes === null">
-                                  <small><i>Tidak ada catatan</i></small>
+                                <p class="mt-2 fs-5" v-if="result.notes !== ''">{{ result.notes }}</p>
+                                <p class="mt-2 fs-5" v-if="result.notes === ''">
+                                  <i>Catatan Klinis Dokter Pemeriksa</i>
                                 </p>
                             </div>
                         </div>

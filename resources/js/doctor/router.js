@@ -66,6 +66,46 @@ router.beforeEach(async (to, from) => {
     const authStore = useAuthStore();
     const layoutStore = useLayoutStore();
 
+    if (authStore.userData.phoneNumber === null || authStore.userData.userId === 0) {
+        try {
+            await axios.get("/sanctum/csrf-cookie");
+            const response = await axios.get(`/api/v1/me`);
+            authStore.updateUserData({
+                userFullName: response.data.user.name,
+                userEmail: response.data.user.email,
+                userId: response.data.user.id,
+                phoneNumber: response.data.user.phone_number.toString().replace(
+                    `${import.meta.env.VITE_CALLING_CODE}`,
+                    ""
+                ),
+                userRole: response.data.role,
+            });
+
+            if (response.data.role === "doctor") {
+                authStore.updateUserDoctorData({
+                    doctorId: response.data.doctor_data.doctor_id,
+                    smfName: response.data.doctor_data.smf_name,
+                });
+            }
+
+            if (authStore.userData.userRole !== "doctor") {
+                authStore.$reset();
+                window.location.href = `/doctor/home`;
+                return;
+            }
+        } catch (error) {
+            if (
+                error.response &&
+                error.response.status &&
+                error.response.status === 401
+            ) {
+                authStore.$reset();
+                window.location.href = `/auth/login`;
+                return;
+            }
+        }
+    }
+
     if (to.name === "HomePage") {
         layoutStore.doctorActiveMenu = "home";
     }
@@ -82,41 +122,41 @@ router.beforeEach(async (to, from) => {
         layoutStore.doctorActiveMenu = "profile";
     }
 
-    if (authStore.userData.phoneNumber === null || authStore.userData.userId === 0) {
-        apiRequest.get("/sanctum/csrf-cookie").then(() => {
-            apiRequest
-                .get(`/api/v1/me`)
-                .then((response) => {
-                    authStore.updateUserData({
-                        userFullName: response.data.user.name,
-                        userEmail: response.data.user.email,
-                        userId: response.data.user.id,
-                        phoneNumber: response.data.user.phone_number.toString().replace(
-                            `${import.meta.env.VITE_CALLING_CODE}`,
-                            ""
-                        ),
-                        userRole: response.data.role,
-                    });
-
-                    if (response.data.role === 'doctor') {
-                        authStore.updateUserDoctorData({
-                            doctorId: response.data.doctor_data.doctor_id,
-                            smfName: response.data.doctor_data.smf_name,
-                        })
-                    } else {
-                        authStore.$reset();
-                        window.location.href = `/patient/home`;
-
-                    }
-                })
-                .catch((error) => {
-                    if (error?.response?.status === 401) {
-                        authStore.$reset();
-                        window.location.href = `/auth/login`;
-                    }
-                });
-        });
-    }
+    // if (authStore.userData.phoneNumber === null || authStore.userData.userId === 0) {
+    //     apiRequest.get("/sanctum/csrf-cookie").then(() => {
+    //         apiRequest
+    //             .get(`/api/v1/me`)
+    //             .then((response) => {
+    //                 authStore.updateUserData({
+    //                     userFullName: response.data.user.name,
+    //                     userEmail: response.data.user.email,
+    //                     userId: response.data.user.id,
+    //                     phoneNumber: response.data.user.phone_number.toString().replace(
+    //                         `${import.meta.env.VITE_CALLING_CODE}`,
+    //                         ""
+    //                     ),
+    //                     userRole: response.data.role,
+    //                 });
+    //
+    //                 if (response.data.role === 'doctor') {
+    //                     authStore.updateUserDoctorData({
+    //                         doctorId: response.data.doctor_data.doctor_id,
+    //                         smfName: response.data.doctor_data.smf_name,
+    //                     })
+    //                 } else {
+    //                     authStore.$reset();
+    //                     window.location.href = `/patient/home`;
+    //
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 if (error?.response?.status === 401) {
+    //                     authStore.$reset();
+    //                     window.location.href = `/auth/login`;
+    //                 }
+    //             });
+    //     });
+    // }
 });
 
 export default router;

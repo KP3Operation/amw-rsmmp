@@ -84,7 +84,6 @@ export default {
             this.updateLoadingState(true);
             const confirmationFormValid = await this.v$.$validate();
             if (!confirmationFormValid) {
-                console.log("validation error");
                 this.updateLoadingState(false);
                 return;
             }

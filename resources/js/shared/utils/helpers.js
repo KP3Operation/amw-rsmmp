@@ -122,21 +122,21 @@ export function updateMyProfileStore() {
     axios
         .get(`/api/v1/me`)
         .then((response) => {
-            authStore.$patch({
+            authStore.updateUserData({
                 userFullName: response.data.user.name,
                 userEmail: response.data.user.email,
                 userId: response.data.user.id,
-                phoneNumber: response.data.user.phone_number.replace(
-                    `${import.meta.env.VITE_CALLING_CODE}`,
-                    ""
-                ),
+                phoneNumber: response.data.user.phone_number
+                    .toString()
+                    .replace(`${import.meta.env.VITE_CALLING_CODE}`, ""),
                 userRole: response.data.role,
-
-                // patient data
+            });
+            authStore.updateUserPatientData({
                 ssn: response.data.patient_data.ssn,
                 patientId: response.data.patient_data.patient_id,
                 birthDate: response.data.patient_data.birth_date,
                 gender: response.data.patient_data.gender,
+                medicalNo: response.data.patient_data.medical_no,
             });
         })
         .catch((error) => {

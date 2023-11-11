@@ -9,10 +9,8 @@ use App\Http\Requests\Auth\RegisterDoctorRequest;
 use App\Http\Requests\Auth\RegisterPatientRequest;
 use App\Http\Requests\Auth\UpdateDoctorRequest;
 use App\Http\Requests\Auth\UpdatePatientRequest;
-use App\Http\Resources\Auth\RegisterDoctorResource;
 use App\Http\Resources\Auth\RegisterPatientResource;
 use App\Http\Resources\Auth\UpdateDoctorResource;
-use App\Http\Resources\Auth\UpdatePatientResource;
 use App\Models\User;
 use App\Models\UserDoctor;
 use App\Models\UserPatient;
@@ -20,7 +18,6 @@ use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
 use App\Services\SimrsService\DoctorService\IDoctorService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use DB;
 
 class RegisterController extends Controller
@@ -54,7 +51,7 @@ class RegisterController extends Controller
             throw new RestApiException("NIK sudah terdaftar", 402);
         }
 
-        DB::transaction(function () use ($request) {
+        \DB::transaction(function () use ($request) {
             $user = User::create([
                 "phone_number" => format_phone_number($request->validated("phoneNumber")),
                 "name" => $request->validated("name"),
@@ -77,7 +74,7 @@ class RegisterController extends Controller
         $otpCode = $this->otpService->sendOtp($user);
 
         $resource = new \stdClass();
-        $resource->ssn = $user->userPatientData->ssn;
+        $resource->ssn = $user->userPatientData->ssn === "" ? $request->validated('ssn') : $user->userPatientData->ssn;
         $resource->otpCreatedAt = $otpCode->created_at;
         $resource->otpUpdatedAt = $otpCode->updated_at;
         $resource->otpTimeout = 30000; // miliseconds - 10 seconds

@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1\Patient;
 
-use App\Dto\SimrsDto\Patient\AppointmentDataDto;
 use App\Exceptions\RestApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
-use App\Http\Requests\Patient\GetAppointmentsRequest;
 use App\Http\Requests\Patient\StoreAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Family;
@@ -25,6 +23,7 @@ class AppointmentController extends Controller
     {
         $this->patientService = $patientService;
     }
+
     public function index(Request $request)
     {
         $user = User::findOrFail(auth()->user()->id);
@@ -33,18 +32,22 @@ class AppointmentController extends Controller
         $startDate = '';
         $endDate = '';
         $response = [];
+        $selectedUserId = $user->id;
+        $newAppointments = [];
 
         if ($request->has('medical_no') && $request->medical_no != '') {
             $medicalNo = $request->medical_no;
         }
 
         if (!$medicalNo || $medicalNo === '') {
-            throw new \Exception("Pasien tidak memiliki No. RM");
+            //throw new RestApiException('Pasien tidak memiliki no rekam medis', 404);
         }
 
-        $appointments = $this->patientService->getAppointments($medicalNo);
-
-        $newAppointments = $appointments->data->toArray();
+        // TODO: Need to recheck how the variable behave
+        if ($medicalNo) {
+            $appointments = $this->patientService->getAppointments($medicalNo);
+            $newAppointments = $appointments->data->toArray();
+        }
 
         if ($request->has('service_unit_id') && $request->service_unit_id != '') {
             $serviceUnitId = $request->service_unit_id;
@@ -89,6 +92,16 @@ class AppointmentController extends Controller
             $response = $newAppointments;
         }
 
+        // TODO: Need to re-validate the logic
+        if (count($response) == 0 && (!$medicalNo || $medicalNo == '')) {
+            $localAppointments = Appointment::where('related_user_id', '=', $selectedUserId)->get();
+
+            foreach ($localAppointments as $localAppointment) {
+                $simrsAppointment = $this->patientService->getAppointment($localAppointment->appointment_no);
+                $response[] =  $simrsAppointment->toArray();
+            }
+        }
+
         $opens = [];
         $cancels = [];
         $dones = [];
@@ -122,7 +135,7 @@ class AppointmentController extends Controller
 
         DB::transaction(function () use ($request, $user) {
             // register it self
-            if ($request->patient_id == $user->userPatientData->patient_id) {
+            if (!$request->is_family_member) {
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id,
                     $request->paramedic_id,
@@ -157,7 +170,7 @@ class AppointmentController extends Controller
                     'related_user_id' => $user->id,
                     'service_unit_id' => $appoinment->serviceUnitID,
                     'appointment_no' => $appoinment->appointmentNo,
-                    'is_family_member' => true,
+                    'is_family_member' => false,
                     'appointment_date' =>  get_date_from_datetime($request->appointment_date),
                 ]);
 

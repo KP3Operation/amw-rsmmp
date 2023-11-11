@@ -41,6 +41,7 @@ class FamilyController extends Controller
 
     public function store(StoreFamilyRequest $request): StoreFamilyResource
     {
+        // TODO: SOmehow 08 leading still not filtered
         $phoneNumber = format_phone_number($request->validated('phone_number'));
         $family = Family::create($request->only(
             "ssn",
@@ -52,7 +53,7 @@ class FamilyController extends Controller
             "user_id" => auth()->user()->id,
             "patient_id" => null,
             "medical_no" => null,
-                'phone_number' => $phoneNumber
+            'phone_number' => $phoneNumber
         ]);
 
         return new StoreFamilyResource($family);
@@ -87,11 +88,11 @@ class FamilyController extends Controller
             "birth_date",
             "email"
         ) + [
-                "user_id" => auth()->user()->id,
-                "guarantor_id" => $familyData->guarantorId,
-                "guarantor_name" => null, // for now we only save null
-                "patient_id" => $familyData->patientId,
-                "medical_no" => $familyData->medicalNo
+            "user_id" => auth()->user()->id,
+            "guarantor_id" => $familyData->guarantorId,
+            "guarantor_name" => null, // for now we only save null
+            "patient_id" => $familyData->patientId,
+            "medical_no" => $familyData->medicalNo
         ]);
 
         return new UpdateFamilyResource($family);

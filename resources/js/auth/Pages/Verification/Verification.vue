@@ -30,7 +30,7 @@ export default {
     data() {
         return {
             otpForm: {
-                code: "", // TODO: Need to remove
+                code: ""
             },
             isCountDownRunning: true,
             lastCodeUpdateDate: new Date(),

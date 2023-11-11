@@ -11,7 +11,9 @@ import {useLayoutStore} from "@shared/+store/layout.store.js";
 export default {
     components: { SubmitButton },
     computed: {
-        ...mapStores(useAuthStore),
+        ...mapState(useAuthStore, {
+            userData: 'userData',
+        }),
         ...mapState(useLayoutStore, ['isLoading'])
     },
     setup() {
@@ -99,8 +101,9 @@ export default {
 
                     if (this.registerForm.role === '1') {
                        // Patient
+                        console.log(response.data.ssn);
                         this.updateUserPatientData({
-                            ssn: response.data.ssn
+                            ssn: this.registerForm.ssn
                         });
                     } else {
                         // Doctor
@@ -147,6 +150,8 @@ export default {
     },
     mounted() {
         this.modalState.alreadyRegisteredModal = new bootstrap.Modal("#modal-register", {});
+        this.registerForm.phoneNumber = this.userData.phoneNumber;
+
     }
 }
 </script>
@@ -158,7 +163,8 @@ export default {
             <label for="phone_number">{{ $t('register.phone_number') }}</label>
             <div class="input-group flex-nowrap mt-2">
                 <span class="input-group-text">{{ callingCode }}</span>
-                <input type="number" name="phone_number" id="phone_number" @input="v$.$touch()" placeholder="8123940183020"
+                <input type="number" name="phone_number" id="phone_number"
+                                @input="v$.registerForm.phoneNumber.$touch()" placeholder="8123940183020"
                        class="form-control" v-model="registerForm.phoneNumber">
             </div>
             <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.phoneNumber.$errors"
@@ -180,7 +186,7 @@ export default {
         <div class="mt-3" :class="{ error: v$.registerForm.ssn.$errors.length }" v-if="registerForm.role === '1'">
             <label for="ssn">{{ $t('register.ssn') }}</label>
             <input type="number" name="ssn" id="ssn" placeholder="3829380183984920" class="form-control mt-2"
-                   @input="v$.$touch()" v-model="registerForm.ssn">
+                   @input="v$.registerForm.ssn.$touch()" v-model="registerForm.ssn">
             <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.ssn.$errors"
                  :key="error.$uid">
                 {{ error.$message }}
@@ -189,7 +195,7 @@ export default {
         <div class="mt-3" :class="{ error: v$.registerForm.name.$errors.length }" v-if="registerForm.role === '1'">
             <label for="name">{{ $t('register.full_name') }}</label>
             <input type="text" name="name" id="name" placeholder="Muhammad Denis Adiswara" class="form-control mt-2"
-                   @input="v$.$touch()" v-model="registerForm.name">
+                   @input="v$.registerForm.name.$touch()" v-model="registerForm.name">
             <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.name.$errors"
                  :key="error.$uid">
                 {{ error.$message }}
@@ -198,7 +204,7 @@ export default {
         <div class="mt-3" :class="{ error: v$.registerForm.doctorId.$errors.length }" v-if="registerForm.role === '2'">
             <label for="doctor_id">{{ $t('register.doctor_id') }}</label>
             <input type="text" name="doctor_id" id="doctor_id" placeholder="3829380183984920" class="form-control mt-2"
-                   @input="v$.$touch()" v-model="registerForm.doctorId">
+                   @input="v$.registerForm.doctorId.$touch()" v-model="registerForm.doctorId">
             <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.registerForm.doctorId.$errors"
                  :key="error.$uid">
                 {{ error.$message }}

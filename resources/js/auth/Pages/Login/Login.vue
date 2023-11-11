@@ -114,7 +114,7 @@ export default {
                            name="phone_number"
                            id="no-hp" placeholder="8123940183020"
                            class="form-control"
-                           @input="v$.$touch()"
+                           @input="v$.loginForm.phoneNumber.$touch()"
                            v-model="loginForm.phoneNumber">
                 </div>
                 <div class="error mt-2 fs-6 fw-bold text-red-200"

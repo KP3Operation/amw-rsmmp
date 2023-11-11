@@ -58,7 +58,7 @@ return [
     |
     */
 
-    'validate_whatsapp_number' => env('WATZAP_VALIDATE_WHATSAPP_NUMBER', false),
+    'validate_whatsapp_number' => env('WATZAP_VALIDATE_WHATSAPP_NUMBER', true),
 
     /*
     |--------------------------------------------------------------------------

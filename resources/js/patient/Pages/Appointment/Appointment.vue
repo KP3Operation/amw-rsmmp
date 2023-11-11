@@ -43,7 +43,9 @@ const fetchAppointments = () => {
         appointmentStore.updateCloseAppointments(data.appointments.dones, data.appointments.cancels);
     }).catch((error) => {
         if (error.response) {
-            layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+            if (error.response.status !== 404) {
+                layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+            }
         } else {
             layoutStore.toggleErrorAlert(`${error}`);
         }

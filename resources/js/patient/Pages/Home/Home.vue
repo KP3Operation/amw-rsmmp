@@ -152,7 +152,7 @@ onMounted(() => {
 
                 <div class="carousel-indicators position-static mt-2 mb-0">
                     <button
-                        v-for="(appointment, index) in openAppointments"
+                        v-for="(_, index) in openAppointments"
                         type="button"
                         data-bs-target="#jadwal-konsultasi"
                         :data-bs-slide-to="index + 1"
@@ -167,7 +167,7 @@ onMounted(() => {
                 v-if="
                     openAppointments.length < 1 &&
                     !isLoading &&
-                    selectedMedicalNo !== ''
+                    selectedMedicalNo !== null
                 "
             >
                 <p class="fw-bold">Anda Tidak Memiliki Jadwal Konsultasi</p>
@@ -184,9 +184,9 @@ onMounted(() => {
             <div
                 class="mt-2 px-4 py-3 bg-blue-100 rounded-3 text-center"
                 v-if="
+                    openAppointments.length < 1 &&
                     !isLoading &&
-                    selectedMedicalNo === '' &&
-                    openAppointments.length < 1
+                    selectedMedicalNo === null
                 "
             >
                 <p class="fw-bold">Mulai Sinkronisasi Data Anda</p>

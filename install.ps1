@@ -25,18 +25,24 @@ function Check-PHP-Extensions {
 }
 
 function Check-Node-Npm {
-    if (-not (Test-Path "$(Get-Command node -ErrorAction SilentlyContinue)" -and (Test-Path "$(Get-Command npm -ErrorAction SilentlyContinue)"))) {
+    $nodePath = Get-Command node -ErrorAction SilentlyContinue
+    $npmPath = Get-Command npm -ErrorAction SilentlyContinue
+
+    if (-not ($nodePath -and $npmPath)) {
         Write-Output "Node.js and npm are required. Please install Node.js and npm and try again."
         exit 1
     }
 }
 
 function Check-Composer {
-    if (-not (Test-Path "$(Get-Command composer -ErrorAction SilentlyContinue)")) {
+    $composerPath = Get-Command composer -ErrorAction SilentlyContinue
+
+    if (-not $composerPath) {
         Write-Output "Composer is not installed. Please install Composer and try again."
         exit 1
     }
 }
+
 
 Write-Output @"
 ..................................................................................................................
@@ -115,7 +121,7 @@ if ($choice -eq 1) {
     Invoke-Expression "php artisan route:clear"
 
     # Ask the user if they want to run migrations
-    $runMigrations = Read-Host "Do you want to run migrations? (yes/no)"
+    $runMigrations = Read-Host "Do you want to run fresh migrations and seeding initial data? (yes/no)"
     if ($runMigrations -eq "yes") {
         Write-Output "Running php artisan migrate:fresh --seed..."
         Invoke-Expression "php artisan migrate:fresh --seed"

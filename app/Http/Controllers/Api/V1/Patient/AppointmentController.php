@@ -32,6 +32,7 @@ class AppointmentController extends Controller
         $startDate = '';
         $endDate = '';
         $response = [];
+        $tempResponse = [];
         $selectedUserId = $user->id;
         $newAppointments = [];
 
@@ -47,43 +48,50 @@ class AppointmentController extends Controller
         if ($medicalNo) {
             $appointments = $this->patientService->getAppointments($medicalNo);
             $newAppointments = $appointments->data->toArray();
+            $tempResponse = $newAppointments;
         }
+
+        $response = $tempResponse;
 
         if ($request->has('service_unit_id') && $request->service_unit_id != '') {
             $serviceUnitId = $request->service_unit_id;
+            $tempResponse = [];
 
-            foreach ($newAppointments as $appointment) {
+            foreach ($response as $appointment) {
                 if ($appointment['serviceUnitID'] == $serviceUnitId) {
-                    if (!in_array($appointment, $response)) {
-                        $response[] = $appointment;
-                    }
+                    $tempResponse[] = $appointment;
                 }
             }
         }
+
+        $response = $tempResponse;
 
         if ($request->has('start_date') && $request->start_date != '') {
             $startDate = date('Y-m-d', strtotime($request->start_date));
+            $tempResponse = [];
 
-            foreach ($newAppointments as $appointment) {
-                if (convert_date_to_req_param($appointment['appointmentDate_yMdHms']) >= $startDate) {
-                    if (!in_array($appointment, $response)) {
-                        $response[] = $appointment;
-                    }
+            foreach ($response as $appointment) {
+                if (strtotime(convert_date_to_req_param($appointment['appointmentDate_yMdHms'])) >= strtotime($startDate)) {
+                    $tempResponse[] = $appointment;
                 }
             }
         }
+
+        $response = $tempResponse;
 
         if ($request->has('end_date') && $request->end_date != '') {
             $endDate = date('Y-m-d', strtotime($request->end_date));
+            $tempResponse = [];
 
-            foreach ($newAppointments as $appointment) {
-                if (convert_date_to_req_param($appointment['appointmentDate_yMdHms']) <= $endDate) {
-                    if (!in_array($appointment, $response)) {
-                        $response[] = $appointment;
-                    }
+            foreach ($response as $appointment) {
+
+                if (strtotime(convert_date_to_req_param($appointment['appointmentDate_yMdHms'])) <= strtotime($endDate)) {
+                    $tempResponse[] = $appointment;
                 }
             }
         }
+
+        $response = $tempResponse;
 
         if ($serviceUnitId == '' &&
             $startDate == '' &&
@@ -92,7 +100,7 @@ class AppointmentController extends Controller
             $response = $newAppointments;
         }
 
-        // TODO: Need to re-validate the logic
+        // Get local appointment
         if (count($response) == 0 && (!$medicalNo || $medicalNo == '')) {
             $localAppointments = Appointment::where('related_user_id', '=', $selectedUserId)->get();
 

@@ -79,7 +79,7 @@ onMounted(() => {
 
                     <div class="w-50 text-end">
                         <p class="fs-6 text-gray-700">Tanggal Lahir</p>
-                        <p class="mt-2">{{ selectedPatient.dateOfBirth }}</p>
+                        <p class="mt-2">{{ convertDateTimeToDate(selectedPatient.dateOfBirth) }}</p>
                     </div>
                 </div>
             </div>

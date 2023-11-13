@@ -149,7 +149,7 @@ if [ "$choice" -eq 1 ]; then
     php artisan route:clear
 
     # Ask the user if they want to run migrations
-    read -p "Do you want to run migrations? (yes/no): " run_migrations
+    read -p "Do you want to run fresh migrations and seeding initial data? (yes/no): " run_migrations
     if [ "$run_migrations" = "yes" ]; then
         echo "Running php artisan migrate:fresh --seed..."
         php artisan migrate:fresh --seed

@@ -115,7 +115,7 @@ class DoctorService implements IDoctorService
             'Content-Type' => ""
         ])->withOptions([
             "verify" => false
-        ])->get(config("simrs.base_url") . "/MobileWS.asmx/RegistrationGetListIpByParamedicID", [
+        ])->get(config("simrs.base_url") . "/MobileWS2.asmx/RegistrationGetListIpByParamedicID", [
             "AccessKey" => $accessKey,
             "GuarantorID" => "",
             "ParamedicID" => $paramedicId,
@@ -124,8 +124,6 @@ class DoctorService implements IDoctorService
             "EwsStatus" => "",
             "RecordCount" => $count,
         ]);
-
-        // dd($response->json()); -> There is no dateOfBirth
 
         if (!$response->successful()) {
             throw new HttpClientException("Failed connecting to SIMRS", 500);

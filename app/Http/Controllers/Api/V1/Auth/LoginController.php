@@ -12,7 +12,6 @@ use App\Models\User;
 use App\Models\UserDoctor;
 use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
 use App\Services\SimrsService\PatientService\IPatientService;
-use Auth;
 
 class LoginController extends Controller
 {
@@ -69,7 +68,7 @@ class LoginController extends Controller
             'status' => 'verified'
         ]);
 
-        Auth::loginUsingId($user->id);
+        \Auth::loginUsingId($user->id);
         $authenticateRequest->session()->regenerate();
 
         // delete old tokens first
@@ -91,13 +90,12 @@ class LoginController extends Controller
 
             $patientData = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn)->data->first();
 
-            $resource['userPatient']['patientId'] = $patientData->patientId;
-            $resource['userPatient']['medicalNo'] = $patientData->medicalNo;
-            $resource['userPatient']['gender'] = $patientData->gender;
-            $resource['userPatient']['birthDate'] = $patientData->birthDate;
-            $resource['userPatient']['ssn'] = $patientData->ssn;
+            $resource['userPatient']['patientId'] = $patientData->patientId ?? $user->userPatientData->patient_id ?? "";
+            $resource['userPatient']['medicalNo'] = $patientData->medicalNo ?? $user->userPatientData->medical_no ?? "";
+            $resource['userPatient']['gender'] = $patientData->gender ?? $user->userPatientData->gender ?? "";
+            $resource['userPatient']['birthDate'] = $patientData->birthDate ?? $user->userPatientData->birth_date ?? "";
+            $resource['userPatient']['ssn'] = $patientData->ssn ?? $user->userPatientData->ssn ?? "";
             $resource['userPatient']['userEmail'] = $user->email;
-
         } else {
             $userDoctorData = UserDoctor::where('user_id', '=', $user->id)->first();
             $resource['userDoctor']['doctorId'] = $userDoctorData->doctor_id;

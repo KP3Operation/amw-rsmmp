@@ -18,7 +18,7 @@ class RoleFactory extends Factory
     {
         return [
             'name' => fake()->randomElements(['doctor', 'patient'], 1, false),
-            'description' => fake()->text,
+            'description' => '-',
         ];
     }
 }

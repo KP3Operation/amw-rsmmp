@@ -36,6 +36,7 @@ export default {
             appointment_date: selectedDate,
             service_unit_id: selectedServiceUnitId.value,
             paramedic_id: selectedParamedicId.value,
+            is_family_member: false
         });
         const rules = {
             patient_name: {
@@ -89,19 +90,20 @@ export default {
         const storeAppointment = async () => {
             layoutStore.updateLoadingState(true);
 
-            const formValid = await v$.value.$validate();
-
-            if (!formValid) {
-                layoutStore.updateLoadingState(false);
-                return;
-            }
-
+            // TODO: Somehow patient_name not populated
+            // Double click in patient name
             if (
                 (form.patient_name === null ||
                     form.patient_name === form.patient_id) &&
                 tempPatientName.value !== ""
             ) {
                 form.patient_name = tempPatientName.value;
+            }
+
+            const formValid = await v$.value.$validate();
+            if (!formValid) {
+                layoutStore.updateLoadingState(false);
+                return;
             }
 
             apiRequest
@@ -193,6 +195,7 @@ export default {
                         form.patient_name = newValue;
                         form.birth_date = foundFamily.birth_date;
                         form.gender = foundFamily.gender;
+                        form.is_family_member = true;
                         tempPatientName.value = foundFamily.name;
                     }
                 }
@@ -229,8 +232,10 @@ export default {
 
         onMounted(() => {
             form.patient_name = userPatientData.value.patientId;
+            if (selectedDate) {
+                fetchDoctorSchedules();
+            }
             if (selectedParamedicId.value !== "") {
-                isReadonly.value = true;
                 isFromDoctorSchedulePage.value = true;
             }
             fetchFamily();
@@ -372,6 +377,7 @@ export default {
                             type="radio"
                             name="gender"
                             value="Perempuan"
+                            id="Perempuan"
                         />
                         <label class="form-check-label" for="Perempuan">
                             Perempuan

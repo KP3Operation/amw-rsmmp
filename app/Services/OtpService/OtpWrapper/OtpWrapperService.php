@@ -2,7 +2,6 @@
 
 namespace App\Services\OtpService\OtpWrapper;
 
-use App\Exceptions\InvalidWhatsAppPhoneNumber;
 use App\Exceptions\RestApiException;
 use App\Jobs\SendWatzapOtp;
 use App\Models\OtpCode;
@@ -44,6 +43,12 @@ class OtpWrapperService implements IotpWrapperService
             SendWatzapOtp::dispatch($user->phone_number, $code);
         } else {
             $this->otpService->sendOtp($user, $code);
+        }
+
+        $oldOtpCodes = OtpCode::where('user_id', '=', $user->id)->get();
+
+        foreach ($oldOtpCodes as $oldOtpCode) {
+            $oldOtpCode->delete();
         }
 
         $otpCode = OtpCode::where('code', '=', $code)->first();

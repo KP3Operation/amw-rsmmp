@@ -3,8 +3,8 @@
 namespace App\Services\SimrsService\PatientService;
 
 
-use App\Dto\SimrsDto\Doctor\DoctorDataDto;
 use App\Dto\SimrsDto\Patient\AppointmentDataDto;
+use App\Dto\SimrsDto\Patient\AppointmentDto;
 use App\Dto\SimrsDto\Patient\CreateAppointmentDataDto;
 use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
@@ -17,7 +17,6 @@ use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Dto\SimrsDto\Patient\ServiceUnitDataDto;
 use App\Models\Simrs\Patient\CreateAppointment;
-use App\Models\User;
 
 interface IPatientService
 {
@@ -35,4 +34,5 @@ interface IPatientService
     public function createAppointment(CreateAppointment $createAppointment): CreateAppointmentDataDto;
     public function deleteAppointment (string $appointmentNo): bool;
     public function getAppointments (string $medicalNo): AppointmentDataDto;
+    public function getAppointment (string $appointmentNo): AppointmentDto;
 }

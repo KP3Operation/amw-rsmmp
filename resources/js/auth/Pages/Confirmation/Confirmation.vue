@@ -32,7 +32,7 @@ export default {
         return {
             confirmationForm: {
                 phoneNumber: null,
-                ssn: null,
+                ssn: null, // TODO: SSN from registration not persistence in state
                 name: null,
                 gender: null,
                 birthDate: null,
@@ -84,8 +84,8 @@ export default {
             this.updateLoadingState(true);
             const confirmationFormValid = await this.v$.$validate();
             if (!confirmationFormValid) {
-                this.updateLoadingState(false);
-                return;
+                 this.updateLoadingState(false);
+                 return;
             }
 
             apiRequest
@@ -124,18 +124,29 @@ export default {
         this.callingCode = import.meta.env.VITE_APP_CALLING_CODE;
         this.userRole = this.userData.userRole;
 
+        if (this.userData.phoneNumber === "") {
+            // window.location.href = import.meta.env.VITE_APP_BASE_URL + "/auth/login";
+        }
+
         this.updateConfirmationForm({
             name: this.userData.userFullName,
             phoneNumber: this.userData.phoneNumber,
         });
 
         if (this.userData.userRole === "patient") {
+            let birthDate = "";
+            if (!this.userPatientData.birthDate) {
+                birthDate = new Date();
+            } else {
+                birthDate = new Date(this.userPatientData.birthDate)
+                    .toISOString()
+                    .split("T")[0];
+            }
+
             this.updateConfirmationForm({
                 ssn: this.userPatientData.ssn,
                 gender: this.userPatientData.gender,
-                birthDate: new Date(this.userPatientData.birthDate ?? "")
-                    .toISOString()
-                    .split("T")[0],
+                birthDate: birthDate,
                 email: this.userData.userEmail,
             });
         } else {

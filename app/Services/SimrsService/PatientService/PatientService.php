@@ -4,6 +4,7 @@ namespace App\Services\SimrsService\PatientService;
 
 
 use App\Dto\SimrsDto\Patient\AppointmentDataDto;
+use App\Dto\SimrsDto\Patient\AppointmentDto;
 use App\Dto\SimrsDto\Patient\CreateAppointmentDataDto;
 use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
@@ -16,8 +17,6 @@ use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Dto\SimrsDto\Patient\ServiceUnitDataDto;
 use App\Models\Simrs\Patient\CreateAppointment;
-use App\Models\User;
-use App\Models\UserPatient;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
 
@@ -407,5 +406,31 @@ class PatientService implements IPatientService
         }
 
         return AppointmentDataDto::from($data);
+    }
+
+    public function getAppointment(string $appointmentNo): AppointmentDto
+    {
+         $accessKey = config("simrs.access_key");
+
+        $response = Http::withHeaders([
+            'Content-Type' => ""
+        ])->withOptions([
+            "verify" => false
+        ])->get(config("simrs.base_url") . "/AppointmentWS.asmx/AppointmentGetOne", [
+            "AccessKey" => $accessKey,
+            "AppointmentNo" => $appointmentNo,
+        ]);
+
+        if (!$response->successful()) {
+            throw new HttpClientException("Can't communicate with SIMRS.", 500);
+        }
+
+        $data = $response->json();
+
+        if ($data['status'] == 'ERR') {
+            throw new \Exception($data['data']);
+        }
+
+        return AppointmentDto::from($data['data']);
     }
 }

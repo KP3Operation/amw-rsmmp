@@ -79,7 +79,7 @@ const cancelAppointment = () => {
             appointment_no: selectedAppointmentNo.value
         }
     }).then((response) => {
-        console.log(response);
+        // console.log(response);
     }).catch((error) => {
         if (error.response) {
             layoutStore.toggleErrorAlert(`${error.response.data.message}`);

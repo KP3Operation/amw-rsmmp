@@ -7,8 +7,6 @@ import Header from "@shared/Components/Header/Header.vue";
 import apiRequest from "@shared/utils/axios.js";
 import { mapActions, mapState } from "pinia";
 
-// Appoinment state -> selectedDate
-
 export default {
     name: "Notifications",
     components: { Header },

@@ -214,7 +214,7 @@ export default {
         watch(
             () => form.appointment_date,
             (newValue, oldValue) => {
-                if (newValue && !isFromDoctorSchedulePage.value) {
+                if (newValue) {
                     serviceUnits.value = [];
                     paramedics.value = [];
                     form.service_unit_id = "";

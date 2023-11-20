@@ -30,7 +30,7 @@ export default {
     data() {
         return {
             otpForm: {
-                code: ""
+                code: "",
             },
             isCountDownRunning: true,
             lastCodeUpdateDate: new Date(),
@@ -112,7 +112,6 @@ export default {
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
                     if (error.response.status === 404) {
                         this.toggleErrorAlert(error.response.data.message);
                     } else {

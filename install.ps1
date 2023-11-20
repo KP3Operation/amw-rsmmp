@@ -1,9 +1,9 @@
 function Check-PHP-Version {
     $phpVersion = php -v | Select-String -Pattern "^PHP [0-9]+\.[0-9]+" | ForEach-Object { $_.Matches[0].Value -replace "PHP\s+" }
-    $requiredPhpVersion = "8.2"
+    $requiredPhpVersion = "8.1"
 
     if ([version]$phpVersion -lt [version]$requiredPhpVersion) {
-        Write-Output "PHP 8.2 is required. Please install PHP 8.2 and try again."
+        Write-Output "PHP 8.1 or above is required. Please install PHP 8.1 or above and try again."
         exit 1
     }
 }

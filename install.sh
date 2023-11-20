@@ -2,10 +2,10 @@
 
 check_php_version() {
     php_version=$(php -v | grep -oE "^PHP [0-9]+\.[0-9]+" | cut -d' ' -f2)
-    required_php_version="8.2"
+    required_php_version="8.1"
 
     if [ "$(echo -e "$php_version\n$required_php_version" | sort -V | head -n1)" != "$required_php_version" ]; then
-        echo "PHP 8.2 is required. Please install PHP 8.2 and try again."
+        echo "PHP 8.1 or above is required. Please install PHP 8.1 or above and try again."
         exit 1
     fi
 }

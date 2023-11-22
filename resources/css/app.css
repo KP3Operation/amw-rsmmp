@@ -14,7 +14,7 @@
     display: block; 
     content: var(--logo-src);
     width: auto;
-    height: 65px;
+    height: 95px;
 }
 .bg-app-primary {
     --bs-bg-opacity: 1;

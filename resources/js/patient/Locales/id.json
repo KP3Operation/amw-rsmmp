@@ -1,0 +1,146 @@
+{
+    "header": {
+        "greeting": "Hai"
+    },
+    "menus": {
+        "home": "Home",
+        "appointment": "Appointment",
+        "history": "History",
+        "profile": "Profile"
+    },
+    "profile": {
+        "title": "Profile",
+        "subtitle": "Detail Profil",
+        "patient_id": "ID Pasien",
+        "ssn": "NIK",
+        "phone_number": "No. Handphone",
+        "birth_date": "Tanggal Lahir",
+        "gender": "Jenis Kelamin",
+        "email": "Email",
+        "sync_data": "Sikronisasi Data",
+        "logout": "Logout",
+        "logout_failed": "Gagal logout",
+        "year": "Tahun",
+        "sync": {
+            "title": "Kami Sedang Mensinkronisasi Data Anda",
+            "subtitle": "Mohon Menunggu. Data Anda Sedang Kami Sinkronisasi Dengan Sistem Kami",
+            "success": "Berhasil Sinkronisasi Profil",
+            "failed": "Gagal Sinkronisasi Profil"
+        },
+        "sync_modal": {
+            "title": "Sinkronisasi Data",
+            "message": "Sinkronisasi Sekarang ?",
+            "sync": "Sinkronisasi",
+            "cancel": "Batalkan"
+        },
+        "edit": {
+            "title": "Edit Profile",
+            "phone_number": "No. Handphone",
+            "full_name": "Nama Lengkap",
+            "ssn": "Nomor Induk Kependudukan (NIK) ",
+            "gender": "Jenis Kelamin",
+            "birth_date": "Tanggal Lahir",
+            "email": "Email",
+            "update": "Ubah",
+            "cancel": "Batal",
+            "male": "Laki-Laki",
+            "female": "Perempuan",
+            "success": "Berhasil Update Profil",
+            "failed": "Gagal Update Profil"
+        },
+        "logout_modal": {
+            "title": "Konfirmasi Logout",
+            "description": "Anda akan logout dari Aviat Mobile Web",
+            "yes": "Ya",
+            "cancel": "Batal"
+        }
+    },
+    "appointment": {
+        "title": "Appointment"
+    },
+    "history": {
+        "title": "Riwayat Medis",
+        "name": "Nama",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "year": "Tahun",
+        "medical_no": "No. RM",
+        "vital_sign": "Tanda Vital",
+        "medical_prescription": "Resep Obat",
+        "lab_result": "Hasil Lab",
+        "meeting": "Pertemuan",
+        "filter": "Filter",
+        "all": "Semua",
+        "pulse": "Denyut Nadi",
+        "body_temperature": "Suhu Tubuh",
+        "blood_pressure": "Tekanan Darah",
+        "vital_sign_history": {
+            "date_created": "Tanggal Pencatatan",
+            "time_created": "Jam Pencatatan",
+            "registration_no": "No. Registrasi",
+            "unit_vital_sign": "Unit Tanda Vital",
+            "unit": "Unit"
+        },
+        "modal_filter": {
+            "title": "Filter",
+            "member": "Member",
+            "reset": "Reset",
+            "apply": "Terapkan"
+        }
+    },
+    "home": {
+        "welcome": "Selamat Datang",
+        "greeting": "Kesehatan anda adalah prioritas bagi kami. Kami siap menolong untuk kesehatan anda",
+        "what_your_need": "Apa Yang Anda Butuhkan?",
+        "history": "Riwayat Medis",
+        "doctor_schedule": "Jadwal Dokter",
+        "family_member": "Family Member",
+        "appointment": "Appointment",
+        "next_consult_schedule": "Jadwal Konsultasi Akan Datang"
+    },
+    "family": {
+        "title": "Family Member",
+        "phone_number": "No. Handphone",
+        "patient_name": "Nama Pasien",
+        "ssn": "Nomor Induk Kependudukan (NIK) ",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "email": "Email",
+        "save": "Tambah Data",
+        "update": "Simpan",
+        "cancel": "Batal",
+        "male": "Laki-Laki",
+        "female": "Perempuan",
+        "required_field": "Wajib Diisi",
+        "main_user": "User Utama",
+        "create": {
+            "title": "Tambah Family Member",
+            "confirmation_modal": {
+                "title": "Konfirmasi Data",
+                "message": "Sudah Pernah Periksa di Rumah Sakit Ini?",
+                "yes": "Sudah",
+                "no": "Belum"
+            }
+        },
+        "edit": {
+            "title": "Edit Family Member",
+            "save": "Simpan"
+        },
+        "family_card": {
+            "name": "Nama Lengkap",
+            "phone_number": "No. Handphone",
+            "ssn": "No Induk Kependudukan (NIK)",
+            "birth_date": "Tanggal Lahir",
+            "edit": "Edit",
+            "delete": "Hapus"
+        },
+        "confirmation": {
+            "title": "Konfirmasi Data",
+            "verification": "Verifikasi"
+        },
+        "delete_confirmation_modal": {
+            "title": "Hapus Data Member",
+            "message": "Yakin ingin menghapus data member {name}?"
+        }
+    }
+}

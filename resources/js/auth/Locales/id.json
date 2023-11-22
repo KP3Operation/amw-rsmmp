@@ -1,0 +1,65 @@
+{
+    "welcome_message": "Selamat Datang Di Aviat Mobile Web",
+    "login": {
+        "phone_number": "No. Handphone",
+        "does_not_have_account": "Belum Punya Akun?",
+        "login_to_account": "Masuk Akun",
+        "login": "Masuk",
+        "register": "Daftar",
+        "phone_number_not_registered": "No Hp Belum Terdaftar",
+        "phone_number_not_registered_desc": "No Hp Belum Terdaftar, Lanjut daftar dengan nomor ini?",
+        "yes": "Ya",
+        "cancel": "Batal"
+    },
+    "verification": {
+        "title": "Verifikasi Kode OTP",
+        "subtitle": "Mohon untuk periksa whatsapp atau SMS anda untuk melihat kode OTP",
+        "otp_code": "Kode OTP",
+        "does_not_get_code": "Tidak Menerima Kode?",
+        "resend_code": "Kirim Ulang",
+        "cancel": "Batal",
+        "verify": "Verifikasi OTP",
+        "enter_otp_code": "Masukkan Kode OTP"
+    },
+    "register": {
+        "title": "Registrasi User",
+        "phone_number": "No. Handphone",
+        "register_as": "Daftar Sebagai",
+        "doctor": "Dokter",
+        "patient": "Pasien",
+        "ssn": "Nomor Induk Kependudukan (NIK)",
+        "full_name": "Nama Lengkap",
+        "register": "Daftar",
+        "already_have_an_account": "Sudah punya akun?",
+        "login": "Masuk",
+        "phone_number_already_registered": "No. Handphone sudah terdaftar",
+        "phone_number_already_registered_desc": "No. Handphone sudah terdaftar, lanjut masuk dengan nomor ini?",
+        "cancel": "Batal",
+        "doctor_id": "ID Dokter",
+        "phone_number_not_registered": "No Hp Belum Terdaftar",
+        "phone_number_not_registered_desc": "No Hp Belum Terdaftar, Lanjut daftar dengan nomor ini?",
+        "yes": "Ya"
+    },
+    "confirmation": {
+        "title": {
+            "patient": "Lengkapi Profil Anda",
+            "doctor": "Konfirmasi Data Dokter"
+        },
+        "subtitle": "*Wajib Diisi",
+        "phone_number": "No. Handphone",
+        "full_name": {
+            "patient": "Nama Lengkap",
+            "doctor": "Nama Dokter"
+        },
+        "ssn": "Nomor Induk Kependudukan (NIK) ",
+        "gender": "Jenis Kelamin",
+        "birth_date": "Tanggal Lahir",
+        "email": "Email",
+        "save": "Simpan",
+        "cancel": "Batal",
+        "male": "Laki-Laki",
+        "female": "Perempuan",
+        "doctor_id": "ID Dokter",
+        "smf_name": "Nama SMF"
+    }
+}

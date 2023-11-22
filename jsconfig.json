@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "target": "es6",
+        "moduleResolution": "node",
+        "strict": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "types": [
+            "vite/client"
+        ],
+        "paths": {
+            "*": [
+                "node_modules"
+            ],
+            "@resources/*": [
+                "resources/*"
+            ],
+            "@auth/*": [
+                "resources/js/auth/*"
+            ],
+            "@shared/*": [
+                "resources/js/shared/*"
+            ],
+            "@patient/*": [
+                "resources/js/patient/*"
+            ],
+            "@doctor/*": [
+                "resources/js/doctor/*"
+            ]
+        }
+    },
+    "include": [
+        "resources/**/*.js",
+        "resources/**/*.vue"
+    ]
+}

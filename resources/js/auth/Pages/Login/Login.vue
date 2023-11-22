@@ -117,7 +117,7 @@ export default {
                            @input="v$.loginForm.phoneNumber.$touch()"
                            v-model="loginForm.phoneNumber">
                 </div>
-                <div class="error mt-2 fs-6 fw-bold text-aviat-warning"
+                <div class="error mt-2 fs-6 fw-bold text-app-warning"
                      v-for="error of v$.loginForm.phoneNumber.$errors"
                      :key="error.$uid">
                     {{ error.$message }}
@@ -125,7 +125,7 @@ export default {
             </div>
             <div class="mt-4 d-flex flex-column">
                 <!-- <SubmitButton :text="$t('login.login')" className="btn-blue-700-rounded" /> -->
-                <SubmitButton :text="$t('login.login')" className="btn-aviat-rounded" />
+                <SubmitButton :text="$t('login.login')" className="btn-app-rounded" />
 
             </div>
         </form>

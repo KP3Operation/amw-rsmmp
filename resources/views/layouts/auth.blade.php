@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     @vite('resources/css/style.css')
+    @vite('resources/css/app.css')
     <link rel="apple-touch-icon" sizes="57x57"
         href="{{ Vite::asset('resources/static/images/favicon/apple-icon-57x57.png') }}">
     <link rel="apple-touch-icon" sizes="60x60"
@@ -44,7 +45,7 @@
 
 <body class="bg-gray-200">
     <!-- <main class="bg-blue-500 text-white pt-6 px-4"> -->
-    <main class="bg-aviat-primary text-white pt-6 px-4">
+    <main class="bg-app-primary text-white pt-6 px-4">
         <img src="{{ Vite::asset('resources/static/images/aviat-logo.png') }}" alt="Aviat Logo" width="auto"
             height="65">
         <div id="app"></div>

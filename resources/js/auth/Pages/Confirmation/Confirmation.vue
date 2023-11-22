@@ -420,7 +420,7 @@ export default {
             <div class="mt-3 d-flex flex-column">
                 <SubmitButton
                     :text="$t('confirmation.save')"
-                    className="btn-aviat-rounded"
+                    className="btn-app-rounded"
                 />
                 <router-link
                     v-show="!isLoading"

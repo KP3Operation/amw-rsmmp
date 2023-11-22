@@ -4,7 +4,7 @@ import ConsulCard from "@patient/Components/ConsulCard/ConsulCard.vue";
 import DoctorWhite from "@resources/static/icons/doctor-white.svg";
 import UserFillWhite from "@resources/static/icons/users-fill-white.svg";
 import DoctorPatient from "@resources/static/images/doctor-2-pasien.png";
-import LogoWhite from "@resources/static/images/logo-white.svg";
+import LogoWhite from "@resources/static/images/aviat-logo.png";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import apiRequest from "@shared/utils/axios.js";

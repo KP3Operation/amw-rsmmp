@@ -217,7 +217,7 @@ export default {
                 />
             </div>
             <div
-                class="error mt-2 fs-6 fw-bold text-red-200"
+                class="error mt-2 fs-6 fw-bold text-aviat-warning"
                 v-for="error of v$.registerForm.phoneNumber.$errors"
                 :key="error.$uid"
             >
@@ -239,7 +239,7 @@ export default {
                 <option value="2">{{ $t("register.doctor") }}</option>
             </select>
             <div
-                class="error mt-2 fs-6 fw-bold text-red-200"
+                class="error mt-2 fs-6 fw-bold text-aviat-warning"
                 v-for="error of v$.registerForm.role.$errors"
                 :key="error.$uid"
             >
@@ -262,7 +262,7 @@ export default {
                 v-model="registerForm.ssn"
             />
             <div
-                class="error mt-2 fs-6 fw-bold text-red-200"
+                class="error mt-2 fs-6 fw-bold text-aviat-warning"
                 v-for="error of v$.registerForm.ssn.$errors"
                 :key="error.$uid"
             >
@@ -285,7 +285,7 @@ export default {
                 v-model="registerForm.name"
             />
             <div
-                class="error mt-2 fs-6 fw-bold text-red-200"
+                class="error mt-2 fs-6 fw-bold text-aviat-warning"
                 v-for="error of v$.registerForm.name.$errors"
                 :key="error.$uid"
             >
@@ -308,7 +308,7 @@ export default {
                 v-model="registerForm.doctorId"
             />
             <div
-                class="error mt-2 fs-6 fw-bold text-red-200"
+                class="error mt-2 fs-6 fw-bold text-aviat-warning"
                 v-for="error of v$.registerForm.doctorId.$errors"
                 :key="error.$uid"
             >
@@ -318,7 +318,7 @@ export default {
         <div class="mt-3 d-flex flex-column">
             <SubmitButton
                 :text="$t('register.register')"
-                className="btn-blue-700-rounded"
+                className="btn-aviat-rounded"
             />
             <router-link
                 to="/login"

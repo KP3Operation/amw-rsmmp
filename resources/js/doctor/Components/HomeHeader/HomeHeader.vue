@@ -40,7 +40,7 @@ export default {
 <template>
     <div class="header header-dokter">
         <router-link to="/home">
-            <img src="@resources/static/images/logo.svg" alt="Logo Aviat" width="33" height="33">
+            <img src="@resources/static/images/aviat-logo.png" alt="Logo Aviat" width="auto" height="65">
         </router-link>
         <router-link to="/notification" class="notifikasi">
             <i class="bi bi-bell-fill fs-3"></i>

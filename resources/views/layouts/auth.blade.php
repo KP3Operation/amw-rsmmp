@@ -43,9 +43,10 @@
 </head>
 
 <body class="bg-gray-200">
-    <main class="bg-blue-500 text-white pt-6 px-4">
-        <img src="{{ Vite::asset('resources/static/images/logo-white.svg') }}" alt="Aviat Logo" width="40"
-            height="40">
+    <!-- <main class="bg-blue-500 text-white pt-6 px-4"> -->
+    <main class="bg-aviat-primary text-white pt-6 px-4">
+        <img src="{{ Vite::asset('resources/static/images/aviat-logo.png') }}" alt="Aviat Logo" width="auto"
+            height="65">
         <div id="app"></div>
 
     </main>

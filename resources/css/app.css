@@ -1,11 +1,21 @@
+/* Perubahan brand logo dan warna app */
 :root{
     --app-main-bg: #cc0202;
     --app-second-bg: #a70000;
+    --app-additional-bg:#910202;
     --app-main-txt: #ffffff;
     --app-second-txt: #DDDDDD;
     --app-warning-txt:#fcef98;
+    --logo-src: url("../static/images/aviat-logo.png");
 }
 
+/* nama class tidak perlu di ubah, cukup ubah variable nya */
+#logo {
+    display: block; 
+    content: var(--logo-src);
+    width: auto;
+    height: 65px;
+}
 .bg-app-primary {
     --bs-bg-opacity: 1;
     background-color: var(--app-main-bg)!important;
@@ -27,15 +37,15 @@
     --bs-btn-bg: var(--aviat-second-bg)!important;
     --bs-btn-border-color: var(--aviat-second-bg)!important;
     --bs-btn-hover-color: var(--aviat-main-txt);
-    --bs-btn-hover-bg: #910202!important;
-    --bs-btn-hover-border-color: #910202!important;
+    --bs-btn-hover-bg: var(--app-additional-bg)!important;
+    --bs-btn-hover-border-color: var(--app-additional-bg)!important;
     --bs-btn-focus-shadow-rgb: 45, 94, 167;
     --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #910202!important;
-    --bs-btn-active-border-color: #910202!important;
+    --bs-btn-active-bg: var(--app-additional-bg)!important;
+    --bs-btn-active-border-color: var(--app-additional-bg)!important;
     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #910202!important;
-    --bs-btn-disabled-border-color: #910202!important;
+    --bs-btn-disabled-bg: var(--app-additional-bg)!important;
+    --bs-btn-disabled-border-color: var(--app-additional-bg)!important;
     border-radius: 100px!important;
   }

@@ -40,6 +40,7 @@ class OtpWrapperService implements IotpWrapperService
         // }
 
         if (config("app.otp_with_queue")) {
+            // If send otp with queue then we can intercept the errors
             SendWatzapOtp::dispatch($user->phone_number, $code);
         } else {
             $this->otpService->sendOtp($user, $code);

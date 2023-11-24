@@ -1,18 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import HomePage from "@doctor/Pages/Home/Home.vue";
-import NotificationPage from "@doctor/Pages/Notification/Notification.vue";
 import AppointmentPage from "@doctor/Pages/Appointment/Appointment.vue";
+import AppointmentDetailPage from "@doctor/Pages/Appointment/AppointmentDetail.vue";
 import FeePage from "@doctor/Pages/Fee/Fee.vue";
-import ProfilePage from "@doctor/Pages/Profile/Profile.vue";
-import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
+import HomePage from "@doctor/Pages/Home/Home.vue";
 import InpatientListPage from "@doctor/Pages/InpatientList/InpatientList.vue";
 import PatientDetailPage from "@doctor/Pages/InpatientList/PatientDetail.vue";
+import NotificationPage from "@doctor/Pages/Notification/Notification.vue";
+import ProfilePage from "@doctor/Pages/Profile/Profile.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
-import AppointmentDetailPage from "@doctor/Pages/Appointment/AppointmentDetail.vue";
-import apiRequest from "@shared/utils/axios.js";
-
+import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
 
 const routes = [
     {
@@ -34,7 +32,8 @@ const routes = [
         path: "/appointment/detail",
         name: "AppointmentDetailPage",
         component: AppointmentDetailPage,
-    },    {
+    },
+    {
         path: "/appointment",
         name: "AppointmentPage",
         component: AppointmentPage,
@@ -66,7 +65,10 @@ router.beforeEach(async (to, from) => {
     const authStore = useAuthStore();
     const layoutStore = useLayoutStore();
 
-    if (authStore.userData.phoneNumber === null || authStore.userData.userId === 0) {
+    if (
+        authStore.userData.phoneNumber === null ||
+        authStore.userData.userId === 0
+    ) {
         try {
             await axios.get("/sanctum/csrf-cookie");
             const response = await axios.get(`/api/v1/me`);
@@ -74,10 +76,9 @@ router.beforeEach(async (to, from) => {
                 userFullName: response.data.user.name,
                 userEmail: response.data.user.email,
                 userId: response.data.user.id,
-                phoneNumber: response.data.user.phone_number.toString().replace(
-                    `${import.meta.env.VITE_CALLING_CODE}`,
-                    ""
-                ),
+                phoneNumber: response.data.user.phone_number
+                    .toString()
+                    .replace(`${import.meta.env.VITE_CALLING_CODE}`, ""),
                 userRole: response.data.role,
             });
 
@@ -90,7 +91,7 @@ router.beforeEach(async (to, from) => {
 
             if (authStore.userData.userRole !== "doctor") {
                 authStore.$reset();
-                window.location.href = `/doctor/home`;
+                window.location.href = `/patient/home`;
                 return;
             }
         } catch (error) {
@@ -121,42 +122,6 @@ router.beforeEach(async (to, from) => {
     if (to.name === "ProfilePage") {
         layoutStore.doctorActiveMenu = "profile";
     }
-
-    // if (authStore.userData.phoneNumber === null || authStore.userData.userId === 0) {
-    //     apiRequest.get("/sanctum/csrf-cookie").then(() => {
-    //         apiRequest
-    //             .get(`/api/v1/me`)
-    //             .then((response) => {
-    //                 authStore.updateUserData({
-    //                     userFullName: response.data.user.name,
-    //                     userEmail: response.data.user.email,
-    //                     userId: response.data.user.id,
-    //                     phoneNumber: response.data.user.phone_number.toString().replace(
-    //                         `${import.meta.env.VITE_CALLING_CODE}`,
-    //                         ""
-    //                     ),
-    //                     userRole: response.data.role,
-    //                 });
-    //
-    //                 if (response.data.role === 'doctor') {
-    //                     authStore.updateUserDoctorData({
-    //                         doctorId: response.data.doctor_data.doctor_id,
-    //                         smfName: response.data.doctor_data.smf_name,
-    //                     })
-    //                 } else {
-    //                     authStore.$reset();
-    //                     window.location.href = `/patient/home`;
-    //
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 if (error?.response?.status === 401) {
-    //                     authStore.$reset();
-    //                     window.location.href = `/auth/login`;
-    //                 }
-    //             });
-    //     });
-    // }
 });
 
 export default router;

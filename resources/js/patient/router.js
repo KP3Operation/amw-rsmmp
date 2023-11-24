@@ -107,56 +107,6 @@ router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
     const layoutStore = useLayoutStore();
 
-    // if (
-    //     authStore.userData.phoneNumber === null ||
-    //     authStore.userData.userId === 0
-    // ) {
-    //     axios.get("/sanctum/csrf-cookie").then(() => {
-    //         axios
-    //             .get(`/api/v1/me`)
-    //             .then((response) => {
-    //                 authStore.updateUserData({
-    //                     userFullName: response.data.user.name,
-    //                     userEmail: response.data.user.email,
-    //                     userId: response.data.user.id,
-    //                     phoneNumber: response.data.user.phone_number
-    //                         .toString()
-    //                         .replace(
-    //                             `${import.meta.env.VITE_CALLING_CODE}`,
-    //                             ""
-    //                         ),
-    //                     userRole: response.data.role,
-    //                 });
-
-    //                 // patient data
-    //                 if (response.data.role === "patient") {
-    //                     authStore.updateUserPatientData({
-    //                         ssn: response.data.patient_data.ssn,
-    //                         patientId: response.data.patient_data.patient_id,
-    //                         birthDate: response.data.patient_data.birth_date,
-    //                         gender: response.data.patient_data.gender,
-    //                         medicalNo: response.data.patient_data.medical_no,
-    //                     });
-    //                 }
-
-    //                 if (authStore.userData.userRole !== "patient") {
-    //                     authStore.$reset();
-    //                     window.location.href = `/doctor/home`;
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 if (
-    //                     error.response &&
-    //                     error.response.status &&
-    //                     error.response.status === 401
-    //                 ) {
-    //                     authStore.$reset();
-    //                     window.location.href = `/auth/login`;
-    //                 }
-    //             });
-    //     });
-    // }
-
     if (
         authStore.userData.phoneNumber === null ||
         authStore.userData.userId === 0

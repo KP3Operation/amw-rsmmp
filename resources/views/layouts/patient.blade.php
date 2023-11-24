@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     @vite('resources/css/style.css')
+    @vite('resources/css/app.css')
     <link rel="apple-touch-icon" sizes="57x57"
         href="{{ Vite::asset('resources/static/images/favicon/apple-icon-57x57.png') }}">
     <link rel="apple-touch-icon" sizes="60x60"

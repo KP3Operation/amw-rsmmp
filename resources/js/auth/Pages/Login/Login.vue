@@ -136,7 +136,7 @@ export default {
                     />
                 </div>
                 <div
-                    class="error mt-2 fs-6 fw-bold text-red-200"
+                    class="error mt-2 fs-6 fw-bold text-app-warning"
                     v-for="error of v$.loginForm.phoneNumber.$errors"
                     :key="error.$uid"
                 >
@@ -144,9 +144,10 @@ export default {
                 </div>
             </div>
             <div class="mt-4 d-flex flex-column">
+                <!-- <SubmitButton :text="$t('login.login')" className="btn-blue-700-rounded" /> -->
                 <SubmitButton
                     :text="$t('login.login')"
-                    className="btn-blue-700-rounded"
+                    className="btn-app-rounded"
                 />
             </div>
         </form>

@@ -244,7 +244,7 @@ export default {
             <div class="d-flex flex-column mt-3">
                 <SubmitButton
                     :text="$t('verification.verify')"
-                    className="btn-blue-700-rounded"
+                    className="btn-app-rounded"
                 />
                 <router-link
                     :to="{ name: 'LoginPage' }"

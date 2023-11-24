@@ -7,12 +7,18 @@
     --app-second-txt: #DDDDDD;
     --app-warning-txt:#fcef98;
     --logo-src: url("../static/images/aviat-logo.png");
+    --white-logo-src: url("../static/images/aviat-white-logo.png");
 }
 
 /* nama class tidak perlu di ubah, cukup ubah variable nya */
 #logo {
     display: block; 
     content: var(--logo-src);
+    width: 95px;
+}
+#white-logo {
+    display: block; 
+    content: var(--white-logo-src);
     width: auto;
     height: 95px;
 }

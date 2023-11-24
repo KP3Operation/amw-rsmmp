@@ -10,36 +10,36 @@
     @vite('resources/css/style.css')
     @vite('resources/css/app.css')
     <link rel="apple-touch-icon" sizes="57x57"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-57x57.png') }}">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-57x57.ico') }}">
     <link rel="apple-touch-icon" sizes="60x60"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-60x60.png') }}">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-60x60.ico') }}">
     <link rel="apple-touch-icon" sizes="72x72"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-72x72.png') }}/">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-72x72.ico') }}/">
     <link rel="apple-touch-icon" sizes="76x76"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-76x76.png') }}/">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-76x76.ico') }}/">
     <link rel="apple-touch-icon" sizes="114x114"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-114x114.png') }}">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-114x114.ico') }}">
     <link rel="apple-touch-icon" sizes="120x120"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-120x120.png') }}">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-120x120.ico') }}">
     <link rel="apple-touch-icon" sizes="144x144"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-144x144.png') }}">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-144x144.ico') }}">
     <link rel="apple-touch-icon" sizes="152x152"
-        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-152x152.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="152x152"
-        href="{{ Vite::asset('resources/static/images/favicon/android-icon-144x144.png') }}">
-    <link rel="icon" type="image/png" sizes="192x192"
-        href="{{ Vite::asset('resources/static/images/favicon/android-icon-192x192.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32"
-        href="{{ Vite::asset('resources/static/images/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="96x96"
-        href="{{ Vite::asset('resources/static/images/favicon/favicon-96x96.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="{{ Vite::asset('resources/static/images/favicon/favicon-16x16.png') }}">
+        href="{{ Vite::asset('resources/static/images/favicon/apple-icon-152x152.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.ico">
+    <link rel="icon" type="image/x-icon" sizes="152x152"
+        href="{{ Vite::asset('resources/static/images/favicon/android-icon-144x144.ico') }}">
+    <link rel="icon" type="image/x-icon" sizes="192x192"
+        href="{{ Vite::asset('resources/static/images/favicon/android-icon-192x192.ico') }}">
+    <link rel="icon" type="image/x-icon" sizes="32x32"
+        href="{{ Vite::asset('resources/static/images/favicon/favicon-32x32.ico') }}">
+    <link rel="icon" type="image/x-icon" sizes="96x96"
+        href="{{ Vite::asset('resources/static/images/favicon/favicon-96x96.ico') }}">
+    <link rel="icon" type="image/x-icon" sizes="16x16"
+        href="{{ Vite::asset('resources/static/images/favicon/favicon-16x16.ico') }}">
     {{-- <link rel="manifest" href="{{ Vite::asset('resources/static/images/favicon/manifest.json') }}"> --}}
     <meta name="msapplication-TileColor" content="#0D6EFD;">
     <meta name="msapplication-TileImage"
-        content="{{ Vite::asset('resources/static/images/favicon/ms-icon-144x144.png') }}">
+        content="{{ Vite::asset('resources/static/images/favicon/ms-icon-144x144.ico') }}">
     <meta name="theme-color" content="#0D6EFD;">
 </head>
 
@@ -47,7 +47,7 @@
     <!-- <main class="bg-blue-500 text-white pt-6 px-4"> -->
     <main class="bg-app-primary text-white pt-6 px-4">
         <img 
-            id="logo" 
+            id="white-logo" 
             alt="Aviat Logo"
         >
         <div id="app"></div>

@@ -157,35 +157,6 @@ class WatzapOtpService implements IWatzapOtpService
         $data = $response->json();
         $result = CheckApiKeyDto::from($data);
 
-        if ($result->status == 200) {
-            Log::info("OTP sent successfully");
-        }
-
-        if ($result->status == 1002) {
-            Log::error("Invalid API Key");
-            throw new HttpClientException("WatZap API key tidak valid", 500);
-        }
-
-        if ($result->status == 1003) {
-            Log::error("Invalid Number Key");
-            throw new HttpClientException("WatZap number key tidak valid", 500);
-        }
-
-        if ($result->status == 1004) {
-            Log::error("WatZap Pairing Failed, Access Denied");
-            throw new HttpClientException("Gagal menghubungkan dengan whatsapp", 500);
-        }
-
-        if ($result->status == 1005) {
-            Log::error("WatZap Fatal Error with Dynamic Message");
-            throw new HttpClientException("Gagal mengirimkan OTP", 500);
-        }
-
-        if ($result->status == 1006) {
-            Log::error("WatZap unknown error");
-            throw new HttpClientException("Gagal mengirimkan OTP", 500);
-        }
-
         if (!$result->status) {
             // TODO: trigger slack notification, email, etc...
             throw new \Exception("API KEY WatZap tidak valid", 500);

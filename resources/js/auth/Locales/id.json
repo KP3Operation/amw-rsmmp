@@ -61,5 +61,8 @@
         "female": "Perempuan",
         "doctor_id": "ID Dokter",
         "smf_name": "Nama SMF"
+    },
+    "not_found": {
+        "title": "Halaman tidak ditemukan."
     }
 }

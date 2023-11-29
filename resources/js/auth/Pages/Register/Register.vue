@@ -9,7 +9,7 @@ import {
     requiredIf,
 } from "@vuelidate/validators";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
-import { mapActions, mapState, mapStores } from "pinia";
+import { mapActions, mapState } from "pinia";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import axios from "axios";
 import { useLayoutStore } from "@shared/+store/layout.store.js";

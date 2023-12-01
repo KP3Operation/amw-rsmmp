@@ -71,7 +71,7 @@ export default {
                 height="209"
                 class="d-inline-block"
             />
-            <p class="fw-bold fs-4 mt-3">Anda Tidak Memiliki Notifikasi</p>
+            <p class="fw-bold fs-4 mt-3">{{ $t('notification.no_notification') }}</p>
         </div>
     </div>
     <main class="bg-gray-100 pb-7 pt-8">
@@ -83,9 +83,7 @@ export default {
                 <div>
                     <p>{{ notification.message }}</p>
                     <p class="fs-6 mt-2 text-gray-700">
-                        {{
-                            $convertDateTimeToDateTime(notification.created_at)
-                        }}
+                        {{ $convertDateTimeToDateTime(notification.created_at) }}
                     </p>
                 </div>
                 <a

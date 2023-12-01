@@ -6,7 +6,6 @@ import { useLayoutStore } from "@shared/+store/layout.store.js";
 import {
     convertDateTimeToDate,
     getCurrentDate,
-    getThisMonthEndDate,
     getThisMonthStartDate,
     toIdrFormat
 } from "@shared/utils/helpers.js";

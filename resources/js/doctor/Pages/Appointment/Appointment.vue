@@ -1,7 +1,6 @@
 <script setup>
 import Header from "@shared/Components/Header/Header.vue";
-import axios from "axios";
-import {convertDateTimeToDate, getCurrentDate} from "@shared/utils/helpers.js";
+import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 import {onMounted, watch} from "vue";
 import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
 import {storeToRefs} from "pinia";
@@ -45,7 +44,7 @@ onMounted(() => {
     <div class="filter-sticky-2 position-sticky bg-white p-4 mt-6 bg-white">
         <input type="date" name="date" id="date" class="d-block form-control" v-model="selectedDate">
         <div class="d-flex justify-content-between col-gap-20 mt-3">
-            <p class="w-50">{{ doctorAppointments.length }} Data</p>
+            <p class="w-50">{{ doctorAppointments.length }} {{ $t('appointment.data') }}</p>
             <p class="w-50 text-end">{{ convertDateTimeToDate(selectedDate) }}</p>
         </div>
     </div>
@@ -63,25 +62,25 @@ onMounted(() => {
             </div>
             <div class="d-flex align-items-center justify-content-between col-gap-20">
                 <div class="w-50">
-                    <p class="fs-6 text-gray-700">No. Antrian</p>
+                    <p class="fs-6 text-gray-700">{{ $t('appointment.queue_number') }}</p>
                     <p class="fs-5 mt-2">{{ appointment.appointmentQue }}</p>
                 </div>
                 <div class="w-50 text-end">
-                    <p class="fs-6 text-gray-700">No. Rekam Medis</p>
+                    <p class="fs-6 text-gray-700">{{ $t('appointment.medical_no') }}</p>
                     <p class="fs-5 mt-2">{{ appointment.medicalNo }}</p>
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-between col-gap-20">
                 <div class="w-50">
-                    <p class="fs-6 text-gray-700">Nama Pasien</p>
+                    <p class="fs-6 text-gray-700">{{ $t('appointment.patient_name') }}</p>
                     <p class="fs-5 mt-2">{{ appointment.patientName }}</p>
                 </div>
                 <div class="w-50 text-end">
-                    <p class="fs-6 text-gray-700">Nama Penjamin</p>
+                    <p class="fs-6 text-gray-700">{{ $t('appointment.guarantor_name') }}</p>
                     <p class="fs-5 mt-2">{{ appointment.guarantorName }}</p>
                 </div>
             </div>
-            <router-link :to="{name: 'AppointmentDetailPage', query: {appointmentNo: appointment.appointmentNo}}" class="d-block btn btn-blue-500-rounded-sm">Detail</router-link>
+            <router-link :to="{name: 'AppointmentDetailPage', query: {appointmentNo: appointment.appointmentNo}}" class="d-block btn btn-blue-500-rounded-sm">{{ $t('appointment.actions.detail') }}</router-link>
         </div>
     </div>
     <div class="text-center mt-3" v-if="isLoading">

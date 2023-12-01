@@ -3,6 +3,7 @@ import Header from "@shared/Components/Header/Header.vue";
 import FeePaidCard from "@doctor/Components/FeePaidCard/FeePaidCard.vue";
 import FeePendingCard from "@doctor/Components/FeePendingCard/FeePendingCard.vue";
 import { onMounted, reactive, ref } from "vue";
+// TODO: Need to migrate to using vuelidate
 import Form from "vform";
 import {
     convertDateTimeToDate,
@@ -61,13 +62,13 @@ onMounted(() => {
         <form class="d-flex col-gap-8 align-items-end" @submit.prevent="filterSummaryFee"
             @keydown="filterForm.onKeydown($event)">
             <div>
-                <label for="dari" class="fs-6 text-gray-700">Dari</label>
+                <label for="dari" class="fs-6 text-gray-700">{{ $t('fee.from') }}</label>
                 <input type="date" name="dari" id="dari" class="form-control mt-2" v-model="filterForm.start_date">
                 <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('start_date')"
                     v-html="filterForm.errors.get('start_date')"></small>
             </div>
             <div>
-                <label for="hingga" class="fs-6 text-gray-700">Hingga</label>
+                <label for="hingga" class="fs-6 text-gray-700">{{ $t('fee.to') }}</label>
                 <input type="date" name="hingga" id="hingga" class="form-control mt-2" v-model="filterForm.end_date">
                 <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('start_date')"
                     v-html="filterForm.errors.get('start_date')"></small>
@@ -79,16 +80,16 @@ onMounted(() => {
         <p class="error-filter mt-3 text-red-500 fs-6 fw-semibold"></p>
     </div>
     <section class="tab-periode mt-4">
-        <p class="periode">Periode: <span>{{ period }}</span></p>
+        <p class="periode">{{ $t('fee.period') }} <span>{{ period }}</span></p>
         <div class="tab-summary-fee nav nav-pills nav-justified d-flex col-gap-20 mt-4">
             <button class="nav-link w-50 active" data-bs-toggle="pill" data-bs-target="#pending" role="tab"
                 aria-controls="pending" aria-selected="true" @click="updateActiveTab('pending')">
-                <p>Pending</p>
+                <p>{{ $t('fee.pending') }}</p>
             </button>
 
             <button class="nav-link w-50" data-bs-toggle="pill" data-bs-target="#terbayar" role="tab"
                 aria-controls="terbayar" aria-selected="true" @click="updateActiveTab('terbayar')">
-                <p>Terbayar</p>
+                <p>{{ $t('fee.payout') }}</p>
             </button>
         </div>
     </section>
@@ -106,7 +107,7 @@ onMounted(() => {
             </div>
             <div class="text-center" v-if="pendings.length === 0">
                 <img :src="NotFoundImage" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3">
-                <p class="mt-4 fw-semibold">Anda Belum Memiliki Pembayaran Pending</p>
+                <p class="mt-4 fw-semibold">{{ $t('fee.no_pending_payment') }}</p>
             </div>
         </div>
 
@@ -121,7 +122,7 @@ onMounted(() => {
             </div>
             <div class="text-center" v-if="payouts.length === 0">
                 <img :src="NotFoundImage" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3" />
-                <p class="mt-4 fw-semibold">Anda Tidak Memiliki Pembayaran</p>
+                <p class="mt-4 fw-semibold">{{ $t('fee.no_payout_payment') }}</p>
             </div>
         </div>
 

@@ -67,13 +67,13 @@ onMounted(() => {
 </script>
 
 <template>
-    <Header title="List Pasien Rawat Inap" :with-back-url="true"></Header>
+    <Header :title="$t('inpatient.title')" :with-back-url="true"></Header>
     <section
         class="filter-inpatient filter-sticky-2 d-flex align-items-center justify-content-between col-gap-20 p-4 mt-6 bg-white position-sticky">
-        <p class="w-50"><span v-if="patientCount !== 0">{{ patientCount }} Data Pasien</span></p>
+        <p class="w-50"><span v-if="patientCount !== 0">{{ patientCount }} {{ $t('inpatient.patient_data') }}</span></p>
         <div id="multiselect" class="w-50 dropdown filter-sticky d-flex col-gap-20 align-items-center p-0">
             <select class="form-select" aria-label="Tipe" v-model="selectedRoomName">
-                <option value="" selected>Semua Ruangan</option>
+                <option value="" selected>{{ $t('inpatient.all_room') }}</option>
             </select>
         </div>
     </section>
@@ -92,12 +92,13 @@ onMounted(() => {
         <div class="text-center mt-3" v-if="patientCount === 0">
             <img :src="NotFoundImage" alt="Ilustrasi Tidak Ditemukan" width="280" height="210">
 
-            <p class="mt-4 fs-3 fw-bold">Anda Tidak Memiliki <br />
-                Pasien Rawat Inap</p>
+            <p class="mt-4 fs-3 fw-bold">
+                {{ $t('inpatient.no_inpatient_list') }}
+            </p>
         </div>
     </div>
 
     <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!isLoading && patients.length >= 10" @click="loadMore">
-        <button type="button" class="btn btn-default">Load More</button>
+        <button type="button" class="btn btn-default">{{ $t('inpatient.load_more') }}</button>
     </div>
 </template>

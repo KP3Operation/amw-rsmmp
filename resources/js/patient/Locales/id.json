@@ -56,7 +56,35 @@
         }
     },
     "appointment": {
-        "title": "Appointment"
+        "title": "Appointment",
+        "future": "Akan Datang",
+        "done": "Selesai",
+        "future_appointment": "Appointment Akan Datang",
+        "no_appointment": "Janji Konsultasi Tidak Ditemukan",
+        "create_appointment_desc": "Buat Janji Konsultasi Yang Baru Dengan Mentap\n Tombol “Buat Janji Konsultasi”",
+        "indexed_appointment": "Appointment Terdata",
+        "filter": "Filter",
+        "canceled": "Dibatalkan",
+        "no_consultation": "Tidak Ada Janji Konsultasi",
+        "no_consultation_desc": "Anda Belum Memiliki Janji Konsultasi Yang\n Sudah Selesai",
+        "actions": {
+            "cancel": "Batal"
+        },
+        "cancel_consultation_modal": {
+            "title": "Batalkan Janji Konsultasi",
+            "message": "Apakah Anda yakin ingin membatalkan Janji Konsultasi?",
+            "yes": "Ya, Batalkan",
+            "no": "Tidak"
+        },
+        "filter_modal": {
+            "title": "Filter",
+            "unit": "Unit",
+            "from": "Dari",
+            "to": "Hingga",
+            "reset": "Reset",
+            "apply": "Terapkan",
+            "all": "Semua"
+        }
     },
     "history": {
         "title": "Riwayat Medis",

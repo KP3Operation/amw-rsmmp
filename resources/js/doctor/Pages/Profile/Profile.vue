@@ -1,13 +1,11 @@
 <script setup>
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import DefaultAvatar from "@resources/static/images/avatar-default.png";
-import axios from "axios";
 import Header from "@shared/Components/Header/Header.vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { storeToRefs } from "pinia";
 import {onMounted, reactive} from "vue";
 import * as bootstrap from "bootstrap";
-import {calculateAge} from "@shared/utils/helpers.js";
 import apiRequest from "@shared/utils/axios.js";
 
 const authStore = useAuthStore();
@@ -70,7 +68,7 @@ onMounted(() => {
                 <div class="modal-header d-flex justify-content-between">
                     <div class="d-flex align-items-center col-gap-8">
                         <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
-                        <h5 class="modal-title">Konfirmasi Logout</h5>
+                        <h5 class="modal-title">{{ $t('profile.logout_modal.title') }}</h5>
                     </div>
                     <button type="button" class="btn-close" aria-label="Close"
                             @click="modalState.logoutConfirmationModal.hide()">
@@ -78,14 +76,14 @@ onMounted(() => {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Anda akan logout dari Aviat Mobile Web</p>
+                    <p>{{ $t('profile.logout_modal.message') }}</p>
                 </div>
                 <div class="modal-footer flex-nowrap">
                     <button type="button" class="w-50 btn btn-link" @click="modalState.logoutConfirmationModal.hide()">
-                        Batal
+                        {{ $t('profile.logout_modal.cancel') }}
                     </button>
                     <button type="button" @click="logout" class="w-50 btn-masuk btn btn-blue">
-                        Ya
+                        {{ $t('profile.logout_modal.yes') }}
                     </button>
                 </div>
             </div>

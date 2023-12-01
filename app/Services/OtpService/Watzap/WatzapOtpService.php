@@ -63,8 +63,8 @@ class WatzapOtpService implements IWatzapOtpService
         }
 
         if ($result->status == 1005) {
-            Log::error("WatZap Fatal Error with Dynamic Message", [$user->phone_number]);
-            throw new HttpClientException("Gagal mengirimkan OTP", 500);
+            Log::error("WatZap Fatal Error with Dynamic Message", [$user->phone_number, $result->message]);
+            throw new HttpClientException("{$result->message}", 500);
         }
 
         if ($result->status == 1006) {

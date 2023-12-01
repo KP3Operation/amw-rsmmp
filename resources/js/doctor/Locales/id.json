@@ -9,13 +9,47 @@
         "title": "Profile",
         "phone_number": "No. Handphone",
         "smf": "Staff Medis Fungsional (SMF)",
-        "logout": "Logout"
+        "logout": "Logout",
+        "logout_modal": {
+            "title": "Konfirmasi Logout",
+            "message": "Anda akan logout dari Aviat Mobile Web",
+            "yes": "Ya",
+            "cancel": "Batal"
+        }
     },
     "fee": {
-        "title": "Persentase Pembayaran Dokter"
+        "title": "Persentase Pembayaran Dokter",
+        "from": "Dari",
+        "to": "Hingga",
+        "period": "Periode:",
+        "pending": "Pending",
+        "payout": "Terbayar",
+        "no_pending_payment": "Anda Belum Memiliki Pembayaran Pending",
+        "no_payout_payment": "Anda Tidak Memiliki Pembayaran"
     },
     "appointment": {
-        "title": "Appointment"
+        "title": "Appointment",
+        "data": "Data",
+        "queue_number": "No. Antrian",
+        "medical_no": "No. Rekam Medis",
+        "patient_name": "Nama Pasien",
+        "guarantor_name": "Nama Penjamin",
+        "actions": {
+            "detail": "Detail"
+        },
+        "appointment_details":  {
+            "title": "Detail Appointment",
+            "name": "Nama",
+            "patient": "Pasien",
+            "medical_no": "No. Rekam Medis",
+            "gender": "Jenis Kelamin",
+            "guarantor": "Penjamin",
+            "address": "Alamat",
+            "registration_no": "No. Registrasi",
+            "date": "Tanggal",
+            "paramedic_name": "Nama Dokter",
+            "unit": "Unit"
+        }
     },
     "home": {
         "title": "Home",
@@ -36,9 +70,34 @@
         "to": "Hingga",
         "priod": "Periode",
         "pending": "Pending",
-        "payout": "Terbayar"
+        "payout": "Terbayar",
+        "patient": "Pasien"
     },
     "notification": {
-        "title": "Notifikasi"
+        "title": "Notifikasi",
+        "no_notification": "Anda Tidak Memiliki Notifikasi"
+    },
+    "inpatient": {
+        "title": "List Pasien Rawat Inap",
+        "patient_data": "Data Pasien",
+        "all_room": "Semua Ruangan",
+        "no_inpatient_list": "Anda Tidak Memiliki Pasien Rawat Inap",
+        "load_more": "Memuat lebih banyak",
+        "details": {
+            "title": "Detail Pasien Rawat Inap",
+            "medical_no": "No. Rekam Medis",
+            "room_name": "Nama Ruang",
+            "patient_name": "Nama Pasien",
+            "gender": "Jenis Kelamin",
+            "male": "Laki-Laki",
+            "female": "Perempuan",
+            "birth_date": "Tanggal Lahir",
+            "medical_history": "Riwayat Medis",
+            "registration_no": "Tanggal",
+            "created_by": "Dibuat Oleh",
+            "cppt_typ": "Tipe CPPT",
+            "implementation": "Implementasi:",
+            "response_result": "Respond/Result:"
+        }
     }
 }

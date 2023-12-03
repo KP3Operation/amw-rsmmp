@@ -1,4 +1,6 @@
 <script setup>
+// FIXME: Need to use vuelidate not vform
+
 import Header from "@shared/Components/Header/Header.vue";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
 import { onMounted, reactive, ref } from "vue";
@@ -7,7 +9,6 @@ import Form from "vform";
 import { useRoute } from 'vue-router'
 import router from "@patient/router.js";
 import { convertDateToFormField } from "@shared/utils/helpers.js";
-import axios from "axios";
 import apiRequest from "@shared/utils/axios.js";
 
 const callingCode = import.meta.env.VITE_APP_CALLING_CODE;

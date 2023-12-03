@@ -36,8 +36,7 @@
                 <p class="fs-6 text-gray-700">{{ $t('history.birth_date') }}</p>
                 <p class="fs-6 fw-semibold mt-1"><span
                    v-text="convertDateTimeToDate(birthDate)"></span>&nbsp;
-               (<span v-text="calculateAge(birthDate)"></span> {{
-               $t('history.year') }})
+               (<span v-text="calculateAge(birthDate)"></span> {{ $t('history.year') }})
                 </p>
             </div>
         </div>

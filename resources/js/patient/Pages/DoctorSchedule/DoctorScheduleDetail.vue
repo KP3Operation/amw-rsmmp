@@ -58,7 +58,7 @@ onMounted(() => {
 
 <template>
     <Header
-        title="Detail Dokter"
+        :title="$t('doctor_schedule.schedule_detail.title')"
         :with-back-url="true"
         page-name="DoctorSchedulePage"
     ></Header>
@@ -72,13 +72,13 @@ onMounted(() => {
         <section class="mt-5">
             <div class="d-flex col-gap-8 align-items-center">
                 <i class="bi bi-clock-fill icon-blue-500 fs-3"></i>
-                <p class="fs-5 text-gray-700">Jadwal</p>
+                <p class="fs-5 text-gray-700">{{ $t('doctor_schedule.schedule_detail.schedule') }}</p>
             </div>
             <div class="d-flex flex-column rows-gap-8 mt-2">
                 <div
                     class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
                 >
-                    <p>Senin</p>
+                    <p>{{ $t('doctor_schedule.schedule_detail.monday') }}</p>
                     <p class="text-end">
                         {{ selectedSchedule.startTime1 }} -
                         {{ selectedSchedule.endTime1 }}
@@ -87,7 +87,7 @@ onMounted(() => {
                 <div
                     class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
                 >
-                    <p>Selasa</p>
+                    <p>{{ $t('doctor_schedule.schedule_detail.tuesday') }}</p>
                     <p class="text-end">
                         {{ selectedSchedule.startTime2 }} -
                         {{ selectedSchedule.endTime2 }}
@@ -96,7 +96,7 @@ onMounted(() => {
                 <div
                     class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
                 >
-                    <p>Rabu</p>
+                    <p>{{ $t('doctor_schedule.schedule_detail.thursday') }}</p>
                     <p class="text-end">
                         {{ selectedSchedule.startTime3 }} -
                         {{ selectedSchedule.endTime3 }}
@@ -105,7 +105,7 @@ onMounted(() => {
                 <div
                     class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
                 >
-                    <p>Kamis</p>
+                    <p>{{ $t('doctor_schedule.schedule_detail.wednesday') }}</p>
                     <p class="text-end">
                         {{ selectedSchedule.startTime4 }} -
                         {{ selectedSchedule.endTime4 }}
@@ -114,7 +114,7 @@ onMounted(() => {
                 <div
                     class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
                 >
-                    <p>Jumat</p>
+                    <p>{{ $t('doctor_schedule.schedule_detail.friday') }}</p>
                     <p class="text-end">
                         {{ selectedSchedule.startTime5 }} -
                         {{ selectedSchedule.endTime5 }}
@@ -123,7 +123,7 @@ onMounted(() => {
                 <div
                     class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
                 >
-                    <p>Sabtu</p>
+                    <p>{{ $t('doctor_schedule.schedule_detail.saturday') }}</p>
                     <p class="text-end">-</p>
                 </div>
             </div>
@@ -132,7 +132,7 @@ onMounted(() => {
                 v-if="isShowButton"
                 @click="navigateToCreateAppointment"
                 class="d-block btn btn-blue-500-rounded mt-4"
-                >Buat Jadwal Konsultasi</a
+                >{{ $t('doctor_schedule.schedule_detail.create_appointment') }}</a
             >
         </section>
     </div>

@@ -1,7 +1,6 @@
 <script setup>
 import MicroscopeWhite from "@resources/static/icons/microscope-white.svg";
 import Header from "@shared/Components/Header/Header.vue";
-import axios from "axios";
 import { onMounted, reactive, ref, watch } from "vue";
 import { useLayoutStore } from "@shared/+store/layout.store";
 import VitalSignCard from "@patient/Components/VitalSignCard/VitalSignCard.vue";
@@ -276,11 +275,11 @@ onMounted(() => {
                 <div id="multiselect" class="dropdown filter-sticky d-flex col-gap-20 align-items-center">
                     <p>Tipe</p>
                     <select class="form-select" aria-label="Tipe" v-model="selectedVitalSignType">
-                        <option value="" selected>Pilih Tipe</option>
-                        <option value="BP1">Tekanan Darah Sistolik</option>
-                        <option value="BP2">Tekanan Darah Diastolik</option>
-                        <option value="TEMP">Suhu Tubuh</option>
-                        <option value="RESP">Laju Pernapasan</option>
+                        <option value="" selected>{{ $t('history.choose_vital_unit') }}</option>
+                        <option value="BP1">{{ $t('history.vital_unit.bp1') }}</option>
+                        <option value="BP2">{{ $t('history.vital_unit.bp2') }}</option>
+                        <option value="TEMP">{{ $t('history.vital_unit.temp') }}</option>
+                        <option value="RESP">{{ $t('history.vital_unit.resp') }}</option>
                     </select>
                 </div>
                 <div v-if="vitalSignHistories.length > 0" class="d-flex flex-column rows-gap-16 mt-4" v-for="history in vitalSignHistories">
@@ -291,12 +290,12 @@ onMounted(() => {
                 <div class="text-center" v-if="vitalSignHistories.length < 1 && !layoutStore.isLoading">
                     <img :src="NotFoundImage" alt="Ilustrasi Tidak Ada Data"
                          width="238" height="198" class="d-inline-block">
-                    <p class="mt-3 fs-3 fw-bold">Anda Belum Memiliki <br> Hasil Tanda Unit Vital</p>
+                    <p class="mt-3 fs-3 fw-bold" v-html="$t('history.no_vital_unit_result')"></p>
                 </div>
 
                 <div class="d-flex flex-column rows-gap-16 mt-6 px-4"
                      v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">Load More</button>
+                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
                 </div>
 
             </section>
@@ -310,10 +309,10 @@ onMounted(() => {
                 <div class="text-center mt-3" v-if="prescriptionHistories.length < 1 && !layoutStore.isLoading">
                     <img :src="DoctorImage" alt="Ilustrasi Tidak Ada Data"
                          width="238" height="198" class="d-inline-block">
-                    <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki Resep Obat</p>
+                    <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_prescription') }}</p>
                 </div>
                 <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">Load More</button>
+                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
                 </div>
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'hasil-lab' ? 'show active' : ''" id="hasil-lab" role="tabpanel" aria-labelledby="hasil-lab" tabindex="0">
@@ -329,11 +328,10 @@ onMounted(() => {
                 <div class="text-center mt-3" v-if="labResultHistories.length < 1 && !layoutStore.isLoading">
                     <img :src="LabImage" alt="Ilustrasi Tidak Ada Data"
                          width="238" height="198" class="d-inline-block">
-                    <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki <br>
-                        Riwayat Hasil Lab</p>
+                    <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_lab_result') }}</p>
                 </div>
                 <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">Load More</button>
+                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
                 </div>
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'pertemuan' ? 'show active' : ''" id="pertemuan" role="tabpanel" aria-labelledby="pertemuan" tabindex="0">
@@ -346,11 +344,10 @@ onMounted(() => {
                 <div class="text-center mt-3" v-if="encounterHistories.length < 1 && !layoutStore.isLoading">
                     <img :src="Doctor2Image" alt="Ilustrasi Tidak Ada Data"
                          width="238" height="198" class="d-inline-block">
-                    <p class="mt-4 fs-3 fw-bold">Anda Belum Memiliki
-                        Pertemuan</p>
+                    <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_encounter') }}</p>
                 </div>
                 <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">Load More</button>
+                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
                 </div>
             </section>
             <div class="text-center mt-3" v-if="layoutStore.isLoading">

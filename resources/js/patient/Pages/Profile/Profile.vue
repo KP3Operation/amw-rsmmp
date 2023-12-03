@@ -3,7 +3,6 @@ import DefaultAvatar from "@resources/static/images/avatar-default.png";
 import SyncPhoto from "@resources/static/images/sinkronisasi.png";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
-import axios from "axios";
 import * as bootstrap from 'bootstrap';
 import {onMounted, reactive, ref, watch} from 'vue';
 import { calculateAge, updateMyProfileStore } from "@shared/utils/helpers.js";

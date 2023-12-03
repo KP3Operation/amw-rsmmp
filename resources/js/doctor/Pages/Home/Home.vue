@@ -176,10 +176,6 @@ export default {
                 </div>
             </div>
         </section>
-        <!--        <section class="mt-5">-->
-        <!--            <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_inpatient_list') }}</h2>-->
-        <!--            <OverviewInpatientEmpty />-->
-        <!--        </section>-->
         <OverviewSummaryFee />
     </div>
 </template>

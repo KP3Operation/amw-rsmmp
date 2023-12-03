@@ -99,5 +99,29 @@
             "implementation": "Implementasi:",
             "response_result": "Respond/Result:"
         }
+    },
+    "fee_paid_card": {
+        "registration_no": "No. Registrasi",
+        "medical_no": "No. RM",
+        "patient_name": "Nama Pasien",
+        "item_name": "Nama Item",
+        "qty": "Qty",
+        "guarantor_name": "Nama Penjamin"
+    },
+    "fee_pending_card": {
+        "registration_no": "No. Registrasi",
+        "medical_no": "No. RM",
+        "patient_name": "Nama Pasien",
+        "item_name": "Nama Item",
+        "qty": "Qty",
+        "guarantor_name": "Nama Penjamin",
+        "payment_percentage": "Payment Percentage"
+    },
+    "inpatient_list_card": {
+        "registration_no": "No. Registrasi",
+        "medical_no": "No. Rekam Medis",
+        "patient_name": "Nama Pasien",
+        "room": "Ruangan",
+        "detail": "Detail"
     }
 }

@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { onMounted, reactive, ref } from "vue";
 import Form from "vform";
@@ -10,46 +10,77 @@ import {
     toIdrFormat
 } from "@shared/utils/helpers.js";
 import { storeToRefs } from "pinia";
+import {helpers, maxValue, required} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
 
-const authStore = useAuthStore();
-const layoutStore = useLayoutStore();
-const { isLoading } = storeToRefs(layoutStore);
-const showFilter = ref(false);
-const filterForm = reactive(
-    new Form({
-        start_date: getThisMonthStartDate(),
-        end_date: getCurrentDate()
-    })
-);
-const pending = ref(0);
-const payout = ref(0);
-const period = ref("bulan ini");
+export default {
+    components: {},
+    setup() {
+        const authStore = useAuthStore();
+        const layoutStore = useLayoutStore();
+        const { isLoading } = storeToRefs(layoutStore);
+        const showFilter = ref(false);
 
-const filterSummaryFee = () => {
-    layoutStore.isLoading = true;
-    filterForm.get('/api/v1/doctor/summary/fee').then((response) => {
-        const data = response.data.data;
-        payout.value = toIdrFormat(data.payout);
-        pending.value = data.pending;
-    }).catch((error) => {
-        if (error.response.status === 401) {
-            window.location.href = '/auth/login';
+        const filterForm = reactive({
+                start_date: getThisMonthStartDate(),
+                end_date: getCurrentDate()
+        });
+        const rules = {
+            start_date: {
+                required: helpers.withMessage("Pilih tanggal awal", required),
+                maxValue: helpers.withMessage("Tanggal tidak valid", maxValue(filterForm.end_date))
+            },
+            end_date: {
+                required: helpers.withMessage("Pilih tanggal akhir", required),
+                minValue: helpers.withMessage("Tanggal tidak valid", maxValue(filterForm.start_date))
+            },
         }
-        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
-    }).finally(() => {
-        layoutStore.isLoading = false;
-        if (filterForm.start_date === getThisMonthStartDate() &&
-            filterForm.end_date === getCurrentDate()) {
-            period.value = "Bulan ini";
-        } else {
-            period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.end_date)}`;
+        const v$ = useVuelidate(rules, filterForm);
+
+        const pending = ref(0);
+        const payout = ref(0);
+        const period = ref("bulan ini");
+
+        const filterSummaryFee = () => {
+            layoutStore.isLoading = true;
+            filterForm.get('/api/v1/doctor/summary/fee').then((response) => {
+                const data = response.data.data;
+                payout.value = toIdrFormat(data.payout);
+                pending.value = data.pending;
+            }).catch((error) => {
+                if (error.response.status === 401) {
+                    window.location.href = '/auth/login';
+                }
+                layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+            }).finally(() => {
+                layoutStore.isLoading = false;
+                if (filterForm.start_date === getThisMonthStartDate() &&
+                    filterForm.end_date === getCurrentDate()) {
+                    period.value = "Bulan ini";
+                } else {
+                    period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.end_date)}`;
+                }
+            });
         }
-    });
+
+        onMounted(() => {
+            filterSummaryFee();
+        });
+
+        return {
+            authStore,
+            layoutStore,
+            isLoading,
+            showFilter,
+            filterForm,
+            pending,
+            payout,
+            period,
+            v$,
+            filterSummaryFee
+        };
+    }
 }
-
-onMounted(() => {
-    filterSummaryFee();
-});
 
 </script>
 <template>
@@ -62,21 +93,31 @@ onMounted(() => {
             </button>
         </div>
         <div class="filter-homepage-summary-fee p-0 mb-3" :class="showFilter ? 'expand' : ''">
-            <form class="d-flex col-gap-8 align-items-end" @submit.prevent="filterSummaryFee"
-                @keydown="filterForm.onKeydown($event)">
-                <div>
+            <form class="d-flex col-gap-8 align-items-end" @submit.prevent="filterSummaryFee">
+                <div :class="{ error: v$.start_date.$errors.length }">
                     <label for="dari" class="fs-6 text-gray-700">{{ $t('home.to') }}</label>
                     <input type="date" name="start_date" v-model="filterForm.start_date" id="dari"
-                        class="form-control mt-2">
-                    <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('start_date')"
-                        v-html="filterForm.errors.get('start_date')"></small>
+                        class="form-control mt-2" @input="v$.start_date.$touch()">
+                    <div
+                            class="error mt-2 fs-6 fw-bold text-red-200"
+                            v-for="error of v$.start_date.$errors"
+                            :key="error.$uid"
+                    >
+                        {{ error.$message }}
+                    </div>
                 </div>
 
-                <div>
+                <div :class="{ error: v$.start_date.$errors.length }">
                     <label for="hingga" class="fs-6 text-gray-700">{{ $t('home.from') }}</label>
-                    <input type="date" name="end_date" v-model="filterForm.end_date" id="hingga" class="form-control mt-2">
-                    <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('end_date')"
-                        v-html="filterForm.errors.get('end_date')"></small>
+                    <input type="date" name="end_date" v-model="filterForm.end_date" id="hingga"
+                           class="form-control mt-2" @input="v$.end_date.$touch()">
+                    <div
+                            class="error mt-2 fs-6 fw-bold text-red-200"
+                            v-for="error of v$.end_date.$errors"
+                            :key="error.$uid"
+                    >
+                        {{ error.$message }}
+                    </div>
                 </div>
 
                 <button type="submit" class="btn bg-green-700 d-flex align-items-center justify-content-center">

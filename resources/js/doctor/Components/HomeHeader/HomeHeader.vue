@@ -1,6 +1,6 @@
 <script>
 import {useNotificationStore} from "@doctor/+store/notification.store.js";
-import {mapActions, mapState, mapStores, storeToRefs} from "pinia";
+import {mapActions, mapState} from "pinia";
 import apiRequest from "@shared/utils/axios.js";
 import {useAuthStore} from "@shared/+store/auth.store.js";
 

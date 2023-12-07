@@ -3,7 +3,7 @@ import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
 import axios from "@shared/utils/axios.js";
-import { getSecondsLeft } from "@shared/utils/helpers.js";
+import {getSecondsLeft, onlyNumberInput} from "@shared/utils/helpers.js";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
 import { mapActions, mapState } from "pinia";
@@ -52,6 +52,7 @@ export default {
         };
     },
     methods: {
+        onlyNumberInput,
         ...mapActions(useLayoutStore, {
             updateLoadingState: "updateLoadingState",
             toggleErrorAlert: "toggleErrorAlert",
@@ -231,6 +232,7 @@ export default {
                     :placeholder="$t('verification.enter_otp_code')"
                     class="form-control mt-2"
                     v-model="otpForm.code"
+                    @keypress="onlyNumberInput($event)"
                 />
                 <div
                     class="error mt-2 fs-6 fw-bold text-red-200"

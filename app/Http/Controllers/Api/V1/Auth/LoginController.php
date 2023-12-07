@@ -64,16 +64,6 @@ class LoginController extends Controller
             throw new RestApiException('Terjadi kesalahan saat membaca data. Mohon untuk login kembali', 500);
         }
 
-        $userOtpCode->update([
-            'status' => 'verified'
-        ]);
-
-        \Auth::loginUsingId($user->id);
-        $authenticateRequest->session()->regenerate();
-
-        // delete old tokens first
-        $user->tokens()->delete();
-
         // NOTE: Not sure, but look like we don't need to generate token, as the authorization id done via cookies
         // $user->token = $user->createToken('auth_token')->plainTextToken;
         foreach ($user->roles as $role) {
@@ -101,6 +91,16 @@ class LoginController extends Controller
             $resource['userDoctor']['doctorId'] = $userDoctorData->doctor_id;
             $resource['userDoctor']['smfName'] = $userDoctorData->smf_name;
         }
+
+        $userOtpCode->update([
+            'status' => 'verified'
+        ]);
+
+        \Auth::loginUsingId($user->id);
+        $authenticateRequest->session()->regenerate();
+
+        // delete old tokens first
+        $user->tokens()->delete();
 
         return response()->json($resource);
     }

@@ -52,8 +52,13 @@ class MeController extends Controller
             $patientData = $response->data->first();
             $user->update([
                 "name" => $patientData->firstName . " " . $patientData->middleName . " " . $patientData->lastName,
-                "email" => $patientData->email
             ]);
+
+            if ($user->email != null) {
+                $user->update([
+                    "email" => $patientData->email
+                ]);
+            }
 
             if ($user->userPatientData) {
                 $user->userPatientData()->update([

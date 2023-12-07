@@ -7,4 +7,5 @@ use App\Models\User;
 interface IOtpWrapperService
 {
     public function sendOtp(User $user);
+    public function sendRegistrationOtp(User $user);
 }

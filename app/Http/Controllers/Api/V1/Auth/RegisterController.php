@@ -71,7 +71,7 @@ class RegisterController extends Controller
             ->where('phone_number', '=', format_phone_number($request->validated('phoneNumber')))
             ->first();
 
-        $otpCode = $this->otpService->sendOtp($user);
+        $otpCode = $this->otpService->sendRegistrationOtp($user);
 
         $resource = new \stdClass();
         $resource->ssn = $user->userPatientData->ssn === "" ? $request->validated('ssn') : $user->userPatientData->ssn;

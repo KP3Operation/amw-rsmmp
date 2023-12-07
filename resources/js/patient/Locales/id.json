@@ -83,7 +83,8 @@
             "to": "Hingga",
             "reset": "Reset",
             "apply": "Terapkan",
-            "all": "Semua"
+            "all": "Semua",
+            "member": "Member"
         },
         "create_appointment":  {
             "title": "Buat Appointment",
@@ -249,6 +250,7 @@
         "unit": "Unit",
         "all_unit": "Semua Unit",
         "detail": "Detail",
+        "date": "Tanggal",
         "schedule_detail": {
             "title": "Detail Dokter",
             "schedule": "Detail Dokter",
@@ -257,7 +259,7 @@
             "thursday": "Rabu",
             "wednesday": "Kamis",
             "friday": "Jumat",
-            "satuday": "Sabtu",
+            "saturday": "Sabtu",
             "sunday": "Minggu",
             "create_appointment": "Buat Jadwal Konsultasi"
         }

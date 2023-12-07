@@ -12,4 +12,5 @@ interface IWatzapOtpService
     public function sendOtp(User $user, string $code): SendMessageDto;
     public function isPhoneNumberValid(User $user): bool;
     public function isApiKeyValid(): CheckApiKeyDto;
+    public function sendRegistrationOtp(User $user, string $code): SendMessageDto;
 }

@@ -338,3 +338,10 @@ Only the following environment attributes would require your attention out of th
 Remember that these specifications are for small to medium-sized applications. For large-scale or high-traffic applications, you might need to invest in more powerful hardware and consider additional technologies like load balancers, distributed databases, and content delivery networks (CDNs) for optimal performance and scalability.
 
 [Back to Top](#aviatmobileweb)
+
+## Notes
+
+1. If app env is `local` then the app will ignore error 1005 code from WatZap, this is to avoid 'Invalid Whatsapp number error message'.
+
+
+[Back to Top](#aviatmobileweb)

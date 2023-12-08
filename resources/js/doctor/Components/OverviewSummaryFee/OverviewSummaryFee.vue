@@ -1,7 +1,6 @@
 <script>
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { onMounted, reactive, ref } from "vue";
-import Form from "vform";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import {
     convertDateTimeToDate,
@@ -12,6 +11,7 @@ import {
 import { storeToRefs } from "pinia";
 import {helpers, maxValue, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
+import apiRequest from "@shared/utils/axios.js";
 
 export default {
     components: {},
@@ -43,7 +43,7 @@ export default {
 
         const filterSummaryFee = () => {
             layoutStore.isLoading = true;
-            filterForm.get('/api/v1/doctor/summary/fee').then((response) => {
+            apiRequest.get(`/api/v1/doctor/summary/fee?start_date=${filterForm.start_date}&end_date=${filterForm.end_date}`).then((response) => {
                 const data = response.data.data;
                 payout.value = toIdrFormat(data.payout);
                 pending.value = data.pending;
@@ -107,7 +107,7 @@ export default {
                     </div>
                 </div>
 
-                <div :class="{ error: v$.start_date.$errors.length }">
+                <div :class="{ error: v$.end_date.$errors.length }">
                     <label for="hingga" class="fs-6 text-gray-700">{{ $t('home.from') }}</label>
                     <input type="date" name="end_date" v-model="filterForm.end_date" id="hingga"
                            class="form-control mt-2" @input="v$.end_date.$touch()">

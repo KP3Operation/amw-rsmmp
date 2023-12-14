@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     private IWatzapOtpService $otpService;
+
     private IPatientService $patientService;
 
     public function __construct(IWatzapOtpService $otpService, IPatientService $patientService)
@@ -35,8 +36,8 @@ class LoginController extends Controller
             ->validated('phoneNumber'))
             ->first();
 
-        if (!$user) {
-            throw new RestApiException("No. Handphone tidak terdaftar", 404);
+        if (! $user) {
+            throw new RestApiException('No. Handphone tidak terdaftar', 404);
         }
 
         $otpCode = generate_otp(6);
@@ -52,7 +53,7 @@ class LoginController extends Controller
             'code' => $otpCode,
             'status' => 'unverified',
             'message_id' => null,
-            'updated_at' => Carbon::now()
+            'updated_at' => Carbon::now(),
         ]);
 
         $sendOtpResult = $this->otpService->sendOtp($user->phone_number, $otpCode);
@@ -72,16 +73,16 @@ class LoginController extends Controller
     public function authenticate(AuthenticateRequest $authenticateRequest)
     {
         $userOtpCode = OtpCode::whereCode($authenticateRequest->validated('code'))->whereStatus('unverified')->first();
-        if (!$userOtpCode) {
-            throw new RestApiException("Kode OTP salah", 404);
+        if (! $userOtpCode) {
+            throw new RestApiException('Kode OTP salah', 404);
         }
 
         if (date_diff_in_second($userOtpCode->updated_at) > config('app.otp_expired_in')) {
-            throw new RestApiException("Kode OTP telah kedaluwarsa", 400);
+            throw new RestApiException('Kode OTP telah kedaluwarsa', 400);
         }
 
         $user = User::find($userOtpCode->user_id);
-        if (!$user) {
+        if (! $user) {
             throw new RestApiException('Terjadi kesalahan saat membaca data. Mohon untuk login kembali', 500);
         }
 
@@ -99,11 +100,11 @@ class LoginController extends Controller
 
             $patientData = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn)->data->first();
 
-            $resource['userPatient']['patientId'] = $patientData->patientId ?? $user->userPatientData->patient_id ?? "";
-            $resource['userPatient']['medicalNo'] = $patientData->medicalNo ?? $user->userPatientData->medical_no ?? "";
-            $resource['userPatient']['gender'] = $patientData->gender ?? $user->userPatientData->gender ?? "";
-            $resource['userPatient']['birthDate'] = $patientData->birthDate ?? $user->userPatientData->birth_date ?? "";
-            $resource['userPatient']['ssn'] = $patientData->ssn ?? $user->userPatientData->ssn ?? "";
+            $resource['userPatient']['patientId'] = $patientData->patientId ?? $user->userPatientData->patient_id ?? '';
+            $resource['userPatient']['medicalNo'] = $patientData->medicalNo ?? $user->userPatientData->medical_no ?? '';
+            $resource['userPatient']['gender'] = $patientData->gender ?? $user->userPatientData->gender ?? '';
+            $resource['userPatient']['birthDate'] = $patientData->birthDate ?? $user->userPatientData->birth_date ?? '';
+            $resource['userPatient']['ssn'] = $patientData->ssn ?? $user->userPatientData->ssn ?? '';
             $resource['userPatient']['userEmail'] = $user->email;
         } else {
             $userDoctorData = UserDoctor::where('user_id', '=', $user->id)->first();
@@ -112,7 +113,7 @@ class LoginController extends Controller
         }
 
         $userOtpCode->update([
-            'status' => 'verified'
+            'status' => 'verified',
         ]);
 
         Auth::loginUsingId($user->id);

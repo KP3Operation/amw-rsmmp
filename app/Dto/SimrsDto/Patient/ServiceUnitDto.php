@@ -12,7 +12,6 @@ use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
 class ServiceUnitDto extends Data
 {
-
     public function __construct(
         #[MapInputName('ServiceUnitID')]
         public ?string $serviceUnitID,
@@ -20,7 +19,8 @@ class ServiceUnitDto extends Data
         #[MapInputName('ServiceUnitName')]
         public ?string $serviceUnitName,
 
-    ) {}
+    ) {
+    }
 
     public static function normalizers(): array
     {
@@ -29,7 +29,7 @@ class ServiceUnitDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

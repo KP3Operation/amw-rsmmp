@@ -14,7 +14,6 @@ use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
 class DoctorFeeByPaymentDateTrxDataDto extends Data
 {
-
     public function __construct(
         #[MapInputName('PaymentGroup')]
         public ?string $paymentGroup,
@@ -35,7 +34,7 @@ class DoctorFeeByPaymentDateTrxDataDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

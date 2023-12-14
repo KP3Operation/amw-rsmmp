@@ -11,6 +11,6 @@ class DoctorDataDto extends Data
     public function __construct(
         #[DataCollectionOf(DoctorDto::class)]
         public DataCollection $data
-    )
-    {}
+    ) {
+    }
 }

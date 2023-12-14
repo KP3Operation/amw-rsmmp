@@ -25,20 +25,22 @@ class MeController extends Controller
     public function index(Request $request)
     {
         $currentRole = user_role($request->user()->id);
-        if ($currentRole == "patient") {
+        if ($currentRole == 'patient') {
             $userPatient = UserPatient::where('user_id', '=', $request->user()->id)->first();
+
             return response()->json([
-                "user" => $request->user(),
-                "patient_data" => $userPatient,
-                "role" => $currentRole
+                'user' => $request->user(),
+                'patient_data' => $userPatient,
+                'role' => $currentRole,
             ]);
         }
 
         $userDoctor = UserDoctor::where('user_id', '=', $request->user()->id)->first();
+
         return response()->json([
-            "user" => $request->user(),
-            "doctor_data" => $userDoctor,
-            "role" => $currentRole
+            'user' => $request->user(),
+            'doctor_data' => $userDoctor,
+            'role' => $currentRole,
         ]);
     }
 
@@ -51,35 +53,35 @@ class MeController extends Controller
         DB::transaction(function () use ($response, $user) {
             $patientData = $response->data->first();
             $user->update([
-                "name" => $patientData->firstName . " " . $patientData->middleName . " " . $patientData->lastName,
+                'name' => $patientData->firstName.' '.$patientData->middleName.' '.$patientData->lastName,
             ]);
 
             if ($user->email != null) {
                 $user->update([
-                    "email" => $patientData->email
+                    'email' => $patientData->email,
                 ]);
             }
 
             if ($user->userPatientData) {
                 $user->userPatientData()->update([
-                    "patient_id" => $patientData->patientId,
-                    "ssn" => $patientData->ssn,
-                    "birth_date" => $patientData->birthDate,
-                    "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki",
-                    "medical_no" => $patientData->medicalNo,
-                    "sync_at" => Carbon::now()
+                    'patient_id' => $patientData->patientId,
+                    'ssn' => $patientData->ssn,
+                    'birth_date' => $patientData->birthDate,
+                    'gender' => $patientData->gender == 'F' ? 'Perempuan' : 'Laki-Laki',
+                    'medical_no' => $patientData->medicalNo,
+                    'sync_at' => Carbon::now(),
                 ]);
             } else {
                 UserPatient::create([
-                    "user_id" => $user->id,
-                    "patient_id" => $patientData->patientId,
-                    "ssn" => $patientData->ssn,
-                    "birth_date" => $patientData->birthDate,
-                    "gender" => $patientData->gender == "F" ? "Perempuan" : "Laki-Laki",
-                    "medical_no" => $patientData->medicalNo,
-                    "sync_at" => Carbon::now(),
-                    "guarantor_id" => $patientData->guarantorId,
-                    "guarantor_name" => null // only save null for now
+                    'user_id' => $user->id,
+                    'patient_id' => $patientData->patientId,
+                    'ssn' => $patientData->ssn,
+                    'birth_date' => $patientData->birthDate,
+                    'gender' => $patientData->gender == 'F' ? 'Perempuan' : 'Laki-Laki',
+                    'medical_no' => $patientData->medicalNo,
+                    'sync_at' => Carbon::now(),
+                    'guarantor_id' => $patientData->guarantorId,
+                    'guarantor_name' => null, // only save null for now
                 ]);
             }
         });

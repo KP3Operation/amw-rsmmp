@@ -12,7 +12,6 @@ use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
 class PatientEncounterDetailDto extends Data
 {
-
     public function __construct(
         #[MapInputName('RegistrationNo')]
         public ?string $registrationNo,
@@ -116,7 +115,8 @@ class PatientEncounterDetailDto extends Data
         #[MapInputName('DateOfBirth_yMdHms')]
         public ?string $dateOfBirth_yMdHms,
 
-    ) {}
+    ) {
+    }
 
     public static function normalizers(): array
     {
@@ -125,7 +125,7 @@ class PatientEncounterDetailDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

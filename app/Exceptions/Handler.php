@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (UserAlreadyExistException $e, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ], 409);
             }
         });
@@ -40,7 +40,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (RestApiException $e, Request $request) {
             if ($request->is('api/*')) {
                 $response = [
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ];
 
                 if (config('app.debug')) {
@@ -49,9 +49,10 @@ class Handler extends ExceptionHandler
                         'exception' => RestApiException::class,
                         'file' => $e->getFile(),
                         'line' => $e->getLine(),
-                        'trace' => $e->getTrace()
+                        'trace' => $e->getTrace(),
                     ];
                 }
+
                 return response()->json($response, $e->getCode());
             }
         });
@@ -59,7 +60,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (SimrsException $e, Request $request) {
             if ($request->is('api/*')) {
                 $response = [
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ];
 
                 if (config('app.debug')) {
@@ -68,9 +69,10 @@ class Handler extends ExceptionHandler
                         'exception' => SimrsException::class,
                         'file' => $e->getFile(),
                         'line' => $e->getLine(),
-                        'trace' => $e->getTrace()
+                        'trace' => $e->getTrace(),
                     ];
                 }
+
                 return response()->json($response, $e->getCode());
             }
         });
@@ -78,7 +80,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (WatzapException $e, Request $request) {
             if ($request->is('api/*')) {
                 $response = [
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ];
 
                 if (config('app.debug')) {
@@ -87,9 +89,10 @@ class Handler extends ExceptionHandler
                         'exception' => WatzapException::class,
                         'file' => $e->getFile(),
                         'line' => $e->getLine(),
-                        'trace' => $e->getTrace()
+                        'trace' => $e->getTrace(),
                     ];
                 }
+
                 return response()->json($response, $e->getCode());
             }
         });

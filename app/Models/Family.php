@@ -12,26 +12,25 @@ class Family extends Model
     use HasFactory;
 
     protected $fillable = [
-        "user_id",
-        "ssn",
-        "name",
-        "phone_number",
-        "gender",
-        "birth_date",
-        "email",
-        "patient_id",
-        "medical_no",
-        "guarantor_id",
-        "guarantor_name",
+        'user_id',
+        'ssn',
+        'name',
+        'phone_number',
+        'gender',
+        'birth_date',
+        'email',
+        'patient_id',
+        'medical_no',
+        'guarantor_id',
+        'guarantor_name',
     ];
 
     protected function phoneNumber(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => config('app.calling_code') . $value,
+            get: fn (string $value) => config('app.calling_code').$value,
         );
     }
-
 
     public function user(): BelongsTo
     {

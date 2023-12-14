@@ -25,6 +25,6 @@ class DoctorDto extends Data
 
         #[MapInputName('Foto64')]
         public ?string $photo64
-    )
-    {}
+    ) {
+    }
 }

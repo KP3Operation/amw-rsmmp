@@ -16,8 +16,8 @@ class PatientVitalSignHistoryDataDto extends Data
     public function __construct(
         #[DataCollectionOf(PatientVitalSignHistoryDto::class)]
         public DataCollection $data
-    )
-    {}
+    ) {
+    }
 
     public static function normalizers(): array
     {
@@ -26,7 +26,7 @@ class PatientVitalSignHistoryDataDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

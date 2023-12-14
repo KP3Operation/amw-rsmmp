@@ -10,7 +10,7 @@ use Spatie\LaravelData\Normalizers\JsonNormalizer;
 use Spatie\LaravelData\Normalizers\ModelNormalizer;
 use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
-class PatientPrescriptionHistoryDto  extends Data
+class PatientPrescriptionHistoryDto extends Data
 {
     public function __construct(
         #[MapInputName('PrescriptionNo')]
@@ -43,7 +43,7 @@ class PatientPrescriptionHistoryDto  extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

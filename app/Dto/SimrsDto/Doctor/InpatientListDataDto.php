@@ -16,8 +16,8 @@ class InpatientListDataDto extends Data
     public function __construct(
         #[DataCollectionOf(InpatientListDto::class)]
         public DataCollection $data
-    )
-    {}
+    ) {
+    }
 
     public static function normalizers(): array
     {
@@ -26,7 +26,7 @@ class InpatientListDataDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

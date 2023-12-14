@@ -22,12 +22,12 @@ class StoreFamilyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "ssn" => "required|min:16|max:16|unique:families,ssn",
-            "name" => 'required',
-            "phone_number" => "required|min:10|max:13|unique:families,phone_number",
-            "gender" => 'required',
-            "birth_date" => 'date',
-            "email" => 'nullable|email|unique:families,email',
+            'ssn' => 'required|min:16|max:16|unique:families,ssn',
+            'name' => 'required',
+            'phone_number' => 'required|min:10|max:13|unique:families,phone_number',
+            'gender' => 'required',
+            'birth_date' => 'date',
+            'email' => 'nullable|email|unique:families,email',
         ];
     }
 }

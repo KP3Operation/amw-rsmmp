@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-if (!function_exists('user_role')) {
+if (! function_exists('user_role')) {
     function user_role(int $userid)
     {
         $user = User::with('roles')->where('id', '=', $userid)->first();
-        $roleName = "patient";
+        $roleName = 'patient';
         foreach ($user->roles as $role) {
             $roleName = $role->name;
             break;
@@ -21,7 +21,7 @@ if (!function_exists('user_role')) {
     }
 }
 
-if (!function_exists('user_role_id')) {
+if (! function_exists('user_role_id')) {
     function user_role_id(int $userid)
     {
         $user = User::with('roles')->where('id', '=', $userid)->first();
@@ -35,15 +35,16 @@ if (!function_exists('user_role_id')) {
     }
 }
 
-if (!function_exists('parse_microsoft_date')) {
+if (! function_exists('parse_microsoft_date')) {
     function parse_microsoft_date(string $date): DateTime|bool
     {
         $timestamp = (int) substr($date, 6, -2) / 1000; // Extract the timestamp value
+
         return DateTime::createFromFormat('U', $timestamp);
     }
 }
 
-if (!function_exists('generate_otp')) {
+if (! function_exists('generate_otp')) {
     function generate_otp(int $length): int
     {
         $otp = '0';
@@ -58,14 +59,15 @@ if (!function_exists('generate_otp')) {
 
         $existingcode = otpcode::where('code', '=', $otp)->first();
 
-        if ($otp == 0 || $existingcode != null)
+        if ($otp == 0 || $existingcode != null) {
             generate_otp($length);
+        }
 
         return $otp;
     }
 }
 
-if (!function_exists('date_diff_in_second')) {
+if (! function_exists('date_diff_in_second')) {
     function date_diff_in_second($pastDate): int
     {
         $currentDate = Carbon::parse(date('Y-m-d H:i:s'));
@@ -75,58 +77,61 @@ if (!function_exists('date_diff_in_second')) {
     }
 }
 
-if (!function_exists('convert_date_to_req_param')) {
+if (! function_exists('convert_date_to_req_param')) {
     function convert_date_to_req_param(string $date): string
     {
         $parsedDate = Carbon::parse($date);
+
         return $parsedDate->format('Y-m-d');
     }
 }
 
-if (!function_exists('get_current_month_start_date')) {
+if (! function_exists('get_current_month_start_date')) {
     function get_current_month_start_date(): string
     {
         return date('Y-m-01');
     }
 }
 
-if (!function_exists('get_current_month_date')) {
+if (! function_exists('get_current_month_date')) {
     function get_current_month_date(): string
     {
         return date('Y-m-d');
     }
 }
 
-if (!function_exists('get_current_year_start_date')) {
+if (! function_exists('get_current_year_start_date')) {
     function get_current_year_start_date(): string
     {
         return date('Y-01-01');
     }
 }
 
-if (!function_exists('get_time_from_datetime')) {
+if (! function_exists('get_time_from_datetime')) {
     /**
      * @throws Exception
      */
     function get_time_from_datetime(string $datetime): string
     {
         $dateTime = new DateTime($datetime);
+
         return $dateTime->format('H:i');
     }
 }
 
-if (!function_exists('get_date_from_datetime')) {
+if (! function_exists('get_date_from_datetime')) {
     /**
      * @throws Exception
      */
     function get_date_from_datetime(string $datetime): string
     {
         $dateTime = new DateTime($datetime);
+
         return $dateTime->format('Y-m-d');
     }
 }
 
-if (!function_exists('format_phone_number')) {
+if (! function_exists('format_phone_number')) {
     function format_phone_number(string $phoneNumber): string
     {
         $numericPhoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
@@ -135,7 +140,7 @@ if (!function_exists('format_phone_number')) {
         if (strlen($numericPhoneNumber) >= 2 &&
             substr($numericPhoneNumber, 0, 2) === '08') {
             // Replace '08' with '8'
-            $formattedPhoneNumber = '8' . substr($numericPhoneNumber, 2);
+            $formattedPhoneNumber = '8'.substr($numericPhoneNumber, 2);
         } else {
             // If it doesn't start with '08', keep the original number
             $formattedPhoneNumber = $numericPhoneNumber;
@@ -145,7 +150,7 @@ if (!function_exists('format_phone_number')) {
     }
 }
 
-if (!!function_exists("invalidate_user_session")) {
+if ((bool) function_exists('invalidate_user_session')) {
     function invalidate_user_session(Request $request): void
     {
         Session::flush();
@@ -154,5 +159,3 @@ if (!!function_exists("invalidate_user_session")) {
         $request->session()->regenerateToken();
     }
 }
-
-

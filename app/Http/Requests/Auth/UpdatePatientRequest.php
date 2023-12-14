@@ -26,12 +26,12 @@ class UpdatePatientRequest extends FormRequest
         $userPatient = UserPatient::where('user_id', '=', $user->id)->first();
 
         return [
-            "phoneNumber" => "required|min:10|max:13|unique:users,phone_number," . $user->id,
-            "ssn" => "required|min:16|max:16|unique:user_patients,ssn," . $userPatient->id,
-            "name" => "required|string",
-            "gender" => "required",
-            "birthDate" => "required|date",
-            "email" => "nullable|email|unique:users,email," . $user->id
+            'phoneNumber' => 'required|min:10|max:13|unique:users,phone_number,'.$user->id,
+            'ssn' => 'required|min:16|max:16|unique:user_patients,ssn,'.$userPatient->id,
+            'name' => 'required|string',
+            'gender' => 'required',
+            'birthDate' => 'required|date',
+            'email' => 'nullable|email|unique:users,email,'.$user->id,
         ];
     }
 }

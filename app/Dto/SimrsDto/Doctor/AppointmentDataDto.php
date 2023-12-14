@@ -11,6 +11,6 @@ class AppointmentDataDto extends Data
     public function __construct(
         #[DataCollectionOf(AppointmentDto::class)]
         public DataCollection $data
-    )
-    {}
+    ) {
+    }
 }

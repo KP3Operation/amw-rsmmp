@@ -40,7 +40,7 @@ class AppointmentController extends Controller
             $medicalNo = $request->medical_no;
         }
 
-        if (!$medicalNo || $medicalNo === '') {
+        if (! $medicalNo || $medicalNo === '') {
             //throw new RestApiException('Pasien tidak memiliki no rekam medis', 404);
         }
 
@@ -101,12 +101,12 @@ class AppointmentController extends Controller
         }
 
         // Get local appointment
-        if (count($response) == 0 && (!$medicalNo || $medicalNo == '')) {
+        if (count($response) == 0 && (! $medicalNo || $medicalNo == '')) {
             $localAppointments = Appointment::where('related_user_id', '=', $selectedUserId)->get();
 
             foreach ($localAppointments as $localAppointment) {
                 $simrsAppointment = $this->patientService->getAppointment($localAppointment->appointment_no);
-                $response[] =  $simrsAppointment->toArray();
+                $response[] = $simrsAppointment->toArray();
             }
         }
 
@@ -117,7 +117,7 @@ class AppointmentController extends Controller
         foreach ($response as $appointment) {
             if ($appointment['appointmentStatus'] == '01') { // open
                 $opens[] = $appointment;
-            } else if ($appointment['appointmentStatus'] == '02') { // done
+            } elseif ($appointment['appointmentStatus'] == '02') { // done
                 $dones[] = $appointment;
             } else { // cancel
                 $cancels[] = $appointment;
@@ -128,8 +128,8 @@ class AppointmentController extends Controller
             'appointments' => [
                 'dones' => $dones,
                 'opens' => $opens,
-                'cancels' => $cancels
-            ]
+                'cancels' => $cancels,
+            ],
         ]);
     }
 
@@ -143,13 +143,13 @@ class AppointmentController extends Controller
 
         DB::transaction(function () use ($request, $user) {
             // register it self
-            if (!$request->is_family_member) {
+            if (! $request->is_family_member) {
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id,
                     $request->paramedic_id,
                     get_date_from_datetime($request->appointment_date),
                     'AUTO',
-                    $user->userPatientData->patient_id ?? "",
+                    $user->userPatientData->patient_id ?? '',
                     $request->patient_name,
                     '',
                     '',
@@ -179,12 +179,12 @@ class AppointmentController extends Controller
                     'service_unit_id' => $appoinment->serviceUnitID,
                     'appointment_no' => $appoinment->appointmentNo,
                     'is_family_member' => false,
-                    'appointment_date' =>  get_date_from_datetime($request->appointment_date),
+                    'appointment_date' => get_date_from_datetime($request->appointment_date),
                 ]);
 
-                if (!$user->userPatientData->medical_no) {
+                if (! $user->userPatientData->medical_no) {
                     $user->update([
-                        'medical_no' => $appoinment->medicalNo
+                        'medical_no' => $appoinment->medicalNo,
                     ]);
                 }
 
@@ -192,18 +192,17 @@ class AppointmentController extends Controller
                     'doctor_id' => $request->paramedic_id,
                     'context' => Notification::APPOINTMENT,
                     'message' => 'Anda mendapatkan janji temu baru',
-                    'appointment_date' => $request->appointment_date
+                    'appointment_date' => $request->appointment_date,
                 ]);
 
                 return response()->json([
-                    'appointment' => $localAppoinment
+                    'appointment' => $localAppoinment,
                 ]);
-
 
             } else { // register family member
                 $family = Family::where('patient_id', '=', $request->patient_id)->first();
-                if (!$family) {
-                    throw new \Exception("Gagal mengambil data family member");
+                if (! $family) {
+                    throw new \Exception('Gagal mengambil data family member');
                 }
 
                 $appointmentData = new CreateAppointment(
@@ -238,7 +237,7 @@ class AppointmentController extends Controller
                 Notification::create([
                     'doctor_id' => $request->paramedic_id,
                     'context' => Notification::APPOINTMENT,
-                    'message' => 'Anda mendapatkan janji temu baru'
+                    'message' => 'Anda mendapatkan janji temu baru',
                 ]);
 
                 $localAppoinment = Appointment::create([
@@ -247,19 +246,17 @@ class AppointmentController extends Controller
                     'service_unit_id' => $appoinment->serviceUnitID,
                     'appointment_no' => $appoinment->appointmentNo,
                     'is_family_member' => true,
-                    'appointment_date' => $request->appointment_date
+                    'appointment_date' => $request->appointment_date,
                 ]);
 
-
-                if (!$family->medical_no) {
+                if (! $family->medical_no) {
                     $user->update([
-                        'medical_no' => $appoinment->medicalNo
+                        'medical_no' => $appoinment->medicalNo,
                     ]);
                 }
 
-
                 return response()->json([
-                    'appointment' => $localAppoinment
+                    'appointment' => $localAppoinment,
                 ]);
             }
         });

@@ -14,6 +14,7 @@ use stdClass;
 class MedicalHistoryController extends Controller
 {
     private IPatientService $patientService;
+
     public function __construct(IPatientService $patientService)
     {
         $this->patientService = $patientService;
@@ -29,23 +30,23 @@ class MedicalHistoryController extends Controller
 
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
-            if (!$user->medical_no) {
+            if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
             $vitalSignHistoryData = $this->patientService
-                ->getVitalSignHistory($request->type ?? "", 10, $user->medical_no);
+                ->getVitalSignHistory($request->type ?? '', 10, $user->medical_no);
 
             $response->histories = $vitalSignHistoryData->data;
             $response->patient = $user;
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
-            if (!$user->userPatientData->medical_no) {
+            if (! $user->userPatientData->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
             $vitalSignHistoryData = $this->patientService
-                ->getVitalSignHistory($request->type ?? "", 999, $user->userPatientData->medical_no);
+                ->getVitalSignHistory($request->type ?? '', 999, $user->userPatientData->medical_no);
 
             $response->histories = $vitalSignHistoryData->data;
             $response->patient = $user;
@@ -57,7 +58,7 @@ class MedicalHistoryController extends Controller
         $paginatedHistories = [];
         if (count($prevData) >= 10) {
             foreach ($response->histories as $patient) {
-                if (!in_array($patient->registrationNo, $prevData)) {
+                if (! in_array($patient->registrationNo, $prevData)) {
                     $paginatedHistories[] = $patient;
                 }
 
@@ -88,7 +89,7 @@ class MedicalHistoryController extends Controller
         }
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
-            if (!$user->medical_no) {
+            if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
@@ -100,7 +101,7 @@ class MedicalHistoryController extends Controller
 
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
-            if (!$user->userPatientData->medical_no) {
+            if (! $user->userPatientData->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
@@ -116,7 +117,7 @@ class MedicalHistoryController extends Controller
         $paginatedHistories = [];
         if (count($prevData) >= 10) {
             foreach ($response->histories as $patient) {
-                if (!in_array($patient->PrescriptionNo, $prevData)) {
+                if (! in_array($patient->PrescriptionNo, $prevData)) {
                     $paginatedHistories[] = $patient;
                 }
 
@@ -141,10 +142,11 @@ class MedicalHistoryController extends Controller
     public function prescriptionHistoryDetail(Request $request)
     {
         $user = User::where('id', '=', $request->user()->id)->first();
-        if (!$user->userPatientData->medical_no)
+        if (! $user->userPatientData->medical_no) {
             throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
+        }
 
-        if (!$request->has('prescription_no')) {
+        if (! $request->has('prescription_no')) {
             throw ValidationException::withMessages(['prescription_no' => 'Gagal mengambil data']);
         }
 
@@ -167,7 +169,7 @@ class MedicalHistoryController extends Controller
         }
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
-            if (!$user->medical_no) {
+            if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
@@ -178,8 +180,9 @@ class MedicalHistoryController extends Controller
 
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
-            if (!$user->userPatientData->medical_no)
+            if (! $user->userPatientData->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
+            }
 
             $labResults = $this->patientService->getLabResult($user->userPatientData->medical_no);
 
@@ -194,7 +197,7 @@ class MedicalHistoryController extends Controller
         $paginatedHistories = [];
         if (count($prevData) >= 10) {
             foreach ($response->histories as $patient) {
-                if (!in_array($patient->registrationNo, $prevData)) {
+                if (! in_array($patient->registrationNo, $prevData)) {
                     $paginatedHistories[] = $patient;
                 }
 
@@ -219,10 +222,11 @@ class MedicalHistoryController extends Controller
     public function labResultDetail(Request $request)
     {
         $user = User::where('id', '=', $request->user()->id)->first();
-        if (!$user->userPatientData->medical_no)
+        if (! $user->userPatientData->medical_no) {
             throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
+        }
 
-        if (!$request->has('transaction_no')) {
+        if (! $request->has('transaction_no')) {
             throw ValidationException::withMessages(['transaction_no' => 'Gagal mengambil data']);
         }
 
@@ -244,7 +248,7 @@ class MedicalHistoryController extends Controller
         }
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
-            if (!$user->medical_no) {
+            if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
             $encountersList = $this->patientService->getEncounterList(
@@ -260,8 +264,9 @@ class MedicalHistoryController extends Controller
 
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
-            if (!$user->userPatientData->medical_no)
+            if (! $user->userPatientData->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
+            }
 
             $encountersList = $this->patientService->getEncounterList(
                 $user->userPatientData->medical_no,
@@ -282,7 +287,7 @@ class MedicalHistoryController extends Controller
         $paginatedHistories = [];
         if (count($prevData) >= 10) {
             foreach ($response->histories as $patient) {
-                if (!in_array($patient->registrationNo, $prevData)) {
+                if (! in_array($patient->registrationNo, $prevData)) {
                     $paginatedHistories[] = $patient;
                 }
 
@@ -307,10 +312,11 @@ class MedicalHistoryController extends Controller
     public function encounterListDetail(Request $request)
     {
         $user = User::where('id', '=', $request->user()->id)->first();
-        if (!$user->userPatientData->medical_no)
+        if (! $user->userPatientData->medical_no) {
             throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
+        }
 
-        if (!$request->has('registration_no')) {
+        if (! $request->has('registration_no')) {
             throw ValidationException::withMessages(['registration_no' => 'Gagal mengambil data']);
         }
 

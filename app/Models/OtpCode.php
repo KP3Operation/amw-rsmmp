@@ -14,7 +14,7 @@ class OtpCode extends Model
         'code',
         'user_id',
         'status',
-        'message_id'
+        'message_id',
     ];
 
     public function user(): BelongsTo

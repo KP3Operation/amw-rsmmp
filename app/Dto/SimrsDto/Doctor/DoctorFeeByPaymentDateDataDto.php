@@ -13,7 +13,6 @@ use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
 class DoctorFeeByPaymentDateDataDto extends Data
 {
-
     public function __construct(
         #[DataCollectionOf(DoctorFeeByPaymentDateTrxDataDto::class)]
         public DataCollection $data
@@ -27,7 +26,7 @@ class DoctorFeeByPaymentDateDataDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

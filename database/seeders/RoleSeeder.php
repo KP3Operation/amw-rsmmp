@@ -11,12 +11,12 @@ class RoleSeeder extends Seeder
     {
         \App\Models\Role::factory()->create([
             'id' => Role::PATIENT,
-            'name' => 'patient'
+            'name' => 'patient',
         ]);
 
         \App\Models\Role::factory()->create([
             'id' => Role::DOCTOR,
-            'name' => 'doctor'
+            'name' => 'doctor',
         ]);
     }
 }

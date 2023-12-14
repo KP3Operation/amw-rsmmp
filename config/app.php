@@ -197,7 +197,6 @@ return [
 
     'calling_code' => env('APP_CALLING_CODE', '+62'),
 
-
     /*
     |--------------------------------------------------------------------------
     | OTP Expired In
@@ -209,6 +208,5 @@ return [
     */
 
     'otp_expired_in' => env('APP_OTP_EXPIRED_IN', 1800),
-
 
 ];

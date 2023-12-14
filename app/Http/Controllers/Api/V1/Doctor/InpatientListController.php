@@ -26,11 +26,11 @@ class InpatientListController extends Controller
         }
 
         $inpatientList = $this->doctorService
-            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? "", 150);
+            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? '', 150);
 
         if (count($prevData) >= 10) {
             foreach ($inpatientList->data as $patient) {
-                if (!in_array($patient->medicalNo, $prevData)) {
+                if (! in_array($patient->medicalNo, $prevData)) {
                     $response[] = $patient;
                 }
 
@@ -48,20 +48,20 @@ class InpatientListController extends Controller
         }
 
         return response()->json([
-            'patients' => $response
+            'patients' => $response,
         ]);
     }
 
     public function getPatientRegistrationCPPT(Request $request)
     {
         $request->validate([
-            'registration_no' => 'required|string'
+            'registration_no' => 'required|string',
         ]);
 
         $patientRegistrationCPPTs = $this->doctorService->getPatientRegistrationCPPT($request->registration_no);
 
         return response()->json([
-            'cppts' => $patientRegistrationCPPTs->data
+            'cppts' => $patientRegistrationCPPTs->data,
         ]);
     }
 }

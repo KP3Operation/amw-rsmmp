@@ -8,6 +8,6 @@ class CreateAppointmentDataDto extends Data
 {
     public function __construct(
         public AppointmentDto $data
-    )
-    {}
+    ) {
+    }
 }

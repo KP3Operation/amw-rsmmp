@@ -12,7 +12,6 @@ use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
 class DoctorScheduleDto extends Data
 {
-
     public function __construct(
         #[MapInputName('ServiceUnitID')]
         public ?string $serviceUnitID,
@@ -53,7 +52,8 @@ class DoctorScheduleDto extends Data
         #[MapInputName('ScheduleDate_yMdHms')]
         public ?string $ScheduleDate_yMdHms,
 
-    ) {}
+    ) {
+    }
 
     public static function normalizers(): array
     {
@@ -62,7 +62,7 @@ class DoctorScheduleDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

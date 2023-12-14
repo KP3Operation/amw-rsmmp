@@ -22,14 +22,14 @@ class DestroyAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'appointment_no' => 'required'
+            'appointment_no' => 'required',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'appointment_no.required' => 'No. appointment tidak valid'
+            'appointment_no.required' => 'No. appointment tidak valid',
         ];
     }
 }

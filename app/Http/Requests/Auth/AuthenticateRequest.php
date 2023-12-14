@@ -22,7 +22,7 @@ class AuthenticateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|numeric'
+            'code' => 'required|numeric',
         ];
     }
 }

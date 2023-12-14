@@ -16,7 +16,8 @@ class PatientLabResultDetailDataDto extends Data
     public function __construct(
         #[DataCollectionOf(PatientLabResultDetailDto::class)]
         public DataCollection $data,
-    ) {}
+    ) {
+    }
 
     public static function normalizers(): array
     {
@@ -25,7 +26,7 @@ class PatientLabResultDetailDataDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

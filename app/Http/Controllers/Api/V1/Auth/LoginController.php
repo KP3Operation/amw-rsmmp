@@ -10,15 +10,17 @@ use App\Models\OtpCode;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserDoctor;
-use App\Services\OtpService\OtpWrapper\IOtpWrapperService;
+use App\Services\OtpService\Watzap\IWatzapOtpService;
 use App\Services\SimrsService\PatientService\IPatientService;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    private IOtpWrapperService $otpService;
+    private IWatzapOtpService $otpService;
     private IPatientService $patientService;
 
-    public function __construct(IOtpWrapperService $otpService, IPatientService $patientService)
+    public function __construct(IWatzapOtpService $otpService, IPatientService $patientService)
     {
         $this->otpService = $otpService;
         $this->patientService = $patientService;
@@ -37,17 +39,36 @@ class LoginController extends Controller
             throw new RestApiException("No. Handphone tidak terdaftar", 404);
         }
 
-        $otpCode = $this->otpService->sendOtp($user);
+        $otpCode = generate_otp(6);
+        // if it is local env force the otpCode to 12345; for dev only
+        if (config('app.env') == 'local') {
+            $otpCode = 12345;
+        }
+
+        OtpCode::where('user_id', '=', $user->id)->delete();
+
+        $otpCodeData = OtpCode::create([
+            'user_id' => $user->id,
+            'code' => $otpCode,
+            'status' => 'unverified',
+            'message_id' => null,
+            'updated_at' => Carbon::now()
+        ]);
+
+        $sendOtpResult = $this->otpService->sendOtp($user->phone_number, $otpCode);
 
         $resource = [];
-        $resource['otpCreatedAt'] = $otpCode->created_at;
-        $resource['otpUpdatedAt'] = $otpCode->updated_at;
+        $resource['otpCreatedAt'] = $otpCodeData->created_at;
+        $resource['otpUpdatedAt'] = $otpCodeData->updated_at;
         $resource['otpTimeout'] = 30000; // miliseconds ; 30 seconds
         $resource['phoneNumber'] = $user->phone_number;
 
         return response()->json($resource);
     }
 
+    /**
+     * @throws RestApiException
+     */
     public function authenticate(AuthenticateRequest $authenticateRequest)
     {
         $userOtpCode = OtpCode::whereCode($authenticateRequest->validated('code'))->whereStatus('unverified')->first();
@@ -64,8 +85,6 @@ class LoginController extends Controller
             throw new RestApiException('Terjadi kesalahan saat membaca data. Mohon untuk login kembali', 500);
         }
 
-        // NOTE: Not sure, but look like we don't need to generate token, as the authorization id done via cookies
-        // $user->token = $user->createToken('auth_token')->plainTextToken;
         foreach ($user->roles as $role) {
             $user->role = $role->name;
             break;
@@ -96,11 +115,8 @@ class LoginController extends Controller
             'status' => 'verified'
         ]);
 
-        \Auth::loginUsingId($user->id);
+        Auth::loginUsingId($user->id);
         $authenticateRequest->session()->regenerate();
-
-        // delete old tokens first
-        $user->tokens()->delete();
 
         return response()->json($resource);
     }

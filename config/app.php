@@ -159,7 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
-        
+
         /*
          * Application Service Providers...
          */
@@ -196,17 +196,6 @@ return [
     */
 
     'calling_code' => env('APP_CALLING_CODE', '+62'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | OTP With Queue
-    |--------------------------------------------------------------------------
-    |
-    | In order to send OTP via queue, set this value to true.
-    |
-    */
-
-    'otp_with_queue' => env('APP_OTP_WITH_QUEUE', false),
 
 
     /*

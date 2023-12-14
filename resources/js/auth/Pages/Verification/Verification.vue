@@ -115,6 +115,8 @@ export default {
                 .catch((error) => {
                     if (error.response.status === 404) {
                         this.toggleErrorAlert(error.response.data.message);
+                    } else if (error.response.status === 500) {
+                        this.toggleErrorAlert(error.response.data.message);
                     } else {
                         this.toggleErrorAlert(error);
                     }

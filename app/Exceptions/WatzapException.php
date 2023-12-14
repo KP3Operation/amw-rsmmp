@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class InvalidWhatsAppPhoneNumber extends Exception
+class WatzapException extends Exception
 {
     //
 }

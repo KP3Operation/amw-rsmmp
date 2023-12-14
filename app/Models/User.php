@@ -53,7 +53,9 @@ class User extends Authenticatable
     protected function phoneNumber(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => config('app.calling_code') . $value,
+            get: function (string $value) {
+                return config('app.calling_code') . $value;
+            },
         );
     }
 

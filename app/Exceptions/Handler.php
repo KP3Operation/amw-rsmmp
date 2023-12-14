@@ -55,5 +55,43 @@ class Handler extends ExceptionHandler
                 return response()->json($response, $e->getCode());
             }
         });
+
+        $this->renderable(function (SimrsException $e, Request $request) {
+            if ($request->is('api/*')) {
+                $response = [
+                    'message' => $e->getMessage()
+                ];
+
+                if (config('app.debug')) {
+                    $response = [
+                        'message' => $e->getMessage(),
+                        'exception' => SimrsException::class,
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTrace()
+                    ];
+                }
+                return response()->json($response, $e->getCode());
+            }
+        });
+
+        $this->renderable(function (WatzapException $e, Request $request) {
+            if ($request->is('api/*')) {
+                $response = [
+                    'message' => $e->getMessage()
+                ];
+
+                if (config('app.debug')) {
+                    $response = [
+                        'message' => $e->getMessage(),
+                        'exception' => WatzapException::class,
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTrace()
+                    ];
+                }
+                return response()->json($response, $e->getCode());
+            }
+        });
     }
 }

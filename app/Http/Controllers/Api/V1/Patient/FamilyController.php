@@ -41,7 +41,7 @@ class FamilyController extends Controller
 
     public function store(StoreFamilyRequest $request): StoreFamilyResource
     {
-        // TODO: SOmehow 08 leading still not filtered
+        // TODO: Somehow 08 leading still not filtered
         $phoneNumber = format_phone_number($request->validated('phone_number'));
         $family = Family::create($request->only(
             "ssn",

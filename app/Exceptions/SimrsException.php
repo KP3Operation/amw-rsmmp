@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class InvalidDoctorId extends Exception
+class SimrsException extends Exception
 {
     //
 }

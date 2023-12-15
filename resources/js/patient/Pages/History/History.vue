@@ -285,7 +285,8 @@ onMounted(() => {
                 <div v-if="vitalSignHistories.length > 0" class="d-flex flex-column rows-gap-16 mt-4" v-for="history in vitalSignHistories">
                     <VitalSignCard :dateCreated="history.recordDate_yMdHms" :timeCreated="history.recordTime"
                         :registrationNo="history.registrationNo" :vitalSignUnit="history.vitalSignUnit"
-                        :vitalSignName="history.vitalSignName" />
+                        :vitalSignName="history.vitalSignName"
+                        :questionAnswerNum="history.questionAnswerNum"/>
                 </div>
                 <div class="text-center" v-if="vitalSignHistories.length < 1 && !layoutStore.isLoading">
                     <img :src="NotFoundImage" alt="Ilustrasi Tidak Ada Data"

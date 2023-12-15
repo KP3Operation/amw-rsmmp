@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Exceptions\RestApiException;
+use App\Exceptions\SimrsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AuthenticateRequest;
 use App\Http\Requests\Auth\LoginRequest;
@@ -29,6 +30,7 @@ class LoginController extends Controller
 
     /**
      * @throws RestApiException
+     * @throws SimrsException
      */
     public function sendOtp(LoginRequest $loginRequest)
     {
@@ -56,7 +58,13 @@ class LoginController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
+
+        try {
+            $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
+        } catch (\Exception $e) {
+            $otpCodeData->delete();
+            throw new SimrsException($e->getMessage(), $e->getCode());
+        }
 
         $resource = [];
         $resource['otpCreatedAt'] = $otpCodeData->created_at;
@@ -72,7 +80,7 @@ class LoginController extends Controller
      */
     public function authenticate(AuthenticateRequest $authenticateRequest)
     {
-        $userOtpCode = OtpCode::whereCode($authenticateRequest->validated('code'))->whereStatus('unverified')->first();
+        $userOtpCode = OtpCode::where('code', '=', $authenticateRequest->validated('code'))->whereStatus('unverified')->first();
         if (! $userOtpCode) {
             throw new RestApiException('Kode OTP salah', 404);
         }
@@ -112,9 +120,7 @@ class LoginController extends Controller
             $resource['userDoctor']['smfName'] = $userDoctorData->smf_name;
         }
 
-        $userOtpCode->update([
-            'status' => 'verified',
-        ]);
+        $userOtpCode->delete();
 
         Auth::loginUsingId($user->id);
         $authenticateRequest->session()->regenerate();

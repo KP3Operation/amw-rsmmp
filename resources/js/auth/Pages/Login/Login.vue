@@ -148,14 +148,13 @@ export default {
                 </div>
             </div>
             <div class="mt-4 d-flex flex-column">
-                <!-- <SubmitButton :text="$t('login.login')" className="btn-blue-700-rounded" /> -->
                 <SubmitButton
                     :text="$t('login.login')"
                     className="btn-app-rounded"
                 />
             </div>
         </form>
-        <p class="mt-4 text-center">
+        <p class="mt-4 text-center" v-show="!isLoading">
             {{ $t("login.does_not_have_account") }}
             <router-link
                 :to="{ name: 'RegisterPage' }"

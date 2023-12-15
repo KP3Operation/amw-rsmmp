@@ -12,7 +12,7 @@ class SimrsBaseApi implements ISimrsBaseApi
     {
         $accessKey = config('simrs.access_key');
 
-        return Http::withHeaders([
+        return Http::timeout(120)->withHeaders([
             'Content-Type' => '',
         ])->withOptions([
             'verify' => false,
@@ -25,7 +25,7 @@ class SimrsBaseApi implements ISimrsBaseApi
     {
         $accessKey = config('simrs.access_key');
 
-        return Http::withHeaders([
+        return Http::timeout(120)->withHeaders([
             'Content-Type' => '',
         ])->withOptions([
             'verify' => false,

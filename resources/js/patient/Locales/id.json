@@ -138,7 +138,8 @@
             "time_created": "Jam Pencatatan",
             "registration_no": "No. Registrasi",
             "unit_vital_sign": "Unit Tanda Vital",
-            "unit": "Unit"
+            "unit": "Unit",
+            "result": "Hasil"
         },
         "modal_filter": {
             "title": "Filter",

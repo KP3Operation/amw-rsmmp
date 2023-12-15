@@ -10,6 +10,7 @@ import { helpers, maxLength, minLength, required } from "@vuelidate/validators";
 import * as bootstrap from "bootstrap";
 import { onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
+import {onlyNumberInput} from "@shared/utils/helpers.js";
 
 export default {
     components: {
@@ -219,6 +220,7 @@ export default {
             storeFamily,
             updateFamily,
             fetchFamily,
+            onlyNumberInput
         };
     },
 };
@@ -279,6 +281,7 @@ export default {
                     @input="v$.ssn.$touch()"
                     v-model="form.ssn"
                     :readonly="isEditMode"
+                    @keypress="onlyNumberInput($event)"
                 />
                 <div
                     class="error mt-2 fs-6 fw-bold text-red-200"
@@ -326,6 +329,7 @@ export default {
                         class="form-control"
                         @input="v$.phone_number.$touch()"
                         v-model="form.phone_number"
+                        @keypress="onlyNumberInput($event)"
                     />
                 </div>
                 <div

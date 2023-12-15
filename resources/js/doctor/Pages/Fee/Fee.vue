@@ -12,7 +12,7 @@ import {
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { useFeeByTrxDateStore } from "@doctor/+store/fee-by-trx-date.store.js";
 import { storeToRefs } from "pinia";
-import {helpers, maxValue, required} from "@vuelidate/validators";
+import {helpers, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import apiRequest from "@shared/utils/axios.js";
 
@@ -35,11 +35,9 @@ export default {
         const rules = {
             start_date: {
                 required: helpers.withMessage("Pilih tanggal awal", required),
-                maxValue: helpers.withMessage("Tanggal tidak valid", maxValue(filterForm.end_date))
             },
             end_date: {
                 required: helpers.withMessage("Pilih tanggal akhir", required),
-                minValue: helpers.withMessage("Tanggal tidak valid", maxValue(filterForm.start_date))
             },
         }
         const v$ = useVuelidate(rules, filterForm);

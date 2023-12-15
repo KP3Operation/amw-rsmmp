@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Exceptions\RestApiException;
+use App\Exceptions\SimrsException;
 use App\Exceptions\WatzapException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterDoctorRequest;
@@ -90,9 +91,10 @@ class RegisterController extends Controller
 
         try {
             $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
-        } catch (WatzapException|\Exception $e) {
+        } catch (\Exception $e) {
             $user->delete();
             $otpCodeData->delete();
+            throw new SimrsException($e->getMessage(), $e->getCode());
         }
 
         $resource = new \stdClass();
@@ -206,10 +208,11 @@ class RegisterController extends Controller
         ]);
 
         try {
-            $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
-        } catch (WatzapException|\Exception $e) {
+            $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
+        } catch (\Exception $e) {
             $user->delete();
             $otpCodeData->delete();
+            throw new SimrsException($e->getMessage(), $e->getCode());
         }
 
         $user->smf_name = $user->userDoctorData->smf_name;

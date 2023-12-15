@@ -45,6 +45,10 @@ class PatientService implements IPatientService
             'Email' => '',
         ]);
 
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
         $data = $response->json();
 
         if (count($data['data']) < 1) {
@@ -57,10 +61,6 @@ class PatientService implements IPatientService
                 'Ssn' => $ssn,
                 'Email' => '',
             ]);
-        }
-
-        if (! $response->successful()) {
-            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
         }
 
         $data = $response->json();

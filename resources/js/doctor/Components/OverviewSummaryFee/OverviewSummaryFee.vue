@@ -9,7 +9,7 @@ import {
     toIdrFormat
 } from "@shared/utils/helpers.js";
 import { storeToRefs } from "pinia";
-import {helpers, maxValue, required} from "@vuelidate/validators";
+import { helpers, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import apiRequest from "@shared/utils/axios.js";
 
@@ -28,11 +28,9 @@ export default {
         const rules = {
             start_date: {
                 required: helpers.withMessage("Pilih tanggal awal", required),
-                maxValue: helpers.withMessage("Tanggal tidak valid", maxValue(filterForm.end_date))
             },
             end_date: {
                 required: helpers.withMessage("Pilih tanggal akhir", required),
-                minValue: helpers.withMessage("Tanggal tidak valid", maxValue(filterForm.start_date))
             },
         }
         const v$ = useVuelidate(rules, filterForm);
@@ -95,7 +93,7 @@ export default {
         <div class="filter-homepage-summary-fee p-0 mb-3" :class="showFilter ? 'expand' : ''">
             <form class="d-flex col-gap-8 align-items-end" @submit.prevent="filterSummaryFee">
                 <div :class="{ error: v$.start_date.$errors.length }">
-                    <label for="dari" class="fs-6 text-gray-700">{{ $t('home.to') }}</label>
+                    <label for="dari" class="fs-6 text-gray-700">{{ $t('home.from') }}</label>
                     <input type="date" name="start_date" v-model="filterForm.start_date" id="dari"
                         class="form-control mt-2" @input="v$.start_date.$touch()">
                     <div
@@ -108,7 +106,7 @@ export default {
                 </div>
 
                 <div :class="{ error: v$.end_date.$errors.length }">
-                    <label for="hingga" class="fs-6 text-gray-700">{{ $t('home.from') }}</label>
+                    <label for="hingga" class="fs-6 text-gray-700">{{ $t('home.to') }}</label>
                     <input type="date" name="end_date" v-model="filterForm.end_date" id="hingga"
                            class="form-control mt-2" @input="v$.end_date.$touch()">
                     <div

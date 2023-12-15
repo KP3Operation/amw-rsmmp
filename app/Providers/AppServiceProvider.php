@@ -36,5 +36,10 @@ class AppServiceProvider extends ServiceProvider
     {
         // Set localization
         $this->app->setLocale(config('app.locale'));
+
+        // Set php.ini
+        ini_set('read', 120);
+        ini_set('max_input_time', 120);
+        ini_set('memory_limit', "100M");
     }
 }

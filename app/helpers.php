@@ -4,7 +4,6 @@ use App\Models\OtpCode;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 if (! function_exists('user_role')) {
@@ -154,7 +153,6 @@ if ((bool) function_exists('invalidate_user_session')) {
     function invalidate_user_session(Request $request): void
     {
         Session::flush();
-        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
     }

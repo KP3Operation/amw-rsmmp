@@ -40,10 +40,6 @@ class AppointmentController extends Controller
             $medicalNo = $request->medical_no;
         }
 
-        if (! $medicalNo || $medicalNo === '') {
-            //throw new RestApiException('Pasien tidak memiliki no rekam medis', 404);
-        }
-
         // TODO: Need to recheck how the variable behave
         if ($medicalNo) {
             $appointments = $this->patientService->getAppointments($medicalNo);

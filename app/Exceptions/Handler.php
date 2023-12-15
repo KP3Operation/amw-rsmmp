@@ -28,14 +28,6 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (UserAlreadyExistException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => $e->getMessage(),
-                ], 409);
-            }
-        });
-
         // General axception handler
         $this->renderable(function (RestApiException $e, Request $request) {
             if ($request->is('api/*')) {

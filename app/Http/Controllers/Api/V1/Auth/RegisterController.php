@@ -89,7 +89,7 @@ class RegisterController extends Controller
         ]);
 
         try {
-            $sendOtpResult = $this->otpService->sendOtp($user->phone_number, $otpCode);
+            $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
         } catch (WatzapException|\Exception $e) {
             $user->delete();
             $otpCodeData->delete();
@@ -206,7 +206,7 @@ class RegisterController extends Controller
         ]);
 
         try {
-            $sendOtpResult = $this->otpService->sendOtp($user->phone_number, $otpCode);
+            $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
         } catch (WatzapException|\Exception $e) {
             $user->delete();
             $otpCodeData->delete();

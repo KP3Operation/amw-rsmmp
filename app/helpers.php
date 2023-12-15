@@ -40,7 +40,7 @@ if (! function_exists('parse_microsoft_date')) {
     {
         $timestamp = (int) substr($date, 6, -2) / 1000; // Extract the timestamp value
 
-        return DateTime::createFromFormat('U', $timestamp);
+        return DateTime::createFromFormat('U', (string)$timestamp);
     }
 }
 

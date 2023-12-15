@@ -56,7 +56,7 @@ class LoginController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        $sendOtpResult = $this->otpService->sendOtp($user->phone_number, $otpCode);
+        $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
 
         $resource = [];
         $resource['otpCreatedAt'] = $otpCodeData->created_at;

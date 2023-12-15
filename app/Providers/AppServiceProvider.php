@@ -40,6 +40,6 @@ class AppServiceProvider extends ServiceProvider
         // Set php.ini
         ini_set('read', 120);
         ini_set('max_input_time', 120);
-        ini_set('memory_limit', "100M");
+        ini_set('memory_limit', '100M');
     }
 }

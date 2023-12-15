@@ -58,9 +58,8 @@ class LoginController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-
         try {
-            $this->otpService->sendOtp($user->phone_number, (string)$otpCode);
+            $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
         } catch (\Exception $e) {
             $otpCodeData->delete();
             throw new SimrsException($e->getMessage(), $e->getCode());

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Patient;
 
-use App\Exceptions\RestApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
 use App\Http\Requests\Patient\StoreAppointmentRequest;

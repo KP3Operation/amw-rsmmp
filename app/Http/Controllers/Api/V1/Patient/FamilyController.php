@@ -41,7 +41,6 @@ class FamilyController extends Controller
 
     public function store(StoreFamilyRequest $request): StoreFamilyResource
     {
-        // TODO: Somehow 08 leading still not filtered
         $phoneNumber = format_phone_number($request->validated('phone_number'));
         $family = Family::create($request->only(
             'ssn',
@@ -111,7 +110,6 @@ class FamilyController extends Controller
         $patientData = $responseFirstAttempt->data->first();
 
         if (! $patientData) {
-            // TODO: Are need to check the patient with only phone number
             $responseSecondtAttempt = $this->patientService->getPatientFamilies($family->ssn, '');
             $patientData = $responseSecondtAttempt->data->first();
 
@@ -138,7 +136,6 @@ class FamilyController extends Controller
         $patientData = $responseFirstAttempt->data->first();
 
         if (! $patientData) {
-            // TODO: Are need to check the patient with only phone number
             $responseSecondtAttempt = $this->patientService->getPatientFamilies($family->ssn, '');
             $patientData = $responseSecondtAttempt->data->first();
 

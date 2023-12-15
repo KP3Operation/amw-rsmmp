@@ -34,7 +34,6 @@ class PatientService implements IPatientService
      */
     public function getPatients(string $phoneNumber, string $ssn): PatientDataDto
     {
-        // TODO: Need to validate the logic how can we pass the phone number
         $phoneNumber = str_replace(config('app.calling_code'), '0', $phoneNumber);
         $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
             'MedicalNo' => '',

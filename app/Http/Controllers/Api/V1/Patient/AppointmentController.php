@@ -40,7 +40,6 @@ class AppointmentController extends Controller
             $medicalNo = $request->medical_no;
         }
 
-        // TODO: Need to recheck how the variable behave
         if ($medicalNo) {
             $appointments = $this->patientService->getAppointments($medicalNo);
             $newAppointments = $appointments->data->toArray();
@@ -153,7 +152,7 @@ class AppointmentController extends Controller
                     $request->gender === 'Perempuan' ? 'F' : 'M',
                     '',
                     $user->email ?? '',
-                    'SELF', // TODO: Need to update family to save the guarantor id & name
+                    'SELF',
                     '',
                     '',
                     '',
@@ -214,7 +213,7 @@ class AppointmentController extends Controller
                     $request->gender === 'Perempuan' ? 'F' : 'M',
                     '',
                     $family->email ?? '',
-                    'SELF', // TODO: Need to update family to save the guarantor id & name
+                    'SELF',
                     '',
                     '',
                     '',

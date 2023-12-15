@@ -26,8 +26,6 @@ class InvalidateSession extends Command
      */
     public function handle()
     {
-        // TODO: need to determine which driver is used and delete it based on the driver
-
         if (config('app.debug')) {
             $sessionFiles = File::allFiles(storage_path('framework'.DIRECTORY_SEPARATOR.'sessions'.DIRECTORY_SEPARATOR));
 

@@ -32,7 +32,7 @@ export default {
         return {
             confirmationForm: {
                 phoneNumber: null,
-                ssn: null, // TODO: SSN from registration not persistence in state
+                ssn: null,
                 name: null,
                 gender: null,
                 birthDate: null,

@@ -159,7 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
-        
+
         /*
          * Application Service Providers...
          */
@@ -199,18 +199,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | OTP With Queue
-    |--------------------------------------------------------------------------
-    |
-    | In order to send OTP via queue, set this value to true.
-    |
-    */
-
-    'otp_with_queue' => env('APP_OTP_WITH_QUEUE', false),
-
-
-    /*
-    |--------------------------------------------------------------------------
     | OTP Expired In
     |--------------------------------------------------------------------------
     |
@@ -220,6 +208,5 @@ return [
     */
 
     'otp_expired_in' => env('APP_OTP_EXPIRED_IN', 1800),
-
 
 ];

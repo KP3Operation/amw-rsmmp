@@ -28,19 +28,11 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (UserAlreadyExistException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => $e->getMessage()
-                ], 409);
-            }
-        });
-
         // General axception handler
         $this->renderable(function (RestApiException $e, Request $request) {
             if ($request->is('api/*')) {
                 $response = [
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ];
 
                 if (config('app.debug')) {
@@ -49,9 +41,50 @@ class Handler extends ExceptionHandler
                         'exception' => RestApiException::class,
                         'file' => $e->getFile(),
                         'line' => $e->getLine(),
-                        'trace' => $e->getTrace()
+                        'trace' => $e->getTrace(),
                     ];
                 }
+
+                return response()->json($response, $e->getCode());
+            }
+        });
+
+        $this->renderable(function (SimrsException $e, Request $request) {
+            if ($request->is('api/*')) {
+                $response = [
+                    'message' => $e->getMessage(),
+                ];
+
+                if (config('app.debug')) {
+                    $response = [
+                        'message' => $e->getMessage(),
+                        'exception' => SimrsException::class,
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTrace(),
+                    ];
+                }
+
+                return response()->json($response, $e->getCode());
+            }
+        });
+
+        $this->renderable(function (WatzapException $e, Request $request) {
+            if ($request->is('api/*')) {
+                $response = [
+                    'message' => $e->getMessage(),
+                ];
+
+                if (config('app.debug')) {
+                    $response = [
+                        'message' => $e->getMessage(),
+                        'exception' => WatzapException::class,
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTrace(),
+                    ];
+                }
+
                 return response()->json($response, $e->getCode());
             }
         });

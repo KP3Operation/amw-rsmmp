@@ -9,6 +9,6 @@ class CheckApiKeyDto extends Data
     public function __construct(
         public bool $status,
         public ?string $message,
-    )
-    { }
+    ) {
+    }
 }

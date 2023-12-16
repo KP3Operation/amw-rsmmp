@@ -29,11 +29,6 @@ let { id, registrationNo, medicalNo, patientName, itemName, qty, guarantorName, 
                         <p class="mt-2 fw-bold text-green-600 fs-3">+ {{ toIdrFormat(parseInt(paidAmount)) }}</p>
                     </div>
 
-                    <div>
-                        <!-- APABILA DATANYA BARU DAN BELUM DI KLIK MAKA KASIH TITIK-->
-                        <!-- TODO: Need to add conditions -->
-                        <!--  <div class="new-data"></div> -->
-                    </div>
                 </div>
             </button>
         </h2>
@@ -44,13 +39,13 @@ let { id, registrationNo, medicalNo, patientName, itemName, qty, guarantorName, 
 
                 <div class="d-flex justify-content-between col-gap-20">
                     <div class="w-50">
-                        <p class="text-gray-700 fs-5">No. Registrasi</p>
+                        <p class="text-gray-700 fs-5">{{ $t('fee_paid_card.registration_no') }}</p>
 
                         <p class="mt-1 text-black fw-semibold fs-5">{{ registrationNo }}</p>
                     </div>
 
                     <div class="w-50 text-end">
-                        <p class="text-gray-700 fs-5">No. RM</p>
+                        <p class="text-gray-700 fs-5">{{ $t('fee_paid_card.medical_no') }}</p>
 
                         <p class="mt-1 text-black fw-semibold fs-5">{{ medicalNo }}</p>
                     </div>
@@ -58,26 +53,26 @@ let { id, registrationNo, medicalNo, patientName, itemName, qty, guarantorName, 
                 </div>
 
                 <div>
-                    <p class="text-gray-700 fs-5">Nama Pasien</p>
+                    <p class="text-gray-700 fs-5">{{ $t('fee_paid_card.patient_name') }}</p>
 
                     <p class="mt-1 fs-5 fw-semibold text-black">{{ patientName }}</p>
                 </div>
 
                 <div>
-                    <p class="text-gray-700 fs-5">Nama Item</p>
+                    <p class="text-gray-700 fs-5">{{ $t('fee_paid_card.item_name') }}</p>
 
                     <p class="mt-1 fs-5 fw-semibold text-black">{{ itemName }}</p>
                 </div>
 
 
                 <div class="fs-5">
-                    <p class="text-gray-700">Qty</p>
+                    <p class="text-gray-700">{{ $t('fee_paid_card.qty') }}</p>
 
                     <p class="mt- 1 fw-semibold">{{ qty }}</p>
                 </div>
 
                 <div class="fs-5">
-                    <p class="text-gray-700">Nama Penjamin</p>
+                    <p class="text-gray-700">{{ $t('fee_paid_card.guarantor_name') }}</p>
 
                     <p class="mt-1 fw-semibold">{{ guarantorName }}</p>
                 </div>

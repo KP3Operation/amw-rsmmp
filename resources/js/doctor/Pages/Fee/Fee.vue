@@ -1,9 +1,9 @@
-<script setup>
+<script>
+
 import Header from "@shared/Components/Header/Header.vue";
 import FeePaidCard from "@doctor/Components/FeePaidCard/FeePaidCard.vue";
 import FeePendingCard from "@doctor/Components/FeePendingCard/FeePendingCard.vue";
 import { onMounted, reactive, ref } from "vue";
-import Form from "vform";
 import {
     convertDateTimeToDate,
     convertDateToFormField, getCurrentDate,
@@ -12,65 +12,110 @@ import {
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { useFeeByTrxDateStore } from "@doctor/+store/fee-by-trx-date.store.js";
 import { storeToRefs } from "pinia";
-import NotFoundImage from "@resources/static/images/not-found.png";
+import {helpers, required} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
+import apiRequest from "@shared/utils/axios.js";
 
-const activeTab = ref('pending');
-const period = ref("bulan ini");
-const layoutStore = useLayoutStore();
-const feeByTrxDateStore = useFeeByTrxDateStore();
-const filterForm = reactive(
-    new Form({
-        start_date: convertDateToFormField(new Date(getThisMonthStartDate())),
-        end_date: getCurrentDate()
-    })
-);
+export default {
+    components: {
+        Header,
+        FeePaidCard,
+        FeePendingCard
+    },
+    setup (){
+        const activeTab = ref('pending');
+        const period = ref("bulan ini");
+        const layoutStore = useLayoutStore();
+        const feeByTrxDateStore = useFeeByTrxDateStore();
 
-const { pendings, payouts } = storeToRefs(feeByTrxDateStore);
-
-const filterSummaryFee = () => {
-    layoutStore.isLoading = true;
-    filterForm.get('/api/v1/doctor/fee/bytrxdate').then((response) => {
-        const data = response.data.data;
-        feeByTrxDateStore.$patch({
-            pendings: data.pendings,
-            payouts: data.payouts
+        const filterForm = reactive({
+            start_date: convertDateToFormField(new Date(getThisMonthStartDate())),
+            end_date: getCurrentDate()
         });
-    }).catch((error) => {
-        if (error.response.status === 401) {
-            window.location.href = '/auth/login';
+        const rules = {
+            start_date: {
+                required: helpers.withMessage("Pilih tanggal awal", required),
+            },
+            end_date: {
+                required: helpers.withMessage("Pilih tanggal akhir", required),
+            },
         }
-        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
-    }).finally(() => {
-        layoutStore.isLoading = false;
-        period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.end_date)}`;
-    });
-}
+        const v$ = useVuelidate(rules, filterForm);
 
-const updateActiveTab = (tab) => {
-    activeTab.value = tab;
-}
+        const { pendings, payouts } = storeToRefs(feeByTrxDateStore);
 
-onMounted(() => {
-    filterSummaryFee();
-});
+        const filterSummaryFee = () => {
+            layoutStore.isLoading = true;
+            apiRequest.get(`/api/v1/doctor/fee/bytrxdate?start_date=${filterForm.start_date}&end_date=${filterForm.end_date}`).then((response) => {
+                const data = response.data.data;
+                feeByTrxDateStore.$patch({
+                    pendings: data.pendings,
+                    payouts: data.payouts
+                });
+            }).catch((error) => {
+                if (error.response.status === 401) {
+                    window.location.href = '/auth/login';
+                }
+                layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+            }).finally(() => {
+                layoutStore.isLoading = false;
+                period.value = `${convertDateTimeToDate(filterForm.start_date)} - ${convertDateTimeToDate(filterForm.end_date)}`;
+            });
+        }
+
+        const updateActiveTab = (tab) => {
+            activeTab.value = tab;
+        }
+
+        onMounted(() => {
+            filterSummaryFee();
+        });
+
+        return{
+            v$,
+            filterForm,
+            activeTab,
+            period,
+            layoutStore,
+            feeByTrxDateStore,
+            pendings,
+            payouts,
+            filterSummaryFee,
+            updateActiveTab
+        };
+    }
+}
 </script>
 
 <template>
     <Header :title="$t('fee.title')" :with-back-url="true" custom-heading-class="fs-4"></Header>
     <div class="filter-summary-fee mt-4 pt-8">
-        <form class="d-flex col-gap-8 align-items-end" @submit.prevent="filterSummaryFee"
-            @keydown="filterForm.onKeydown($event)">
-            <div>
-                <label for="dari" class="fs-6 text-gray-700">Dari</label>
-                <input type="date" name="dari" id="dari" class="form-control mt-2" v-model="filterForm.start_date">
-                <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('start_date')"
-                    v-html="filterForm.errors.get('start_date')"></small>
+        <form class="d-flex col-gap-8 align-items-end" @submit.prevent="filterSummaryFee">
+            <div :class="{ error: v$.start_date.$errors.length }">
+                <label for="dari" class="fs-6 text-gray-700">{{ $t('fee.from') }}</label>
+                <input type="date" name="dari" id="dari"
+                       class="form-control mt-2" v-model="filterForm.start_date"
+                       @input="v$.start_date.$touch()">
+                <div
+                    class="error mt-2 fs-6 fw-bold text-red-200"
+                    v-for="error of v$.start_date.$errors"
+                    :key="error.$uid"
+                >
+                    {{ error.$message }}
+                </div>
             </div>
-            <div>
-                <label for="hingga" class="fs-6 text-gray-700">Hingga</label>
-                <input type="date" name="hingga" id="hingga" class="form-control mt-2" v-model="filterForm.end_date">
-                <small class="error mt-2 fs-6 fw-bold text-red-200" v-if="filterForm.errors.has('start_date')"
-                    v-html="filterForm.errors.get('start_date')"></small>
+            <div :class="{ error: v$.end_date.$errors.length }">
+                <label for="hingga" class="fs-6 text-gray-700">{{ $t('fee.to') }}</label>
+                <input type="date" name="hingga" id="hingga"
+                       class="form-control mt-2" v-model="filterForm.end_date"
+                       @input="v$.end_date.$touch()">
+                <div
+                    class="error mt-2 fs-6 fw-bold text-red-200"
+                    v-for="error of v$.end_date.$errors"
+                    :key="error.$uid"
+                >
+                    {{ error.$message }}
+                </div>
             </div>
             <button type="submit" class="btn bg-green-700 d-flex align-items-center justify-content-center">
                 <i class="bi bi-search icon-white"></i>
@@ -79,16 +124,16 @@ onMounted(() => {
         <p class="error-filter mt-3 text-red-500 fs-6 fw-semibold"></p>
     </div>
     <section class="tab-periode mt-4">
-        <p class="periode">Periode: <span>{{ period }}</span></p>
+        <p class="periode">{{ $t('fee.period') }} <span>{{ period }}</span></p>
         <div class="tab-summary-fee nav nav-pills nav-justified d-flex col-gap-20 mt-4">
             <button class="nav-link w-50 active" data-bs-toggle="pill" data-bs-target="#pending" role="tab"
                 aria-controls="pending" aria-selected="true" @click="updateActiveTab('pending')">
-                <p>Pending</p>
+                <p>{{ $t('fee.pending') }}</p>
             </button>
 
             <button class="nav-link w-50" data-bs-toggle="pill" data-bs-target="#terbayar" role="tab"
                 aria-controls="terbayar" aria-selected="true" @click="updateActiveTab('terbayar')">
-                <p>Terbayar</p>
+                <p>{{ $t('fee.payout') }}</p>
             </button>
         </div>
     </section>
@@ -105,8 +150,8 @@ onMounted(() => {
                 </div>
             </div>
             <div class="text-center" v-if="pendings.length === 0">
-                <img :src="NotFoundImage" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3">
-                <p class="mt-4 fw-semibold">Anda Belum Memiliki Pembayaran Pending</p>
+                <img :src="'@resources/static/images/not-found.png'" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3">
+                <p class="mt-4 fw-semibold">{{ $t('fee.no_pending_payment') }}</p>
             </div>
         </div>
 
@@ -120,8 +165,8 @@ onMounted(() => {
                 </div>
             </div>
             <div class="text-center" v-if="payouts.length === 0">
-                <img :src="NotFoundImage" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3" />
-                <p class="mt-4 fw-semibold">Anda Tidak Memiliki Pembayaran</p>
+                <img :src="'@resources/static/images/not-found.png'" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3" />
+                <p class="mt-4 fw-semibold">{{ $t('fee.no_payout_payment') }}</p>
             </div>
         </div>
 

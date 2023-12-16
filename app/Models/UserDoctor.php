@@ -16,7 +16,7 @@ class UserDoctor extends Model
         'smf_name',
         'smf_id',
         'photo',
-        'sync_at'
+        'sync_at',
     ];
 
     public function user(): BelongsTo

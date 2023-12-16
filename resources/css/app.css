@@ -12,12 +12,12 @@
 
 /* nama class tidak perlu di ubah, cukup ubah variable nya */
 #logo {
-    display: block; 
+    display: block;
     content: var(--logo-src);
     width: 95px;
 }
 #white-logo {
-    display: block; 
+    display: block;
     content: var(--white-logo-src);
     width: auto;
     height: 95px;
@@ -55,3 +55,14 @@
     --bs-btn-disabled-border-color: var(--app-additional-bg)!important;
     border-radius: 100px!important;
   }
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}

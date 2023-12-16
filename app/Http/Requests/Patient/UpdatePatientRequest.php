@@ -24,10 +24,10 @@ class UpdatePatientRequest extends FormRequest
         $user = auth('sanctum')->user();
 
         return [
-            "name" => "required|string",
-            "gender" => "required",
-            "birth_date" => "required|date",
-            "email" => "nullable|email|unique:users,email," . $user->id
+            'name' => 'required|string',
+            'gender' => 'required',
+            'birth_date' => 'required|date',
+            'email' => 'nullable|email|unique:users,email,'.$user->id,
         ];
     }
 }

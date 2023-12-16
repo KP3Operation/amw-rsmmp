@@ -24,7 +24,6 @@
         "@vuelidate/validators": "^2.0.4",
         "bootstrap": "^5.3.1",
         "pinia": "^2.1.6",
-        "vform": "^2.1.2",
         "vue": "^3.2.36",
         "vue-i18n": "^9.2.2",
         "vue-loader": "^17.2.2",

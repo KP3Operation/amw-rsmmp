@@ -18,15 +18,16 @@ class NotificationController extends Controller
 
         return response()->json([
             'notifications' => $notifications,
-            'count' => count($notifications)
+            'count' => count($notifications),
         ]);
     }
 
     public function update(Notification $notification)
     {
         $notification->update([
-            'is_read' => true
+            'is_read' => true,
         ]);
+
         return response()->json([], 204);
     }
 }

@@ -181,7 +181,7 @@ onMounted(() => {
                 aria-selected="true"
                 form="#"
             >
-                <p>Akan Datang</p>
+                <p> {{ $t('appointment.future') }}</p>
             </button>
             <button
                 class="nav-link w-50"
@@ -193,7 +193,7 @@ onMounted(() => {
                 tabindex="-1"
                 form="#"
             >
-                <p>Selesai</p>
+                <p> {{ $t('appointment.done') }}</p>
             </button>
         </div>
         <div class="tab-content mt-4" id="tab-content" v-if="!isLoading">
@@ -206,10 +206,10 @@ onMounted(() => {
             >
                 <section class="filter d-flex justify-content-between mt-4">
                     <p>
-                        <span v-if="openAppointments.length > 0"
-                            >{{ openAppointments.length }} Appointment Akan
-                            Datang</span
-                        >
+                        <span v-if="openAppointments.length > 0">
+                            {{ openAppointments.length }}
+                            {{ $t('appointment.future_appointment') }}
+                        </span>
                     </p>
                     <button
                         id="btn-akan-datang"
@@ -218,7 +218,7 @@ onMounted(() => {
                         form="#"
                     >
                         <i class="bi bi-filter-left"></i>
-                        Filter
+                        {{ $t('appointment.filter') }}
                     </button>
                 </section>
                 <section
@@ -264,7 +264,7 @@ onMounted(() => {
                             @click="showCancelModal(appointment.appointmentNo)"
                             form="#"
                         >
-                            Batal
+                            {{ $t('appointment.actions.cancel') }}
                         </button>
                     </div>
                 </section>
@@ -280,12 +280,9 @@ onMounted(() => {
                             height="202"
                         />
                         <p class="mt-3 fw-bold fs-3">
-                            Janji Konsultasi Tidak Ditemukan
+                            {{ $t('appointment.no_appointment') }}
                         </p>
-                        <p class="mt-2 text-gray-700">
-                            Buat Janji Konsultasi Baru Dengan Mentap <br />
-                            Tombol “Buat Janji Konsultasi”
-                        </p>
+                        <p class="mt-2 text-gray-700" v-html="$t('appointment.create_appointment_desc')"></p>
                     </div>
                 </section>
             </div>
@@ -298,19 +295,17 @@ onMounted(() => {
             >
                 <section class="filter d-flex justify-content-between mt-4">
                     <p>
-                        <span v-if="closeAppointments.length > 0"
-                            >{{ closeAppointments.length }} Appointment
-                            Terdata</span
-                        >
+                        <span v-if="closeAppointments.length > 0">
+                            {{ closeAppointments.length }} {{ $t('appointment.indexed_appointment') }}
+                        </span>
                     </p>
                     <button
                         id="filter-selesai"
                         class="btn d-flex col-gap-8 align-items-center fw-bold text-blue-500 p-0"
                         @click="modalState.filterAppointmentModal.show()"
-                        form="#"
-                    >
+                        form="#">
                         <i class="bi bi-filter-left"></i>
-                        Filter
+                        {{ $t('appointment.filter') }}
                     </button>
                 </section>
                 <section
@@ -356,13 +351,13 @@ onMounted(() => {
                                 class="px-2 py-1 bg-red-100 text-red-500 fw-bold text-sm rounded fs-5"
                                 v-if="appointment.appointmentStatus === '03'"
                             >
-                                Dibatalkan
+                                {{ $t('appointment.canceled') }}
                             </p>
                             <p
                                 class="px-2 py-1 bg-green-100 text-green-500 fw-bold text-sm rounded fs-5"
                                 v-else
                             >
-                                Selesai
+                                {{ $t('appointment.done') }}
                             </p>
                         </div>
                     </div>
@@ -379,12 +374,9 @@ onMounted(() => {
                             height="202"
                         />
                         <p class="mt-3 fw-bold fs-3">
-                            Tidak Ada Janji Konsultasi
+                            {{ $t('appointment.no_consultation') }}
                         </p>
-                        <p class="mt-2 text-gray-700">
-                            Anda Belum Memiliki Janji Konsultasi Yang<br />
-                            Sudah Selesai
-                        </p>
+                        <p class="mt-2 text-gray-700" v-html="$t('appointment.no_consultation_desc')"></p>
                     </div>
                 </section>
             </div>
@@ -412,7 +404,7 @@ onMounted(() => {
                         <i
                             class="bi bi-info-circle-fill icon-blue-500 fs-3"
                         ></i>
-                        <h5 class="modal-title">Batalkan Janji Konsultasi</h5>
+                        <h5 class="modal-title">{{ $t('appointment.cancel_consultation_modal.title') }}</h5>
                     </div>
                     <button
                         type="button"
@@ -426,7 +418,7 @@ onMounted(() => {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Apakah Anda yakin ingin membatalkan Janji Konsultasi?</p>
+                    <p>{{ $t('appointment.cancel_consultation_modal.message') }}</p>
                 </div>
                 <div class="modal-footer flex-nowrap">
                     <button
@@ -436,7 +428,7 @@ onMounted(() => {
                         form="#"
                         @click="modalState.cancelAppointmentModal.hide()"
                     >
-                        Tidak
+                        {{ $t('appointment.cancel_consultation_modal.no') }}
                     </button>
                     <button
                         type="button"
@@ -445,7 +437,7 @@ onMounted(() => {
                         form="#"
                         @click="cancelAppointment()"
                     >
-                        Ya, Batalkan
+                        {{ $t('appointment.cancel_consultation_modal.yes') }}
                     </button>
                 </div>
             </div>
@@ -468,7 +460,7 @@ onMounted(() => {
                             class="bi bi-info-circle-fill icon-blue-500 fs-3"
                         ></i>
 
-                        <h5 class="modal-title">Filter</h5>
+                        <h5 class="modal-title">{{ $t('appointment.filter_modal.title') }}</h5>
                     </div>
                     <button
                         type="button"
@@ -485,7 +477,7 @@ onMounted(() => {
                     <form action="" class="d-flex flex-column rows-gap-16">
                         <div>
                             <label for="member" class="d-block text-start"
-                                >Member</label
+                                >{{ $t('appointment.filter_modal.member') }}</label
                             >
                             <select
                                 name="member"
@@ -503,7 +495,7 @@ onMounted(() => {
                         </div>
                         <div>
                             <label for="unit" class="d-block text-start"
-                                >Unit</label
+                                >{{ $t('appointment.filter_modal.unit') }}</label
                             >
                             <select
                                 name="unit"
@@ -511,7 +503,7 @@ onMounted(() => {
                                 class="form-select mt-2"
                                 v-model="serviceUnitIdFilter"
                             >
-                                <option value="" selected>Semua</option>
+                                <option value="" selected>{{ $t('appointment.filter_modal.all') }}</option>
                                 <option
                                     v-for="unit in serviceUnits"
                                     :value="unit.serviceUnitID"
@@ -522,7 +514,7 @@ onMounted(() => {
                         </div>
                         <div>
                             <label for="from" class="d-block text-start"
-                                >Dari</label
+                                >{{ $t('appointment.filter_modal.from') }}</label
                             >
                             <input
                                 type="date"
@@ -534,7 +526,7 @@ onMounted(() => {
                         </div>
                         <div>
                             <label for="to" class="d-block text-start"
-                                >Hingga</label
+                                >{{ $t('appointment.filter_modal.to') }}</label
                             >
                             <input
                                 type="date"
@@ -552,7 +544,7 @@ onMounted(() => {
                                 @click="resetFilter"
                                 form="#"
                             >
-                                Reset
+                                {{ $t('appointment.filter_modal.reset') }}
                             </button>
                             <button
                                 type="button"
@@ -561,7 +553,7 @@ onMounted(() => {
                                 @click="fetchAppointments"
                                 form="#"
                             >
-                                Terapkan
+                                {{ $t('appointment.filter_modal.apply') }}
                             </button>
                         </div>
                     </form>

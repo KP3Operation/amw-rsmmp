@@ -22,9 +22,9 @@ class RegisterDoctorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "phoneNumber" => "required|min:10|max:13",
-            "doctorId" => "required",
-            "role" => "required"
+            'phoneNumber' => 'required|min:10|max:13',
+            'doctorId' => 'required',
+            'role' => 'required',
         ];
     }
 }

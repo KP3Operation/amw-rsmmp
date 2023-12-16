@@ -24,15 +24,9 @@ let { id, registrationNo, medicalNo, patientName, itemName, qty, guarantorName, 
                     :aria-controls="'pending-' + id">
                 <div class="w-100 d-flex align-items-center justify-content-between col-gap-8">
                     <div class="flex-fill">
-                        <p class="fs-6 text-gray-700 fw-normal">No. Registrasi</p>
+                        <p class="fs-6 text-gray-700 fw-normal">{{ $t('fee_pending_card.registration_no') }}</p>
 
                         <p class="mt-1">{{ registrationNo }}</p>
-                    </div>
-
-                    <div>
-                        <!-- APABILA DATANYA BARU DAN BELUM DI KLIK MAKA KASIH TITIK-->
-                        <!-- TODO: Need to add conditions -->
-                        <!--  <div class="new-data"></div>-->
                     </div>
                 </div>
             </button>
@@ -44,41 +38,33 @@ let { id, registrationNo, medicalNo, patientName, itemName, qty, guarantorName, 
 
                 <div class="d-flex justify-content-between col-gap-20">
                     <div class="w-50 fs-5">
-                        <p class="text-gray-700">Nama Pasien</p>
-
+                        <p class="text-gray-700">{{ $t('fee_pending_card.patient_name') }}</p>
                         <p class="mt-1 fw-semibold">{{ patientName }}</p>
                     </div>
 
                     <div class="w-50 fs-5 text-end">
-                        <p class="text-gray-700">No. RM</p>
-
+                        <p class="text-gray-700">{{ $t('fee_pending_card.medical_no') }}</p>
                         <p class="mt-1 fw-semibold">{{ medicalNo }}</p>
                     </div>
-
                 </div>
 
-
                 <div>
-                    <p class="text-gray-700 fs-5">Nama Item</p>
-
+                    <p class="text-gray-700 fs-5">{{ $t('fee_pending_card.item_name') }}</p>
                     <p class="mt-1 fs-5 fw-semibold text-black">{{ itemName }}</p>
                 </div>
 
                 <div class="fs-5">
-                    <p class="text-gray-700">Qty</p>
-
+                    <p class="text-gray-700">{{ $t('fee_pending_card.qty') }}</p>
                     <p class="mt-1 fw-semibold">{{ qty }}</p>
                 </div>
 
                 <div class="fs-5">
-                    <p class="text-gray-700">Nama Penjamin</p>
-
+                    <p class="text-gray-700">{{ $t('fee_pending_card.guarantor_name') }}</p>
                     <p class="mt-1 fw-semibold">{{ guarantorName }}</p>
                 </div>
 
                 <div class="fs-5">
-                    <p class="text-gray-700">Payment Percentage</p>
-
+                    <p class="text-gray-700">{{ $t('fee_pending_card.payment_percentage') }}</p>
                     <p class="mt-1 fw-semibold">{{ paymentPercentage }}%</p>
                 </div>
             </div>

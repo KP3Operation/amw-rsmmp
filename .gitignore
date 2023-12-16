@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 composer-setup.php
 composer.phar
+coverage/

@@ -4,7 +4,6 @@ import {useLayoutStore} from "@shared/+store/layout.store.js";
 import {storeToRefs} from "pinia";
 import {onMounted, reactive, ref} from "vue";
 import {useRoute} from "vue-router";
-import axios from "axios";
 import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 import apiRequest from "@shared/utils/axios.js";
 
@@ -35,7 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Header title="Detail Pertemuan" :with-back-url="true" page-name="HistoryPage"></Header>
+    <Header :title="$t('history.encounter_detail.title')" :with-back-url="true" page-name="HistoryPage"></Header>
     <div class="px-4 pt-8">
         <div class="bg-white mt-4">
             <div class="header-detail-encounter">
@@ -45,7 +44,7 @@ onMounted(() => {
                 </div>
 
                 <div class="queue">
-                    <p class="note">No. Antrian</p>
+                    <p class="note">{{ $t('history.encounter_detail.queue_no') }}</p>
                     <p class="name">{{ encounterDetail.registrationQue }}</p>
                 </div>
             </div>
@@ -53,47 +52,47 @@ onMounted(() => {
             <div class="d-flex flex-column rows-gap-16 mt-3 px-4">
                 <div class="d-flex justify-content-between pb-3 border-bottom border-gray-400">
                     <div class="w-50">
-                        <p class="fs-6 text-gray-700">No Registrasi</p>
+                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.registration_no') }}</p>
                         <p class="mt-2">{{ encounterDetail.registrationNo }}</p>
                     </div>
 
                     <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">Nama Penjamin</p>
+                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.guarantor_name') }}</p>
                         <p class="mt-2">{{ encounterDetail.guarantorName }}</p>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between pb-3 border-bottom border-gray-400">
                     <div class="w-50">
-                        <p class="fs-6 text-gray-700">Tanggal Konsultasi</p>
+                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.consultation_date') }}</p>
                         <p class="mt-2">{{ convertDateTimeToDate(encounterDetail.registrationDate_yMdHms) }}</p>
                     </div>
 
                     <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">Jam Konsultasi</p>
+                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.consultation_time') }}</p>
                         <p class="mt-2">{{ encounterDetail.registrationTime }}</p>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between pb-3 border-bottom border-gray-400">
                     <div class="w-50">
-                        <p class="fs-6 text-gray-700">Tanggal Keluar</p>
+                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.out_date') }}</p>
                         <p class="mt-2">{{ (encounterDetail.dischargeDate_yMdHms === null) ? '-' :  convertDateTimeToDate(encounterDetail.dischargeDate_yMdHms)}}</p>
                     </div>
 
                     <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">Jam Keluar</p>
+                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.out_time') }}</p>
                         <p class="mt-2">{{ (encounterDetail.dischargeTime === null) ? '-' :  encounterDetail.dischargeTime}}</p>
                     </div>
                 </div>
 
                 <div class="pb-3 border-bottom border-gray-400">
-                    <p class="fs-6 text-gray-700">Tipe Kunjungan</p>
+                    <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.visit_type') }}</p>
                     <p class="mt-2">{{ encounterDetail.visitTypeName }}</p>
                 </div>
 
                 <div class="pb-3">
-                    <p class="fs-6 text-gray-700">Diagnosis</p>
+                    <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.diagnosis') }}</p>
 
                     <div v-if="!isLoading" class="accordion d-flex flex-column rows-gap-16 mt-3" id="accordion" v-for="(encounter, index) in encountersDetail">
                         <div class="accordion-item">
@@ -106,7 +105,7 @@ onMounted(() => {
                                 <div class="accordion-body">
                                     <div class="accordion-divider"></div>
                                     <p class="fs-5 mt-3">{{ encounter.diagnosisText }}</p>
-                                    <p class="mt-3 fs-5 text-gray-700">Catatan</p>
+                                    <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.notes') }}</p>
                                     <p class="mt-2 fs-5">
                                         {{ encounter.notes }}
                                     </p>

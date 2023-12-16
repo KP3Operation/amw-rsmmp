@@ -65,18 +65,18 @@ onMounted(() => {
 </script>
 
 <template>
-    <Header title="Jadwal Dokter" :with-back-url="true"></Header>
+    <Header :title="$t('doctor_schedule.title')" :with-back-url="true"></Header>
     <div class="px-4 pt-8 mt-4">
         <section class="d-flex col-gap-20 justify-content-between">
             <div>
-                <label for="unit" class="fs-5 text-gray-700">Unit</label>
+                <label for="unit" class="fs-5 text-gray-700">{{ $t('doctor_schedule.unit') }}</label>
                 <select
                     v-model="selectedServiceUnitId"
                     name="unit"
                     id="unit"
                     class="form-select mt-2"
                 >
-                    <option value="">Semua Unit</option>
+                    <option value="">{{ $t('doctor_schedule.all_unit') }}</option>
                     <option
                         v-for="unit in serviceUnits"
                         :value="unit.serviceUnitID"
@@ -86,7 +86,7 @@ onMounted(() => {
                 </select>
             </div>
             <div>
-                <label for="tanggal" class="fs-5 text-gray-700">Tanggal</label>
+                <label for="tanggal" class="fs-5 text-gray-700">{{ $t('doctor_schedule.date') }}</label>
                 <input
                     v-model="selectedDate"
                     type="date"
@@ -112,7 +112,7 @@ onMounted(() => {
                         query: { paramedicId: schedule.paramedicID },
                     }"
                     class="d-block btn btn-blue-500-rounded-sm mt-3"
-                    >Detail</router-link
+                    >{{ $t('doctor_schedule.detail') }}</router-link
                 >
             </div>
         </section>

@@ -11,11 +11,12 @@ class Role extends Model
     use HasFactory;
 
     const PATIENT = 1;
+
     const DOCTOR = 2;
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
     ];
 
     public function users(): BelongsToMany

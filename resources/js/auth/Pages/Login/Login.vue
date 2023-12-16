@@ -7,6 +7,7 @@ import useVuelidate from "@vuelidate/core";
 import { helpers, maxLength, minLength, required } from "@vuelidate/validators";
 import * as bootstrap from "bootstrap";
 import { mapActions, mapState } from "pinia";
+import {onlyNumberInput} from "@shared/utils/helpers.js";
 
 export default {
     name: "LoginPage",
@@ -35,6 +36,7 @@ export default {
             },
         };
     },
+    watch: { },
     validations() {
         return {
             loginForm: {
@@ -45,17 +47,18 @@ export default {
                     ),
                     minLength: helpers.withMessage(
                         "No Hp kurang dari 10 digit",
-                        minLength(10)
+                        minLength(9)
                     ),
                     maxLength: helpers.withMessage(
                         "No Hp lebih dari 13 digit",
                         maxLength(13)
-                    ),
+                    )
                 },
             },
         };
     },
     methods: {
+        onlyNumberInput,
         ...mapActions(useLayoutStore, {
             toggleErrorAlert: "toggleErrorAlert",
             updateLoadingState: "updateLoadingState",
@@ -132,7 +135,8 @@ export default {
                         placeholder="8123940183020"
                         class="form-control"
                         @input="v$.loginForm.phoneNumber.$touch()"
-                        v-model="loginForm.phoneNumber"
+                        v-model.number="loginForm.phoneNumber"
+                        @keypress="onlyNumberInput($event)"
                     />
                 </div>
                 <div
@@ -144,14 +148,13 @@ export default {
                 </div>
             </div>
             <div class="mt-4 d-flex flex-column">
-                <!-- <SubmitButton :text="$t('login.login')" className="btn-blue-700-rounded" /> -->
                 <SubmitButton
                     :text="$t('login.login')"
                     className="btn-app-rounded"
                 />
             </div>
         </form>
-        <p class="mt-4 text-center">
+        <p class="mt-4 text-center" v-show="!isLoading">
             {{ $t("login.does_not_have_account") }}
             <router-link
                 :to="{ name: 'RegisterPage' }"

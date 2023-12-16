@@ -22,7 +22,7 @@ class GetAppointmentsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'medical_no' => 'required'
+            'medical_no' => 'required',
         ];
     }
 }

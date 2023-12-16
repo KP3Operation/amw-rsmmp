@@ -10,7 +10,7 @@ use Spatie\LaravelData\Normalizers\JsonNormalizer;
 use Spatie\LaravelData\Normalizers\ModelNormalizer;
 use Spatie\LaravelData\Normalizers\ObjectNormalizer;
 
-class PatientVitalSignHistoryDto  extends Data
+class PatientVitalSignHistoryDto extends Data
 {
     public function __construct(
         #[MapInputName('QuestionAnswerText')]
@@ -46,7 +46,8 @@ class PatientVitalSignHistoryDto  extends Data
         #[MapInputName('RecordDate_yMdHms')]
         public ?string $recordDate_yMdHms,
 
-    ) {}
+    ) {
+    }
 
     public static function normalizers(): array
     {
@@ -55,7 +56,7 @@ class PatientVitalSignHistoryDto  extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

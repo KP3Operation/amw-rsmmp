@@ -9,7 +9,6 @@ use Spatie\LaravelData\Normalizers\ArrayNormalizer;
 use Spatie\LaravelData\Normalizers\JsonNormalizer;
 use Spatie\LaravelData\Normalizers\ModelNormalizer;
 use Spatie\LaravelData\Normalizers\ObjectNormalizer;
-use Spatie\LaravelData\Optional;
 
 class PatientRegistrationCPPTDto extends Data
 {
@@ -65,7 +64,7 @@ class PatientRegistrationCPPTDto extends Data
             ArrayableNormalizer::class,
             ObjectNormalizer::class,
             ArrayNormalizer::class,
-            JsonNormalizer::class
+            JsonNormalizer::class,
         ];
     }
 }

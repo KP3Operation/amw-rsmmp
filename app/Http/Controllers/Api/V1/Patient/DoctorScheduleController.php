@@ -15,11 +15,12 @@ class DoctorScheduleController extends Controller
     {
         $this->patientService = $patientService;
     }
+
     public function index(Request $request)
     {
-        $paramedicId = "";
-        $date = "";
-        $serviceUnitId = "";
+        $paramedicId = '';
+        $date = '';
+        $serviceUnitId = '';
         $response = new stdClass();
 
         if ($request->has('paramedic_id')) {
@@ -37,8 +38,8 @@ class DoctorScheduleController extends Controller
         $doctorSchedules = $this->patientService->getDoctorSchedule(
             $date,
             $date,
-            $serviceUnitId ?? "",
-            $paramedicId ?? ""
+            $serviceUnitId ?? '',
+            $paramedicId ?? ''
         );
 
         $serviceUnits = $this->patientService->getServiceUnitList('', '');
@@ -51,9 +52,9 @@ class DoctorScheduleController extends Controller
 
     public function getAndFormatDoctorSchedules(Request $request)
     {
-        $paramedicId = "";
-        $date = "";
-        $serviceUnitId = "";
+        $paramedicId = '';
+        $date = '';
+        $serviceUnitId = '';
         $response = new stdClass();
 
         if ($request->has('paramedic_id')) {
@@ -71,8 +72,8 @@ class DoctorScheduleController extends Controller
         $doctorSchedules = $this->patientService->getDoctorSchedule(
             $date,
             $date,
-            $serviceUnitId ?? "",
-            $paramedicId ?? ""
+            $serviceUnitId ?? '',
+            $paramedicId ?? ''
         );
 
         $schedules = [];
@@ -88,8 +89,8 @@ class DoctorScheduleController extends Controller
             foreach ($schedules as $schedule) {
                 if ($scheduleData->serviceUnitID == $schedule['serviceUnitID']) {
                     $schedules[$schedule['serviceUnitID']]['doctors'][] = [
-                      'paramedicName' => $scheduleData->paramedicName,
-                      'paramedicId' => $scheduleData->paramedicID
+                        'paramedicName' => $scheduleData->paramedicName,
+                        'paramedicId' => $scheduleData->paramedicID,
                     ];
                 }
             }

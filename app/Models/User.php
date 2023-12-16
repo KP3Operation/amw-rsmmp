@@ -27,7 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone_number',
-        'image'
+        'image',
     ];
 
     /**
@@ -53,7 +53,9 @@ class User extends Authenticatable
     protected function phoneNumber(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => config('app.calling_code') . $value,
+            get: function (string $value) {
+                return config('app.calling_code').$value;
+            },
         );
     }
 
@@ -67,12 +69,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function userPatientData (): HasOne
+    public function userPatientData(): HasOne
     {
         return $this->hasOne(UserPatient::class);
     }
 
-    public function userDoctorData (): HasOne
+    public function userDoctorData(): HasOne
     {
         return $this->hasOne(UserDoctor::class);
     }

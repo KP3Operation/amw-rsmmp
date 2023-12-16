@@ -9,10 +9,11 @@ import {
     requiredIf,
 } from "@vuelidate/validators";
 import SubmitButton from "@shared/Components/SubmitButton/SubmitButton.vue";
-import { mapActions, mapState, mapStores } from "pinia";
+import { mapActions, mapState } from "pinia";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import axios from "axios";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
+import {onlyNumberInput} from "@shared/utils/helpers.js";
 
 export default {
     components: { SubmitButton },
@@ -90,6 +91,7 @@ export default {
         };
     },
     methods: {
+        onlyNumberInput,
         useLayoutStore,
         ...mapActions(useAuthStore, {
             updateOtpData: "updateOtpData",
@@ -214,6 +216,7 @@ export default {
                     placeholder="8123940183020"
                     class="form-control"
                     v-model="registerForm.phoneNumber"
+                    @keypress="onlyNumberInput($event)"
                 />
             </div>
             <div
@@ -260,6 +263,7 @@ export default {
                 class="form-control mt-2"
                 @input="v$.registerForm.ssn.$touch()"
                 v-model="registerForm.ssn"
+                @keypress="onlyNumberInput($event)"
             />
             <div
                 class="error mt-2 fs-6 fw-bold text-app-warning"

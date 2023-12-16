@@ -7,10 +7,11 @@
         timeCreated: String,
         registrationNo: String,
         vitalSignUnit: String,
-        vitalSignName: String
+        vitalSignName: String,
+        questionAnswerNum: String
     });
 
-    const { dateCreated, timeCreated, registrationNo, vitalSignName, vitalSignUnit } = toRefs(props);
+    const { dateCreated, timeCreated, registrationNo, vitalSignName, vitalSignUnit, questionAnswerNum } = toRefs(props);
 </script>
 
 <template>
@@ -41,8 +42,8 @@
         </div>
 
         <div>
-            <p class="fs-6 text-gray-700">{{ $t('history.vital_sign_history.unit') }}</p>
-            <p class="mt-2 fs-5 fw-semibold">{{ vitalSignUnit }}</p>
+            <p class="fs-6 text-gray-700">{{ $t('history.vital_sign_history.result') }}</p>
+            <p class="mt-2 fs-5 fw-semibold">{{ questionAnswerNum }} {{ vitalSignUnit }}</p>
         </div>
     </div>
 </template>

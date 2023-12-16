@@ -10,7 +10,9 @@ class Notification extends Model
     use HasFactory;
 
     const FEE = 1;
+
     const INPATIENT_LIST = 2;
+
     const APPOINTMENT = 3;
 
     protected $fillable = [
@@ -18,6 +20,6 @@ class Notification extends Model
         'context',
         'is_read',
         'appointment_date',
-        'message'
+        'message',
     ];
 }

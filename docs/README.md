@@ -154,7 +154,6 @@ APP_URL=
 APP_CALLING_CODE="+62"
 APP_LOCALE=
 APP_FALLBACK_LOCALE=
-APP_OTP_WITH_QUEUE=false
 APP_OTP_EXPIRED_IN=1800
 
 ...
@@ -169,10 +168,8 @@ DB_PASSWORD=
 ...
 
 WATZAP_SEND_MESSAGE_URL=https://api.watzap.id/v1/send_message
-WATZAP_VALIDATE_WHATSAPP_NUMBER_URL=https://api.watzap.id/v1/validate_number
 WATZAP_API_KEY=fooBarBazz
 WATZAP_NUMBER_KEY=fooBarBazz
-WATZAP_VALIDATE_WHATSAPP_NUMBER=true
 
 SIMRS_BASE_URL=http://103.111.202.214/live/WebService
 SIMRS_ACCESS_KEY=MWApA
@@ -221,6 +218,7 @@ $ php artisan cache:clear
 $ php artisan route:clear
 $ php artisan view:clear
 $ php artisan config:clear
+$ php artisan session:clear
 $ php artisan optimize
 ```
 
@@ -277,7 +275,6 @@ Only the following environment attributes would require your attention out of th
 |          `APP_CALLING_CODE`           |                  "+62"                   |                                                   The calling country code                                                    |
 |             `APP_LOCALE`              |                    id                    |                                                 The application localization                                                  |
 |         `APP_FALLBACK_LOCALE`         |                    en                    |                              The default value if the specific localization key does not exists                               |
-|         `APP_OTP_WITH_QUEUE`          |                  false                   |                              Set it to `true` if you want to send the otp message by using queue                              |
 |         `APP_OTP_EXPIRED_IN`          |                   1800                   |                                                The OTP code expired in seconds                                                |
 |            `DB_CONNECTION`            |                  pgsql                   |                                                                                                                               |
 |               `DB_HOST`               |                127.0.0.1                 |                                                                                                                               |
@@ -286,8 +283,6 @@ Only the following environment attributes would require your attention out of th
 |             `DB_USERNAME`             |                   dev                    |                                                                                                                               |
 |             `DB_PASSWORD`             |                   dev                    |                                                                                                                               |
 |       `WATZAP_SEND_MESSAGE_URL`       |  https://api.watzap.id/v1/send_message   |                                              The `WatZap` send message endpoint                                               |
-|   `WATZAP_VALIDATE_WHATSAPP_NUMBER`   |                  false                   |                       Set it to `true` if you want to validate whatsapp phone number before sending OTP                       |
-| `WATZAP_VALIDATE_WHATSAPP_NUMBER_URL` | https://api.watzap.id/v1/validate_number |                                        The `WatZap` validate whatsapp number endpoint                                         |
 |           `WATZAP_API_KEY`            |                FooBarBazz                |                                                     The `WatZap` API key                                                      |
 |          `WATZAP_NUMBER_KEY`          |                FooBarBazz                |                                                    The `WatZap` number key                                                    |
 |           `SIMRS_BASE_URL`            |  http://103.111.202.214/live/WebService  |                                                      The SIMRS Base URL                                                       |
@@ -336,5 +331,12 @@ Only the following environment attributes would require your attention out of th
 
 
 Remember that these specifications are for small to medium-sized applications. For large-scale or high-traffic applications, you might need to invest in more powerful hardware and consider additional technologies like load balancers, distributed databases, and content delivery networks (CDNs) for optimal performance and scalability.
+
+[Back to Top](#aviatmobileweb)
+
+## Notes
+
+1. If app env is `local` then the app will ignore error 1005 code from WatZap, this is to avoid 'Invalid Whatsapp number error message'.
+
 
 [Back to Top](#aviatmobileweb)

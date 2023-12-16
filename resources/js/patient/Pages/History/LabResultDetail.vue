@@ -41,19 +41,19 @@ onMounted(() => {
 
 <template>
     <Header
-        title="Detail Hasil Lab"
+        :title="$t('history.lab_result_detail.title')"
         :with-back-url="true"
         page-name="HistoryPage"
     ></Header>
     <div class="px-4 pt-8 mt-4">
         <div class="d-flex flex-column rows-gap-16 mt-2">
             <div class="pb-3 border-bottom border-gray-400">
-                <p class="fs-6 text-gray-700">No. Pemeriksaan</p>
+                <p class="fs-6 text-gray-700">{{ $t('history.lab_result_detail.transaction_no') }}</p>
                 <p class="mt-2">{{ selectedLabResult.transactionNo }}</p>
             </div>
 
             <div class="pb-3 border-bottom border-gray-400">
-                <p class="fs-6 text-gray-700">Waktu Pemeriksaan</p>
+                <p class="fs-6 text-gray-700">{{ $t('history.lab_result_detail.execution_time') }}</p>
                 <p class="mt-2">
                     {{
                         convertDateTimeToDateTime(
@@ -64,12 +64,12 @@ onMounted(() => {
             </div>
 
             <div class="pb-3 border-bottom border-gray-400">
-                <p class="fs-6 text-gray-700">Umur Pasien</p>
+                <p class="fs-6 text-gray-700">{{ $t('history.lab_result_detail.patient_age') }}</p>
                 <p class="mt-2">{{ selectedLabResult.age }} Tahun</p>
             </div>
 
             <div class="pb-3 border-bottom border-gray-400">
-                <p class="fs-6 text-gray-700">Jenis Kelamin</p>
+                <p class="fs-6 text-gray-700">{{ $t('history.lab_result_detail.gender') }}</p>
                 <p class="mt-2">
                     {{
                         selectedLabResult.gender === "M"
@@ -80,7 +80,7 @@ onMounted(() => {
             </div>
 
             <div class="pb-3">
-                <p class="fs-6 text-gray-700">Hasil Pemeriksaan</p>
+                <p class="fs-6 text-gray-700">{{ $t('history.lab_result_detail.lab_result') }}</p>
 
                 <div
                     v-if="!isLoading"
@@ -111,25 +111,25 @@ onMounted(() => {
                                 <div class="accordion-divider"></div>
                                 <div class="pt-3">
                                     <p v-if="result.resultValue === ''">
-                                        <i>Hasil pemeriksaan belum tersedia</i>
+                                        <i>{{ $t('history.lab_result_detail.no_result') }}</i>
                                     </p>
                                     <p v-if="result.resultValue !== ''">
-                                        <span class="me-3">Hasil</span>:
+                                        <span class="me-3">{{ $t('history.lab_result_detail.result_value') }}</span>:
                                         {{ result.resultValue }}<br />
-                                        <span class="me-3">Nilai Normal</span
+                                        <span class="me-3">{{ $t('history.lab_result_detail.result_value_normal') }}</span
                                         >:{{ result.normalValueMin }} -
                                         {{ result.normalValueMax }}
                                     </p>
                                 </div>
                                 <div class="accordion-divider my-3"></div>
 
-                                <p class="fs-5 text-gray-700">Catatan</p>
+                                <p class="fs-5 text-gray-700">{{ $t('history.lab_result_detail.notes') }}</p>
 
                                 <p class="mt-2 fs-5" v-if="result.notes !== ''">
                                     {{ result.notes }}
                                 </p>
                                 <p class="mt-2 fs-5" v-if="result.notes === ''">
-                                    <i>Catatan Klinis Dokter Pemeriksa</i>
+                                    <i>{{ $t('history.lab_result_detail.doctor_notes') }}</i>
                                 </p>
                             </div>
                         </div>

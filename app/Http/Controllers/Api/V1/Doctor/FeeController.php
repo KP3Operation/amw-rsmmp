@@ -19,7 +19,7 @@ class FeeController extends Controller
     {
         $request->validate([
             'start_date' => 'required|date|before_or_equal:end_date',
-            'end_date' => 'required|date|after_or_equal:start_date'
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
         $user = $request->user();
@@ -29,7 +29,7 @@ class FeeController extends Controller
         $feeByTrxDate = $this->doctorService
             ->getFeeByTrxDate($userDoctor->doctor_id, $request->start_date, $request->end_date);
 
-        $payout = "0";
+        $payout = '0';
         $pendings = [];
         foreach ($feeByTrxDate->data as $item) {
             if ($item->paymentPercentage != 100) {
@@ -38,7 +38,7 @@ class FeeController extends Controller
         }
 
         foreach ($summaryFee->data->data as $item) {
-            if ($item->name == "Fee4ServicePaid") {
+            if ($item->name == 'Fee4ServicePaid') {
                 $payout = $item->value;
             }
         }
@@ -47,7 +47,7 @@ class FeeController extends Controller
             'data' => [
                 'payout' => $payout,
                 'pending' => count($pendings),
-            ]
+            ],
         ]);
     }
 
@@ -55,7 +55,7 @@ class FeeController extends Controller
     {
         $request->validate([
             'start_date' => 'required|date|before_or_equal:end_date',
-            'end_date' => 'required|date|after_or_equal:start_date'
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
         $user = $request->user();
@@ -86,7 +86,7 @@ class FeeController extends Controller
         }
 
         return response()->json([
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }

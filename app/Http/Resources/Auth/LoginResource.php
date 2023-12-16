@@ -17,10 +17,10 @@ class LoginResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "phoneNumber" => $this->resource->phoneNumber,
-            "otpCreatedAt" => $this->resource->otpCreatedAt,
-            "otpUpdatedAt" => $this->resource->otpUpdatedAt,
-            "otpTimeout" => $this->resource->otpTimeout,
+            'phoneNumber' => $this->resource->phoneNumber,
+            'otpCreatedAt' => $this->resource->otpCreatedAt,
+            'otpUpdatedAt' => $this->resource->otpUpdatedAt,
+            'otpTimeout' => $this->resource->otpTimeout,
         ];
     }
 }

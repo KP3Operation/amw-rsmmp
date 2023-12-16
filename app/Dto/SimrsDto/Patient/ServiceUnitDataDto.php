@@ -11,6 +11,6 @@ class ServiceUnitDataDto extends Data
     public function __construct(
         #[DataCollectionOf(ServiceUnitDto::class)]
         public DataCollection $data
-    )
-    {}
+    ) {
+    }
 }

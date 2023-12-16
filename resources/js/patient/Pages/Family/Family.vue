@@ -108,12 +108,12 @@ export default {
         <div class="d-flex flex-column rows-gap-16 mt-4" v-else>
             <div class="text-center">
                 <img src="@resources/static/images/not-found.png" alt="Ilustrasi Family Member" width="206" height="195">
-                <h2 class="fs-2 fw-bold mt-4">Tambah Orang Yang Anda Sayangi</h2>
-                <p class="text-gray-800 mt-2">Tambah orang yang anda sayangi untuk menjadi family member</p>
+                <h2 class="fs-2 fw-bold mt-4">{{ $t('family.add_your_family') }}</h2>
+                <p class="text-gray-800 mt-2">{{ $t('family.add_your_family_desc') }}</p>
                 <router-link to="/family/create"
                     class="d-flex col-gap-8 btn btn-blue-500-rounded text-decoration-none justify-content-center align-items-center mt-4">
                     <i class="bi bi-plus fs-3"></i>
-                    Tambah Data
+                    {{ $t('family.add_data') }}
                 </router-link>
             </div>
         </div>
@@ -136,10 +136,10 @@ export default {
                 </div>
                 <div class="modal-footer flex-nowrap">
                     <button @click="modalState.deleteFamilyConfirmation.hide()" type="button" class="w-50 btn btn-link"
-                        data-bs-dismiss="modal">Batal</button>
+                        data-bs-dismiss="modal">{{ $t('family.delete_confirmation_modal.cancel') }}</button>
 
                     <button @click="handleDeleteFamily" type="button" class="w-50 btn-hapus-data btn btn-red-500-rounded"
-                        data-bs-dismiss="modal">Hapus Data</button>
+                        data-bs-dismiss="modal">{{ $t('family.delete_confirmation_modal.yes') }}</button>
                 </div>
             </div>
         </div>

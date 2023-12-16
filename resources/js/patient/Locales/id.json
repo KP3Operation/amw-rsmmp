@@ -56,7 +56,54 @@
         }
     },
     "appointment": {
-        "title": "Appointment"
+        "title": "Appointment",
+        "future": "Akan Datang",
+        "done": "Selesai",
+        "future_appointment": "Appointment Akan Datang",
+        "no_appointment": "Janji Konsultasi Tidak Ditemukan",
+        "create_appointment_desc": "Buat Janji Konsultasi Yang Baru Dengan Mentap\n Tombol “Buat Janji Konsultasi”",
+        "indexed_appointment": "Appointment Terdata",
+        "filter": "Filter",
+        "canceled": "Dibatalkan",
+        "no_consultation": "Tidak Ada Janji Konsultasi",
+        "no_consultation_desc": "Anda Belum Memiliki Janji Konsultasi Yang\n Sudah Selesai",
+        "actions": {
+            "cancel": "Batal"
+        },
+        "cancel_consultation_modal": {
+            "title": "Batalkan Janji Konsultasi",
+            "message": "Apakah Anda yakin ingin membatalkan Janji Konsultasi?",
+            "yes": "Ya, Batalkan",
+            "no": "Tidak"
+        },
+        "filter_modal": {
+            "title": "Filter",
+            "unit": "Unit",
+            "from": "Dari",
+            "to": "Hingga",
+            "reset": "Reset",
+            "apply": "Terapkan",
+            "all": "Semua",
+            "member": "Member"
+        },
+        "create_appointment":  {
+            "title": "Buat Appointment",
+            "required_fields": "* Wajib diisi",
+            "member": "Pilih Member",
+            "patient": "Pasien",
+            "patient_name": "Nama Pasien",
+            "patient_id": "ID Pasien",
+            "birth_date": "Tanggal Lahir",
+            "gender": "Jenis Kelamin",
+            "male": "Laki-Laki",
+            "female": "Perempuan",
+            "consultation": "Konsultasi",
+            "consultation_date": "Tanggal Konsultasi",
+            "unit": "Pilih Unit",
+            "paramedic": "Pilih Dokter",
+            "save": "Simpan",
+            "cancel": "Batal"
+        }
     },
     "history": {
         "title": "Riwayat Medis",
@@ -74,18 +121,68 @@
         "pulse": "Denyut Nadi",
         "body_temperature": "Suhu Tubuh",
         "blood_pressure": "Tekanan Darah",
+        "load_more": "Load More",
+        "choose_vital_unit": "Pilih Tipe",
+        "vital_unit": {
+            "bp1": "Tekanan Darah Sistolik",
+            "bp2": "Tekanan Darah Diastolik",
+            "temp": "Suhu Tubuh",
+            "resp": "Laju Pernapasan"
+        },
+        "no_vital_unit_result": "Anda Belum Memiliki\n Hasil Tanda Vital",
+        "no_prescription": "Anda Belum Memiliki Resep Obat",
+        "no_lab_result": "Anda Belum Memiliki Hasil Lab",
+        "no_encounter": "Anda Belum Memiliki Pertemuan",
         "vital_sign_history": {
             "date_created": "Tanggal Pencatatan",
             "time_created": "Jam Pencatatan",
             "registration_no": "No. Registrasi",
             "unit_vital_sign": "Unit Tanda Vital",
-            "unit": "Unit"
+            "unit": "Unit",
+            "result": "Hasil"
         },
         "modal_filter": {
             "title": "Filter",
             "member": "Member",
             "reset": "Reset",
             "apply": "Terapkan"
+        },
+        "encounter_detail": {
+            "title": "Detail Pertemuan",
+            "queue_no": "No. Antrian",
+            "registration_no": "No. Registrasi",
+            "guarantor_name": "Nama Penjamin",
+            "consultation_date": "Tanggal Konsultasi",
+            "consultation_time": "Jam Konsultasi",
+            "out_date": "Tanggal Keluar",
+            "out_time": "Jam Keluar",
+            "visit_type": "Tipe Kunjungan",
+            "diagnosis": "Diagnosis",
+            "notes": "Catatan"
+        },
+        "lab_result_detail": {
+            "title": "Detail Hasil Lab",
+            "transaction_no": "No. Pemeriksaan",
+            "patient_age": "Umur Pasien",
+            "execution_time": "Waktu Pemeriksaan",
+            "gender": "Jenis Kelamin",
+            "male": "Laki-Laki",
+            "female": "Perempuan",
+            "lab_result": "Hasil Pemeriksaan",
+            "no_result": "Hasil pemeriksaan belum tersedia",
+            "result_value": "Hasil",
+            "result_value_normal": "Nilai Normal",
+            "notes": "Catatan",
+            "doctor_notes": "Catatan Klinis Dokter Pemeriksa"
+        },
+        "prescription_detail": {
+            "title": "Detail Resep",
+            "prescription_no": "Nomor Resep",
+            "prescription_date": "Tanggal Resep",
+            "paramedic_name": "Nama Dokter Pemberi Resep",
+            "item_name": "Nama Obat",
+            "qty": "Total",
+            "consume_method": "Petunjuk"
         }
     },
     "home": {
@@ -113,6 +210,9 @@
         "female": "Perempuan",
         "required_field": "Wajib Diisi",
         "main_user": "User Utama",
+        "add_your_family": "Tambah Orang Yang Anda Sayangi",
+        "add_your_family_desc": "Tambah orang yang anda sayangi untuk menjadi family member",
+        "add_data": "Tambah Data",
         "create": {
             "title": "Tambah Family Member",
             "confirmation_modal": {
@@ -132,7 +232,8 @@
             "ssn": "No Induk Kependudukan (NIK)",
             "birth_date": "Tanggal Lahir",
             "edit": "Edit",
-            "delete": "Hapus"
+            "delete": "Hapus",
+            "sync": "Sinkronisasi"
         },
         "confirmation": {
             "title": "Konfirmasi Data",
@@ -140,7 +241,45 @@
         },
         "delete_confirmation_modal": {
             "title": "Hapus Data Member",
-            "message": "Yakin ingin menghapus data member {name}?"
+            "message": "Yakin ingin menghapus data member {name}?",
+            "cancel": "Batal",
+            "yes": "Hapus Data"
         }
+    },
+    "doctor_schedule": {
+        "title": "Jadwal Dokter",
+        "unit": "Unit",
+        "all_unit": "Semua Unit",
+        "detail": "Detail",
+        "date": "Tanggal",
+        "schedule_detail": {
+            "title": "Detail Dokter",
+            "schedule": "Detail Dokter",
+            "monday": "Senin",
+            "tuesday": "Selasa",
+            "thursday": "Rabu",
+            "wednesday": "Kamis",
+            "friday": "Jumat",
+            "saturday": "Sabtu",
+            "sunday": "Minggu",
+            "create_appointment": "Buat Jadwal Konsultasi"
+        }
+    },
+    "encounter_card": {
+        "registration_no": "No. Registrasi",
+        "date": "Tanggal",
+        "paramedic_name": "Nama Dokter",
+        "detail": "Detail"
+    },
+    "lab_result_card": {
+        "transaction_no": "No. Pemeriksa",
+        "date": "Tanggal",
+        "detail": "Detail"
+    },
+    "prescription_card": {
+        "prescription_no": "No. Resep",
+        "date": "Tanggal Resep",
+        "paramedic_name": "Nama Dokter",
+        "detail": "Detail"
     }
 }

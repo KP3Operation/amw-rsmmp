@@ -37,6 +37,6 @@ class AppointmentDto extends Data
 
         #[MapInputName('AppointmentDate_yMdHms')]
         public ?string $appointmentDate_yMdHms,
-    )
-    {}
+    ) {
+    }
 }

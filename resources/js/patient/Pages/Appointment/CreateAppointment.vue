@@ -313,20 +313,20 @@ export default {
 
 <template>
     <Header
-        title="Buat Appointment"
+        :title="$t('appointment.create_appointment.title')"
         :with-back-url="true"
         page-name="AppointmentPage"
     ></Header>
     <div class="px-4 pt-7 pb-4">
-        <p class="fs-5 text-red-500">* Wajib Diisi</p>
+        <p class="fs-5 text-red-500">{{ $t('appointment.create_appointment.required_fields') }}</p>
         <form
             @submit.prevent="storeAppointment"
             class="d-flex flex-column rows-gap-16 mt-3"
         >
-            <p class="fs-3 fw-bold">Pasien</p>
+            <p class="fs-3 fw-bold">{{ $t('appointment.create_appointment.patient') }}</p>
             <div :class="{ error: v$.patient_name.$errors.length }">
                 <label for="nama"
-                    >Nama Pasien
+                    >{{ $t('appointment.create_appointment.patient_name') }}
                     <span class="text-red-500 fw-semibold">*</span></label
                 >
                 <select
@@ -336,7 +336,7 @@ export default {
                     v-model="form.patient_name"
                     @input="v$.patient_name.$touch()"
                 >
-                    <option value="">Pilih Member</option>
+                    <option value="">{{ $t('appointment.create_appointment.member') }}</option>
                     <option :value="userPatientData.patientId">
                         {{ userData.userFullName }}
                     </option>
@@ -356,7 +356,7 @@ export default {
                 </div>
             </div>
             <div :class="{ error: v$.patient_id.$errors.length }">
-                <label for="id-pasien">ID Pasien</label>
+                <label for="id-pasien">{{ $t('appointment.create_appointment.patient_id') }}</label>
                 <input
                     type="text"
                     class="form-control mt-2"
@@ -375,7 +375,7 @@ export default {
             </div>
             <div :class="{ error: v$.birth_date.$errors.length }">
                 <label for="dob"
-                    >Tanggal Lahir
+                    >{{ $t('appointment.create_appointment.birth_date') }}
                     <span class="text-red-500 fw-semibold">*</span></label
                 >
                 <input
@@ -396,7 +396,7 @@ export default {
             </div>
             <div :class="{ error: v$.gender.$errors.length }">
                 <label for="gender"
-                    >Jenis Kelamin
+                    >{{ $t('appointment.create_appointment.gender') }}
                     <span class="text-red-500 fw-semibold">*</span></label
                 >
                 <div class="d-flex col-gap-20 mt-2">
@@ -410,7 +410,7 @@ export default {
                             value="Laki-Laki"
                         />
                         <label class="form-check-label" for="Laki-Laki">
-                            Laki-Laki
+                            {{ $t('appointment.create_appointment.male') }}
                         </label>
                     </div>
                     <div class="form-check">
@@ -423,7 +423,7 @@ export default {
                             id="Perempuan"
                         />
                         <label class="form-check-label" for="Perempuan">
-                            Perempuan
+                            {{ $t('appointment.create_appointment.female') }}
                         </label>
                     </div>
                 </div>
@@ -442,7 +442,7 @@ export default {
                     :class="{ error: v$.appointment_date.$errors.length }"
                 >
                     <label for="date"
-                        >Tanggal Konsultasi
+                        >{{ $t('appointment.create_appointment.consultation_date') }}
                         <span class="text-red-500 fw-semibold">*</span></label
                     >
                     <input
@@ -466,7 +466,7 @@ export default {
                     :class="{ error: v$.service_unit_id.$errors.length }"
                 >
                     <label for="unit"
-                        >Pilih Unit
+                        >{{ $t('appointment.create_appointment.unit') }}
                         <span class="text-red-500 fw-semibold">*</span></label
                     >
                     <select
@@ -497,7 +497,7 @@ export default {
                     :class="{ error: v$.paramedic_id.$errors.length }"
                 >
                     <label for="paramedis"
-                        >Pilih Dokter
+                        >{{ $t('appointment.create_appointment.paramedic') }}
                         <span class="text-red-500 fw-semibold">*</span></label
                     >
                     <select
@@ -525,11 +525,11 @@ export default {
                 </div>
             </div>
 
-            <SubmitButton className="btn-blue-500-rounded" text="Simpan" />
+            <SubmitButton className="btn-blue-500-rounded" :text="$t('appointment.create_appointment.save')" />
             <router-link
                 :to="{ name: 'AppointmentPage' }"
                 class="text-center text-blue-500 text-decoration-none fw-bold"
-                >Batal</router-link
+                >{{ $t('appointment.create_appointment.cancel') }}</router-link
             >
         </form>
     </div>

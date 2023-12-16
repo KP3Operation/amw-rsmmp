@@ -6,6 +6,7 @@ import OverviewSummaryFee from "@doctor/Components/OverviewSummaryFee/OverviewSu
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import apiRequest from "@shared/utils/axios.js";
 import {mapState} from "pinia";
+import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 
 export default {
     components: { HomeHeader, OverviewConsultationScheduleEmpty, OverviewSummaryFee },
@@ -29,6 +30,7 @@ export default {
         this.getAppointments();
     },
     methods: {
+        convertDateTimeToDate,
         getAppointments() {
             apiRequest
                 .get("/api/v1/doctor/appointments/group", {
@@ -142,12 +144,7 @@ export default {
                                 <div class="date">
                                     <div>
                                         <i class="bi bi-calendar-event-fill"></i>
-                                        <p>
-                                            {{
-                                                $convertDateTimeToDate(
-                                                    appointment.date,
-                                                )
-                                            }}
+                                        <p> {{ convertDateTimeToDate(appointment.date) }}
                                         </p>
                                     </div>
                                 </div>
@@ -156,7 +153,7 @@ export default {
                                     <p>
                                         <span>{{ appointment.count }}</span>
                                         <br />
-                                        Pasien
+                                        {{ $t('home.patient') }}
                                     </p>
                                 </div>
                                 <p class="location">
@@ -179,10 +176,6 @@ export default {
                 </div>
             </div>
         </section>
-        <!--        <section class="mt-5">-->
-        <!--            <h2 class="fs-3 fw-bold text-black">{{ $t('home.overview_inpatient_list') }}</h2>-->
-        <!--            <OverviewInpatientEmpty />-->
-        <!--        </section>-->
         <OverviewSummaryFee />
     </div>
 </template>

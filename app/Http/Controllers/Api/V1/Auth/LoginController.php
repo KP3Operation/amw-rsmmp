@@ -38,15 +38,20 @@ class LoginController extends Controller
             ->validated('phoneNumber'))
             ->first();
 
-        if (! $user) {
+        if (!$user) {
             throw new RestApiException('No. Handphone tidak terdaftar', 404);
         }
 
+        // Delete old user otp codes
+        OtpCode::where('user_id', '=', $user->id)->delete();
+
         $otpCode = generate_otp(6);
+
+        // Uncomment if we want the otp set to 12345 in local
         // if it is local env force the otpCode to 12345; for dev only
-        if (config('app.env') == 'local') {
-            $otpCode = 12345;
-        }
+        // if (config('app.env') == 'local') {
+        //     $otpCode = 12345;
+        // }
 
         OtpCode::where('user_id', '=', $user->id)->delete();
 
@@ -80,7 +85,7 @@ class LoginController extends Controller
     public function authenticate(AuthenticateRequest $authenticateRequest)
     {
         $userOtpCode = OtpCode::where('code', '=', $authenticateRequest->validated('code'))->whereStatus('unverified')->first();
-        if (! $userOtpCode) {
+        if (!$userOtpCode) {
             throw new RestApiException('Kode OTP salah', 404);
         }
 
@@ -89,7 +94,7 @@ class LoginController extends Controller
         }
 
         $user = User::find($userOtpCode->user_id);
-        if (! $user) {
+        if (!$user) {
             throw new RestApiException('Terjadi kesalahan saat membaca data. Mohon untuk login kembali', 500);
         }
 

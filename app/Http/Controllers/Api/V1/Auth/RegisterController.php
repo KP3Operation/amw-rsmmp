@@ -72,13 +72,15 @@ class RegisterController extends Controller
             ->where('phone_number', '=', format_phone_number($request->validated('phoneNumber')))
             ->first();
 
+
+        // Delete old user otp codes
+        OtpCode::where('user_id', '=', $user->id)->delete();
+
         $otpCode = generate_otp(6);
         // if it is local env force the otpCode to 12345; for dev only
-        if (config('app.env') == 'local') {
-            $otpCode = 12345;
-        }
-
-        OtpCode::where('user_id', '=', $user->id)->delete();
+        // if (config('app.env') == 'local') {
+        //     $otpCode = 12345;
+        // }
 
         $otpCodeData = OtpCode::create([
             'user_id' => $user->id,
@@ -113,7 +115,7 @@ class RegisterController extends Controller
     public function updatePatient(UpdatePatientRequest $request, string $phoneNumber)
     {
         $user = User::with('userPatientData')->where('phone_number', '=', $phoneNumber)->first();
-        if (! $user) {
+        if (!$user) {
             throw new RestApiException('No. Handphone salah', 422);
         }
 
@@ -133,7 +135,7 @@ class RegisterController extends Controller
 
         $user = User::with('userPatientData')->where('id', '=', $user->id)->first();
 
-        if (! $user) {
+        if (!$user) {
             throw new RestApiException('Terjadi kesalahan sistem. Mohon menghubungi tim support kami', 500);
         }
 
@@ -161,7 +163,7 @@ class RegisterController extends Controller
         }
 
         $simrsDoctorData = $this->doctorService->getDoctors($request->validated('doctorId'));
-        if (! $simrsDoctorData->data->first()) {
+        if (!$simrsDoctorData->data->first()) {
             throw new RestApiException('ID Dokter tidak ditemukan pada SIMRS', 404);
         }
 
@@ -190,11 +192,15 @@ class RegisterController extends Controller
         $user = User::with('userDoctorData')
             ->where('phone_number', '=', $request->validated('phoneNumber'))->first();
 
+
+        // Delete old user otp codes
+        OtpCode::where('user_id', '=', $user->id)->delete();
+
         $otpCode = generate_otp(6);
         // if it is local env force the otpCode to 12345; for dev only
-        if (config('app.env') == 'local') {
-            $otpCode = 12345;
-        }
+        // if (config('app.env') == 'local') {
+        //     $otpCode = 12345;
+        // }
 
         OtpCode::where('user_id', '=', $user->id)->delete();
 
@@ -235,7 +241,7 @@ class RegisterController extends Controller
     public function updateDoctor(UpdateDoctorRequest $request, string $phoneNumber): UpdateDoctorResource
     {
         $user = User::with('userDoctorData')->where('phone_number', '=', $phoneNumber)->first();
-        if (! $user) {
+        if (!$user) {
             throw new RestApiException('NO. Handphone salah', 422);
         }
 

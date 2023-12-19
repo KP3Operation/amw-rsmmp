@@ -1,20 +1,20 @@
 <script>
 
-import Header from "@shared/Components/Header/Header.vue";
+import { useFeeByTrxDateStore } from "@doctor/+store/fee-by-trx-date.store.js";
 import FeePaidCard from "@doctor/Components/FeePaidCard/FeePaidCard.vue";
 import FeePendingCard from "@doctor/Components/FeePendingCard/FeePendingCard.vue";
-import { onMounted, reactive, ref } from "vue";
-import {
-    convertDateTimeToDate,
-    convertDateToFormField, getCurrentDate,
-    getThisMonthStartDate
-} from "@shared/utils/helpers.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
-import { useFeeByTrxDateStore } from "@doctor/+store/fee-by-trx-date.store.js";
-import { storeToRefs } from "pinia";
-import {helpers, required} from "@vuelidate/validators";
-import useVuelidate from "@vuelidate/core";
+import Header from "@shared/Components/Header/Header.vue";
 import apiRequest from "@shared/utils/axios.js";
+import {
+convertDateTimeToDate,
+convertDateToFormField, getCurrentDate,
+getThisMonthStartDate
+} from "@shared/utils/helpers.js";
+import useVuelidate from "@vuelidate/core";
+import { helpers, required } from "@vuelidate/validators";
+import { storeToRefs } from "pinia";
+import { onMounted, reactive, ref } from "vue";
 
 export default {
     components: {
@@ -123,7 +123,7 @@ export default {
         </form>
         <p class="error-filter mt-3 text-red-500 fs-6 fw-semibold"></p>
     </div>
-    <section class="tab-periode mt-4">
+    <section class="tab-periode">
         <p class="periode">{{ $t('fee.period') }} <span>{{ period }}</span></p>
         <div class="tab-summary-fee nav nav-pills nav-justified d-flex col-gap-20 mt-4">
             <button class="nav-link w-50 active" data-bs-toggle="pill" data-bs-target="#pending" role="tab"
@@ -150,7 +150,7 @@ export default {
                 </div>
             </div>
             <div class="text-center" v-if="pendings.length === 0">
-                <img :src="'@resources/static/images/not-found.png'" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3">
+                <img src="@resources/static/images/not-found.png" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3">
                 <p class="mt-4 fw-semibold">{{ $t('fee.no_pending_payment') }}</p>
             </div>
         </div>
@@ -165,7 +165,7 @@ export default {
                 </div>
             </div>
             <div class="text-center" v-if="payouts.length === 0">
-                <img :src="'@resources/static/images/not-found.png'" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3" />
+                <img src="@resources/static/images/not-found.png" alt="Ilustrasi Tanpa Data" width="280" height="210" class="d-inline-block mt-3" />
                 <p class="mt-4 fw-semibold">{{ $t('fee.no_payout_payment') }}</p>
             </div>
         </div>

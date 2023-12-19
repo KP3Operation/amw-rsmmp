@@ -1,6 +1,6 @@
 <script setup>
-    import { toRefs } from "vue";
-    import { convertDateTimeToDate, calculateAge } from "@shared/utils/helpers";
+    import { calculateAge, convertDateTimeToDate } from "@shared/utils/helpers";
+import { toRefs } from "vue";
 
     const props = defineProps({
         name: String,

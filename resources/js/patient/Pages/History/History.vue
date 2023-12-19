@@ -1,22 +1,22 @@
 <script setup>
-import MicroscopeWhite from "@resources/static/icons/microscope-white.svg";
-import Header from "@shared/Components/Header/Header.vue";
-import { onMounted, reactive, ref, watch } from "vue";
-import { useLayoutStore } from "@shared/+store/layout.store";
-import VitalSignCard from "@patient/Components/VitalSignCard/VitalSignCard.vue";
-import PatientCard from "@patient/Components/PatientCard/PatientCard.vue";
-import * as bootsrap from "bootstrap";
 import { useFamilyStore } from "@patient/+store/family.store.js";
-import { storeToRefs } from "pinia";
-import {useMedicalHistoryStore} from "@patient/+store/medical-history.store.js";
-import PrescriptionCard from "@patient/Components/PrescriptionCard/PrescriptionCard.vue";
-import LabResultCard from "@patient/Components/LabResultCard/LabResultCard.vue";
+import { useMedicalHistoryStore } from "@patient/+store/medical-history.store.js";
 import EncounterCard from "@patient/Components/EncounterCard/EncounterCard.vue";
-import NotFoundImage from "@resources/static/images/not-found.png";
+import LabResultCard from "@patient/Components/LabResultCard/LabResultCard.vue";
+import PatientCard from "@patient/Components/PatientCard/PatientCard.vue";
+import PrescriptionCard from "@patient/Components/PrescriptionCard/PrescriptionCard.vue";
+import VitalSignCard from "@patient/Components/VitalSignCard/VitalSignCard.vue";
+import MicroscopeWhite from "@resources/static/icons/microscope-white.svg";
+import Doctor2Image from "@resources/static/images/doctor-2.png";
 import DoctorImage from "@resources/static/images/doctor.png";
 import LabImage from "@resources/static/images/lab.png";
-import Doctor2Image from "@resources/static/images/doctor-2.png";
+import NotFoundImage from "@resources/static/images/not-found.png";
+import { useLayoutStore } from "@shared/+store/layout.store";
+import Header from "@shared/Components/Header/Header.vue";
 import apiRequest from "@shared/utils/axios.js";
+import * as bootsrap from "bootstrap";
+import { storeToRefs } from "pinia";
+import { onMounted, reactive, ref, watch } from "vue";
 
 const prevVitalSignData = ref([]);
 const prevPrescriptionData = ref([]);
@@ -126,6 +126,10 @@ const fetchEncounterHistories = () => {
 }
 
 const onTabChange = (tab) => {
+    prevVitalSignData.value = [];
+    prevPrescriptionData.value = [];
+    prevLabResultData.value = [];
+    prevEncounterData.value = [];
     medicalHistoriesStore.updateSelectedTab(tab);
 }
 

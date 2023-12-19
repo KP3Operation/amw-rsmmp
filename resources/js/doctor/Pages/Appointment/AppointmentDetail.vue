@@ -1,13 +1,13 @@
 <script setup>
-import Header from "@shared/Components/Header/Header.vue";
-import {convertDateTimeToDate} from "@shared/utils/helpers.js";
-import {onMounted, ref} from "vue";
-import {useAppointmentStore} from "@doctor/+store/appointment.store.js";
-import {storeToRefs} from "pinia";
-import {useLayoutStore} from "@shared/+store/layout.store.js";
+import { useAppointmentStore } from "@doctor/+store/appointment.store.js";
 import DoctorBlue from "@resources/static/icons/doctor-blue.svg";
-import {useRoute} from "vue-router";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
+import Header from "@shared/Components/Header/Header.vue";
 import apiRequest from "@shared/utils/axios.js";
+import { convertDateTimeToDate } from "@shared/utils/helpers.js";
+import { storeToRefs } from "pinia";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
@@ -91,7 +91,7 @@ onMounted(() => {
                         <div class="d-flex align-items-center justify-content-end col-gap-8">
                             <i class="bi bi-clock-fill icon-blue-500"></i>
 
-                            <span class="fs-6 text-gray-700">{{ $t('appointment.appointment_details.tanggal') }}</span>
+                            <span class="fs-6 text-gray-700">{{ $t('appointment.appointment_details.date') }}</span>
                         </div>
                         <p class="mt-2">{{ convertDateTimeToDate(appointmentDetail.appointmentDate_yMdHms) }}. {{ appointmentDetail.appointmentTime }}</p>
                     </div>

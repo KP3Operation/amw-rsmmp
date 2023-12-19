@@ -1,11 +1,12 @@
 <script setup>
 import { useAppointmentStore } from "@patient/+store/appointment.store.js";
 import { useFamilyStore } from "@patient/+store/family.store.js";
+import PatientCard from "@patient/Components/PatientCard/PatientCard.vue";
 import NotFoundImage from "@resources/static/images/not-found.png";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import Header from "@shared/Components/Header/Header.vue";
+import apiRequest from "@shared/utils/axios.js";
 import { convertDateTimeToDate } from "@shared/utils/helpers.js";
-import axios from "axios";
 import * as bootstrap from "bootstrap";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive, ref, watch } from "vue";
@@ -24,6 +25,7 @@ const {
     selectedStartDate,
     selectedEndDate,
     selectedServiceUnitId,
+    selectedPatient,
 } = storeToRefs(appointmentStore);
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
@@ -36,8 +38,8 @@ const dateEndFilter = ref("");
 
 const fetchAppointments = () => {
     layoutStore.updateLoadingState(true);
-    axios
-        .get(`/api/v1/patient/appointments`, {
+    apiRequest
+    .get(`/api/v1/patient/appointments`, {
             params: {
                 medical_no: selectedMedicalNo.value,
                 service_unit_id: selectedServiceUnitId.value,
@@ -52,6 +54,29 @@ const fetchAppointments = () => {
                 data.appointments.dones,
                 data.appointments.cancels
             );
+
+            if (openAppointments.value.length > 0) {
+               appointmentStore.updateSelectedPatient({
+                    name: `${openAppointments.value[0].firstName} ${openAppointments.value[0].lastName}`,
+                    gender: openAppointments.value[0].sex,
+                    medicalNo: openAppointments.value[0].medicalNo,
+                    birthDate: openAppointments.value[0].dateOfBirth_yMdHms
+                });
+            } else if (closeAppointments.value.length > 0) {
+               appointmentStore.updateSelectedPatient({
+                    name: `${closeAppointments.value[0].firstName} ${closeAppointments.value[0].lastName}`,
+                    gender: closeAppointments.value[0].sex,
+                    medicalNo: closeAppointments.value[0].medicalNo,
+                    birthDate: closeAppointments.value[0].dateOfBirth_yMdHms
+                });
+            } else {
+               appointmentStore.updateSelectedPatient({
+                    name: '-',
+                    gender: '-',
+                    medicalNo: '-',
+                    birthDate: '-'
+                });
+            }
         })
         .catch((error) => {
             if (error.response) {
@@ -70,8 +95,8 @@ const fetchAppointments = () => {
 };
 
 const fetchFamily = () => {
-    axios
-        .get(`/api/v1/patient/family`)
+    apiRequest
+    .get(`/api/v1/patient/family`)
         .then((response) => {
             const data = response.data;
             familyStore.updateFamilies(data.families);
@@ -92,8 +117,8 @@ const showCancelModal = (appointmentNo) => {
 };
 
 const cancelAppointment = () => {
-    axios
-        .delete(`/api/v1/patient/appointments`, {
+    apiRequest
+    .delete(`/api/v1/patient/appointments`, {
             params: {
                 appointment_no: selectedAppointmentNo.value,
             },
@@ -168,6 +193,11 @@ onMounted(() => {
         </router-link>
     </Header>
     <div class="px-4 pt-8">
+        <PatientCard class="mt-3"
+            :name="selectedPatient.name"
+            :gender="(selectedPatient.gender === 'M') ? 'Laki-Laki' : 'Perempuan'"
+            :medicalNo="selectedPatient.medicalNo"
+            :birthDate="selectedPatient.birthDate" />
         <div
             class="tab-appointment nav nav-pills nav-justified d-flex col-gap-20 mt-4"
             role="tablist"

@@ -1,11 +1,11 @@
 <script>
-import Header from "@shared/Components/Header/Header.vue";
-import {onMounted, ref, watch} from "vue";
-import { useLayoutStore } from "@shared/+store/layout.store.js";
-import InpatientListCard from "@doctor/Components/InpatientListCard/InpatientListCard.vue";
 import { useInpatientStore } from "@doctor/+store/inpatient.store.js";
-import { storeToRefs } from "pinia";
+import InpatientListCard from "@doctor/Components/InpatientListCard/InpatientListCard.vue";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
+import Header from "@shared/Components/Header/Header.vue";
 import apiRequest from "@shared/utils/axios.js";
+import { storeToRefs } from "pinia";
+import { onMounted, ref, watch } from "vue";
 
 export default {
     components: {
@@ -23,7 +23,7 @@ export default {
 
         const filterInpatientList = () => {
             layoutStore.isLoading = true;
-            apiRequest.get(`/api/v1/doctor/inpatient?room_name=${selectedRoomName}&prev_data=${prevData}`).then((response) => {
+            apiRequest.get(`/api/v1/doctor/inpatient?room_name=${selectedRoomName.value}&prev_data=${prevData.value}`).then((response) => {
                 const data = response.data;
                 data.patients.map((patient) => {
                     if (!prevData.value.includes(patient.medicalNo)) {
@@ -106,7 +106,7 @@ export default {
                 @click="setSelectedPatient(patient)" />
         </div>
         <div class="text-center mt-3" v-if="patientCount === 0">
-            <img :src="'@resources/static/images/not-found.png'" alt="Ilustrasi Tidak Ditemukan" width="280" height="210">
+            <img src="@resources/static/images/not-found.png" alt="Ilustrasi Tidak Ditemukan" width="280" height="210">
 
             <p class="mt-4 fs-3 fw-bold">
                 {{ $t('inpatient.no_inpatient_list') }}

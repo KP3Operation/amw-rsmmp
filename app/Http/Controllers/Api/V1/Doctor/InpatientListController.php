@@ -21,7 +21,7 @@ class InpatientListController extends Controller
         $userDoctor = $user->userDoctorData;
         $prevData = [];
         $response = [];
-        if ($request->has('prev_data')) {
+        if ($request->has('prev_data') && $request->prev_data != null) {
             $prevData = $request->get('prev_data');
         }
 
@@ -30,7 +30,7 @@ class InpatientListController extends Controller
 
         if (count($prevData) >= 10) {
             foreach ($inpatientList->data as $patient) {
-                if (! in_array($patient->medicalNo, $prevData)) {
+                if (!in_array($patient->medicalNo, $prevData)) {
                     $response[] = $patient;
                 }
 

@@ -114,7 +114,7 @@ export default {
 
         const updateFamily = () => {
             layoutStore.isLoading = true;
-            form.put(`/api/v1/patient/family/${route.params.id}`).then((response) => {
+            apiRequest.put(`/api/v1/patient/family/${route.params.id}`, form).then((response) => {
                 router.push({ path: '/family' });
             }).catch((error) => {
                 layoutStore.toggleErrorAlert(`${error.response.data.message}`);

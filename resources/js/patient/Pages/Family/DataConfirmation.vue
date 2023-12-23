@@ -37,7 +37,6 @@ export default {
 
         const rules = {
             id: {},
-            user_id: {},
             name: {
                 required: helpers.withMessage(
                     "Nama Lengkap tidak boleh kosong",
@@ -151,20 +150,6 @@ export default {
     <div class="px-4 pt-7 pb-4">
 
         <form @submit.prevent="updateFamily" class="d-flex flex-column rows-gap-16 mt-3">
-            <div :class="{ error: v$.user_id.$errors.length }">
-                <label for="user_id">{{ $t('family.main_user') }}
-                </label>
-                <input type="text" name="user_id" id="user_id" placeholder="0" class="form-control mt-2"
-                    v-model="form.user_id"
-                       @input="v$.name.$touch()" readonly>
-                <div
-                    class="error mt-2 fs-6 fw-bold text-red-200"
-                    v-for="error of v$.user_id.$errors"
-                    :key="error.$uid"
-                >
-                    {{ error.$message }}
-                </div>
-            </div>
             <div :class="{ error: v$.name.$errors.length }">
                 <label for="nama">{{ $t('family.patient_name') }}
                 </label>

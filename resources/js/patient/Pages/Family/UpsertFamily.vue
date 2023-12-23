@@ -101,8 +101,14 @@ export default {
         };
 
         const storeFamilyConfirmTrue = () => {
-            modalState.familyDataConfirmation.hide();
-            router.push({ path: `/family/confirm/${newFamilyId.value}` });
+            apiRequest.get(`/api/v1/patient/family/fetchsimrs/${newFamilyId.value}`).then(() => {
+                modalState.familyDataConfirmation.hide();
+                router.push({ path: `/family/confirm/${newFamilyId.value}` });
+            }).catch((error) => {
+                layoutStore.toggleErrorAlert(
+                    `${error.response.data.message}`
+                );
+            });
         };
 
         const storeFamily = async () => {

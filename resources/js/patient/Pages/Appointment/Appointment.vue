@@ -25,7 +25,6 @@ const {
     selectedStartDate,
     selectedEndDate,
     selectedServiceUnitId,
-    selectedPatient,
 } = storeToRefs(appointmentStore);
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
@@ -35,6 +34,12 @@ const selectedFamilyId = ref("");
 const serviceUnitIdFilter = ref("");
 const dateStartFilter = ref("");
 const dateEndFilter = ref("");
+let selectedPatient = reactive({
+    name: "-",
+    gender: "-",
+    medicalNo: "-",
+    birthDate: "-",
+});
 
 const fetchAppointments = () => {
     layoutStore.updateLoadingState(true);
@@ -55,30 +60,14 @@ const fetchAppointments = () => {
                 data.appointments.cancels
             );
 
-            if (openAppointments.value.length > 0) {
-               appointmentStore.updateSelectedPatient({
-                    name: `${openAppointments.value[0].firstName} ${openAppointments.value[0].lastName}`,
-                    gender: openAppointments.value[0].sex,
-                    medicalNo: openAppointments.value[0].medicalNo,
-                    birthDate: openAppointments.value[0].dateOfBirth_yMdHms
-                });
-            } else if (closeAppointments.value.length > 0) {
-               appointmentStore.updateSelectedPatient({
-                    name: `${closeAppointments.value[0].firstName} ${closeAppointments.value[0].lastName}`,
-                    gender: closeAppointments.value[0].sex,
-                    medicalNo: closeAppointments.value[0].medicalNo,
-                    birthDate: closeAppointments.value[0].dateOfBirth_yMdHms
-                });
-            } else {
-               appointmentStore.updateSelectedPatient({
-                    name: '-',
-                    gender: '-',
-                    medicalNo: '-',
-                    birthDate: '-'
-                });
-            }
+            selectedPatient.name= data.patient.name;
+            selectedPatient.gender= data.patient.gender;
+            selectedPatient.medicalNo= data.patient.medical_no;
+            selectedPatient.birthDate= data.patient.birth_date;
+
         })
         .catch((error) => {
+            console.log(error);
             if (error.response) {
                 if (error.response.status !== 404) {
                     layoutStore.toggleErrorAlert(

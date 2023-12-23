@@ -378,4 +378,39 @@ class PatientService implements IPatientService
 
         return AppointmentDto::from($data['data']);
     }
+
+    public function getPatientsByMedicalNo(string $medicalNo): PatientDataDto
+    {
+        $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
+            'MedicalNo' => $medicalNo,
+            'Name' => '',
+            'DateOfBirth' => '',
+            'Address' => '',
+            'PhoneNo' => '',
+            'Ssn' => '',
+            'Email' => '',
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        if (count($data['data']) < 1) {
+            $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
+                'MedicalNo' => '',
+                'Name' => '',
+                'DateOfBirth' => '',
+                'Address' => '',
+                'PhoneNo' => '',
+                'Ssn' => $ssn,
+                'Email' => '',
+            ]);
+        }
+
+        $data = $response->json();
+
+        return PatientDataDto::from($data);
+    }
 }

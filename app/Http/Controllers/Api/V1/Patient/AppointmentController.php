@@ -34,9 +34,25 @@ class AppointmentController extends Controller
         $tempResponse = [];
         $selectedUserId = $user->id;
         $newAppointments = [];
+        $selectedPatient = [
+            'name' => $user->name,
+            'gender' => $user->userPatientData->gender,
+            'medical_no' => $user->userPatientData->medical_no,
+            'birth_date' => $user->userPatientData->birth_date,
+        ];
 
         if ($request->has('medical_no') && $request->medical_no != '') {
+            // if medical no exists in request then it is family data
             $medicalNo = $request->medical_no;
+            if ($user->userPatientData->medical_no != $medicalNo) {
+                $family = Family::where('medical_no', '=', $medicalNo)->first();
+                $selectedPatient = [
+                    'name' => $family->name,
+                    'gender' => $family->gender,
+                    'medical_no' => $family->medical_no,
+                    'birth_date' => $family->birth_date,
+                ];
+            }
         }
 
         if ($medicalNo) {
@@ -124,6 +140,7 @@ class AppointmentController extends Controller
                 'opens' => $opens,
                 'cancels' => $cancels,
             ],
+            'patient' => $selectedPatient
         ]);
     }
 

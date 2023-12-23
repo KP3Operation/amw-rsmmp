@@ -89,7 +89,7 @@ class FamilyController extends Controller
         ) + [
             'user_id' => auth()->user()->id,
             'guarantor_id' => $familyData->guarantorId,
-            'guarantor_name' => null, // for now we only save null
+            'guarantor_name' => 'SELF', // for now we only save null
             'patient_id' => $familyData->patientId,
             'medical_no' => $familyData->medicalNo,
         ]);

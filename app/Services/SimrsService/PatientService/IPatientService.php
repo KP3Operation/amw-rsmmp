@@ -50,4 +50,6 @@ interface IPatientService
     public function getAppointments(string $medicalNo): AppointmentDataDto;
 
     public function getAppointment(string $appointmentNo): AppointmentDto;
+
+    public function getPatientsByMedicalNo(string $medicalNo): PatientDataDto;
 }

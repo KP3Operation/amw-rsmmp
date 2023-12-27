@@ -166,8 +166,6 @@ $theme-colors: map-merge($theme-colors, $custom-neutral);
 }
 
 main {
-    width: 393px;
-    min-height: 100vh;
     margin-left: auto;
     margin-right: auto;
     color: $black;

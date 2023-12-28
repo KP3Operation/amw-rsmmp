@@ -70,7 +70,7 @@ input::-webkit-inner-spin-button {
 @media (max-width: 480px) {
     main {
         width: 480px;
-        min-height: 105vh;
+        min-height: 120vh;
     }
 
     main > div > nav {

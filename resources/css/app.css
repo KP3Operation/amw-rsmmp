@@ -67,32 +67,36 @@ input::-webkit-inner-spin-button {
     -moz-appearance: none;
 }
 
-@media (max-width: 430px) {
+@media (max-width: 480px) {
     main {
-        width: 430px;
+        width: 480px;
         min-height: 105vh;
     }
 
     main > div > nav {
-        width: 430px;
+        width: 480px;
     }
 
     main > div > div.header {
-        width: 430px;
+        width: 480px;
+    }
+
+    main > div > div > div.header {
+        width: 480px;
     }
 }
 
-@media (max-width: 430px) and (min-width: 375px) {
+@media (max-width: 480px) and (min-width: 375px) {
     main > div > nav {
         width: 100%;
     }
 
-    main > div > div.header {
+    main > div > div > div.header {
         width: 100%;
     }
 }
 
-@media (min-width: 431px) {
+@media (min-width: 481px) {
     main {
         width: 393px;
         min-height: 100vh;

@@ -91,12 +91,10 @@ export default {
         const storeAppointment = async () => {
             layoutStore.updateLoadingState(true);
 
-            // TODO: Somehow patient_name not populated
-            // Double click in patient name
             if (
                 (form.patient_name === null ||
-                    form.patient_name === form.patient_id) &&
-                tempPatientName.value !== ""
+                    (form.patient_name === form.patient_id) &&
+                    tempPatientName.value !== "") || (form.patient_name === "nopatientid" || form.patient_name === "familynopatientid")
             ) {
                 form.patient_name = tempPatientName.value;
             }
@@ -125,6 +123,8 @@ export default {
                             `Jadwal Konsultasi Gagal Disimpan. Error: ${error.response.data.message}`
                         );
                         if (error.response.status !== 422) {
+                            // NOTE: We can force the user to redirect
+                            // to appointments page
                             // router.push({ name: 'AppointmentPage' });
                         }
                     } else {
@@ -155,10 +155,7 @@ export default {
                 .get(`/api/v1/patient/doctor/schedules/format`, {
                     params: {
                         date: `${selectedDate.value}`,
-                        // service_unit_id: isFromDoctorSchedulePage.value
-                        //     ? `${selectedServiceUnitId.value}`
-                        //     : "",
-                    },
+                    }
                 })
                 .then((response) => {
                     const data = response.data;
@@ -179,7 +176,7 @@ export default {
                         `${error.response.data.message}`
                     );
                 })
-                .finally(() => {});
+                .finally(() => { });
         };
 
         watch(
@@ -190,13 +187,16 @@ export default {
                     form.birth_date = "";
                     form.gender = "";
                     tempPatientName.value = "";
-                } else if (newValue === userPatientData.value.patientId) {
+                } else if (newValue === userPatientData.value.patientId || newValue === "nopatientid") {
                     form.patient_id = userPatientData.value.patientId;
                     form.birth_date = userPatientData.value.birthDate;
                     form.gender = userPatientData.value.gender;
                     tempPatientName.value = userData.value.userFullName;
-                } else {
-                    const foundFamily = families.value.find(
+                    form.is_family_member = false;
+                }
+                // TODO: Need to handle family member no patient id
+                else {
+                    let foundFamily = families.value.find(
                         (family) => family.patient_id === newValue
                     );
                     if (foundFamily) {
@@ -206,8 +206,21 @@ export default {
                         form.gender = foundFamily.gender;
                         form.is_family_member = true;
                         tempPatientName.value = foundFamily.name;
+                    } else {
+                        // Try to find family by name
+                        foundFamily = families.value.find(
+                            (family) => family.name === newValue
+                        );
+
+                        form.patient_id = "";
+                        form.patient_name = newValue;
+                        form.birth_date = foundFamily.birth_date;
+                        form.gender = foundFamily.gender;
+                        form.is_family_member = true;
+                        tempPatientName.value = foundFamily.name;
                     }
                 }
+
             }
         );
 
@@ -256,7 +269,8 @@ export default {
 
         onMounted(() => {
             isFromDoctorSchedulePage.value = false;
-            form.patient_name = userPatientData.value.patientId;
+            form.patient_name = userPatientData.value.patientId ?
+                userPatientData.value.patientId : 'nopatientid';
             fetchFamily();
 
             if (
@@ -312,225 +326,116 @@ export default {
 </script>
 
 <template>
-    <Header
-        :title="$t('appointment.create_appointment.title')"
-        :with-back-url="true"
-        page-name="AppointmentPage"
-    ></Header>
+    <Header :title="$t('appointment.create_appointment.title')" :with-back-url="true" page-name="AppointmentPage"></Header>
     <div class="px-4 pt-7 pb-4">
         <p class="fs-5 text-red-500">{{ $t('appointment.create_appointment.required_fields') }}</p>
-        <form
-            @submit.prevent="storeAppointment"
-            class="d-flex flex-column rows-gap-16 mt-3"
-        >
+        <form @submit.prevent="storeAppointment" class="d-flex flex-column rows-gap-16 mt-3">
             <p class="fs-3 fw-bold">{{ $t('appointment.create_appointment.patient') }}</p>
             <div :class="{ error: v$.patient_name.$errors.length }">
-                <label for="nama"
-                    >{{ $t('appointment.create_appointment.patient_name') }}
-                    <span class="text-red-500 fw-semibold">*</span></label
-                >
-                <select
-                    name="nama"
-                    id="nama"
-                    class="form-select mt-2"
-                    v-model="form.patient_name"
-                    @input="v$.patient_name.$touch()"
-                >
+                <label for="nama">{{ $t('appointment.create_appointment.patient_name') }}
+                    <span class="text-red-500 fw-semibold">*</span></label>
+                <select name="nama" id="nama" class="form-select mt-2" v-model="form.patient_name"
+                    @input="v$.patient_name.$touch()">
                     <option value="">{{ $t('appointment.create_appointment.member') }}</option>
-                    <option :value="userPatientData.patientId">
+                    <option :value="userPatientData.patientId ? userPatientData.patientId : 'nopatientid'">
                         {{ userData.userFullName }}
                     </option>
-                    <option
-                        v-for="family in families"
-                        :value="family.patient_id"
-                    >
+                    <option v-for="family in families" :value="family.patient_id ? family.patient_id : family.name">
                         {{ family.name }}
                     </option>
                 </select>
-                <div
-                    class="error mt-2 fs-6 fw-bold text-red-200"
-                    v-for="error of v$.patient_name.$errors"
-                    :key="error.$uid"
-                >
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.patient_name.$errors"
+                    :key="error.$uid">
                     {{ error.$message }}
                 </div>
             </div>
             <div :class="{ error: v$.patient_id.$errors.length }">
                 <label for="id-pasien">{{ $t('appointment.create_appointment.patient_id') }}</label>
-                <input
-                    type="text"
-                    class="form-control mt-2"
-                    v-model="form.patient_id"
-                    id="id-pasien"
-                    @input="v$.patient_id.$touch()"
-                    readonly
-                />
-                <div
-                    class="error mt-2 fs-6 fw-bold text-red-200"
-                    v-for="error of v$.patient_id.$errors"
-                    :key="error.$uid"
-                >
+                <input type="text" class="form-control mt-2" v-model="form.patient_id" id="id-pasien"
+                    @input="v$.patient_id.$touch()" readonly />
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.patient_id.$errors" :key="error.$uid">
                     {{ error.$message }}
                 </div>
             </div>
             <div :class="{ error: v$.birth_date.$errors.length }">
-                <label for="dob"
-                    >{{ $t('appointment.create_appointment.birth_date') }}
-                    <span class="text-red-500 fw-semibold">*</span></label
-                >
-                <input
-                    type="date"
-                    v-model="form.birth_date"
-                    name="dob"
-                    id="dob"
-                    class="form-control mt-2"
-                    @input="v$.birth_date.$touch()"
-                />
-                <div
-                    class="error mt-2 fs-6 fw-bold text-red-200"
-                    v-for="error of v$.birth_date.$errors"
-                    :key="error.$uid"
-                >
+                <label for="dob">{{ $t('appointment.create_appointment.birth_date') }}
+                    <span class="text-red-500 fw-semibold">*</span></label>
+                <input type="date" v-model="form.birth_date" name="dob" id="dob" class="form-control mt-2"
+                    @input="v$.birth_date.$touch()" />
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.birth_date.$errors" :key="error.$uid">
                     {{ error.$message }}
                 </div>
             </div>
             <div :class="{ error: v$.gender.$errors.length }">
-                <label for="gender"
-                    >{{ $t('appointment.create_appointment.gender') }}
-                    <span class="text-red-500 fw-semibold">*</span></label
-                >
+                <label for="gender">{{ $t('appointment.create_appointment.gender') }}
+                    <span class="text-red-500 fw-semibold">*</span></label>
                 <div class="d-flex col-gap-20 mt-2">
                     <div class="form-check">
-                        <input
-                            v-model="form.gender"
-                            class="form-check-input"
-                            type="radio"
-                            name="gender"
-                            id="Laki-Laki"
-                            value="Laki-Laki"
-                        />
+                        <input v-model="form.gender" class="form-check-input" type="radio" name="gender" id="Laki-Laki"
+                            value="Laki-Laki" />
                         <label class="form-check-label" for="Laki-Laki">
                             {{ $t('appointment.create_appointment.male') }}
                         </label>
                     </div>
                     <div class="form-check">
-                        <input
-                            v-model="form.gender"
-                            class="form-check-input"
-                            type="radio"
-                            name="gender"
-                            value="Perempuan"
-                            id="Perempuan"
-                        />
+                        <input v-model="form.gender" class="form-check-input" type="radio" name="gender" value="Perempuan"
+                            id="Perempuan" />
                         <label class="form-check-label" for="Perempuan">
                             {{ $t('appointment.create_appointment.female') }}
                         </label>
                     </div>
                 </div>
-                <div
-                    class="error mt-2 fs-6 fw-bold text-red-200"
-                    v-for="error of v$.gender.$errors"
-                    :key="error.$uid"
-                >
+                <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.gender.$errors" :key="error.$uid">
                     {{ error.$message }}
                 </div>
             </div>
             <div>
                 <p class="fs-3 fw-bold">Konsultasi</p>
-                <div
-                    class="mt-3"
-                    :class="{ error: v$.appointment_date.$errors.length }"
-                >
-                    <label for="date"
-                        >{{ $t('appointment.create_appointment.consultation_date') }}
-                        <span class="text-red-500 fw-semibold">*</span></label
-                    >
-                    <input
-                        v-model="form.appointment_date"
-                        type="date"
-                        name="date"
-                        id="date"
-                        class="form-control mt-2"
-                        @input="v$.appointment_date.$touch()"
-                    />
-                    <div
-                        class="error mt-2 fs-6 fw-bold text-red-200"
-                        v-for="error of v$.appointment_date.$errors"
-                        :key="error.$uid"
-                    >
+                <div class="mt-3" :class="{ error: v$.appointment_date.$errors.length }">
+                    <label for="date">{{ $t('appointment.create_appointment.consultation_date') }}
+                        <span class="text-red-500 fw-semibold">*</span></label>
+                    <input v-model="form.appointment_date" type="date" name="date" id="date" class="form-control mt-2"
+                        @input="v$.appointment_date.$touch()" />
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.appointment_date.$errors"
+                        :key="error.$uid">
                         {{ error.$message }}
                     </div>
                 </div>
-                <div
-                    class="mt-3"
-                    :class="{ error: v$.service_unit_id.$errors.length }"
-                >
-                    <label for="unit"
-                        >{{ $t('appointment.create_appointment.unit') }}
-                        <span class="text-red-500 fw-semibold">*</span></label
-                    >
-                    <select
-                        name="unit"
-                        id="unit"
-                        class="form-select mt-2"
-                        v-model="form.service_unit_id"
-                        :disabled="serviceUnits && serviceUnits.length < 1"
-                    >
+                <div class="mt-3" :class="{ error: v$.service_unit_id.$errors.length }">
+                    <label for="unit">{{ $t('appointment.create_appointment.unit') }}
+                        <span class="text-red-500 fw-semibold">*</span></label>
+                    <select name="unit" id="unit" class="form-select mt-2" v-model="form.service_unit_id"
+                        :disabled="serviceUnits && serviceUnits.length < 1">
                         <option value="" selected disabled>Pilih Unit</option>
-                        <option
-                            v-for="unit in serviceUnits"
-                            :value="unit.serviceUnitID"
-                        >
+                        <option v-for="unit in serviceUnits" :value="unit.serviceUnitID">
                             {{ unit.serviceUnitName }}
                         </option>
                     </select>
-                    <div
-                        class="error mt-2 fs-6 fw-bold text-red-200"
-                        v-for="error of v$.service_unit_id.$errors"
-                        :key="error.$uid"
-                    >
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.service_unit_id.$errors"
+                        :key="error.$uid">
                         {{ error.$message }}
                     </div>
                 </div>
-                <div
-                    class="mt-3"
-                    :class="{ error: v$.paramedic_id.$errors.length }"
-                >
-                    <label for="paramedis"
-                        >{{ $t('appointment.create_appointment.paramedic') }}
-                        <span class="text-red-500 fw-semibold">*</span></label
-                    >
-                    <select
-                        name="paramedis"
-                        id="paramedis"
-                        class="form-select mt-2"
-                        v-model="form.paramedic_id"
-                        :disabled="paramedics && paramedics.length < 1"
-                    >
+                <div class="mt-3" :class="{ error: v$.paramedic_id.$errors.length }">
+                    <label for="paramedis">{{ $t('appointment.create_appointment.paramedic') }}
+                        <span class="text-red-500 fw-semibold">*</span></label>
+                    <select name="paramedis" id="paramedis" class="form-select mt-2" v-model="form.paramedic_id"
+                        :disabled="paramedics && paramedics.length < 1">
                         <option value="" selected disabled>Pilih Dokter</option>
-                        <option
-                            v-for="paramedic in paramedics"
-                            :value="paramedic.paramedicId"
-                        >
+                        <option v-for="paramedic in paramedics" :value="paramedic.paramedicId">
                             {{ paramedic.paramedicName }}
                         </option>
                     </select>
-                    <div
-                        class="error mt-2 fs-6 fw-bold text-red-200"
-                        v-for="error of v$.paramedic_id.$errors"
-                        :key="error.$uid"
-                    >
+                    <div class="error mt-2 fs-6 fw-bold text-red-200" v-for="error of v$.paramedic_id.$errors"
+                        :key="error.$uid">
                         {{ error.$message }}
                     </div>
                 </div>
             </div>
 
             <SubmitButton className="btn-blue-500-rounded" :text="$t('appointment.create_appointment.save')" />
-            <router-link
-                :to="{ name: 'AppointmentPage' }"
-                class="text-center text-blue-500 text-decoration-none fw-bold"
-                >{{ $t('appointment.create_appointment.cancel') }}</router-link
-            >
+            <router-link :to="{ name: 'AppointmentPage' }" class="text-center text-blue-500 text-decoration-none fw-bold">{{
+                $t('appointment.create_appointment.cancel') }}</router-link>
         </form>
     </div>
 </template>

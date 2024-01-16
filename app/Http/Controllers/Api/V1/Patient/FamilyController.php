@@ -53,6 +53,7 @@ class FamilyController extends Controller
             'patient_id' => null,
             'medical_no' => null,
             'phone_number' => $phoneNumber,
+            'guarantor_name' => 'SELF'
         ]);
 
         return new StoreFamilyResource($family);
@@ -70,29 +71,39 @@ class FamilyController extends Controller
         $familySimrsDataFirstAttempt = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
         $familyData = $familySimrsDataFirstAttempt->data->first();
 
-        if (! $familyData) {
+        if (!$familyData) {
             $familySimrsDataSecondAttempt = $this->patientService->getPatientFamilies($family->ssn, '');
             $familyData = $familySimrsDataSecondAttempt->data->first();
 
-            if (! $familyData) {
-                throw new \Exception('Data keluarga tidak sesuai dengan data pada SIMRS');
+            if (!$familyData) {
+                // if there is no data that mean the family is not registered in SIMRS
+                $family->update($request->only(
+                    'ssn',
+                    'name',
+                    'phone_number',
+                    'gender',
+                    'birth_date',
+                    'email'
+                ));
+            } else {
+                $family->update($request->only(
+                    'ssn',
+                    'name',
+                    'phone_number',
+                    'gender',
+                    'birth_date',
+                    'email'
+                ) + [
+                    'user_id' => auth()->user()->id,
+                    'guarantor_id' => $familyData->guarantorId,
+                    'guarantor_name' => 'SELF',
+                    'patient_id' => $familyData->patientId,
+                    'medical_no' => $familyData->medicalNo,
+                ]);
             }
         }
 
-        $family->update($request->only(
-            'ssn',
-            'name',
-            'phone_number',
-            'gender',
-            'birth_date',
-            'email'
-        ) + [
-            'user_id' => auth()->user()->id,
-            'guarantor_id' => $familyData->guarantorId,
-            'guarantor_name' => 'SELF', // for now we only save null
-            'patient_id' => $familyData->patientId,
-            'medical_no' => $familyData->medicalNo,
-        ]);
+
 
         return new UpdateFamilyResource($family);
     }
@@ -109,16 +120,16 @@ class FamilyController extends Controller
         $responseFirstAttempt = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
         $patientData = $responseFirstAttempt->data->first();
 
-        if (! $patientData) {
+        if (!$patientData) {
             $responseSecondtAttempt = $this->patientService->getPatientFamilies($family->ssn, '');
             $patientData = $responseSecondtAttempt->data->first();
 
-            if (! $patientData) {
+            if (!$patientData) {
                 throw new RestApiException('Keluarga tidak terdaftar di SIMRS', 404);
             }
         }
 
-        $family->name = $patientData->firstName.' '.$patientData->middleName.' '.$patientData->lastName;
+        $family->name = $patientData->firstName . ' ' . $patientData->middleName . ' ' . $patientData->lastName;
         $family->birth_date = $patientData->birthDate;
         $family->patient_id = $patientData->patientId;
         $family->medical_no = $patientData->medicalNo;
@@ -135,18 +146,18 @@ class FamilyController extends Controller
         $responseFirstAttempt = $this->patientService->getPatientFamilies($family->ssn, $family->phone_number);
         $patientData = $responseFirstAttempt->data->first();
 
-        if (! $patientData) {
+        if (!$patientData) {
             $responseSecondtAttempt = $this->patientService->getPatientFamilies($family->ssn, '');
             $patientData = $responseSecondtAttempt->data->first();
 
-            if (! $patientData) {
+            if (!$patientData) {
                 throw new RestApiException('Keluarga tidak terdaftar di SIMRS', 404);
             }
         }
 
         $family->update([
             'ssn' => $patientData->ssn,
-            'name' => $patientData->firstName.' '.$patientData->middleName.' '.$patientData->lastName,
+            'name' => $patientData->firstName . ' ' . $patientData->middleName . ' ' . $patientData->lastName,
             'phone_number' => $patientData->phoneNo,
             'gender' => $patientData->sex == 'F' ? 'Perempuan' : 'Laki-Laki',
             'birth_date' => Carbon::parse($patientData->birthDate),

@@ -117,6 +117,7 @@ Ensure you have installed one of the following Web Server.
 -   Nginx
 
 You can also use the builtin development server that `Laravel` has, instead of using Apache or Nginx.
+
 > Please use the laravel builtin development server only for development purpose, if you in production please use either Nginx or Apache.
 
 [Back to Top](#aviatmobileweb)
@@ -133,6 +134,7 @@ This is a main project of aviatmobileweb that are written on top of Laravel fram
 $ chmod +x ./install.sh
 $ ./install.sh
 ```
+
 > You may need to re-verify the `.env` configs that has been generated.
 
 ---
@@ -222,7 +224,6 @@ $ php artisan session:clear
 $ php artisan optimize
 ```
 
-
 [Back to Top](#aviatmobileweb)
 
 #### Frontend Setup
@@ -265,70 +266,79 @@ to ensure any new tables is migrated to the database.
 
 Only the following environment attributes would require your attention out of the 67 environment variables that can be configured within this web application.
 
-|                 Name                  |              Default Value               |                                                          Description                                                          |
-|:-------------------------------------:|:----------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------:|
-|              `APP_NAME`               |              AviatMobileWeb              | The web app name, please dot not include any white space(s), if you want to include it, please surround it with double quotes |
-|               `APP_ENV`               |                  local                   |                                                      The app envitonment                                                      |
-|               `APP_KEY`               |                                          |                                           The web application key, can not be blank                                           |
-|              `APP_DEBUG`              |                   true                   |                                                    Show application debug                                                     |
-|               `APP_URL`               |             http://localhost             |                                                The web application 'BASE' url                                                 |
-|          `APP_CALLING_CODE`           |                  "+62"                   |                                                   The calling country code                                                    |
-|             `APP_LOCALE`              |                    id                    |                                                 The application localization                                                  |
-|         `APP_FALLBACK_LOCALE`         |                    en                    |                              The default value if the specific localization key does not exists                               |
-|         `APP_OTP_EXPIRED_IN`          |                   1800                   |                                                The OTP code expired in seconds                                                |
-|            `DB_CONNECTION`            |                  pgsql                   |                                                                                                                               |
-|               `DB_HOST`               |                127.0.0.1                 |                                                                                                                               |
-|               `DB_PORT`               |                   5432                   |                                                                                                                               |
-|             `DB_DATABASE`             |              aviatmobileweb              |                                                                                                                               |
-|             `DB_USERNAME`             |                   dev                    |                                                                                                                               |
-|             `DB_PASSWORD`             |                   dev                    |                                                                                                                               |
-|       `WATZAP_SEND_MESSAGE_URL`       |  https://api.watzap.id/v1/send_message   |                                              The `WatZap` send message endpoint                                               |
-|           `WATZAP_API_KEY`            |                FooBarBazz                |                                                     The `WatZap` API key                                                      |
-|          `WATZAP_NUMBER_KEY`          |                FooBarBazz                |                                                    The `WatZap` number key                                                    |
-|           `SIMRS_BASE_URL`            |  http://103.111.202.214/live/WebService  |                                                      The SIMRS Base URL                                                       |
-|          `SIMRS_ACCESS_KEY`           |                  MWApA                   |                                                     The SIMRS access key                                                      |
-
+|           Name            |                         Default Value                         |                                                                             Description                                                                              |
+| :-----------------------: | :-----------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|        `APP_NAME`         |                        AviatMobileWeb                         |                    The web app name, please dot not include any white space(s), if you want to include it, please surround it with double quotes                     |
+|         `APP_ENV`         |                             local                             |                                                                         The app envitonment                                                                          |
+|         `APP_KEY`         |                                                               |                                                              The web application key, can not be blank                                                               |
+|        `APP_DEBUG`        |                             true                              |                                                                        Show application debug                                                                        |
+|         `APP_URL`         |                       http://localhost                        |                                                                    The web application 'BASE' url                                                                    |
+|    `APP_CALLING_CODE`     |                             "+62"                             |                                                                       The calling country code                                                                       |
+|       `APP_LOCALE`        |                              id                               |                                                                     The application localization                                                                     |
+|   `APP_FALLBACK_LOCALE`   |                              en                               |                                                  The default value if the specific localization key does not exists                                                  |
+|   `APP_OTP_EXPIRED_IN`    |                             1800                              |                                                                   The OTP code expired in seconds                                                                    |
+|      `DB_CONNECTION`      |                             pgsql                             |                                                                                                                                                                      |
+|         `DB_HOST`         |                           127.0.0.1                           |                                                                                                                                                                      |
+|         `DB_PORT`         |                             5432                              |                                                                                                                                                                      |
+|       `DB_DATABASE`       |                        aviatmobileweb                         |                                                                                                                                                                      |
+|       `DB_USERNAME`       |                              dev                              |                                                                                                                                                                      |
+|       `DB_PASSWORD`       |                              dev                              |                                                                                                                                                                      |
+| `WATZAP_SEND_MESSAGE_URL` |             https://api.watzap.id/v1/send_message             |                                                                  The `WatZap` send message endpoint                                                                  |
+|     `WATZAP_API_KEY`      |                          FooBarBazz                           |                                                                         The `WatZap` API key                                                                         |
+|    `WATZAP_NUMBER_KEY`    |                          FooBarBazz                           |                                                                       The `WatZap` number key                                                                        |
+|     `SIMRS_BASE_URL`      |            http://103.111.202.214/live/WebService             |                                                                          The SIMRS Base URL                                                                          |
+|    `SIMRS_ACCESS_KEY`     |                             MWApA                             |                                                                          The SIMRS Base URL                                                                          |
+|    `SIMRS_OTP_MESSAGE`    | Kode OTP anda untuk masuk ke aviat web mobile adalah :otpcode | The OTP message template. Please do not remove the ":otpcode" placeholder, because this is a placeholder that will be replace with the otp code The SIMRS access key |
 
 [Back to Top](#aviatmobileweb)
 
 ## Minimum Server Specifications:
+
 #### 1. Processor:
-- Dual-core processor or higher (e.g., Intel Core i3 or equivalent)
+
+-   Dual-core processor or higher (e.g., Intel Core i3 or equivalent)
 
 #### 2.RAM (Memory):
-- 4 GB RAM or more (Recommended: 8 GB RAM for better performance)
+
+-   4 GB RAM or more (Recommended: 8 GB RAM for better performance)
 
 #### 3.Storage:
-- SSD (Solid State Drive) with at least 20 GB of free space for the operating system and applications. Additional storage space for your application data and files.
+
+-   SSD (Solid State Drive) with at least 20 GB of free space for the operating system and applications. Additional storage space for your application data and files.
 
 #### 4.Network:
-- Stable internet connection for package installations, updates, and accessing external APIs (Minimum: 10 Mbps recommended)
+
+-   Stable internet connection for package installations, updates, and accessing external APIs (Minimum: 10 Mbps recommended)
 
 #### 5. Operating System:
-- Linux-based OS (e.g., Ubuntu 20.04 LTS) is recommended for stability and performance. However, Laravel can also run on Windows and macOS.
+
+-   Linux-based OS (e.g., Ubuntu 20.04 LTS) is recommended for stability and performance. However, Laravel can also run on Windows and macOS.
 
 #### 6. Web Server:
-- Nginx 1.19 or Apache 2.4 (or later versions) with URL rewriting enabled.
+
+-   Nginx 1.19 or Apache 2.4 (or later versions) with URL rewriting enabled.
 
 #### 7. PHP:
-- PHP 8.2 (or later) with necessary extensions installed (pdo, pdo_pgsql, openssl, mbstring, tokenizer, json, xml).
+
+-   PHP 8.2 (or later) with necessary extensions installed (pdo, pdo_pgsql, openssl, mbstring, tokenizer, json, xml).
 
 #### 8. Database:
-- PostgreSQL 9.6 or later. Ensure the server has enough space for the database storage.
+
+-   PostgreSQL 9.6 or later. Ensure the server has enough space for the database storage.
 
 #### 10. Node.js:
-- Node.js LTS (Long Term Support) version. You can check the LTS version on the Node.js [official website](https://nodejs.org/).
 
+-   Node.js LTS (Long Term Support) version. You can check the LTS version on the Node.js [official website](https://nodejs.org/).
 
 [Back to Top](#aviatmobileweb)
 
 ### Additional Considerations:
-- Backup System: Implement a regular backup system to prevent data loss.
-- Security: Configure firewalls, intrusion detection systems, and SSL certificates for secure communication.
-- Monitoring: Set up server monitoring tools to track server performance, uptime, and resource usage.
-- Load Balancing (For High Traffic): If you expect high traffic, consider implementing load balancing techniques.
-- Caching: Utilize caching mechanisms (e.g., Redis) to optimize database and application performance.
 
+-   Backup System: Implement a regular backup system to prevent data loss.
+-   Security: Configure firewalls, intrusion detection systems, and SSL certificates for secure communication.
+-   Monitoring: Set up server monitoring tools to track server performance, uptime, and resource usage.
+-   Load Balancing (For High Traffic): If you expect high traffic, consider implementing load balancing techniques.
+-   Caching: Utilize caching mechanisms (e.g., Redis) to optimize database and application performance.
 
 Remember that these specifications are for small to medium-sized applications. For large-scale or high-traffic applications, you might need to invest in more powerful hardware and consider additional technologies like load balancers, distributed databases, and content delivery networks (CDNs) for optimal performance and scalability.
 
@@ -337,6 +347,5 @@ Remember that these specifications are for small to medium-sized applications. F
 ## Notes
 
 1. If app env is `local` then the app will ignore error 1005 code from WatZap, this is to avoid 'Invalid Whatsapp number error message'.
-
 
 [Back to Top](#aviatmobileweb)

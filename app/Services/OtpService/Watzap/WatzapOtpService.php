@@ -23,12 +23,18 @@ class WatzapOtpService implements IWatzapOtpService
     {
         Log::info("Mengirimkan OTP ke {$phoneNumber}", [$phoneNumber]);
 
+        $otpMessageTemplate = config('simrs.otp_message');
+        $otpCode = [
+            'otpcode' => $code
+        ];
+        $otpMessage = string_replacer($otpMessageTemplate, $otpCode);
+
         $response = $this->otpBaseApi->post('', [], [
             'phone_no' => str_replace('+', '', $phoneNumber),
-            'message' => __('login.otp_message', ['otpcode' => $code]),
+            'message' => $otpMessage,
         ]);
 
-        if (! $response->successful()) {
+        if (!$response->successful()) {
             Log::error('Gagal menghubungi WatZap OTP', [$response->status(), $response->body()]);
             throw new WatzapException('Gagal menghubungi WatZap OTP, mohon menghubungi tim support kami', 500);
         }

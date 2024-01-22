@@ -23,4 +23,16 @@ return [
     */
 
     'access_key' => env('SIMRS_ACCESS_KEY', 'MWApA'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | OTP code message
+    |--------------------------------------------------------------------------
+    |
+    | We can use this config value to use customize OTP code message.
+    | Please do not delete the otp code placeholder ( :otpcode )
+    |
+    */
+
+    'otp_message' => env('SIMRS_OTP_MESSAGE', 'Kode OTP anda untuk masuk ke aviat web mobile adalah :otpcode'),
 ];

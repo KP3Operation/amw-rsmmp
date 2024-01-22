@@ -43,14 +43,27 @@ let selectedPatient = reactive({
 
 const fetchAppointments = () => {
     layoutStore.updateLoadingState(true);
+
+    let params = {
+        medical_no: selectedMedicalNo.value,
+        service_unit_id: selectedServiceUnitId.value,
+        start_date: selectedStartDate.value,
+        end_date: selectedEndDate.value,
+    };
+
+    if (selectedMedicalNo.value === null) {
+        params = {
+            medical_no: selectedMedicalNo.value,
+            family_id: selectedFamilyId.value,
+            service_unit_id: selectedServiceUnitId.value,
+            start_date: selectedStartDate.value,
+            end_date: selectedEndDate.value,
+        };
+    }
+
     apiRequest
         .get(`/api/v1/patient/appointments`, {
-            params: {
-                medical_no: selectedMedicalNo.value,
-                service_unit_id: selectedServiceUnitId.value,
-                start_date: selectedStartDate.value,
-                end_date: selectedEndDate.value,
-            },
+            params: params,
         })
         .then((response) => {
             const data = response.data;
@@ -163,8 +176,8 @@ onMounted(() => {
         appointmentStore.updateSelectedMedicalNo("");
     }
 
-    fetchAppointments();
     fetchFamily();
+    fetchAppointments();
 
     modalState.cancelAppointmentModal = new bootstrap.Modal("#modal-batal");
     modalState.filterAppointmentModal = new bootstrap.Modal("#modal-filter");

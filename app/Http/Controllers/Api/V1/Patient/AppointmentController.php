@@ -237,12 +237,17 @@ class AppointmentController extends Controller
                     throw new \Exception('Gagal mengambil data family member');
                 }
 
+                $patientId = $request->patient_id;
+                if ($patientId == '' || $patientId == null) {
+                    $patientId = $family->patient_id;
+                }
+
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id,
                     $request->paramedic_id,
                     get_date_from_datetime($request->appointment_date),
                     'AUTO',
-                    $request->patient_id ?? '',
+                    $patientId ?? '',
                     $request->patient_name,
                     '',
                     '',

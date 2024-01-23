@@ -229,6 +229,10 @@ class AppointmentController extends Controller
                 ]);
             } else { // register family member
                 $family = Family::where('patient_id', '=', $request->patient_id)->first();
+                if ($request->has('family_id') && ($request->family_id != '' && $request->patient_id == '')) {
+                    $family = Family::where('id', '=', $request->family_id)->first();
+                }
+
                 if (!$family) {
                     throw new \Exception('Gagal mengambil data family member');
                 }
@@ -278,7 +282,7 @@ class AppointmentController extends Controller
                 ]);
 
                 if (!$family->medical_no) {
-                    $user->update([
+                    $family->update([
                         'medical_no' => $appoinment->medicalNo,
                     ]);
                 }

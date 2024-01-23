@@ -38,6 +38,7 @@ export default {
             service_unit_id: selectedServiceUnitId.value,
             paramedic_id: selectedParamedicId.value,
             is_family_member: false,
+            family_id: "",
         });
         const rules = {
             patient_name: {
@@ -77,6 +78,7 @@ export default {
                     required
                 ),
             },
+            family_id: {}
         };
         const v$ = useVuelidate(rules, form);
         const paramedics = ref([]);
@@ -87,6 +89,7 @@ export default {
         const tempPatientName = ref("");
         const appointmentDateChanged = ref(true);
         const serviceUnitChanged = ref(true);
+        const selectedFamilyId = ref("");
 
         const storeAppointment = async () => {
             layoutStore.updateLoadingState(true);
@@ -103,6 +106,10 @@ export default {
             if (!formValid) {
                 layoutStore.updateLoadingState(false);
                 return;
+            }
+
+            if (form.is_family_member && (form.patient_id === null || form.patient_id == '')) {
+                form.family_id = selectedFamilyId.value;
             }
 
             apiRequest
@@ -133,6 +140,7 @@ export default {
                 })
                 .finally(() => {
                     layoutStore.updateLoadingState(false);
+                    selectedFamilyId.value = "";
                 });
         };
 
@@ -194,7 +202,6 @@ export default {
                     tempPatientName.value = userData.value.userFullName;
                     form.is_family_member = false;
                 }
-                // TODO: Need to handle family member no patient id
                 else {
                     let foundFamily = families.value.find(
                         (family) => family.patient_id === newValue
@@ -206,6 +213,7 @@ export default {
                         form.gender = foundFamily.gender;
                         form.is_family_member = true;
                         tempPatientName.value = foundFamily.name;
+                        selectedFamilyId.value = foundFamily.id;
                     } else {
                         // Try to find family by name
                         foundFamily = families.value.find(
@@ -218,6 +226,7 @@ export default {
                         form.gender = foundFamily.gender;
                         form.is_family_member = true;
                         tempPatientName.value = foundFamily.name;
+                        selectedFamilyId.value = foundFamily.id;
                     }
                 }
 
@@ -435,7 +444,7 @@ export default {
 
             <SubmitButton className="btn-blue-500-rounded" :text="$t('appointment.create_appointment.save')" />
             <router-link :to="{ name: 'AppointmentPage' }" class="text-center text-blue-500 text-decoration-none fw-bold">{{
-                $t('appointment.create_appointment.cancel') }}</router-link>
+                            $t('appointment.create_appointment.cancel') }}</router-link>
         </form>
     </div>
 </template>

@@ -30,6 +30,7 @@ class StoreAppointmentRequest extends FormRequest
             'service_unit_id' => 'required',
             'paramedic_id' => 'required',
             'is_family_member' => 'nullable',
+            'family_id' => 'nullable'
         ];
     }
 

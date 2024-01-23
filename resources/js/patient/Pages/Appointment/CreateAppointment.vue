@@ -443,8 +443,9 @@ export default {
             </div>
 
             <SubmitButton className="btn-blue-500-rounded" :text="$t('appointment.create_appointment.save')" />
-            <router-link :to="{ name: 'AppointmentPage' }" class="text-center text-blue-500 text-decoration-none fw-bold">{{
-                            $t('appointment.create_appointment.cancel') }}</router-link>
+            <router-link v-if="!isLoading" :to="{ name: 'AppointmentPage' }"
+                class="text-center text-blue-500 text-decoration-none fw-bold">{{
+                    $t('appointment.create_appointment.cancel') }}</router-link>
         </form>
     </div>
 </template>

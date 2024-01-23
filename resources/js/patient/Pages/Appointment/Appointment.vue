@@ -51,7 +51,7 @@ const fetchAppointments = () => {
         end_date: selectedEndDate.value,
     };
 
-    if (selectedMedicalNo.value === null) {
+    if (selectedMedicalNo.value === null || selectedMedicalNo.value === '') {
         params = {
             medical_no: selectedMedicalNo.value,
             family_id: selectedFamilyId.value,
@@ -80,7 +80,6 @@ const fetchAppointments = () => {
 
         })
         .catch((error) => {
-            console.log(error);
             if (error.response) {
                 if (error.response.status !== 404) {
                     layoutStore.toggleErrorAlert(

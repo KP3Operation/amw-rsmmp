@@ -56,7 +56,7 @@ class WatzapOtpService implements IWatzapOtpService
 
         if ($result->status == 1002) {
             Log::error('Invalid API Key', [$phoneNumber]);
-            throw new WatzapException('WatZap API key tidak valid', 500);
+            throw new WatzapException('WatZap API key tidak valid '.config('watzap.api_key'), 500);
         }
 
         if ($result->status == 1003) {

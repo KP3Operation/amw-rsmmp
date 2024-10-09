@@ -193,17 +193,23 @@ onMounted(() => {
         <PatientCard class="mt-3" :name="selectedPatient.name"
             :gender="(selectedPatient.gender === 'M' || selectedPatient.gender === 'Laki-Laki') ? 'Laki-Laki' : 'Perempuan'"
             :medicalNo="selectedPatient.medicalNo" :birthDate="selectedPatient.birthDate" />
+
         <div class="tab-appointment nav nav-pills nav-justified d-flex col-gap-20 mt-4" role="tablist">
             <button class="nav-link w-50 active" data-bs-toggle="pill" data-bs-target="#akan-datang" role="tab"
-                aria-controls="akan-datang" aria-selected="true" form="#">
+                aria-controls="akan-datang" aria-selected="true" tabindex="0" form="#">
                 <p> {{ $t('appointment.future') }}</p>
             </button>
             <button class="nav-link w-50" data-bs-toggle="pill" data-bs-target="#selesai" role="tab" aria-controls="selesai"
-                aria-selected="false" tabindex="-1" form="#">
+                aria-selected="false" tabindex="1" form="#">
                 <p> {{ $t('appointment.done') }}</p>
             </button>
         </div>
-        <div class="tab-content mt-4" id="tab-content" v-if="!isLoading">
+        <div class="text-center mt-3" v-if="isLoading">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div class="tab-content mt-4" id="tab-content">
             <div class="tab-pane fade show active" id="akan-datang" role="tabpanel" aria-labelledby="akan-datang"
                 tabindex="0">
                 <section class="filter d-flex justify-content-between mt-4">
@@ -248,6 +254,16 @@ onMounted(() => {
                                 {{ appointment.serviceUnitName }}
                             </p>
                         </div>
+                        <div>
+                            <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
+                                v-if="appointment.appointmentStatus === '01'">
+                                status : {{ $t('appointment.booking') }}
+                            </p>                            
+                            <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
+                                v-else>
+                                status : {{ $t('appointment.confirm') }}
+                            </p>                            
+                        </div>
                         <button class="btn text-red-500 fw-semibold p-0" @click="showCancelModal(appointment.appointmentNo)"
                             form="#">
                             {{ $t('appointment.actions.cancel') }}
@@ -264,7 +280,7 @@ onMounted(() => {
                     </div>
                 </section>
             </div>
-            <div class="tab-pane fade" id="selesai" role="tabpanel" aria-labelledby="selesai" tabindex="0">
+            <div class="tab-pane fade" id="selesai" role="tabpanel" aria-labelledby="selesai" tabindex="1">
                 <section class="filter d-flex justify-content-between mt-4">
                     <p>
                         <span v-if="closeAppointments.length > 0">
@@ -329,11 +345,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="text-center mt-3" v-if="isLoading">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
+        
     </div>
 
     <div class="modal" id="modal-batal" aria-labelledby="Modal Batal" tabindex="-1" style="display: none"

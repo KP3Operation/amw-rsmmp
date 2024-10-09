@@ -26,7 +26,7 @@ const layoutStore = useLayoutStore();
 const modalState = reactive({
     familyMemberFilterModal: null
 });
-const selectedVitalSignType = ref("");
+const selectedVitalSignType = ref("BP1");
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
 const medicalHistoriesStore = useMedicalHistoryStore();
@@ -134,6 +134,9 @@ const onTabChange = (tab) => {
 }
 
 watch(selectedVitalSignType, (newValue, oldValue) => {
+    if(newValue !== oldValue) {
+        prevVitalSignData.value = [];
+    }
     selectedVitalSignType.value = newValue;
     fetchVitalSignHistories();
 });
@@ -279,8 +282,8 @@ onMounted(() => {
                 <div id="multiselect" class="dropdown filter-sticky d-flex col-gap-20 align-items-center">
                     <p>Tipe</p>
                     <select class="form-select" aria-label="Tipe" v-model="selectedVitalSignType">
-                        <option value="" selected>{{ $t('history.choose_vital_unit') }}</option>
-                        <option value="BP1">{{ $t('history.vital_unit.bp1') }}</option>
+                        <!-- <option value="" selected>{{ $t('history.choose_vital_unit') }}</option> -->
+                        <option value="BP1" selected>{{ $t('history.vital_unit.bp1') }}</option>
                         <option value="BP2">{{ $t('history.vital_unit.bp2') }}</option>
                         <option value="TEMP">{{ $t('history.vital_unit.temp') }}</option>
                         <option value="RESP">{{ $t('history.vital_unit.resp') }}</option>
@@ -335,6 +338,11 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_lab_result') }}</p>
                 </div>
+                <div class="d-flex flex-column rows-gap-16 mt-4 text-center">
+                    <p>Apabila membutuhkan informasi lebih lanjut hubungi call center RS :</p>
+                    <p class="fw-bold">{{ $t('history.callcenter') }}</p>
+                </div>
+                
                 <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
                     <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
                 </div>

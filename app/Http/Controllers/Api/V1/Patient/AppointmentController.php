@@ -10,9 +10,12 @@ use App\Models\Family;
 use App\Models\Notification;
 use App\Models\Simrs\Patient\CreateAppointment;
 use App\Models\User;
+use App\Models\UserPatient;
 use App\Services\SimrsService\PatientService\IPatientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -25,6 +28,8 @@ class AppointmentController extends Controller
 
     public function index(Request $request)
     {
+        //return response()->json(['message' => 'disini bro']);
+
         $user = User::findOrFail(auth()->user()->id);
         $medicalNo = $user->userPatientData->medical_no;
         $serviceUnitId = '';
@@ -41,7 +46,7 @@ class AppointmentController extends Controller
             'birth_date' => $user->userPatientData->birth_date,
         ];
 
-        if ($request->has('medical_no') && $request->medical_no != '') {
+        if ($request->has('medical_no') && $request->medical_no !== '' && $request->medical_no !== null) {
             // if medical_no exists in request then it is family data
             $medicalNo = $request->medical_no;
             if ($user->userPatientData->medical_no != $medicalNo) {
@@ -56,11 +61,12 @@ class AppointmentController extends Controller
             }
         }
 
-        if ($request->has('family_id') && $request->family_id != '') {
+        if ($request->has('family_id') && $request->family_id !== '' && $request->family_id !== null) {
             // if family_id exists in request then use family_id
             $familyId = $request->family_id;
-            if ($user->id != $familyId) {
+            if ($user->id !== $familyId) {
                 $family = Family::where('id', '=', $familyId)->first();
+                $medicalNo = $family->medical_no;
                 $selectedUserId = $family->id;
                 $selectedPatient = [
                     'name' => $family->name,
@@ -71,6 +77,7 @@ class AppointmentController extends Controller
             }
         }
 
+        
         if ($medicalNo) {
             $appointments = $this->patientService->getAppointments($medicalNo);
             $newAppointments = $appointments->data->toArray();
@@ -143,9 +150,9 @@ class AppointmentController extends Controller
         $dones = [];
 
         foreach ($response as $appointment) {
-            if ($appointment['appointmentStatus'] == '01') { // open
+            if ($appointment['appointmentStatus'] == '01' || $appointment['appointmentStatus'] == '02' ) { // open
                 $opens[] = $appointment;
-            } elseif ($appointment['appointmentStatus'] == '02') { // done
+            } elseif ($appointment['appointmentStatus'] == '04') { // done
                 $dones[] = $appointment;
             } else { // cancel
                 $cancels[] = $appointment;
@@ -169,34 +176,35 @@ class AppointmentController extends Controller
     public function store(StoreAppointmentRequest $request)
     {
         $user = User::findOrFail(auth()->user()->id);
+        $patient = UserPatient::where('user_id', auth()->user()->id)->firstOrFail();
 
-        DB::transaction(function () use ($request, $user) {
+        DB::transaction(function () use ($request, $user, $patient) {
             // register it self
             if (!$request->is_family_member) {
                 $appointmentData = new CreateAppointment(
-                    $request->service_unit_id,
-                    $request->paramedic_id,
-                    get_date_from_datetime($request->appointment_date),
-                    'AUTO',
-                    $user->userPatientData->patient_id ?? '',
-                    $request->patient_name,
-                    '',
-                    '',
-                    $request->birth_date,
-                    $request->gender === 'Perempuan' ? 'F' : 'M',
-                    '',
-                    $user->email ?? '',
-                    'SELF',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
+                    $request->service_unit_id, //unit ID
+                    $request->paramedic_id, //paramedic ID
+                    get_date_from_datetime($request->appointment_date), //appointment Date
+                    'AUTO', //Appointment Time
+                    $user->userPatientData->patient_id ?? '', //patient ID
+                    $request->patient_name, //firstname
+                    '', //middle name
+                    '', //last name
+                    $request->birth_date, //date of birth
+                    $request->gender === 'Perempuan' ? 'F' : 'M', //$sex
+                    '', //street name
+                    $user->email ?? '', //email
+                    'SELF', //guarantor ID
+                    '', //district
+                    '', //county
+                    '', //city
+                    '', //state
+                    '', //zipcode
+                    '', //phone no
+                    '', //notes
+                    '', //birthplace
+                    $patient->ssn ?? '', //ssn
+                    $user->phone_number ? $user->phone_number : '', //mobile phone no
                 );
 
                 $createdAppointment = $this->patientService->createAppointment($appointmentData);
@@ -243,29 +251,29 @@ class AppointmentController extends Controller
                 }
 
                 $appointmentData = new CreateAppointment(
-                    $request->service_unit_id,
-                    $request->paramedic_id,
-                    get_date_from_datetime($request->appointment_date),
-                    'AUTO',
-                    $patientId ?? '',
-                    $request->patient_name,
-                    '',
-                    '',
-                    $request->birth_date,
-                    $request->gender === 'Perempuan' ? 'F' : 'M',
-                    '',
-                    $family->email ?? '',
-                    'SELF',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
+                    $request->service_unit_id, //unitID
+                    $request->paramedic_id, //paramedicID
+                    get_date_from_datetime($request->appointment_date), //appointmentDate
+                    'AUTO', //appointment time
+                    $patientId ?? '', //patientID
+                    $request->patient_name, //firstname
+                    '', //middlename
+                    '', //lastname
+                    $request->birth_date, //birthdate
+                    $request->gender === 'Perempuan' ? 'F' : 'M', //sex
+                    '', //streetname
+                    $family->email ?? '', //email
+                    'SELF', //guarantorID
+                    '', //district
+                    '', //county
+                    '', //city
+                    '', //state
+                    '', //zipcode
+                    '', //phone no
+                    '', //notes
+                    '', //birthplace
+                    $family->ssn ?? '', //ssn
+                    $family->phone_number ?? '', //mobile phone no
                 );
 
                 $createdAppointment = $this->patientService->createAppointment($appointmentData);

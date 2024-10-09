@@ -105,6 +105,8 @@ export default {
                 modalState.familyDataConfirmation.hide();
                 router.push({ path: `/family/confirm/${newFamilyId.value}` });
             }).catch((error) => {
+                modalState.familyDataConfirmation.hide();
+                router.push({ path: "/family" });
                 layoutStore.toggleErrorAlert(
                     `${error.response.data.message}`
                 );

@@ -204,8 +204,9 @@ export default {
                 }
                 else {
                     let foundFamily = families.value.find(
-                        (family) => family.patient_id === newValue
+                        (family) => family.patient_id === newValue || family.name === newValue
                     );
+                    
                     if (foundFamily) {
                         form.patient_id = foundFamily.patient_id;
                         form.patient_name = newValue;
@@ -216,17 +217,17 @@ export default {
                         selectedFamilyId.value = foundFamily.id;
                     } else {
                         // Try to find family by name
-                        foundFamily = families.value.find(
-                            (family) => family.name === newValue
-                        );
+                        // foundFamily = families.value.find(
+                        //     (family) => family.name === newValue
+                        // );
 
                         form.patient_id = "";
                         form.patient_name = newValue;
-                        form.birth_date = foundFamily.birth_date;
-                        form.gender = foundFamily.gender;
-                        form.is_family_member = true;
-                        tempPatientName.value = foundFamily.name;
-                        selectedFamilyId.value = foundFamily.id;
+                        // form.birth_date = foundFamily.birth_date;
+                        // form.gender = foundFamily.gender;
+                        // form.is_family_member = true;
+                        // tempPatientName.value = foundFamily.name;
+                        // selectedFamilyId.value = foundFamily.id;
                     }
                 }
 
@@ -344,7 +345,7 @@ export default {
                 <label for="nama">{{ $t('appointment.create_appointment.patient_name') }}
                     <span class="text-red-500 fw-semibold">*</span></label>
                 <select name="nama" id="nama" class="form-select mt-2" v-model="form.patient_name"
-                    @input="v$.patient_name.$touch()">
+                    @change="v$.patient_name.$touch()">
                     <option value="">{{ $t('appointment.create_appointment.member') }}</option>
                     <option :value="userPatientData.patientId ? userPatientData.patientId : 'nopatientid'">
                         {{ userData.userFullName }}

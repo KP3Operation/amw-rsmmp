@@ -20,6 +20,8 @@ use App\Models\Simrs\Patient\CreateAppointment;
 use App\Services\SimrsService\ISimrsBaseApi;
 use Exception;
 
+use Illuminate\Support\Facades\Log;
+
 class PatientService implements IPatientService
 {
     private ISimrsBaseApi $simrsBaseApi;
@@ -274,7 +276,7 @@ class PatientService implements IPatientService
      */
     public function createAppointment(CreateAppointment $createAppointment): CreateAppointmentDataDto
     {
-        $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/AppointmentCreate', [], [
+        $dataSend = [
             'ServiceUnitID' => $createAppointment->serviceUnitID,
             'ParamedicID' => $createAppointment->paramedicID,
             'AppointmentDate' => $createAppointment->appointmentDate,
@@ -298,7 +300,9 @@ class PatientService implements IPatientService
             'BirthPlace' => $createAppointment->birthPlace != null ? $createAppointment->birthPlace : '',
             'Ssn' => $createAppointment->ssn != null ? $createAppointment->ssn : '',
             'MobilePhoneNo' => $createAppointment->mobilePhoneNo != null ? $createAppointment->mobilePhoneNo : '',
-        ]);
+        ];
+
+        $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/AppointmentCreate', [], $dataSend);
 
         if (! $response->successful()) {
             throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);

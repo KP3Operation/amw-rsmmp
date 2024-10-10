@@ -80,6 +80,19 @@ onMounted(() => {
                     <p class="fs-5 mt-2">{{ appointment.guarantorName }}</p>
                 </div>
             </div>
+            <div class="d-flex align-items-center justify-content-between col-gap-20">
+                <div class="w-100">
+                    <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
+                        v-if="appointment.appointmentStatus === 'Open'">
+                        status : {{ $t('appointment.status.booking') }}
+                    </p>                            
+                    <p class="px-2 py-1 bg-green-100 text-blue-500 fw-bold text-sm rounded fs-5"
+                        v-else>
+                        status : {{ $t('appointment.status.confirm') }}
+                    </p>
+                </div>         
+            </div>
+
             <router-link :to="{name: 'AppointmentDetailPage', query: {appointmentNo: appointment.appointmentNo}}" class="d-block btn btn-blue-500-rounded-sm">{{ $t('appointment.actions.detail') }}</router-link>
         </div>
     </div>

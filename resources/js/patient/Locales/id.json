@@ -65,6 +65,8 @@
         "indexed_appointment": "Appointment Terdata",
         "filter": "Filter",
         "canceled": "Dibatalkan",
+        "booking" : "Booking",
+        "confirm" : "Confirm",
         "no_consultation": "Tidak Ada Janji Konsultasi",
         "no_consultation_desc": "Anda Belum Memiliki Janji Konsultasi Yang\n Sudah Selesai",
         "actions": {
@@ -106,6 +108,7 @@
         }
     },
     "history": {
+        "callcenter" : "+628112665352",
         "title": "Riwayat Medis",
         "name": "Nama",
         "gender": "Jenis Kelamin",

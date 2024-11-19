@@ -31,8 +31,17 @@ const setSelectedLabResult = (labResult) => {
                 <p class="mt-2 fs-5 fw-semibold">{{ convertDateTimeToDate(date) }}</p>
             </div>
         </div>
-        <router-link @click="setSelectedLabResult({sequenceNo: sequenceNo,
+        <div class="row gx-5">
+            <div class="col">
+                <router-link @click="setSelectedLabResult({sequenceNo: sequenceNo,
                         executionDate: date, age: age, gender: gender, transactionNo: transactionNo})"
-                     :to="{name: 'LabResultDetailPage', query: {transactionNo: transactionNo}}" class="btn btn-blue-500-rounded-sm mt-2">Detail</router-link>
+                    :to="{name: 'LabResultViewPage', query: {transactionNo: transactionNo}}" class="btn w-100 btn-blue-500-rounded-sm mt-1">View</router-link>
+            </div>
+            <div class="col">
+                <router-link @click="setSelectedLabResult({sequenceNo: sequenceNo,
+                    executionDate: date, age: age, gender: gender, transactionNo: transactionNo})"
+                        :to="{name: 'LabResultDetailPage', query: {transactionNo: transactionNo}}" class="btn w-100 btn-blue-500-rounded-sm mt-1">Detail</router-link>
+            </div>
+        </div>
     </div>
 </template>

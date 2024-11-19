@@ -178,6 +178,9 @@
             "notes": "Catatan",
             "doctor_notes": "Catatan Klinis Dokter Pemeriksa"
         },
+        "lab_result_view": {
+            "title": "File Hasil Lab"
+        },
         "prescription_detail": {
             "title": "Detail Resep",
             "prescription_no": "Nomor Resep",

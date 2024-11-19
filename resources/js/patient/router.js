@@ -11,6 +11,8 @@ import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
 import EncounterDetailPage from "@patient/Pages/History/EncounterDetail.vue";
 import HistoryPage from "@patient/Pages/History/History.vue";
 import LabResultDetailPage from "@patient/Pages/History/LabResultDetail.vue";
+import LabResultViewPage from "@patient/Pages/History/LabResultView.vue";
+
 import PrescriptionDetailPage from "@patient/Pages/History/PrescriptionDetail.vue";
 import HomePage from "@patient/Pages/Home/Home.vue";
 import ProfilePage from "@patient/Pages/Profile/Profile.vue";
@@ -38,6 +40,11 @@ const routes = [
         path: "/history/labresult",
         name: "LabResultDetailPage",
         component: LabResultDetailPage,
+    },
+    {
+        path: "/history/labresultview",
+        name: "LabResultViewPage",
+        component: LabResultViewPage,
     },
     {
         path: "/history/prescriptions",

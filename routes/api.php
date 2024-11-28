@@ -68,6 +68,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/appointments', [AppointmentController::class, 'index']);
             Route::get('/notifications', [NotificationController::class, 'index']);
             Route::put('/notifications/{notification}', [NotificationController::class, 'update']);
+            Route::get('/inpatient/rooms', [InpatientListController::class, 'getInpatientRooms']);
+            
         });
     });
 });

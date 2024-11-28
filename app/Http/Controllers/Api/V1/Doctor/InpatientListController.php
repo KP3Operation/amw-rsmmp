@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Api\V1\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Services\SimrsService\DoctorService\IDoctorService;
+use App\Services\SimrsService\DoctorService\DoctorService;
 use Illuminate\Http\Request;
 
 class InpatientListController extends Controller
 {
     private IDoctorService $doctorService;
+    
 
-    public function __construct(IDoctorService $doctorService)
+    public function __construct(IDoctorService $doctorService )
     {
         $this->doctorService = $doctorService;
     }
@@ -21,12 +23,12 @@ class InpatientListController extends Controller
         $userDoctor = $user->userDoctorData;
         $prevData = [];
         $response = [];
-        if ($request->has('prev_data') && $request->prev_data != null) {
-            $prevData = $request->get('prev_data');
-        }
+        // if ($request->has('prev_data') && $request->prev_data != null) {
+        //     $prevData = $request->get('prev_data');
+        // }
 
         $inpatientList = $this->doctorService
-            ->getInpatientList($userDoctor->doctor_id, $request->room_name ?? '', 150);
+            ->getInpatientList($userDoctor->doctor_id, $request->room_id ?? '', 150);
 
         if (count($prevData) >= 10) {
             foreach ($inpatientList->data as $patient) {
@@ -63,5 +65,21 @@ class InpatientListController extends Controller
         return response()->json([
             'cppts' => $patientRegistrationCPPTs->data,
         ]);
+    }
+
+    public function getInpatientRooms(Request $request)
+    {
+        try {
+            $inpatientRooms = $this->doctorService->getInpatientRooms();
+
+            return response()->json([
+                'inpatientRooms' => $inpatientRooms->data,
+            ]);
+        }
+        catch(\Exception $e) {
+            return response()->json(['error' => $e]);
+        }
+
+        
     }
 }

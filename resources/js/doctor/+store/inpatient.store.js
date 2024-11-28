@@ -5,6 +5,7 @@ export const useInpatientStore = defineStore(
     "inpatient-store",
     () => {
         let patients = ref([]);
+        let inpatientRooms = ref([]);
         let selectedPatient = ref({});
         let patientCount = ref(0);
         let selectedRegistrationNo = ref("");
@@ -14,6 +15,7 @@ export const useInpatientStore = defineStore(
         }
 
         function $reset() {
+            inpatientRooms.value = [];
             patients.value = [];
             selectedPatient.value = {};
             patientCount.value = 0;
@@ -26,7 +28,8 @@ export const useInpatientStore = defineStore(
             patients,
             selectedPatient,
             patientCount,
-            selectedRegistrationNo
+            selectedRegistrationNo,
+            inpatientRooms
         };
     }
 );

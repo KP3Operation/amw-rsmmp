@@ -14,22 +14,50 @@ export default {
     },
     setup() {
         const inpatientStore = useInpatientStore();
-        const { patients, patientCount, selectedRegistrationNo } = storeToRefs(inpatientStore);
+        const { patients, patientCount, selectedRegistrationNo,inpatientRooms } = storeToRefs(inpatientStore);
         const prevData = ref([]);
 
         const layoutStore = useLayoutStore();
         const { isLoading } = storeToRefs(layoutStore);
         const selectedRoomName = ref("");
+        const selectedRoomID = ref("");
+        
+
+        const getInpatientRooms = () => {
+            layoutStore.isLoading = true;
+            apiRequest.get(`/api/v1/doctor/inpatient/rooms`).then((response) => {
+                const data = response.data;
+                data.inpatientRooms.map((inpatientRoom) => {
+                    if (!prevData.value.includes(inpatientRoom.RoomID)) {
+                        inpatientRooms.value.push(inpatientRoom);
+                        patientCount.value += 1;
+                    }
+                });
+                inpatientRooms.value.map((inpatientRoom) => {
+                    prevData.value.push(
+                        inpatientRoom.RoomID
+                    );
+                });
+            }).catch((error) => {
+                if (error.response.status === 401) {
+                    window.location.href = '/auth/login';
+                }
+                layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+            }).finally(() => {
+                layoutStore.isLoading = false;
+            })
+        }
 
         const filterInpatientList = () => {
             layoutStore.isLoading = true;
-            apiRequest.get(`/api/v1/doctor/inpatient?room_name=${selectedRoomName.value}&prev_data=${prevData.value}`).then((response) => {
+            apiRequest.get(`/api/v1/doctor/inpatient?room_id=${selectedRoomID.value}&prev_data=${prevData.value}`).then((response) => {
+                patients.value = [];
                 const data = response.data;
                 data.patients.map((patient) => {
-                    if (!prevData.value.includes(patient.medicalNo)) {
+                    // if (!prevData.value.includes(patient.medicalNo)) {
                         patients.value.push(patient);
                         patientCount.value += 1;
-                    }
+                    // }
                 });
                 patients.value.map((patient) => {
                     prevData.value.push(patient.medicalNo);
@@ -48,10 +76,11 @@ export default {
             filterInpatientList();
         }
 
-        watch(selectedRoomName, (newValue, oldValue) => {
-            filterForm.fill({
-                room_name: newValue
-            });
+        watch(selectedRoomID, (newValue, oldValue) => {
+            // filterForm.fill({
+            //     room_id: newValue
+            // });
+            prevData.value = null;
             filterInpatientList();
         });
 
@@ -62,6 +91,7 @@ export default {
 
         onMounted(() => {
             inpatientStore.$reset();
+            getInpatientRooms();
             filterInpatientList();
         });
 
@@ -74,9 +104,11 @@ export default {
             layoutStore,
             isLoading,
             selectedRoomName,
+            selectedRoomID,
             filterInpatientList,
             loadMore,
-            setSelectedPatient
+            setSelectedPatient,
+            inpatientRooms
         };
     }
 }
@@ -87,9 +119,10 @@ export default {
     <section
         class="filter-inpatient filter-sticky-2 d-flex align-items-center justify-content-between col-gap-20 p-4 mt-6 bg-white position-sticky">
         <p class="w-50"><span v-if="patientCount !== 0">{{ patientCount }} {{ $t('inpatient.patient_data') }}</span></p>
-        <div id="multiselect" class="w-50 dropdown filter-sticky d-flex col-gap-20 align-items-center p-0">
-            <select class="form-select" aria-label="Tipe" v-model="selectedRoomName">
+        <div id="multiselect" class="w-100 dropdown filter-sticky d-flex col-gap-20 align-items-center p-0">
+            <select class="form-select" aria-label="Tipe" v-model="selectedRoomID">
                 <option value="" selected>{{ $t('inpatient.all_room') }}</option>
+                <option v-for="(ir,index) in inpatientRooms" :value="ir.RoomID">{{ ir.RoomName }}</option>
             </select>
         </div>
     </section>
@@ -97,7 +130,7 @@ export default {
         <br><br>
         <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
-        </div>
+        </div>  
     </div>
     <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!isLoading">
         <div v-for="(patient, index) in patients">

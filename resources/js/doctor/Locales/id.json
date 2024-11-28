@@ -99,7 +99,7 @@
             "title": "Detail Pasien Rawat Inap"
         },
         "load_more": "Memuat lebih banyak",
-        "no_inpatient_list": "Anda Tidak Memiliki Pasien Rawat Inap",
+        "no_inpatient_list": "Data Pasien Rawat Inap tidak ditemukan",
         "patient_data": "Data Pasien",
         "title": "List Pasien Rawat Inap"
     },

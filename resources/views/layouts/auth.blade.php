@@ -47,7 +47,7 @@
     <!-- <main class="bg-blue-500 text-white pt-6 px-4"> -->
     <main class="bg-app-primary text-white pt-6 px-4">
         <img 
-            id="white-logo" 
+            id="company-logo" 
             alt="Aviat Logo"
         >
         <div id="app"></div>

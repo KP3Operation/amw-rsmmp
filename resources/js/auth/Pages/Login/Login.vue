@@ -120,11 +120,12 @@ export default {
 </script>
 
 <template>
-    <div>
+    <div style="margin:60% auto;">
         <h1 class="fs-1 mt-6 fw-bold">{{ $t("welcome_message") }}</h1>
-        <h2 class="mt-6 fs-3 fw-bold">{{ $t("login.login_to_account") }}</h2>
-        <form id="login-form" class="mt-6" @submit.prevent="login">
+        <div class="company-slogan"></div>
+        <form id="login-form" class="mt-8" @submit.prevent="login">
             <div :class="{ error: v$.loginForm.phoneNumber.$errors.length }">
+                <h2 class="mt-6 fs-3 fw-bold">{{ $t("login.login_to_account") }}</h2>
                 <label for="no-hp">{{ $t("login.phone_number") }}</label>
                 <div class="input-group flex-nowrap mt-2">
                     <span class="input-group-text">{{ callingCode }}</span>
@@ -163,6 +164,9 @@ export default {
                 {{ $t("login.register") }}
             </router-link>
         </p>
+        <div class="mt-6 text-center">
+            <p>{{ $t("slogan_hospital") }}</p>
+        </div>  
     </div>
 
     <div

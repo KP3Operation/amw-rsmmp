@@ -17,7 +17,7 @@ export const useAuthStore = defineStore("auth", () => {
         userFullName: '',
         userEmail: '',
         userRole: 'patient',
-        phoneNumber: '',
+        phoneNumber: null,
     });
 
     /**

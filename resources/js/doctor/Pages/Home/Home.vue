@@ -15,6 +15,7 @@ export default {
         return {
             showSummaryFeeFilter: false,
             overviewAppointments: [],
+            isShowDoctorFee :true
         };
     },
     computed: {
@@ -27,10 +28,17 @@ export default {
         })
     },
     mounted() {
+        this.initialize();
         this.getAppointments();
     },
     methods: {
         convertDateTimeToDate,
+        initialize(){
+            if(import.meta.env.VITE_SHOW_DOCTOR_FEE === 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE === 'TRUE'){
+                this.isShowDoctorFee = true;
+            }
+            else { this.isShowDoctorFee = false; }
+        },
         getAppointments() {
             apiRequest
                 .get("/api/v1/doctor/appointments/group", {
@@ -93,7 +101,7 @@ export default {
                 </p>
             </router-link>
 
-            <router-link to="/fee" class="item summary-fee">
+            <router-link v-if="isShowDoctorFee" to="/fee" class="item summary-fee">
                 <div class="icon icon-doctor">
                     <img src="@resources/static/icons/money-white.svg" alt="Icon" width="20" height="20" />
                 </div>
@@ -176,6 +184,6 @@ export default {
                 </div>
             </div>
         </section>
-        <OverviewSummaryFee />
+        <OverviewSummaryFee v-if="isShowDoctorFee"/>
     </div>
 </template>

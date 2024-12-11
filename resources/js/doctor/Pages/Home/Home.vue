@@ -4,8 +4,9 @@ import HomeHeader from "@doctor/Components/HomeHeader/HomeHeader.vue";
 import OverviewConsultationScheduleEmpty from "@doctor/Components/OverviewConsultationSchedule/OverviewConsultationScheduleEmpty.vue";
 import OverviewSummaryFee from "@doctor/Components/OverviewSummaryFee/OverviewSummaryFee.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
+import { useLayoutStore } from "@shared/+store/layout.store.js";
 import apiRequest from "@shared/utils/axios.js";
-import {mapState} from "pinia";
+import {mapActions, mapState, mapWritableState} from "pinia";
 import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 
 export default {
@@ -15,7 +16,6 @@ export default {
         return {
             showSummaryFeeFilter: false,
             overviewAppointments: [],
-            isShowDoctorFee :true
         };
     },
     computed: {
@@ -25,6 +25,9 @@ export default {
         }),
         ...mapState(useAuthStore, {
             userData: 'userData'
+        }),
+        ...mapWritableState(useLayoutStore, {
+            showDoctorFee : 'showDoctorFee'
         })
     },
     mounted() {
@@ -35,9 +38,9 @@ export default {
         convertDateTimeToDate,
         initialize(){
             if(import.meta.env.VITE_SHOW_DOCTOR_FEE === 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE === 'TRUE'){
-                this.isShowDoctorFee = true;
+                this.showDoctorFee = true;
             }
-            else { this.isShowDoctorFee = false; }
+            else { this.showDoctorFee = false; }
         },
         getAppointments() {
             apiRequest
@@ -101,7 +104,7 @@ export default {
                 </p>
             </router-link>
 
-            <router-link v-if="isShowDoctorFee" to="/fee" class="item summary-fee">
+            <router-link v-if="showDoctorFee" to="/fee" class="item summary-fee">
                 <div class="icon icon-doctor">
                     <img src="@resources/static/icons/money-white.svg" alt="Icon" width="20" height="20" />
                 </div>
@@ -184,6 +187,6 @@ export default {
                 </div>
             </div>
         </section>
-        <OverviewSummaryFee v-if="isShowDoctorFee"/>
+        <OverviewSummaryFee v-if="showDoctorFee"/>
     </div>
 </template>

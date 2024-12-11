@@ -9,7 +9,19 @@
     --background-src: url("../static/images/app-background.png");
     --logo-src: url("../static/images/aviat-logo.png");
     --company-slogan-src: url("../static/images/company-slogan.png");
-    --company-logo-src: url("../static/images/aviat-white-logo.png");
+    --company-logo-src: url("../static/images/company-logo.png");
+}
+
+body {
+    background-color: #000;
+}
+
+html {
+    --bs-bg-opacity: 0;
+    background-image: var(--background-src);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: var(--app-main-bg) !important;
 }
 
 /* nama class tidak perlu di ubah, cukup ubah variable nya */

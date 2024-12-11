@@ -1,7 +1,7 @@
 <script setup>
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { storeToRefs } from "pinia";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 
 const layoutStore = useLayoutStore();
 const { showSuccessAlert,
@@ -10,7 +10,7 @@ const { showSuccessAlert,
     errorAlertMessage } = storeToRefs(layoutStore);
 
 onMounted(() => {
-
+    
 });
 </script>
 

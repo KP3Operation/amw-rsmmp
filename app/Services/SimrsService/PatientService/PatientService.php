@@ -157,8 +157,8 @@ class PatientService implements IPatientService
      */
     public function getLabResult(string $medicalNo): PatientLabResultDataDto
     {
-        $response = $this->simrsBaseApi->get('/MobileWS.asmx/PatientLabResult', [], [
-            'MedicalNo' => $medicalNo,
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/PatientLabResultList', [], [
+            'MedicalNo' => $medicalNo,'RecordCount' => 20
         ]);
 
         if (! $response->successful()) {

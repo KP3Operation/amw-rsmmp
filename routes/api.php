@@ -42,6 +42,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'patient'], function () {
             Route::apiResource('family', FamilyController::class);
             Route::get('/family/sync/{family}', [FamilyController::class, 'syncFamilyMember']);
+            Route::post('/family/fetchsimrs', [FamilyController::class, 'fetchNewFamilyDataInSimrs']);
             Route::get('/family/fetchsimrs/{family}', [FamilyController::class, 'fetchFamilyDataInSimrs']);
             Route::get('/medical/history/vitalsign', [MedicalHistoryController::class, 'vitalSign']);
             Route::get('/medical/history/prescriptions/detail', [MedicalHistoryController::class, 'prescriptionHistoryDetail']);

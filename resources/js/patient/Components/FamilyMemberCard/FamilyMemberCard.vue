@@ -55,8 +55,8 @@ const syncFamilyEmitter = () => {
             <router-link :to="'/family/edit/' + familyId"
                class="btn w-50 btn-card btn-blue-500-rounded-sm flex-fill">{{ $t('family.family_card.edit') }}</router-link>
 
-            <button class="btn w-50 btn-card btn-outline-secondary flex-fill"
-                    type="button" @click="syncFamilyEmitter">{{ $t('family.family_card.sync') }}</button>
+            <!-- <button class="btn w-50 btn-card btn-outline-secondary flex-fill"
+                    type="button" @click="syncFamilyEmitter">{{ $t('family.family_card.sync') }}</button> -->
             <button class="btn w-50 btn-card btn-outline-red-rounded-sm flex-fill"
                     type="button" @click="deleteFamilyEmitter">{{ $t('family.family_card.delete') }}</button>
         </div>

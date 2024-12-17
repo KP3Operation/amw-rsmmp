@@ -120,7 +120,7 @@ export default {
 </script>
 
 <template>
-    <div style="margin:60% auto;">
+    <div style="margin:60% auto;padding-bottom:12em;">
         <h1 class="fs-1 mt-6 fw-bold">{{ $t("welcome_message") }}</h1>
         <div class="company-slogan"></div>
         <form id="login-form" class="mt-8" @submit.prevent="login">

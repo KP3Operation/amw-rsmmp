@@ -12,6 +12,7 @@ export const useLayoutStore = defineStore("layout", () => {
     let isLoading = ref(false);
     let showInfoAlert = ref(false);
     let infoAlertMessage = ref("");
+    let showDoctorFee = ref(true);
 
     function toggleSuccessAlert(msg = '') {
         if (msg !== '') {
@@ -73,6 +74,7 @@ export const useLayoutStore = defineStore("layout", () => {
         isLoading = false;
         showInfoAlert.value = false;
         infoAlertMessage.value = "";
+        showDoctorFee.value = true;
     }
 
     return {
@@ -91,5 +93,6 @@ export const useLayoutStore = defineStore("layout", () => {
         isLoading,
         showInfoAlert,
         infoAlertMessage,
+        showDoctorFee
     };
 });

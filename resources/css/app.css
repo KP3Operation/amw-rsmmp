@@ -22,6 +22,7 @@ html {
     background-size: cover;
     background-repeat: no-repeat;
     background-color: var(--app-main-bg) !important;
+    height: 100vh;
 }
 
 /* nama class tidak perlu di ubah, cukup ubah variable nya */
@@ -48,7 +49,7 @@ html {
     display: block;
     content: var(--company-slogan-src);
     width: auto;
-    height: 95px;
+    max-height: 90px;
 }
 
 .bg-app-secondary {

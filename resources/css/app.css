@@ -48,7 +48,7 @@ html {
     display: block;
     content: var(--company-slogan-src);
     width: auto;
-    height: 95px;
+    max-height: 90px;
 }
 
 .bg-app-secondary {

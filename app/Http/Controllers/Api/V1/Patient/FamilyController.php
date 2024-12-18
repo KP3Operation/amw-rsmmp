@@ -161,7 +161,7 @@ class FamilyController extends Controller
     public function fetchNewFamilyDataInSimrs(Request $request) {
         $request->validate([
             'ssn' => 'required|min:16|max:16|unique:families,ssn',
-            'phone_number' => 'required|min:10|max:13|unique:families,phone_number'
+            'phone_number' => 'required|min:10|max:13'
         ]);
 
         $phoneNumber = format_phone_number($request->phone_number);

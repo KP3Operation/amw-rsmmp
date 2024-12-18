@@ -24,7 +24,7 @@ class UpdateFamilyRequest extends FormRequest
         return [
             'ssn' => 'required|min:16|max:16|unique:families,ssn,'.$this->request->get('id'),
             'name' => 'required',
-            'phone_number' => 'required|min:10|max:13|unique:families,phone_number,'.$this->request->get('id'),
+            'phone_number' => 'required|min:10|max:13,'.$this->request->get('id'),
             'gender' => 'required',
             'birth_date' => 'date',
             'email' => 'nullable|email|unique:families,email,'.$this->request->get('id'),

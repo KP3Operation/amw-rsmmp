@@ -10,6 +10,7 @@ use App\Dto\SimrsDto\Doctor\DoctorFeeByTrxDateDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorSummaryFeeDataDto;
 use App\Dto\SimrsDto\Doctor\InpatientListDataDto;
 use App\Dto\SimrsDto\Doctor\PatientRegistrationCPPTDataDto;
+use App\Dto\SimrsDto\Doctor\InpatientRoomListDataDto;
 
 interface IDoctorService
 {
@@ -28,4 +29,7 @@ interface IDoctorService
     public function getAppointments(string $paramedicId, string $appointmentDate): AppointmentDataDto;
 
     public function getAppointmentDetail(string $appointmentNo): AppointmentDetailDataDto;
+    
+    public function getInpatientRooms(): InpatientRoomListDataDto;
+    
 }

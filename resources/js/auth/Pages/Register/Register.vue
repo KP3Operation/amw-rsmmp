@@ -52,8 +52,8 @@ export default {
                         required
                     ),
                     minLength: helpers.withMessage(
-                        "No Hp kurang dari 10 digit",
-                        minLength(10)
+                        "No Hp kurang dari 9 digit",
+                        minLength(9)
                     ),
                     maxLength: helpers.withMessage(
                         "No Hp lebih dari 13 digit",

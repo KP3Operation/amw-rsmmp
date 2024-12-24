@@ -6,8 +6,23 @@
     --app-main-txt: #ffffff;
     --app-second-txt: #dddddd;
     --app-warning-txt: #fcef98;
+    --background-src: url("../static/images/app-background.png");
     --logo-src: url("../static/images/aviat-logo.png");
-    --white-logo-src: url("../static/images/aviat-white-logo.png");
+    --company-slogan-src: url("../static/images/company-slogan.png");
+    --company-logo-src: url("../static/images/company-logo.png");
+}
+
+body {
+    background-color: #000;
+}
+
+html {
+    --bs-bg-opacity: 0;
+    background-image: var(--background-src);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: var(--app-main-bg) !important;
+    height: 100vh;
 }
 
 /* nama class tidak perlu di ubah, cukup ubah variable nya */
@@ -16,16 +31,27 @@
     content: var(--logo-src);
     width: 95px;
 }
-#white-logo {
+#company-logo {
     display: block;
-    content: var(--white-logo-src);
+    content: var(--company-logo-src);
     width: auto;
     height: 95px;
 }
 .bg-app-primary {
     --bs-bg-opacity: 1;
+    background-image: var(--background-src);
+    background-size: cover;
+    background-repeat: no-repeat;
     background-color: var(--app-main-bg) !important;
 }
+
+.company-slogan {
+    display: block;
+    content: var(--company-slogan-src);
+    width: auto;
+    max-height: 90px;
+}
+
 .bg-app-secondary {
     background-color: var(--app-second-bg) !important;
 }

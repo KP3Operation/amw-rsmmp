@@ -25,7 +25,7 @@ class SimrsBaseApi implements ISimrsBaseApi
                     'AccessKey' => $accessKey,
                 ] + $query);
         }catch (\Exception $e) {
-            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+            //throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
         }
     }
 

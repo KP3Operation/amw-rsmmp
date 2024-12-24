@@ -1,5 +1,7 @@
 {
-    "welcome_message": "Selamat Datang Di Aviat Mobile Web",
+    "welcome_message": "Selamat datang mobile appointment Rumah Sakit",
+    "slogan_hospital": "your hospital slogan",
+    
     "login": {
         "phone_number": "No. Handphone",
         "does_not_have_account": "Belum Punya Akun?",

@@ -167,7 +167,7 @@ class MedicalHistoryController extends Controller
         if ($request->has('prev_data')) {
             $prevData = $request->get('prev_data');
         }
-        if ($request->has('family_member_id') && $request->family_member_id != 0) {
+        if ($request->has('family_member_id') && $request->family_member_id !== null) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
@@ -217,6 +217,13 @@ class MedicalHistoryController extends Controller
         $response->histories = $paginatedHistories;
 
         return response()->json($response);
+    }
+
+    public function labResultFile(Request $request, $transactionNo) 
+    {   
+        //$transactionNo = 'DS231217-0024';
+        $fileUrlLink = env('LAB_FILE_URL','127.0.0.1').'/'.$transactionNo.'.'.env('LAB_FILE_EXTENSION','pdf');
+        return response()->json(['message' => 'link file created', 'data' => $fileUrlLink]);
     }
 
     public function labResultDetail(Request $request)

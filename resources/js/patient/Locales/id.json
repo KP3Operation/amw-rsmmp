@@ -178,6 +178,9 @@
             "notes": "Catatan",
             "doctor_notes": "Catatan Klinis Dokter Pemeriksa"
         },
+        "lab_result_view": {
+            "title": "File Hasil Lab"
+        },
         "prescription_detail": {
             "title": "Detail Resep",
             "prescription_no": "Nomor Resep",
@@ -219,10 +222,10 @@
         "create": {
             "title": "Tambah Family Member",
             "confirmation_modal": {
-                "title": "Konfirmasi Data",
-                "message": "Sudah Pernah Periksa di Rumah Sakit Ini?",
-                "yes": "Sudah",
-                "no": "Belum"
+                "title": "Konfirmasi",
+                "message": "Masukkan OTP yang dikirim ke nomor telepon member :",
+                "yes": "Kirim",
+                "no": "Batal"
             }
         },
         "edit": {

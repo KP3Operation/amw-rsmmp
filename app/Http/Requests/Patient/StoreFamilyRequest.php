@@ -24,7 +24,7 @@ class StoreFamilyRequest extends FormRequest
         return [
             'ssn' => 'required|min:16|max:16|unique:families,ssn',
             'name' => 'required',
-            'phone_number' => 'required|min:10|max:13|unique:families,phone_number',
+            'phone_number' => 'required|min:10|max:13',
             'gender' => 'required',
             'birth_date' => 'date',
             'email' => 'nullable|email|unique:families,email',

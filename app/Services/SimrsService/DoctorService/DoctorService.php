@@ -10,6 +10,7 @@ use App\Dto\SimrsDto\Doctor\DoctorFeeByTrxDateDataDto;
 use App\Dto\SimrsDto\Doctor\DoctorSummaryFeeDataDto;
 use App\Dto\SimrsDto\Doctor\InpatientListDataDto;
 use App\Dto\SimrsDto\Doctor\PatientRegistrationCPPTDataDto;
+use App\Dto\SimrsDto\Doctor\InpatientRoomListDataDto;
 use App\Exceptions\SimrsException;
 use App\Services\SimrsService\ISimrsBaseApi;
 
@@ -178,5 +179,25 @@ class DoctorService implements IDoctorService
         $data = $response->json();
 
         return AppointmentDetailDataDto::from($data);
+    }
+
+    /**
+     * @throws SimrsException
+     */
+    public function getInpatientRooms(): InpatientRoomListDataDto
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/ServiceRoomInpatientGetList', [], [
+            'RoomID' => '',
+            'RoomName' => '',
+        ]);
+
+        //return $response;
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        return InpatientRoomListDataDto::from($data);
     }
 }

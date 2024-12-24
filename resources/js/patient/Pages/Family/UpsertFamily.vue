@@ -36,6 +36,8 @@ export default {
             gender: null,
             birth_date: null,
             email: null,
+            code : null,
+            simrs_data : null
         });
 
         const rules = {
@@ -66,8 +68,8 @@ export default {
                     required
                 ),
                 minLength: helpers.withMessage(
-                    "No Hp kurang dari 10 digit",
-                    minLength(10)
+                    "No Hp kurang dari 9 digit",
+                    minLength(9)
                 ),
                 maxLength: helpers.withMessage(
                     "No Hp lebih dari 13 digit",
@@ -89,7 +91,46 @@ export default {
             email: {},
         };
 
+        const rulesNew = {
+            id: {},
+            name: {
+                required: helpers.withMessage(
+                    "Nama Lengkap tidak boleh kosong",
+                    required
+                ),
+            },
+            ssn: {
+                required: helpers.withMessage(
+                    "NIK tidak boleh kosong",
+                    required
+                ),
+                minLength: helpers.withMessage(
+                    "NIK kurang dari 16 digit",
+                    minLength(16)
+                ),
+                maxLength: helpers.withMessage(
+                    "NIK lebih dari 16 digit",
+                    maxLength(16)
+                ),
+            },
+            phone_number: {
+                required: helpers.withMessage(
+                    "No Hp tidak boleh kosong",
+                    required
+                ),
+                minLength: helpers.withMessage(
+                    "No Hp kurang dari 9 digit",
+                    minLength(9)
+                ),
+                maxLength: helpers.withMessage(
+                    "No Hp lebih dari 13 digit",
+                    maxLength(13)
+                ),
+            }
+        };
+
         const v$ = useVuelidate(rules, form);
+        const vnew$ = useVuelidate(rulesNew, form);
 
         const confirmation = () => {
             modalState.familyDataConfirmation.show();
@@ -100,35 +141,20 @@ export default {
             router.push({ path: "/family" });
         };
 
+
         const storeFamilyConfirmTrue = () => {
-            apiRequest.get(`/api/v1/patient/family/fetchsimrs/${newFamilyId.value}`).then(() => {
-                modalState.familyDataConfirmation.hide();
-                router.push({ path: `/family/confirm/${newFamilyId.value}` });
-            }).catch((error) => {
-                modalState.familyDataConfirmation.hide();
-                router.push({ path: "/family" });
-                layoutStore.toggleErrorAlert(
-                    `${error.response.data.message}`
-                );
-            });
-        };
-
-        const storeFamily = async () => {
-            layoutStore.isLoading = true;
-
-            const formValid = await v$.value.$validate();
-
-            if (!formValid) {
-                layoutStore.isLoading = false;
-                return;
-            }
-
+            form.gender = "-";
+            form.birth_date = new Date().toLocaleString();
+            
             apiRequest
                 .post("/api/v1/patient/family", form)
                 .then((response) => {
-                    const data = response.data.data;
-                    newFamilyId.value = data.family.id;
-                    modalState.familyDataConfirmation.show();
+                    console.log(response);
+                    // const data = response.data.data;
+                    // newFamilyId.value = data.family.id;
+                    // modalState.familyDataConfirmation.show();
+                    modalState.familyDataConfirmation.hide();
+                    router.push({ path: "/family" });
                 })
                 .catch((error) => {
                     if (error.response.status === 401) {
@@ -141,6 +167,62 @@ export default {
                 .finally(() => {
                     layoutStore.isLoading = false;
                 });
+
+            // apiRequest.get(`/api/v1/patient/family/fetchsimrs/${newFamilyId.value}`).then(() => {
+            //     modalState.familyDataConfirmation.hide();
+            //     router.push({ path: `/family/confirm/${newFamilyId.value}` });
+            // }).catch((error) => {
+            //     modalState.familyDataConfirmation.hide();
+            //     router.push({ path: "/family" });
+            //     layoutStore.toggleErrorAlert(
+            //         `${error.response.data.message}`
+            //     );
+            // });
+        };
+
+        const storeFamily = async () => {
+            layoutStore.isLoading = true;
+            const formValid = await vnew$.value.$validate();
+            if (!formValid) {
+                layoutStore.isLoading = false;
+                return;
+            }
+
+            apiRequest
+                .post(`/api/v1/patient/family/fetchsimrs`,form)
+                .then((response) => {
+                    layoutStore.isLoading = false;
+                    console.log(response.data);
+                    if(response.data.success) {
+                        //form.simrs_data = response.data.data;
+                        modalState.familyDataConfirmation.show();
+                    }
+                    else {
+                        layoutStore.toggleErrorAlert(`${response.data.message}`);    
+                    }
+                }).catch((error) => {
+                    layoutStore.isLoading = false;
+                    layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+            });
+
+            // apiRequest
+            //     .post("/api/v1/patient/family", form)
+            //     .then((response) => {
+            //         const data = response.data.data;
+            //         newFamilyId.value = data.family.id;
+            //         modalState.familyDataConfirmation.show();
+            //     })
+            //     .catch((error) => {
+            //         if (error.response.status === 401) {
+            //             window.location.href = "/auth/login";
+            //         }
+            //         layoutStore.toggleErrorAlert(
+            //             `${error.response.data.message}`
+            //         );
+            //     })
+            //     .finally(() => {
+            //         layoutStore.isLoading = false;
+            //     });
         };
 
         const updateFamily = () => {
@@ -215,6 +297,7 @@ export default {
 
         return {
             v$,
+            vnew$,
             callingCode,
             layoutStore,
             newFamilyId,
@@ -245,7 +328,7 @@ export default {
     >
     </Header>
 
-    <div class="px-4 pt-7 pb-4">
+    <div v-if="isEditMode" class="px-4 pt-7 pb-4">
         <p class="fs-5 text-red-500">* {{ $t("family.required_field") }}</p>
 
         <form
@@ -300,6 +383,34 @@ export default {
                 </div>
             </div>
 
+            <div :class="{ error: v$.phone_number.$errors.length }">
+                <label for="nohp"
+                    >{{ $t("family.phone_number") }}
+                    <span class="text-red-500 fw-semibold">*</span></label
+                >
+                <div class="input-group flex-nowrap mt-2">
+                    <span class="input-group-text">{{ callingCode }}</span>
+                    <input
+                        type="tel"
+                        name="no-hp"
+                        id="no-hp"
+                        placeholder="8123940183020"
+                        class="form-control"
+                        @input="v$.phone_number.$touch()"
+                        v-model="form.phone_number"
+                         :readonly="isEditMode"
+                        @keypress="onlyNumberInput($event)"
+                    />
+                </div>
+                <div
+                    class="error mt-2 fs-6 fw-bold text-red-200"
+                    v-for="error of v$.phone_number.$errors"
+                    :key="error.$uid"
+                >
+                    {{ error.$message }}
+                </div>
+            </div>
+
             <div :class="{ error: v$.birth_date.$errors.length }">
                 <label for="dob"
                     >{{ $t("family.birth_date") }}
@@ -316,33 +427,6 @@ export default {
                 <div
                     class="error mt-2 fs-6 fw-bold text-red-200"
                     v-for="error of v$.birth_date.$errors"
-                    :key="error.$uid"
-                >
-                    {{ error.$message }}
-                </div>
-            </div>
-
-            <div :class="{ error: v$.phone_number.$errors.length }">
-                <label for="nohp"
-                    >{{ $t("family.phone_number") }}
-                    <span class="text-red-500 fw-semibold">*</span></label
-                >
-                <div class="input-group flex-nowrap mt-2">
-                    <span class="input-group-text">{{ callingCode }}</span>
-                    <input
-                        type="tel"
-                        name="no-hp"
-                        id="no-hp"
-                        placeholder="8123940183020"
-                        class="form-control"
-                        @input="v$.phone_number.$touch()"
-                        v-model="form.phone_number"
-                        @keypress="onlyNumberInput($event)"
-                    />
-                </div>
-                <div
-                    class="error mt-2 fs-6 fw-bold text-red-200"
-                    v-for="error of v$.phone_number.$errors"
                     :key="error.$uid"
                 >
                     {{ error.$message }}
@@ -433,6 +517,102 @@ export default {
         </form>
     </div>
 
+    <div v-else class="px-4 pt-7 pb-4">
+        <p class="fs-5 text-red-500">* {{ $t("family.required_field") }}</p>
+
+        <form
+            @submit.prevent="isEditMode ? updateFamily() : storeFamily()"
+            class="d-flex flex-column rows-gap-16 mt-3"
+        >
+            <div :class="{ error: vnew$.name.$errors.length }">
+                <label for="nama"
+                    >{{ $t("family.patient_name") }}
+                    <span class="text-red-500 fw-semibold">*</span>
+                </label>
+                <input
+                    type="text"
+                    name="nama"
+                    id="nama"
+                    placeholder="John Doe"
+                    class="form-control mt-2"
+                    @input="vnew$.name.$touch()"
+                    v-model="form.name"
+                />
+                <p style="font-size: 11px;margin-top:2px;font-style: italic;">**nama akan diupdate berdasar data dari rekam medis.</p>
+                <div
+                    class="error mt-2 fs-6 fw-bold text-red-200"
+                    v-for="error of vnew$.name.$errors"
+                    :key="error.$uid"
+                >
+                    {{ error.$message }}
+                </div>
+            </div>
+
+            <div :class="{ error: vnew$.ssn.$errors.length }">
+                <label for="nik"
+                    >{{ $t("family.ssn") }}
+                    <span class="text-red-500 fw-semibold">*</span></label
+                >
+                <input
+                    type="number"
+                    name="nik"
+                    id="nik"
+                    placeholder="3123987564123"
+                    class="form-control mt-2"
+                    @input="vnew$.ssn.$touch()"
+                    v-model="form.ssn"
+                    :readonly="isEditMode"
+                    @keypress="onlyNumberInput($event)"
+                />
+                <div
+                    class="error mt-2 fs-6 fw-bold text-red-200"
+                    v-for="error of vnew$.ssn.$errors"
+                    :key="error.$uid"
+                >
+                    {{ error.$message }}
+                </div>
+            </div>
+
+            <div :class="{ error: vnew$.phone_number.$errors.length }">
+                <label for="nohp"
+                    >{{ $t("family.phone_number") }}
+                    <span class="text-red-500 fw-semibold">*</span></label
+                >
+                <div class="input-group flex-nowrap mt-2">
+                    <span class="input-group-text">{{ callingCode }}</span>
+                    <input
+                        type="tel"
+                        name="no-hp"
+                        id="no-hp"
+                        placeholder="8123940183020"
+                        class="form-control"
+                        @input="vnew$.phone_number.$touch()"
+                        v-model="form.phone_number"
+                        @keypress="onlyNumberInput($event)"
+                    />
+                </div>
+                <div
+                    class="error mt-2 fs-6 fw-bold text-red-200"
+                    v-for="error of vnew$.phone_number.$errors"
+                    :key="error.$uid"
+                >
+                    {{ error.$message }}
+                </div>
+            </div>
+
+            <SubmitButton
+                className="btn-blue-500-rounded"
+                :text="isEditMode ? $t('family.edit.save') : $t('family.save')"
+            />
+            <router-link
+                v-show="!layoutStore.isLoading"
+                :to="{ name: 'FamilyPage' }"
+                class="text-center text-blue-500 text-decoration-none fw-bold"
+                >{{ $t("family.cancel") }}</router-link
+            >
+        </form>
+    </div>
+
     <div
         class="modal"
         id="modal-konfirmasi"
@@ -462,7 +642,19 @@ export default {
                 </div>
                 <div class="modal-body">
                     <p>{{ $t("family.create.confirmation_modal.message") }}</p>
+                    <div class="mt-2 mb-2">
+                        <input
+                            type="number"
+                            name="code"
+                            id="kode-otp"
+                            placeholder="OTP Code"
+                            class="form-control mt-2 text-center"
+                            v-model="form.code"
+                            @keypress="onlyNumberInput($event)"
+                        />
+                    </div>
                 </div>
+                    
                 <div class="modal-footer flex-nowrap">
                     <button
                         @click="storeFamilyConfirmFalse"

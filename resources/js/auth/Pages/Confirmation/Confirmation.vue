@@ -121,6 +121,12 @@ export default {
         },
     },
     mounted() {
+        // let dtFormat = new Date("1963-04-13 00:00:00");
+        // console.log(dtFormat.toISOString().split("T")[0]);
+        // var result = `${dtFormat.getFullYear()}-${((dtFormat.getMonth() + 1) > 9 ? '' : '0') + (dtFormat.getMonth() + 1)}-${(dtFormat.getDate() > 9 ? '' : '0') + dtFormat.getDate()}`;
+        // console.log(result);
+        // this.confirmationForm.birthDate = dtFormat.toLocaleDateString();
+
         this.callingCode = import.meta.env.VITE_APP_CALLING_CODE;
         this.userRole = this.userData.userRole;
 
@@ -138,9 +144,13 @@ export default {
             if (!this.userPatientData.birthDate) {
                 birthDate = new Date();
             } else {
-                birthDate = new Date(this.userPatientData.birthDate)
-                    .toISOString()
-                    .split("T")[0];
+                let dtFormat = new Date("1963-04-13 00:00:00");
+                console.log(dtFormat.toISOString().split("T")[0]);
+                birthDate = `${dtFormat.getFullYear()}-${((dtFormat.getMonth() + 1) > 9 ? '' : '0') + (dtFormat.getMonth() + 1)}-${(dtFormat.getDate() > 9 ? '' : '0') + dtFormat.getDate()}`;
+                
+                // birthDate = new Date(this.userPatientData.birthDate)
+                // .toISOString()
+                // .split("T")[0];
             }
 
             this.updateConfirmationForm({

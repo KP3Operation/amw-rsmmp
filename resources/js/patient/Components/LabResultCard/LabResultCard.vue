@@ -8,10 +8,11 @@ const props = defineProps({
     sequenceNo: String,
     date: String,
     transactionNo: String,
+    registrationNo : String,
     gender: String,
     age: String
 });
-const { paramedicName, sequenceNo, date, transactionNo, gender, age } = toRefs(props);
+const { paramedicName, sequenceNo, date, transactionNo,registrationNo, gender, age } = toRefs(props);
 const medicalHistoryStore = useMedicalHistoryStore();
 
 const setSelectedLabResult = (labResult) => {
@@ -27,8 +28,9 @@ const setSelectedLabResult = (labResult) => {
                 <p class="mt-2 fs-5 fw-semibold">{{ transactionNo }}</p>
             </div>
             <div class="w-50 text-end">
-                <p class="fs-6 text-gray-700">Tanggal</p>
-                <p class="mt-2 fs-5 fw-semibold">{{ convertDateTimeToDate(date) }}</p>
+                <p class="fs-6 text-gray-700">No. Registrasi</p>
+                <!-- <p class="mt-2 fs-5 fw-semibold">{{ convertDateTimeToDate(date) }}</p> -->
+                <p class="mt-2 fs-5 fw-semibold">{{ registrationNo }}</p>
             </div>
         </div>
         <div class="row gx-5">

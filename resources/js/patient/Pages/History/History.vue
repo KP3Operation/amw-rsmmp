@@ -330,6 +330,7 @@ onMounted(() => {
                         :sequence-no="result.sequenceNo"
                         :date="result.executionDate_yMdHms"
                         :transaction-no="result.transactionNo"
+                        :registration-no="result.registrationNo"
                         :age="result.age"
                         :sex="result.sex"/>
                 </div>

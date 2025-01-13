@@ -88,6 +88,9 @@ onMounted(() => {
                 <div class="accordion d-flex flex-column rows-gap-16 mt-3" id="accordion"
                     v-for="(cppt, index) in cppts.values">
                     <div class="accordion-item rawat-inap">
+                        <div v-if="cppt.isDeleted" class="w-100 pt-2 pb-2 text-center" style="background-color: red;border-radius: 5px;">
+                            <p style="font-size:14px; font-weight:800;color:white;">VOID</p>
+                        </div>
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed col-gap-20" type="button" data-bs-toggle="collapse"
                                 :data-bs-target="'#riwayat-medis-' + index" aria-expanded="false"
@@ -125,9 +128,13 @@ onMounted(() => {
                             <div class="accordion-body">
                                 <div class="accordion-divider"></div>
 
-                                <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'Notes' && !cppt.info1.includes('TTV')">
+                                <!-- <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'Notes' && !cppt.info1.includes('TTV')">
                                     <li>{{ $t('inpatient.details.implementation') }} {{ cppt.info1 }}</li>
                                     <li>{{ $t('inpatient.details.response_result') }} {{ cppt.info2 }}</li>
+                                </ul> -->
+                                <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'Notes'">
+                                    <li><b>{{ $t('inpatient.details.implementation') }}</b> {{ cppt.info1 }}</li>
+                                    <li><b>{{ $t('inpatient.details.response_result') }}</b> {{ cppt.info2 }}</li>
                                 </ul>
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SOAP'">
@@ -135,6 +142,8 @@ onMounted(() => {
                                     <li><b>O</b>: {{ cppt.info2 }}</li>
                                     <li><b>A</b>: {{ cppt.info3 }}</li>
                                     <li><b>P</b>: {{ cppt.info4 }}</li>
+                                    <li><b>I</b>: {{ cppt.ppaInstruction }}</li>
+                                    <li><b>E</b>: {{ cppt.info5 }}</li>
                                 </ul>
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SBAR'">
@@ -142,6 +151,8 @@ onMounted(() => {
                                     <li><b>B</b>: {{ cppt.info2 }}</li>
                                     <li><b>A</b>: {{ cppt.info3 }}</li>
                                     <li><b>R</b>: {{ cppt.info4 }}</li>
+                                    <li><b>I</b>: {{ cppt.ppaInstruction }}</li>
+                                    <li><b>TBAK</b>: {{ cppt.info5 }}</li>
                                 </ul>
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'ADIME'">

@@ -22,6 +22,8 @@ const prevVitalSignData = ref([]);
 const prevPrescriptionData = ref([]);
 const prevLabResultData = ref([]);
 const prevEncounterData = ref([]);
+const isLabResultFile = ref(false);
+
 const layoutStore = useLayoutStore();
 const modalState = reactive({
     familyMemberFilterModal: null
@@ -223,11 +225,21 @@ const loadMore = () => {
     }
 }
 
+
+const initialize = function(){
+    if(import.meta.env.VITE_IS_LAB_RESULT_BRIDGING === 'true' || import.meta.env.VITE_IS_LAB_RESULT_BRIDGING === 'TRUE'){
+        isLabResultFile.value = true;
+    }
+    else { 
+        isLabResultFile.value = false; 
+    }
+}
+
 onMounted(() => {
     if (selectedTab.value === '') {
         medicalHistoriesStore.updateSelectedTab('unit-vital');
     }
-
+    initialize();
     fetchFamily();
     modalState.familyMemberFilterModal = new bootsrap.Modal("#modal-filter");
 });
@@ -332,7 +344,8 @@ onMounted(() => {
                         :transaction-no="result.transactionNo"
                         :registration-no="result.registrationNo"
                         :age="result.age"
-                        :sex="result.sex"/>
+                        :sex="result.sex"
+                        :isLabResultBridging="isLabResultFile"/>
                 </div>
                 <div class="text-center mt-3" v-if="labResultHistories.length < 1 && !layoutStore.isLoading">
                     <img :src="LabImage" alt="Ilustrasi Tidak Ada Data"

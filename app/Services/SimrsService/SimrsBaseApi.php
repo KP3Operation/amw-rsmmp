@@ -18,7 +18,7 @@ class SimrsBaseApi implements ISimrsBaseApi
             $accessKey = config('simrs.access_key');
 
             return Http::timeout(120)->withHeaders([
-                'Content-Type' => '',
+                'Content-Type' => '',        
             ])->withOptions([
                     'verify' => false,
                 ] + $options)->get(config('simrs.base_url').$url, [

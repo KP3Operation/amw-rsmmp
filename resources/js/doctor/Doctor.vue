@@ -12,7 +12,6 @@ const { showSuccessAlert,
 let showDoctorFee = false;
 
 onMounted(() => {
-    console.log('nangkene loh');
     if(import.meta.env.VITE_SHOW_DOCTOR_FEE === 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE === 'TRUE'){
         showDoctorFee = true;
     }

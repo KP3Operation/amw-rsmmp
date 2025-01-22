@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\Doctor\AppointmentController;
 use App\Http\Controllers\Api\V1\Doctor\FeeController;
 use App\Http\Controllers\Api\V1\Doctor\InpatientListController;
 use App\Http\Controllers\Api\V1\Doctor\NotificationController;
+use App\Http\Controllers\Api\V1\Doctor\PatientGuarantorController;
 use App\Http\Controllers\Api\V1\Patient\DoctorScheduleController;
 use App\Http\Controllers\Api\V1\Patient\FamilyController;
 use App\Http\Controllers\Api\V1\Patient\MedicalHistoryController;
@@ -70,6 +71,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/notifications', [NotificationController::class, 'index']);
             Route::put('/notifications/{notification}', [NotificationController::class, 'update']);
             Route::get('/inpatient/rooms', [InpatientListController::class, 'getInpatientRooms']);
+            Route::get('/guarantor/summary', [PatientGuarantorController::class, 'index']);
             
         });
     });

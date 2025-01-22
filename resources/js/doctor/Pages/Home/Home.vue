@@ -3,6 +3,8 @@ import { useAppointmentStore } from "@doctor/+store/appointment.store.js";
 import HomeHeader from "@doctor/Components/HomeHeader/HomeHeader.vue";
 import OverviewConsultationScheduleEmpty from "@doctor/Components/OverviewConsultationSchedule/OverviewConsultationScheduleEmpty.vue";
 import OverviewSummaryFee from "@doctor/Components/OverviewSummaryFee/OverviewSummaryFee.vue";
+import GuarantorSummary from "@doctor/Components/GuarantorSummary/GuarantorSummary.vue";
+
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import apiRequest from "@shared/utils/axios.js";
@@ -10,7 +12,7 @@ import {mapActions, mapState, mapWritableState} from "pinia";
 import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 
 export default {
-    components: { HomeHeader, OverviewConsultationScheduleEmpty, OverviewSummaryFee },
+    components: { HomeHeader, OverviewConsultationScheduleEmpty, OverviewSummaryFee, GuarantorSummary },
     setup() {},
     data() {
         return {
@@ -188,5 +190,6 @@ export default {
             </div>
         </section>
         <OverviewSummaryFee v-if="showDoctorFee"/>
+        <GuarantorSummary />
     </div>
 </template>

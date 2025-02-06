@@ -54,18 +54,22 @@ class PatientService implements IPatientService
         $data = $response->json();
 
         if (count($data['data']) < 1) {
-            $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
-                'MedicalNo' => '',
-                'Name' => '',
-                'DateOfBirth' => '',
-                'Address' => '',
-                'PhoneNo' => '',
-                'Ssn' => $ssn,
-                'Email' => '',
-            ]);
+            throw new SimrsException('data pasien tidak ditemukan', 500);
         }
+        
+        // if (count($data['data']) < 1) {
+        //     $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
+        //         'MedicalNo' => '',
+        //         'Name' => '',
+        //         'DateOfBirth' => '',
+        //         'Address' => '',
+        //         'PhoneNo' => '',
+        //         'Ssn' => $ssn,
+        //         'Email' => '',
+        //     ]);
+        // }
 
-        $data = $response->json();
+        // $data = $response->json();
 
         return PatientDataDto::from($data);
     }
@@ -401,19 +405,19 @@ class PatientService implements IPatientService
 
         $data = $response->json();
 
-        if (count($data['data']) < 1) {
-            $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
-                'MedicalNo' => '',
-                'Name' => '',
-                'DateOfBirth' => '',
-                'Address' => '',
-                'PhoneNo' => '',
-                'Ssn' => $ssn,
-                'Email' => '',
-            ]);
-        }
+        // if (count($data['data']) < 1) {
+        //     $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
+        //         'MedicalNo' => '',
+        //         'Name' => '',
+        //         'DateOfBirth' => '',
+        //         'Address' => '',
+        //         'PhoneNo' => '',
+        //         'Ssn' => $ssn,
+        //         'Email' => '',
+        //     ]);
+        // }
 
-        $data = $response->json();
+        // $data = $response->json();
 
         return PatientDataDto::from($data);
     }

@@ -36,10 +36,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::put('/register/patient/{phoneNumber}', [RegisterController::class, 'updatePatient']);
         Route::put('/register/doctor/{phoneNumber}', [RegisterController::class, 'updateDoctor']);
 
+        Route::get('/me/sync', [MeController::class, 'syncData']);
         Route::get('/me', [MeController::class, 'index']);
         Route::put('/me/{id}', [MeController::class, 'update']);
-        Route::get('/me/sync', [MeController::class, 'syncData']);
-
+        
         Route::group(['prefix' => 'patient'], function () {
             Route::apiResource('family', FamilyController::class);
             Route::get('/family/sync/{family}', [FamilyController::class, 'syncFamilyMember']);

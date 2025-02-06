@@ -10,7 +10,8 @@ use App\Models\UserDoctor;
 use App\Models\UserPatient;
 use App\Services\SimrsService\PatientService\IPatientService;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
+
 use Illuminate\Http\Request;
 
 class MeController extends Controller
@@ -46,47 +47,50 @@ class MeController extends Controller
 
     public function syncData(Request $request)
     {
-        $user = User::where('id', '=', $request->user()->id)->first();
-
-        $response = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn);
-
-        DB::transaction(function () use ($response, $user) {
-            $patientData = $response->data->first();
-            $user->update([
-                'name' => $patientData->firstName.' '.$patientData->middleName.' '.$patientData->lastName,
-            ]);
-
-            if ($user->email != null) {
+        try {
+            $user = User::where('id', '=', $request->user()->id)->first();
+            $response = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn);
+    
+            DB::transaction(function () use ($response, $user) {
+                $patientData = $response->data->first();
                 $user->update([
-                    'email' => $patientData->email,
+                    'name' => $patientData->firstName.' '.$patientData->middleName.' '.$patientData->lastName,
                 ]);
-            }
-
-            if ($user->userPatientData) {
-                $user->userPatientData()->update([
-                    'patient_id' => $patientData->patientId,
-                    'ssn' => $patientData->ssn,
-                    'birth_date' => $patientData->birthDate,
-                    'gender' => $patientData->gender == 'F' ? 'Perempuan' : 'Laki-Laki',
-                    'medical_no' => $patientData->medicalNo,
-                    'sync_at' => Carbon::now(),
-                ]);
-            } else {
-                UserPatient::create([
-                    'user_id' => $user->id,
-                    'patient_id' => $patientData->patientId,
-                    'ssn' => $patientData->ssn,
-                    'birth_date' => $patientData->birthDate,
-                    'gender' => $patientData->gender == 'F' ? 'Perempuan' : 'Laki-Laki',
-                    'medical_no' => $patientData->medicalNo,
-                    'sync_at' => Carbon::now(),
-                    'guarantor_id' => $patientData->guarantorId,
-                    'guarantor_name' => null, // only save null for now
-                ]);
-            }
-        });
-
-        return response()->json([], 204);
+    
+                if ($user->email != null) {
+                    $user->update([
+                        'email' => $patientData->email,
+                    ]);
+                }
+    
+                if ($user->userPatientData) {
+                    $user->userPatientData()->update([
+                        'patient_id' => $patientData->patientId,
+                        'ssn' => $patientData->ssn,
+                        'birth_date' => $patientData->birthDate,
+                        'gender' => $patientData->gender == 'F' ? 'Perempuan' : 'Laki-Laki',
+                        'medical_no' => $patientData->medicalNo,
+                        'sync_at' => Carbon::now(),
+                    ]);
+                } else {
+                    UserPatient::create([
+                        'user_id' => $user->id,
+                        'patient_id' => $patientData->patientId,
+                        'ssn' => $patientData->ssn,
+                        'birth_date' => $patientData->birthDate,
+                        'gender' => $patientData->gender == 'F' ? 'Perempuan' : 'Laki-Laki',
+                        'medical_no' => $patientData->medicalNo,
+                        'sync_at' => Carbon::now(),
+                        'guarantor_id' => $patientData->guarantorId,
+                        'guarantor_name' => null, // only save null for now
+                    ]);
+                }
+            });
+            return response()->json([], 204);
+        }
+        catch(\Exception $e){
+            return response()->json(['message'=> $e->getMessage()],500);
+        }
     }
 
     public function update(UpdatePatientRequest $request): UpdatePatientResource

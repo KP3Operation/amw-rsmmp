@@ -190,6 +190,6 @@ export default {
             </div>
         </section>
         <OverviewSummaryFee v-if="showDoctorFee"/>
-        <GuarantorSummary />
+        <!-- <GuarantorSummary /> -->
     </div>
 </template>

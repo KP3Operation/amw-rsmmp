@@ -11,6 +11,7 @@ use App\Dto\SimrsDto\Doctor\DoctorSummaryFeeDataDto;
 use App\Dto\SimrsDto\Doctor\InpatientListDataDto;
 use App\Dto\SimrsDto\Doctor\PatientRegistrationCPPTDataDto;
 use App\Dto\SimrsDto\Doctor\InpatientRoomListDataDto;
+use App\Dto\SimrsDto\Doctor\PatientGuarantorDataSummaryDto;
 use App\Exceptions\SimrsException;
 use App\Services\SimrsService\ISimrsBaseApi;
 
@@ -199,5 +200,20 @@ class DoctorService implements IDoctorService
         $data = $response->json();
 
         return InpatientRoomListDataDto::from($data);
+    }
+
+    public function getPatientGuarantorSummary(string $paramedicID) : PatientGuarantorDataSummaryDto
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/RegistrationSummaryGuarantorByParamedicID', [], [
+            'ParamedicID' => $paramedicID
+        ]);
+
+        //return $response;
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+        return PatientGuarantorDataSummaryDto::from($data['data']);
     }
 }

@@ -19,7 +19,7 @@ use App\Models\Simrs\Patient\CreateAppointment;
 
 interface IPatientService
 {
-    public function getPatients(string $phoneNumber, string $ssn): PatientDataDto;
+    public function getPatients(string $phoneNumber, string $ssn, ?bool $isPersist = true): PatientDataDto;
 
     // FIXME: Need to reposition the params
     public function getVitalSignHistory(string $type, int $count, string $medicalNo): PatientVitalSignHistoryDataDto;

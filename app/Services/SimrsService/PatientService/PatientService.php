@@ -34,7 +34,7 @@ class PatientService implements IPatientService
     /**
      * @throws SimrsException
      */
-    public function getPatients(string $phoneNumber, string $ssn): PatientDataDto
+    public function getPatients(string $phoneNumber, string $ssn, ?bool $isPersist = true): PatientDataDto
     {
         $phoneNumber = str_replace(config('app.calling_code'), '0', $phoneNumber);
         $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
@@ -54,7 +54,20 @@ class PatientService implements IPatientService
         $data = $response->json();
 
         if (count($data['data']) < 1) {
-            throw new SimrsException('data pasien tidak ditemukan', 500);
+            if($isPersist) {
+                throw new SimrsException('data pasien tidak ditemukan', 500);
+            }
+            else {
+                $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
+                    'MedicalNo' => '',
+                    'Name' => '',
+                    'DateOfBirth' => '',
+                    'Address' => '',
+                    'PhoneNo' => '',
+                    'Ssn' => $ssn,
+                    'Email' => '',
+                ]);
+            }    
         }
         
         // if (count($data['data']) < 1) {
@@ -69,7 +82,7 @@ class PatientService implements IPatientService
         //     ]);
         // }
 
-        // $data = $response->json();
+        $data = $response->json();
 
         return PatientDataDto::from($data);
     }

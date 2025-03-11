@@ -77,7 +77,6 @@ class AppointmentController extends Controller
             }
         }
 
-        
         if ($medicalNo) {
             $appointments = $this->patientService->getAppointments($medicalNo);
             $newAppointments = $appointments->data->toArray();

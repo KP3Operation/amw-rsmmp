@@ -109,7 +109,7 @@ class LoginController extends Controller
         $resource['user']['phoneNumber'] = $user->phone_number;
 
         if (user_role_id($user->id) == Role::PATIENT) {
-            $patientData = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn)->data->first();
+            $patientData = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn, false)->data->first();
 
             $resource['userPatient']['patientId'] = $patientData->patientId ?? $user->userPatientData->patient_id ?? '';
             $resource['userPatient']['medicalNo'] = $patientData->medicalNo ?? $user->userPatientData->medical_no ?? '';

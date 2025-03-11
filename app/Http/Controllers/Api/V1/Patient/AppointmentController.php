@@ -200,7 +200,7 @@ class AppointmentController extends Controller
                     '', //city
                     '', //state
                     '', //zipcode
-                    '', //phone no
+                    $user->phone_number ? $user->phone_number : '', //phone no
                     '', //notes
                     '', //birthplace
                     $patient->ssn ?? '', //ssn
@@ -269,7 +269,7 @@ class AppointmentController extends Controller
                     '', //city
                     '', //state
                     '', //zipcode
-                    '', //phone no
+                    $family->phone_number ?? '', //phone no
                     '', //notes
                     '', //birthplace
                     $family->ssn ?? '', //ssn

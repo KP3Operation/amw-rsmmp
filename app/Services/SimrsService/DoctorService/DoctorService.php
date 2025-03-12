@@ -132,7 +132,7 @@ class DoctorService implements IDoctorService
      */
     public function getPatientRegistrationCPPT(string $registrationNo): PatientRegistrationCPPTDataDto
     {
-        $response = $this->simrsBaseApi->get('/MobileWS.asmx/RegistrationCPPT', [], [
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/RegistrationCPPT', [], [
             'RegistrationNo' => $registrationNo,
         ]);
 

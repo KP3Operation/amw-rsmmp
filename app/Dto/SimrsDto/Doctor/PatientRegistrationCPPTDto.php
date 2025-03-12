@@ -22,6 +22,9 @@ class PatientRegistrationCPPTDto extends Data
         #[MapInputName('CreatedByUserID')]
         public ?string $createdByUserID,
 
+        #[MapInputName('CreatedByUserName')]
+        public ?string $createdByUserName,
+
         #[MapInputName('ServiceUnitName')]
         public ?string $serviceUnitName,
 

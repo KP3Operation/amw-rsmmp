@@ -111,7 +111,7 @@ onMounted(() => {
 
                                             <div>
                                                 <p class="fw-bold">{{ $t('inpatient.details.created_by') }}</p>
-                                                <p class="fw-normal">{{ cppt.createdByUserID }}</p>
+                                                <p class="fw-normal">{{ cppt.createdByUserName }}</p>
                                             </div>
                                         </div>
                                     </div>

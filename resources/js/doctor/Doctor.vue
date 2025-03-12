@@ -7,15 +7,15 @@ const layoutStore = useLayoutStore();
 const { showSuccessAlert,
     successAlertMessage,
     showErrorAlert,
-    errorAlertMessage } = storeToRefs(layoutStore);
+    errorAlertMessage,showDoctorFee } = storeToRefs(layoutStore);
 
-let showDoctorFee = false;
+// let showDoctorFee = false;
 
 onMounted(() => {
-    if(import.meta.env.VITE_SHOW_DOCTOR_FEE === 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE === 'TRUE'){
-        showDoctorFee = true;
+    if(import.meta.env.VITE_SHOW_DOCTOR_FEE == 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE == 'TRUE'){
+        showDoctorFee.value = true;
     }
-    else { showDoctorFee = false; }
+    else { showDoctorFee.value = false; }
 });
 </script>
 

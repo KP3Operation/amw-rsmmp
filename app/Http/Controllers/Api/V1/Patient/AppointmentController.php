@@ -12,6 +12,7 @@ use App\Models\Simrs\Patient\CreateAppointment;
 use App\Models\User;
 use App\Models\UserPatient;
 use App\Services\SimrsService\PatientService\IPatientService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -149,6 +150,10 @@ class AppointmentController extends Controller
         $dones = [];
 
         foreach ($response as $appointment) {
+            
+            $appDate = Carbon::createFromFormat('Y-m-d H:m:s', $appointment['appointmentDate_yMdHms'])->toDateString();
+            $appointment['full_appointmentDate']  = Carbon::createFromFormat('Y-m-d H:i', $appDate.' '.$appointment['appointmentTime'])->toDateTimeString();
+            
             if ($appointment['appointmentStatus'] == '01' || $appointment['appointmentStatus'] == '02' ) { // open
                 $opens[] = $appointment;
             } elseif ($appointment['appointmentStatus'] == '04') { // done
@@ -157,6 +162,18 @@ class AppointmentController extends Controller
                 $cancels[] = $appointment;
             }
         }
+
+        usort($opens, function($a, $b) {
+            return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
+        });
+
+        usort($dones, function($a, $b) {
+            return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
+        });
+
+        usort($cancels, function($a, $b) {
+            return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
+        });
 
         return response()->json([
             'appointments' => [

@@ -180,6 +180,9 @@ class AppointmentController extends Controller
         DB::transaction(function () use ($request, $user, $patient) {
             // register it self
             if (!$request->is_family_member) {
+                $phoneNumber = $user->phone_number ? $user->phone_number : '';
+                $phoneNumber = str_replace(config('app.calling_code'), '0', $phoneNumber);
+        
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id, //unit ID
                     $request->paramedic_id, //paramedic ID
@@ -199,11 +202,11 @@ class AppointmentController extends Controller
                     '', //city
                     '', //state
                     '', //zipcode
-                    $user->phone_number ? $user->phone_number : '', //phone no
+                    $phoneNumber, //$user->phone_number ? $user->phone_number : '', //phone no
                     '', //notes
                     '', //birthplace
                     $patient->ssn ?? '', //ssn
-                    $user->phone_number ? $user->phone_number : '', //mobile phone no
+                    $phoneNumber, //$user->phone_number ? $user->phone_number : '', //mobile phone no
                 );
 
                 $createdAppointment = $this->patientService->createAppointment($appointmentData);
@@ -249,6 +252,10 @@ class AppointmentController extends Controller
                     $patientId = $family->patient_id;
                 }
 
+                $fPhoneNumber = $family->phone_number ?? '';
+                $fPhoneNumber = str_replace(config('app.calling_code'), '0', $fPhoneNumber);
+        
+
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id, //unitID
                     $request->paramedic_id, //paramedicID
@@ -268,11 +275,11 @@ class AppointmentController extends Controller
                     '', //city
                     '', //state
                     '', //zipcode
-                    $family->phone_number ?? '', //phone no
+                    $fPhoneNumber, //$family->phone_number ?? '', //phone no
                     '', //notes
                     '', //birthplace
                     $family->ssn ?? '', //ssn
-                    $family->phone_number ?? '', //mobile phone no
+                    $fPhoneNumber, //$family->phone_number ?? '', //mobile phone no
                 );
 
                 $createdAppointment = $this->patientService->createAppointment($appointmentData);

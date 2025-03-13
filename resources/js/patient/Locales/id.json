@@ -160,8 +160,15 @@
             "out_date": "Tanggal Keluar",
             "out_time": "Jam Keluar",
             "visit_type": "Tipe Kunjungan",
-            "diagnosis": "Diagnosis",
-            "notes": "Catatan"
+            "diagnosis": "Hasil Analisa",
+            "notes": "Catatan",
+            "chiefComplain": "Keluhan Utama",
+            "currentHistory": "Riwayat Penyakit Sekarang",
+            "medikamentosaHistory": "Riwayat Medikamentosa",
+            "generalCondition": "Kondisi Umum",
+            "conscious": "Kesadaran",
+            "otherExamination": "Pemeriksaan Penunjang",
+            "service_unit" : "Unit Pelayanan"
         },
         "lab_result_detail": {
             "title": "Detail Hasil Lab",

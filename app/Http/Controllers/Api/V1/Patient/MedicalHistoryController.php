@@ -253,17 +253,26 @@ class MedicalHistoryController extends Controller
         if ($request->has('prev_data')) {
             $prevData = $request->get('prev_data');
         }
+        else {
+            $previousYear = date('Y') - 1;
+            $currentMonth = date('m');
+            $startDate = $previousYear.'-'.$currentMonth.'-01';
+            $endDate = date('Y-m-d');
+        }
+            
+
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
+            
             $encountersList = $this->patientService->getEncounterList(
                 $user->medical_no,
                 '',
                 '',
-                get_current_year_start_date(),
-                get_current_month_date(),
+                $startDate,//get_current_year_start_date(),
+                $endDate,//get_current_month_date(),
             );
 
             $response->histories = $encountersList->data;
@@ -279,8 +288,8 @@ class MedicalHistoryController extends Controller
                 $user->userPatientData->medical_no,
                 '',
                 '',
-                get_current_year_start_date(),
-                get_current_month_date(),
+                $startDate, //get_current_year_start_date(),
+                $endDate, //get_current_month_date(),
             );
 
             $response->histories = $encountersList->data;

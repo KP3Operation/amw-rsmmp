@@ -232,7 +232,7 @@ class PatientService implements IPatientService
      */
     public function getEncounterListDetail(string $registrationNo, string $serviceUniId, string $paramedicId): PatientEncounterDetailDataDto
     {
-        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/RegistrationGetOne', [], [
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/RegistrationGetOneWithMedicalAssessment', [], [
             'RegistrationNo' => $registrationNo,
             'ServiceUnitID' => $serviceUniId,
             'ParamedicID' => $paramedicId,

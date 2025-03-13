@@ -113,7 +113,9 @@ export const useMedicalHistoryStore = defineStore(
         function updateEncounterHistories (histories) {
             encounterHistories.value = histories;
         }
-
+        function clearEncounterHistories(){
+            encounterHistories.value = [];
+        }
         /**
          * @param {Object} patient
          * @param {string} patient.name
@@ -237,7 +239,8 @@ export const useMedicalHistoryStore = defineStore(
             selectedLabResult,
             selectedTab,
             selectedEncounterResult,
-            selectedFamilyMemberId
+            selectedFamilyMemberId,
+            clearEncounterHistories
         };
     }
 );

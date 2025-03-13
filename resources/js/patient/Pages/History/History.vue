@@ -21,8 +21,10 @@ import { onMounted, reactive, ref, watch } from "vue";
 const prevVitalSignData = ref([]);
 const prevPrescriptionData = ref([]);
 const prevLabResultData = ref([]);
-const prevEncounterData = ref([]);
+const prevEncounterData = ref(1);
 const isLabResultFile = ref(false);
+
+const loadMoreIndexPertemuan = ref(1);
 
 const layoutStore = useLayoutStore();
 const modalState = reactive({

@@ -13,6 +13,8 @@ use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDataDto;
 use App\Dto\SimrsDto\Patient\PatientPrescriptionHistoryDetailDataDto;
+use App\Dto\SimrsDto\Patient\PatientRadResultDataDto;
+use App\Dto\SimrsDto\Patient\PatientRadResultDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Dto\SimrsDto\Patient\ServiceUnitDataDto;
 use App\Exceptions\SimrsException;
@@ -203,6 +205,42 @@ class PatientService implements IPatientService
         $data = $response->json();
 
         return PatientLabResultDetailDataDto::from($data);
+    }
+
+    /**
+     * @throws SimrsException
+     */
+    public function getRadResult(string $medicalNo): PatientRadResultDataDto
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/RadiologyResultsExpertise', [], [
+            'MedicalNo' => $medicalNo,'RecordCount' => 20
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        return PatientRadResultDataDto::from($data);
+    }
+
+    /**
+     * @throws SimrsException
+     */
+    public function getRadResultDetail(string $transactionNo): PatientRadResultDetailDataDto
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/TransactionExpertise', [], [
+            'TransactionNo' => $transactionNo,
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        return PatientRadResultDetailDataDto::from($data);
     }
 
     /**

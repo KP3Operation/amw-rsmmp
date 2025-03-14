@@ -51,6 +51,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/medical/history/labresult/file/{transactionNo}', [MedicalHistoryController::class, 'labResultFile']);
             Route::get('/medical/history/labresult/detail', [MedicalHistoryController::class, 'labResultDetail']);
             Route::get('/medical/history/labresult', [MedicalHistoryController::class, 'labResult']);
+            
+            Route::get('/medical/history/radresult/detail', [MedicalHistoryController::class, 'radResultDetail']);
+            Route::get('/medical/history/radresult', [MedicalHistoryController::class, 'radResult']);
+            
             Route::get('/medical/history/encounters/details', [MedicalHistoryController::class, 'encounterListDetail']);
             Route::get('/medical/history/encounters', [MedicalHistoryController::class, 'encounterList']);
             Route::get('/doctor/schedules/format', [DoctorScheduleController::class, 'getAndFormatDoctorSchedules']);

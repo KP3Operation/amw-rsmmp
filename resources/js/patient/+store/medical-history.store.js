@@ -43,6 +43,7 @@ export const useMedicalHistoryStore = defineStore(
          * @type {Ref<UnwrapRef<LabResult[]>>}
          */
         let labResultHistories = ref([]);
+        let radResultHistories = ref([]);
         let encounterHistories = ref([]);
         let selectedPatient = reactive({
             name: "-",
@@ -61,6 +62,17 @@ export const useMedicalHistoryStore = defineStore(
             age: "-",
             gender: "-",
             transactionNo: "-"
+        });
+        let selectedRadResult = reactive({
+            itemID : '',
+            itemName : '',
+            readBy : '',
+            registrationNo : '',
+            transactionNo : '',
+            testResult : '',
+            testSummary : '',
+            testResultDate : '',
+            testSuggest : '',
         });
         let selectedEncounterResult = reactive({
             serviceUnitName: "-",
@@ -105,6 +117,13 @@ export const useMedicalHistoryStore = defineStore(
          */
         function updateLabResultHistories (histories) {
             labResultHistories.value = histories;
+        }
+
+        /**
+         * @param {Array<Object>} histories
+         */
+        function updateRadResultHistories (histories) {
+            radResultHistories.value = histories;
         }
 
         /**
@@ -159,6 +178,26 @@ export const useMedicalHistoryStore = defineStore(
         }
 
         /**
+         * @param {Object} radResult
+         * @param {string} radResult.sequenceNo
+         * @param {string} radResult.executionDate
+         * @param {string} radResult.age
+         * @param {string} radResult.gender
+         * @param {string} radResult.transactionNo
+         */
+        function updateSelectedRadResult(radResult) {
+            selectedRadResult.itemID = radResult.itemID;
+            selectedRadResult.itemName = radResult.itemName;
+            selectedRadResult.readBy = radResult.readBy;
+            selectedRadResult.registrationNo = radResult.registrationNo;
+            selectedRadResult.transactionNo = radResult.transactionNo;
+            selectedRadResult.testResult = radResult.testResult;
+            selectedRadResult.testSummary = radResult.testSummary;
+            selectedRadResult.testResultDate = radResult.testResultDate;
+            selectedRadResult.testSuggest = radResult.testSuggest;
+        }
+
+        /**
          * @param {string} tab
          */
         function updateSelectedTab(tab) {
@@ -190,6 +229,7 @@ export const useMedicalHistoryStore = defineStore(
             vitalSignHistories.value = [];
             prescriptionHistories.value = [];
             labResultHistories.value = [];
+            radResultHistories.value = [];
             encounterHistories.value = [];
             selectedPatient = {
                 name: "-",
@@ -198,6 +238,13 @@ export const useMedicalHistoryStore = defineStore(
                 birthDate: "-",
             };
             selectedLabResult = {
+                sequenceNo: "-",
+                executionDate: "-",
+                age: "-",
+                gender: "-",
+                transactionNo: "-"
+            };
+            selectedRadResult = {
                 sequenceNo: "-",
                 executionDate: "-",
                 age: "-",
@@ -224,19 +271,23 @@ export const useMedicalHistoryStore = defineStore(
             updateVitalSignHistories,
             updatePrescriptionHitories,
             updateLabResultHistories,
+            updateRadResultHistories,
             updateEncounterHistories,
             updateSelectedPrescription,
             updateSelectedLabResult,
+            updateSelectedRadResult,
             updateSelectedTab,
             updateSelectedEncounter,
             updateSelectedFamilyMemberId,
             vitalSignHistories,
             prescriptionHistories,
             labResultHistories,
+            radResultHistories,
             encounterHistories,
             selectedPatient,
             selectedPrescription,
             selectedLabResult,
+            selectedRadResult,
             selectedTab,
             selectedEncounterResult,
             selectedFamilyMemberId,

@@ -46,6 +46,9 @@ class PatientRegistrationCPPTDto extends Data
         #[MapInputName('Info5')]
         public ?string $info5,
 
+        #[MapInputName('Info6')]
+        public ?string $info6,
+
         #[MapInputName('PpaInstruction')]
         public ?string $ppaInstruction,
 

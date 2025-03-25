@@ -3,6 +3,7 @@ import { useFamilyStore } from "@patient/+store/family.store.js";
 import { useMedicalHistoryStore } from "@patient/+store/medical-history.store.js";
 import EncounterCard from "@patient/Components/EncounterCard/EncounterCard.vue";
 import LabResultCard from "@patient/Components/LabResultCard/LabResultCard.vue";
+import RadResultCard from "@patient/Components/RadResultCard/RadResultCard.vue";
 import PatientCard from "@patient/Components/PatientCard/PatientCard.vue";
 import PrescriptionCard from "@patient/Components/PrescriptionCard/PrescriptionCard.vue";
 import VitalSignCard from "@patient/Components/VitalSignCard/VitalSignCard.vue";
@@ -21,7 +22,12 @@ import { onMounted, reactive, ref, watch } from "vue";
 const prevVitalSignData = ref([]);
 const prevPrescriptionData = ref([]);
 const prevLabResultData = ref([]);
-const prevEncounterData = ref([]);
+const prevRadResultData = ref([]);
+const prevEncounterData = ref(1);
+const isLabResultFile = ref(false);
+
+const loadMoreIndexPertemuan = ref(1);
+
 const layoutStore = useLayoutStore();
 const modalState = reactive({
     familyMemberFilterModal: null
@@ -31,7 +37,7 @@ const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
 const medicalHistoriesStore = useMedicalHistoryStore();
 const { vitalSignHistories, prescriptionHistories, encounterHistories,
-    labResultHistories, selectedPatient, selectedTab, selectedFamilyMemberId } = storeToRefs(medicalHistoriesStore);
+    labResultHistories,radResultHistories, selectedPatient, selectedTab, selectedFamilyMemberId } = storeToRefs(medicalHistoriesStore);
 
 const fetchVitalSignHistories = () => {
     medicalHistoriesStore.updateVitalSignHistories([]);
@@ -104,6 +110,28 @@ const fetchLabResults = () => {
     });
 }
 
+const fetchRadResults = () => {
+    medicalHistoriesStore.updateRadResultHistories([]);
+    layoutStore.isLoading = true;
+    apiRequest.get(`/api/v1/patient/medical/history/radresult`, {
+        params: {
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
+            prev_data: prevRadResultData.value
+        }
+    }).then((response) => {
+        const data = response.data;
+        medicalHistoriesStore.updateRadResultHistories(data.histories);
+        data.histories.map((history) => {
+            prevRadResultData.value.push(history.registrationNo);
+        });
+    }).catch((error) => {
+        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+    }).finally(() => {
+        layoutStore.isLoading = false;
+    });
+}
+
+
 const fetchEncounterHistories = () => {
     medicalHistoriesStore.updateEncounterHistories([]);
     layoutStore.isLoading = true;
@@ -152,6 +180,10 @@ watch(selectedTab, (newValue, oldValue) => {
 
     if (newValue === 'hasil-lab') {
         fetchLabResults();
+    }
+
+    if (newValue === 'hasil-rad') {
+        fetchRadResults();
     }
 
     if (newValue === 'pertemuan') {
@@ -218,8 +250,22 @@ const loadMore = () => {
         fetchLabResults();
     }
 
+    if (selectedTab.value === 'hasil-rad') {
+        fetchRadResults();
+    }
+
     if (selectedTab.value === 'pertemuan') {
         fetchEncounterHistories();
+    }
+}
+
+
+const initialize = function(){
+    if(import.meta.env.VITE_IS_LAB_RESULT_BRIDGING === 'true' || import.meta.env.VITE_IS_LAB_RESULT_BRIDGING === 'TRUE'){
+        isLabResultFile.value = true;
+    }
+    else { 
+        isLabResultFile.value = false; 
     }
 }
 
@@ -227,7 +273,7 @@ onMounted(() => {
     if (selectedTab.value === '') {
         medicalHistoriesStore.updateSelectedTab('unit-vital');
     }
-
+    initialize();
     fetchFamily();
     modalState.familyMemberFilterModal = new bootsrap.Modal("#modal-filter");
 });
@@ -266,6 +312,13 @@ onMounted(() => {
                     <img :src="MicroscopeWhite" alt="Icon" width="16" height="16">
                 </div>
                 <p>{{ $t('history.lab_result') }}</p>
+            </button>
+            <button class="nav-link hasil-rad" :class="selectedTab === 'hasil-rad' ? 'active' : ''" data-bs-toggle="pill" data-bs-target="#hasil-rad" role="tab"
+                aria-controls="hasil-rad" aria-selected="true" @click="onTabChange('hasil-rad')">
+                <div class="icon">
+                    <img :src="MicroscopeWhite" alt="Icon" width="16" height="16">
+                </div>
+                <p>{{ $t('history.rad_result') }}</p>
             </button>
             <button class="nav-link pertemuan" :class="selectedTab === 'pertemuan' ? 'active' : ''" data-bs-toggle="pill" data-bs-target="#pertemuan" role="tab"
                 aria-controls="pertemuan" aria-selected="true" @click="onTabChange('pertemuan')" form="#">
@@ -332,9 +385,33 @@ onMounted(() => {
                         :transaction-no="result.transactionNo"
                         :registration-no="result.registrationNo"
                         :age="result.age"
-                        :sex="result.sex"/>
+                        :sex="result.sex"
+                        :isLabResultBridging="isLabResultFile"/>
                 </div>
                 <div class="text-center mt-3" v-if="labResultHistories.length < 1 && !layoutStore.isLoading">
+                    <img :src="LabImage" alt="Ilustrasi Tidak Ada Data"
+                         width="238" height="198" class="d-inline-block">
+                    <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_lab_result') }}</p>
+                </div>
+                <div class="d-flex flex-column rows-gap-16 mt-4 text-center">
+                    <p>Apabila membutuhkan informasi lebih lanjut hubungi call center RS :</p>
+                    <p class="fw-bold">{{ $t('history.callcenter') }}</p>
+                </div>
+                
+                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
+                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
+                </div>
+            </section>
+            <section class="tab-pane fade" :class="selectedTab === 'hasil-rad' ? 'show active' : ''" id="hasil-rad" role="tabpanel" aria-labelledby="hasil-rad" tabindex="0">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in radResultHistories">
+                    <RadResultCard
+                        :paramedic-name="result.readBy"
+                        :result-date="result.testResultDate"
+                        :transaction-no="result.transactionNo"
+                        :registration-no="result.registrationNo"
+                        :isRadResultBridging="isLabResultFile"/>
+                </div>
+                <div class="text-center mt-3" v-if="radResultHistories.length < 1 && !layoutStore.isLoading">
                     <img :src="LabImage" alt="Ilustrasi Tidak Ada Data"
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_lab_result') }}</p>

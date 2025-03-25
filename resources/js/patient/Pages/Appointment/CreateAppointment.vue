@@ -27,8 +27,11 @@ export default {
         const authStore = useAuthStore();
         const { userData, userPatientData } = storeToRefs(authStore);
         const appointmentStore = useAppointmentStore();
-        const { selectedServiceUnitId, selectedParamedicId } =
+        
+        const { selectedServiceUnitId, selectedParamedicId,selectedStartDate,
+            selectedEndDate } =
             storeToRefs(appointmentStore);
+
         const form = reactive({
             patient_name: "",
             patient_id: null,
@@ -118,6 +121,8 @@ export default {
                     layoutStore.toggleSuccessAlert(
                         "Jadwal Konsultasi Berhasil Disimpan"
                     );
+                    selectedStartDate.value = null
+                    selectedEndDate.value = null
                     router.push({ name: "AppointmentPage" });
                 })
                 .catch((error) => {

@@ -12,6 +12,8 @@ import EncounterDetailPage from "@patient/Pages/History/EncounterDetail.vue";
 import HistoryPage from "@patient/Pages/History/History.vue";
 import LabResultDetailPage from "@patient/Pages/History/LabResultDetail.vue";
 import LabResultViewPage from "@patient/Pages/History/LabResultView.vue";
+import RadResultDetailPage from "@patient/Pages/History/RadResultDetail.vue";
+import RadResultViewPage from "@patient/Pages/History/RadResultView.vue";
 
 import PrescriptionDetailPage from "@patient/Pages/History/PrescriptionDetail.vue";
 import HomePage from "@patient/Pages/Home/Home.vue";
@@ -45,6 +47,16 @@ const routes = [
         path: "/history/labresultview",
         name: "LabResultViewPage",
         component: LabResultViewPage,
+    },
+    {
+        path: "/history/radresult",
+        name: "RadResultDetailPage",
+        component: RadResultDetailPage,
+    },
+    {
+        path: "/history/radresultview",
+        name: "RadResultViewPage",
+        component: RadResultViewPage,
     },
     {
         path: "/history/prescriptions",

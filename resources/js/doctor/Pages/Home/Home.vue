@@ -3,6 +3,8 @@ import { useAppointmentStore } from "@doctor/+store/appointment.store.js";
 import HomeHeader from "@doctor/Components/HomeHeader/HomeHeader.vue";
 import OverviewConsultationScheduleEmpty from "@doctor/Components/OverviewConsultationSchedule/OverviewConsultationScheduleEmpty.vue";
 import OverviewSummaryFee from "@doctor/Components/OverviewSummaryFee/OverviewSummaryFee.vue";
+import GuarantorSummary from "@doctor/Components/GuarantorSummary/GuarantorSummary.vue";
+
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import apiRequest from "@shared/utils/axios.js";
@@ -10,7 +12,7 @@ import {mapActions, mapState, mapWritableState} from "pinia";
 import {convertDateTimeToDate} from "@shared/utils/helpers.js";
 
 export default {
-    components: { HomeHeader, OverviewConsultationScheduleEmpty, OverviewSummaryFee },
+    components: { HomeHeader, OverviewConsultationScheduleEmpty, OverviewSummaryFee, GuarantorSummary },
     setup() {},
     data() {
         return {
@@ -37,7 +39,7 @@ export default {
     methods: {
         convertDateTimeToDate,
         initialize(){
-            if(import.meta.env.VITE_SHOW_DOCTOR_FEE === 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE === 'TRUE'){
+            if(import.meta.env.VITE_SHOW_DOCTOR_FEE == 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE == 'TRUE'){
                 this.showDoctorFee = true;
             }
             else { this.showDoctorFee = false; }
@@ -104,7 +106,7 @@ export default {
                 </p>
             </router-link>
 
-            <router-link v-if="showDoctorFee" to="/fee" class="item summary-fee">
+            <router-link  v-if="showDoctorFee" to="/fee" class="item summary-fee">
                 <div class="icon icon-doctor">
                     <img src="@resources/static/icons/money-white.svg" alt="Icon" width="20" height="20" />
                 </div>
@@ -188,5 +190,6 @@ export default {
             </div>
         </section>
         <OverviewSummaryFee v-if="showDoctorFee"/>
+        <!-- <GuarantorSummary /> -->
     </div>
 </template>

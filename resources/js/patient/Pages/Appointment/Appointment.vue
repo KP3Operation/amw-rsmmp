@@ -174,7 +174,10 @@ onMounted(() => {
     if (selectedMedicalNo === "") {
         appointmentStore.updateSelectedMedicalNo("");
     }
-
+    appointmentStore.updateSelectedEndDate(null);
+    appointmentStore.updateSelectedStartDate(null);
+    
+                    
     fetchFamily();
     fetchAppointments();
 

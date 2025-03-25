@@ -115,6 +115,29 @@ class PatientEncounterDetailDto extends Data
         #[MapInputName('DateOfBirth_yMdHms')]
         public ?string $dateOfBirth_yMdHms,
 
+        #[MapInputName('ChiefComplaint')]
+        public ?string $chiefComplaint,
+
+        #[MapInputName('Hpi')]
+        public ?string $hpi,
+
+        #[MapInputName('Medikamentosa')]
+        public ?string $medikamentosa,
+        
+        #[MapInputName('OtherExam')]
+        public ?string $otherExam,
+
+        #[MapInputName('GeneralCondition')]
+        public ?string $generalCondition,
+
+        #[MapInputName('GCS')]
+        public ?string $gcs,
+
+        #[MapInputName('Conscious')]
+        public ?string $conscious,
+
+        #[MapInputName('Diagnose')]
+        public ?string $diagnose,
     ) {
     }
 

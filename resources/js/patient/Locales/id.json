@@ -118,6 +118,7 @@
         "vital_sign": "Tanda Vital",
         "medical_prescription": "Resep Obat",
         "lab_result": "Hasil Lab",
+        "rad_result": "Radiologi",
         "meeting": "Pertemuan",
         "filter": "Filter",
         "all": "Semua",
@@ -160,8 +161,15 @@
             "out_date": "Tanggal Keluar",
             "out_time": "Jam Keluar",
             "visit_type": "Tipe Kunjungan",
-            "diagnosis": "Diagnosis",
-            "notes": "Catatan"
+            "diagnosis": "Hasil Analisa",
+            "notes": "Catatan",
+            "chiefComplain": "Keluhan Utama",
+            "currentHistory": "Riwayat Penyakit Sekarang",
+            "medikamentosaHistory": "Riwayat Medikamentosa",
+            "generalCondition": "Kondisi Umum",
+            "conscious": "Kesadaran",
+            "otherExamination": "Pemeriksaan Penunjang",
+            "service_unit" : "Unit Pelayanan"
         },
         "lab_result_detail": {
             "title": "Detail Hasil Lab",
@@ -178,6 +186,7 @@
             "notes": "Catatan",
             "doctor_notes": "Catatan Klinis Dokter Pemeriksa"
         },
+
         "lab_result_view": {
             "title": "File Hasil Lab"
         },
@@ -189,7 +198,27 @@
             "item_name": "Nama Obat",
             "qty": "Total",
             "consume_method": "Petunjuk"
+        },
+
+        "rad_result_detail": {
+            "title": "Detail Hasil Radiologi",
+            "transaction_no": "No. Pemeriksaan",
+            "patient_age": "Umur Pasien",
+            "patient_name": "Nama Pasien",
+            "result_date": "Tanggal Pemeriksaan",
+            "item_name": "Nama Pemeriksaan",
+            
+            "gender": "Jenis Kelamin",
+            "male": "Laki-Laki",
+            "female": "Perempuan",
+            "rad_result": "Hasil Pemeriksaan",
+            "no_result": "Hasil pemeriksaan belum tersedia",
+            "result_value": "Hasil",
+            "result_value_normal": "Nilai Normal",
+            "notes": "Catatan",
+            "doctor_notes": "Catatan Klinis Dokter Pemeriksa"
         }
+        
     },
     "home": {
         "welcome": "Selamat Datang",

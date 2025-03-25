@@ -5,6 +5,8 @@ import { storeToRefs } from "pinia";
 import { onMounted, reactive, watch } from "vue";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import { convertDateTimeToDate } from "@shared/utils/helpers.js"
+import { convertDateTimeToDateTime } from "@shared/utils/helpers.js"
+
 import apiRequest from "@shared/utils/axios.js";
 
 const inpatientStore = useInpatientStore();
@@ -100,7 +102,7 @@ onMounted(() => {
                                         <div class="w-100 d-flex flex-column rows-gap-16 fs-6">
                                             <div>
                                                 <p class="fw-bold">{{ $t('inpatient.details.date') }}</p>
-                                                <p class="fw-normal">{{ convertDateTimeToDate(cppt.dateTimeInfo_yMdHms) }}
+                                                <p class="fw-normal">{{ convertDateTimeToDateTime(cppt.dateTimeInfo_yMdHms) }}
                                                 </p>
                                             </div>
 
@@ -111,7 +113,7 @@ onMounted(() => {
 
                                             <div>
                                                 <p class="fw-bold">{{ $t('inpatient.details.created_by') }}</p>
-                                                <p class="fw-normal">{{ cppt.createdByUserID }}</p>
+                                                <p class="fw-normal">{{ cppt.createdByUserName }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -134,7 +136,10 @@ onMounted(() => {
                                 </ul> -->
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'Notes'">
                                     <li><b>{{ $t('inpatient.details.implementation') }}</b> {{ cppt.info1 }}</li>
-                                    <li><b>{{ $t('inpatient.details.response_result') }}</b> {{ cppt.info2 }}</li>
+                                    <li>
+                                        <b>{{ $t('inpatient.details.response_result') }}</b> 
+                                        <br/>{{ cppt.info6 }}
+                                    </li>
                                 </ul>
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SOAP'">

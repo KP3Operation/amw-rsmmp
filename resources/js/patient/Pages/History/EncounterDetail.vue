@@ -39,7 +39,7 @@ onMounted(() => {
         <div class="bg-white mt-4">
             <div class="header-detail-encounter">
                 <div class="unit">
-                    <p class="note">{{ encounterDetail.serviceUnitName }}</p>
+                    <!-- <p class="note">{{ encounterDetail.serviceUnitName }}</p> -->
                     <p class="name">{{ encounterDetail.paramedicName }}</p>
                 </div>
 
@@ -57,39 +57,26 @@ onMounted(() => {
                     </div>
 
                     <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.guarantor_name') }}</p>
-                        <p class="mt-2">{{ encounterDetail.guarantorName }}</p>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-between pb-3 border-bottom border-gray-400">
-                    <div class="w-50">
                         <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.consultation_date') }}</p>
-                        <p class="mt-2">{{ convertDateTimeToDate(encounterDetail.registrationDate_yMdHms) }}</p>
-                    </div>
-
-                    <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.consultation_time') }}</p>
-                        <p class="mt-2">{{ encounterDetail.registrationTime }}</p>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-between pb-3 border-bottom border-gray-400">
-                    <div class="w-50">
-                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.out_date') }}</p>
-                        <p class="mt-2">{{ (encounterDetail.dischargeDate_yMdHms === null) ? '-' :  convertDateTimeToDate(encounterDetail.dischargeDate_yMdHms)}}</p>
-                    </div>
-
-                    <div class="w-50 text-end">
-                        <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.out_time') }}</p>
-                        <p class="mt-2">{{ (encounterDetail.dischargeTime === null) ? '-' :  encounterDetail.dischargeTime}}</p>
+                        <!-- <p class="mt-2">{{ encounterDetail.guarantorName }}</p> -->
+                        <p class="mt-2">
+                            {{ convertDateTimeToDate(encounterDetail.registrationDate_yMdHms) }} {{ encounterDetail.registrationTime }}
+                        </p>
+                         
                     </div>
                 </div>
-
                 <div class="pb-3 border-bottom border-gray-400">
+                    <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.guarantor_name') }}</p>
+                    <p class="mt-2">{{ encounterDetail.guarantorName }}</p>
+                </div>
+                <div class="pb-3 border-bottom border-gray-400">
+                    <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.service_unit') }}</p>
+                    <p class="mt-2">{{ encounterDetail.serviceUnitName }}</p>
+                </div>
+                <!-- <div class="pb-3 border-bottom border-gray-400">
                     <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.visit_type') }}</p>
                     <p class="mt-2">{{ encounterDetail.visitTypeName }}</p>
-                </div>
+                </div> -->
 
                 <div class="pb-3">
                     <p class="fs-6 text-gray-700">{{ $t('history.encounter_detail.diagnosis') }}</p>
@@ -101,14 +88,39 @@ onMounted(() => {
                                     {{ encounter.diagnoseID }}
                                 </button>
                             </h2>
-                            <div :id="'diagnosis-'+index" class="accordion-collapse collapse" :data-bs-parent="'#diagnosis-'+index">
+                            <div :id="'diagnosis-'+index" class="accordion-collapse collapse show" :data-bs-parent="'#diagnosis-'+index">
                                 <div class="accordion-body">
                                     <div class="accordion-divider"></div>
-                                    <p class="fs-5 mt-3">{{ encounter.diagnosisText }}</p>
+                                    <p class="fs-5 mt-3">{{ encounter.diagnoseID }} : {{ encounter.diagnosisText }}</p>
+                                    <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.chiefComplain') }}</p>
+                                    <p class="mt-2 fs-5">
+                                        {{ encounter.chiefComplaint }}
+                                    </p>
+                                    <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.currentHistory') }}</p>
+                                    <p class="mt-2 fs-5">
+                                        {{ encounter.hpi }}
+                                    </p>
+                                    <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.medikamentosaHistory') }}</p>
+                                    <p class="mt-2 fs-5">
+                                        {{ encounter.medikamentosa }}
+                                    </p>
+                                    <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.generalCondition') }}</p>
+                                    <p class="mt-2 fs-5">
+                                        {{ encounter.generalCondition }}
+                                    </p>
+                                    <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.conscious') }}</p>
+                                    <p class="mt-2 fs-5">
+                                        {{ encounter.conscious }}
+                                    </p>
+                                    <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.otherExamination') }}</p>
+                                    <p class="mt-2 fs-5">
+                                        {{ encounter.otherExam }}
+                                    </p>
                                     <p class="mt-3 fs-5 text-gray-700">{{ $t('history.encounter_detail.notes') }}</p>
                                     <p class="mt-2 fs-5">
                                         {{ encounter.notes }}
                                     </p>
+                                    
                                 </div>
                             </div>
                         </div>

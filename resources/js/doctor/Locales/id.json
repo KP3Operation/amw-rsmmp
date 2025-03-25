@@ -67,6 +67,7 @@
         "overview_consult_schedule": "Overview Jadwal Konsultasi",
         "overview_inpatient_list": "Overview Pasien Rawat Inap",
         "overview_summary_fee": "Overview Summary Fee",
+        "guarantor_summary": "Overview Pasien",
         "patient": "Pasien",
         "payout": "Terbayar",
         "pending": "Pending",

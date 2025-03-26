@@ -138,6 +138,7 @@ onMounted(() => {
                                     <li><b>{{ $t('inpatient.details.implementation') }}</b> {{ cppt.info1 }}</li>
                                     <li>
                                         <b>{{ $t('inpatient.details.response_result') }}</b> 
+                                        <br/>{{ cppt.info2 }}
                                         <br/>{{ cppt.info6 }}
                                     </li>
                                 </ul>

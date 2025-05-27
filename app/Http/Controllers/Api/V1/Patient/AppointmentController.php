@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Patient\CancelAppointmentRequest;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
 use App\Http\Requests\Patient\StoreAppointmentRequest;
 use App\Models\Appointment;
@@ -150,10 +151,10 @@ class AppointmentController extends Controller
         $dones = [];
 
         foreach ($response as $appointment) {
-            
+
             $appDate = Carbon::createFromFormat('Y-m-d H:m:s', $appointment['appointmentDate_yMdHms'])->toDateString();
             $appointment['full_appointmentDate']  = Carbon::createFromFormat('Y-m-d H:i', $appDate.' '.$appointment['appointmentTime'])->toDateTimeString();
-            
+
             if ($appointment['appointmentStatus'] == '01' || $appointment['appointmentStatus'] == '02' ) { // open
                 $opens[] = $appointment;
             } elseif ($appointment['appointmentStatus'] == '04') { // done
@@ -199,7 +200,7 @@ class AppointmentController extends Controller
             if (!$request->is_family_member) {
                 $phoneNumber = $user->phone_number ? $user->phone_number : '';
                 $phoneNumber = str_replace(config('app.calling_code'), '0', $phoneNumber);
-        
+
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id, //unit ID
                     $request->paramedic_id, //paramedic ID
@@ -271,7 +272,7 @@ class AppointmentController extends Controller
 
                 $fPhoneNumber = $family->phone_number ?? '';
                 $fPhoneNumber = str_replace(config('app.calling_code'), '0', $fPhoneNumber);
-        
+
 
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id, //unitID
@@ -335,5 +336,11 @@ class AppointmentController extends Controller
         $this->patientService->deleteAppointment($request->appointment_no);
 
         return response()->json([], 204);
+    }
+
+    public function cancelAppointment(CancelAppointmentRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validated();
+        return $this->patientService->cancelAppointment($validated['appointment_no'],$validated['note']);
     }
 }

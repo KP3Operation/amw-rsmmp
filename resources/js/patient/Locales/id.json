@@ -74,9 +74,9 @@
         },
         "cancel_consultation_modal": {
             "title": "Batalkan Janji Konsultasi",
-            "message": "Apakah Anda yakin ingin membatalkan Janji Konsultasi?",
+            "message": "Berikan alasan pembatalan :",
             "yes": "Ya, Batalkan",
-            "no": "Tidak"
+            "no": "Tutup"
         },
         "filter_modal": {
             "title": "Filter",
@@ -207,7 +207,7 @@
             "patient_name": "Nama Pasien",
             "result_date": "Tanggal Pemeriksaan",
             "item_name": "Nama Pemeriksaan",
-            
+
             "gender": "Jenis Kelamin",
             "male": "Laki-Laki",
             "female": "Perempuan",
@@ -218,7 +218,7 @@
             "notes": "Catatan",
             "doctor_notes": "Catatan Klinis Dokter Pemeriksa"
         }
-        
+
     },
     "home": {
         "welcome": "Selamat Datang",

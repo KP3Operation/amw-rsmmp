@@ -108,7 +108,10 @@ class AppointmentDto extends Data
         public ?string $appointmentDate_yMdHms,
 
         #[MapInputName('DateOfBirth_yMdHms')]
-        public ?string $dateOfBirth_yMdHms
+        public ?string $dateOfBirth_yMdHms,
+
+        #[MapInputName('AppointmentQueFormattedNo')]
+        public ?string $AppointmentQueFormattedNo
     ) {
     }
 }

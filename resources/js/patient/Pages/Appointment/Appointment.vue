@@ -176,8 +176,8 @@ onMounted(() => {
     }
     appointmentStore.updateSelectedEndDate(null);
     appointmentStore.updateSelectedStartDate(null);
-    
-                    
+
+
     fetchFamily();
     fetchAppointments();
 
@@ -257,15 +257,17 @@ onMounted(() => {
                                 {{ appointment.serviceUnitName }}
                             </p>
                         </div>
-                        <div>
-                            <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
-                                v-if="appointment.appointmentStatus === '01'">
-                                status : {{ $t('appointment.booking') }}
-                            </p>                            
-                            <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
-                                v-else>
-                                status : {{ $t('appointment.confirm') }}
-                            </p>                            
+                        <div class="d-flex col-gap-20 bg-gray-100 rounded px-2 py-2">
+                            <div class="w-50">
+                                <p class="fs-6 text-gray-700">Status</p>
+                                <p class="fs-5 fw-semibold" v-if="appointment.appointmentStatus === '01'">{{ $t('appointment.booking') }}</p>
+                                <p class="fs-5 fw-semibold" v-else>{{ $t('appointment.confirm') }}</p>
+                            </div>
+
+                            <div class="w-50 text-end" v-if="appointment.AppointmentQueFormattedNo !== ''">
+                                <p class="fs-6 text-gray-700">No.Antrian</p>
+                                <p class="fs-5 fw-semibold">{{ appointment.AppointmentQueFormattedNo }}</p>
+                            </div>
                         </div>
                         <button class="btn text-red-500 fw-semibold p-0" @click="showCancelModal(appointment.appointmentNo)"
                             form="#">
@@ -303,11 +305,7 @@ onMounted(() => {
                             <div class="d-flex col-gap-8 align-items-center">
                                 <i class="bi bi-calendar-event fs-3 icon-blue-500"></i>
                                 <p class="fs-5">
-                                    {{
-                                        convertDateTimeToDate(
-                                            appointment.appointmentDate_yMdHms
-                                        )
-                                    }}
+                                    {{convertDateTimeToDate(appointment.appointmentDate_yMdHms)}}
                                 </p>
                             </div>
                             <div class="d-flex col-gap-8 justify-content-end align-items-center">
@@ -326,13 +324,18 @@ onMounted(() => {
                                     {{ appointment.serviceUnitName }}
                                 </p>
                             </div>
-                            <p class="px-2 py-1 bg-red-100 text-red-500 fw-bold text-sm rounded fs-5"
-                                v-if="appointment.appointmentStatus === '03'">
-                                {{ $t('appointment.canceled') }}
-                            </p>
-                            <p class="px-2 py-1 bg-green-100 text-green-500 fw-bold text-sm rounded fs-5" v-else>
-                                {{ $t('appointment.done') }}
-                            </p>
+                        </div>
+                        <div class="d-flex col-gap-20 bg-gray-100 rounded px-2 py-2">
+                            <div class="w-50">
+                                <p class="fs-6 text-gray-700">Status</p>
+                                <p class="fs-5 fw-semibold" v-if="appointment.appointmentStatus === '03'">{{ $t('appointment.cancelled') }}</p>
+                                <p class="fs-5 fw-semibold" v-else>{{ $t('appointment.done') }}</p>
+                            </div>
+
+                            <div class="w-50 text-end" v-if="appointment.AppointmentQueFormattedNo !== ''">
+                                <p class="fs-6 text-gray-700">No.Antrian</p>
+                                <p class="fs-5 fw-semibold">{{ appointment.AppointmentQueFormattedNo }}</p>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -348,7 +351,7 @@ onMounted(() => {
             </div>
         </div>
 
-        
+
     </div>
 
     <div class="modal" id="modal-batal" aria-labelledby="Modal Batal" tabindex="-1" style="display: none"

@@ -136,19 +136,14 @@ const cancelAppointment = () => {
             note : cancelNote.value
         })
         .then((response) => {
-            console.log('pembatalan berhasil')
             fetchAppointments();
             selectedAppointmentNo.value = "";
             modalState.cancelAppointmentModal.hide();
         })
         .catch((error) => {
-            console.log('error')
-            console.log(error.response?.data)
             errorMessage.value = error.response?.data?.message
         })
         .finally(() => {
-            console.log('finally')
-            //modalState.cancelAppointmentModal.hide();
         });
     }
 };

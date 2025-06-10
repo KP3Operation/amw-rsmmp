@@ -48,8 +48,9 @@ class MeController extends Controller
     public function syncData(Request $request)
     {
         try {
+
             $user = User::where('id', '=', $request->user()->id)->first();
-            $response = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn);
+            $response = $this->patientService->getPatients($user->phone_number, $user->userPatientData->ssn, true);
     
             DB::transaction(function () use ($response, $user) {
                 $patientData = $response->data->first();
@@ -57,7 +58,7 @@ class MeController extends Controller
                     'name' => $patientData->firstName.' '.$patientData->middleName.' '.$patientData->lastName,
                 ]);
     
-                if ($user->email != null) {
+                if ($patientData->email !== null && $patientData->email !== '') {
                     $user->update([
                         'email' => $patientData->email,
                     ]);

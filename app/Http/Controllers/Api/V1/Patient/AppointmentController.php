@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Patient\CancelAppointmentRequest;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
 use App\Http\Requests\Patient\StoreAppointmentRequest;
 use App\Models\Appointment;
@@ -12,6 +13,7 @@ use App\Models\Simrs\Patient\CreateAppointment;
 use App\Models\User;
 use App\Models\UserPatient;
 use App\Services\SimrsService\PatientService\IPatientService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -77,7 +79,6 @@ class AppointmentController extends Controller
             }
         }
 
-        
         if ($medicalNo) {
             $appointments = $this->patientService->getAppointments($medicalNo);
             $newAppointments = $appointments->data->toArray();
@@ -150,6 +151,10 @@ class AppointmentController extends Controller
         $dones = [];
 
         foreach ($response as $appointment) {
+
+            $appDate = Carbon::createFromFormat('Y-m-d H:m:s', $appointment['appointmentDate_yMdHms'])->toDateString();
+            $appointment['full_appointmentDate']  = Carbon::createFromFormat('Y-m-d H:i', $appDate.' '.$appointment['appointmentTime'])->toDateTimeString();
+
             if ($appointment['appointmentStatus'] == '01' || $appointment['appointmentStatus'] == '02' ) { // open
                 $opens[] = $appointment;
             } elseif ($appointment['appointmentStatus'] == '04') { // done
@@ -158,6 +163,18 @@ class AppointmentController extends Controller
                 $cancels[] = $appointment;
             }
         }
+
+        usort($opens, function($a, $b) {
+            return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
+        });
+
+        usort($dones, function($a, $b) {
+            return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
+        });
+
+        usort($cancels, function($a, $b) {
+            return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
+        });
 
         return response()->json([
             'appointments' => [
@@ -181,6 +198,9 @@ class AppointmentController extends Controller
         DB::transaction(function () use ($request, $user, $patient) {
             // register it self
             if (!$request->is_family_member) {
+                $phoneNumber = $user->phone_number ? $user->phone_number : '';
+                $phoneNumber = str_replace(config('app.calling_code'), '0', $phoneNumber);
+
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id, //unit ID
                     $request->paramedic_id, //paramedic ID
@@ -200,11 +220,11 @@ class AppointmentController extends Controller
                     '', //city
                     '', //state
                     '', //zipcode
-                    '', //phone no
+                    $phoneNumber, //$user->phone_number ? $user->phone_number : '', //phone no
                     '', //notes
                     '', //birthplace
                     $patient->ssn ?? '', //ssn
-                    $user->phone_number ? $user->phone_number : '', //mobile phone no
+                    $phoneNumber, //$user->phone_number ? $user->phone_number : '', //mobile phone no
                 );
 
                 $createdAppointment = $this->patientService->createAppointment($appointmentData);
@@ -250,6 +270,10 @@ class AppointmentController extends Controller
                     $patientId = $family->patient_id;
                 }
 
+                $fPhoneNumber = $family->phone_number ?? '';
+                $fPhoneNumber = str_replace(config('app.calling_code'), '0', $fPhoneNumber);
+
+
                 $appointmentData = new CreateAppointment(
                     $request->service_unit_id, //unitID
                     $request->paramedic_id, //paramedicID
@@ -269,11 +293,11 @@ class AppointmentController extends Controller
                     '', //city
                     '', //state
                     '', //zipcode
-                    '', //phone no
+                    $fPhoneNumber, //$family->phone_number ?? '', //phone no
                     '', //notes
                     '', //birthplace
                     $family->ssn ?? '', //ssn
-                    $family->phone_number ?? '', //mobile phone no
+                    $fPhoneNumber, //$family->phone_number ?? '', //mobile phone no
                 );
 
                 $createdAppointment = $this->patientService->createAppointment($appointmentData);
@@ -312,5 +336,11 @@ class AppointmentController extends Controller
         $this->patientService->deleteAppointment($request->appointment_no);
 
         return response()->json([], 204);
+    }
+
+    public function cancelAppointment(CancelAppointmentRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validated();
+        return $this->patientService->cancelAppointment($validated['appointment_no'],$validated['note']);
     }
 }

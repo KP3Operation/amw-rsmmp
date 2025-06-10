@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
 class FamilyController extends Controller
-{   
+{
     private IWatzapOtpService $otpService;
     private IPatientService $patientService;
     private IDoctorService $doctorService;
@@ -44,7 +44,7 @@ class FamilyController extends Controller
         ]);
     }
 
-    public function store(StoreFamilyRequest $request): StoreFamilyResource
+    public function store(StoreFamilyRequest $request) //: StoreFamilyResource
     {
         $otp = OtpCode::where('code',$request->code)->where('user_id',auth()->user()->id)->first();
         if(!$otp) {
@@ -53,12 +53,13 @@ class FamilyController extends Controller
         //$phoneNumber = format_phone_number($request->validated('phone_number'));
 
         $responseFirstAttempt = $this->patientService->getPatientFamilies($request->ssn, $request->phone_number);
+
         $patientData = $responseFirstAttempt->data->first();
         $family = new Family();
         $family->user_id = auth()->user()->id;
         $family->ssn = $patientData->ssn;
         $family->name = $patientData->firstName . ' ' . $patientData->middleName . ' ' . $patientData->lastName;
-        $family->phone_number = format_phone_number($patientData->phoneNo);
+        $family->phone_number = format_phone_number($patientData->mobilePhoneNo);
         $family->email = $patientData->email;
         $family->gender = $patientData->sex == 'F' ? 'Perempuan' : 'Laki-Laki';
         $family->birth_date = Carbon::parse($patientData->birthDate);
@@ -69,10 +70,10 @@ class FamilyController extends Controller
         $success = $family->save();
         if(!$success) {
             throw new RestApiException('Data keluarga gagal disimpan.', 404);
-        } 
+        }
 
         OtpCode::where('user_id', '=', auth()->user()->id)->delete();
-        
+
         // 'ssn' => $patientData->ssn,
         //     'name' => $patientData->firstName . ' ' . $patientData->middleName . ' ' . $patientData->lastName,
         //     'phone_number' => $patientData->phoneNo,
@@ -83,7 +84,7 @@ class FamilyController extends Controller
         //     'patient_id' => $patientData->patientId,
         //     'medical_no' => $patientData->medicalNo,
 
-        
+
         // $family = Family::create($request->only(
         //     'ssn',
         //     'name',
@@ -96,7 +97,7 @@ class FamilyController extends Controller
         //     'medical_no' => null,
         //     'phone_number' => $phoneNumber,
         //     'guarantor_name' => 'SELF',
-            
+
         // ]);
 
         return new StoreFamilyResource($family);

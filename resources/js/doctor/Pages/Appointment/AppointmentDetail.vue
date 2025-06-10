@@ -111,6 +111,18 @@ onMounted(() => {
                     </div>
                     <p class="mt-2">{{ appointmentDetail.serviceUnitName }}</p>
                 </div>
+                <div class="d-flex col-gap-20 rounded py-1 mt-3 pt-3 border-top border-gray-400">
+                    <div class="w-50">
+                        <p class="fs-6 text-gray-700">{{ $t('appointment.queue_status') }}</p>
+                        <p class="mt-2" v-if="appointmentDetail.appointmentStatusName === 'Open'">{{ $t('appointment.status.booking') }}</p>
+                        <p class="mt-2" v-else>{{ $t('appointment.status.confirm') }}</p>
+                    </div>
+
+                    <div class="w-50 text-end" v-if="appointmentDetail.appointmentQueFormattedNo !== ''">
+                        <p class="fs-6 text-gray-700">{{ $t('appointment.queue_number') }}</p>
+                        <p class="mt-2">{{ appointmentDetail.appointmentQueFormattedNo }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

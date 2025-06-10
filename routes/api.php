@@ -39,7 +39,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/me/sync', [MeController::class, 'syncData']);
         Route::get('/me', [MeController::class, 'index']);
         Route::put('/me/{id}', [MeController::class, 'update']);
-        
+
         Route::group(['prefix' => 'patient'], function () {
             Route::apiResource('family', FamilyController::class);
             Route::get('/family/sync/{family}', [FamilyController::class, 'syncFamilyMember']);
@@ -51,10 +51,15 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/medical/history/labresult/file/{transactionNo}', [MedicalHistoryController::class, 'labResultFile']);
             Route::get('/medical/history/labresult/detail', [MedicalHistoryController::class, 'labResultDetail']);
             Route::get('/medical/history/labresult', [MedicalHistoryController::class, 'labResult']);
+
+            Route::get('/medical/history/radresult/detail', [MedicalHistoryController::class, 'radResultDetail']);
+            Route::get('/medical/history/radresult', [MedicalHistoryController::class, 'radResult']);
+
             Route::get('/medical/history/encounters/details', [MedicalHistoryController::class, 'encounterListDetail']);
             Route::get('/medical/history/encounters', [MedicalHistoryController::class, 'encounterList']);
             Route::get('/doctor/schedules/format', [DoctorScheduleController::class, 'getAndFormatDoctorSchedules']);
             Route::get('/doctor/schedules', [DoctorScheduleController::class, 'index']);
+            Route::put('/appointments/cancel', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'cancelAppointment']);
             Route::post('/appointments/store', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'store']);
             Route::delete('/appointments', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'destroy']);
             Route::get('/appointments', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'index']);
@@ -72,7 +77,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('/notifications/{notification}', [NotificationController::class, 'update']);
             Route::get('/inpatient/rooms', [InpatientListController::class, 'getInpatientRooms']);
             Route::get('/guarantor/summary', [PatientGuarantorController::class, 'index']);
-            
+
         });
     });
 });

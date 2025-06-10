@@ -20,13 +20,14 @@
             "canceled": "Dibatalkan",
             "booking" : "Booking",
             "confirm" : "Confirm"
-            
+
         },
         "data": "Data",
         "guarantor_name": "Nama Penjamin",
         "medical_no": "No. Rekam Medis",
         "patient_name": "Nama Pasien",
         "queue_number": "No. Antrian",
+        "booking_code": "No. Registrasi",
         "queue_status": "Status",
         "title": "Appointment"
     },

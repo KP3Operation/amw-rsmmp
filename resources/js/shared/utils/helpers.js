@@ -20,7 +20,7 @@ const plugins = {
                 return date.toLocaleDateString("id-ID", {
                     year: "numeric",
                     month: "2-digit",
-                    day: "2-digit",
+                    day: "2-digit", 
                 });
             },
             app.config.globalProperties.$getSecondsLeft = (startDate, endDate) => {

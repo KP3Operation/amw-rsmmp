@@ -41,6 +41,13 @@ let selectedPatient = reactive({
     birthDate: "-",
 });
 
+const cancelNote = ref(null);
+const errorMessage = ref("");
+
+const cancelNoteChange = () => {
+    errorMessage.value = ""
+}
+
 const fetchAppointments = () => {
     layoutStore.updateLoadingState(true);
 
@@ -118,27 +125,27 @@ const showCancelModal = (appointmentNo) => {
 };
 
 const cancelAppointment = () => {
-    apiRequest
-        .delete(`/api/v1/patient/appointments`, {
-            params: {
-                appointment_no: selectedAppointmentNo.value,
-            },
+    if(cancelNote.value == null || cancelNote.value == '') {
+        errorMessage.value = "Alasan pembatalan tidak boleh kosong."
+    }
+    else {
+
+        apiRequest
+        .put(`/api/v1/patient/appointments/cancel`, {
+            appointment_no: selectedAppointmentNo.value,
+            note : cancelNote.value
         })
         .then((response) => {
-            //
-        })
-        .catch((error) => {
-            if (error.response) {
-                layoutStore.toggleErrorAlert(`${error.response.data.message}`);
-            } else {
-                layoutStore.toggleErrorAlert(`${error}`);
-            }
-        })
-        .finally(() => {
             fetchAppointments();
             selectedAppointmentNo.value = "";
             modalState.cancelAppointmentModal.hide();
+        })
+        .catch((error) => {
+            errorMessage.value = error.response?.data?.message
+        })
+        .finally(() => {
         });
+    }
 };
 
 const resetFilter = () => {
@@ -174,6 +181,9 @@ onMounted(() => {
     if (selectedMedicalNo === "") {
         appointmentStore.updateSelectedMedicalNo("");
     }
+    appointmentStore.updateSelectedEndDate(null);
+    appointmentStore.updateSelectedStartDate(null);
+
 
     fetchFamily();
     fetchAppointments();
@@ -254,15 +264,17 @@ onMounted(() => {
                                 {{ appointment.serviceUnitName }}
                             </p>
                         </div>
-                        <div>
-                            <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
-                                v-if="appointment.appointmentStatus === '01'">
-                                status : {{ $t('appointment.booking') }}
-                            </p>                            
-                            <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
-                                v-else>
-                                status : {{ $t('appointment.confirm') }}
-                            </p>                            
+                        <div class="d-flex col-gap-20 bg-gray-100 rounded px-2 py-2">
+                            <div class="w-50">
+                                <p class="fs-6 text-gray-700">Status</p>
+                                <p class="fs-5 fw-semibold" v-if="appointment.appointmentStatus === '01'">{{ $t('appointment.booking') }}</p>
+                                <p class="fs-5 fw-semibold" v-else>{{ $t('appointment.confirm') }}</p>
+                            </div>
+
+                            <div class="w-50 text-end" v-if="appointment.AppointmentQueFormattedNo !== ''">
+                                <p class="fs-6 text-gray-700">No.Antrian</p>
+                                <p class="fs-5 fw-semibold">{{ appointment.AppointmentQueFormattedNo }}</p>
+                            </div>
                         </div>
                         <button class="btn text-red-500 fw-semibold p-0" @click="showCancelModal(appointment.appointmentNo)"
                             form="#">
@@ -300,11 +312,7 @@ onMounted(() => {
                             <div class="d-flex col-gap-8 align-items-center">
                                 <i class="bi bi-calendar-event fs-3 icon-blue-500"></i>
                                 <p class="fs-5">
-                                    {{
-                                        convertDateTimeToDate(
-                                            appointment.appointmentDate_yMdHms
-                                        )
-                                    }}
+                                    {{convertDateTimeToDate(appointment.appointmentDate_yMdHms)}}
                                 </p>
                             </div>
                             <div class="d-flex col-gap-8 justify-content-end align-items-center">
@@ -323,13 +331,21 @@ onMounted(() => {
                                     {{ appointment.serviceUnitName }}
                                 </p>
                             </div>
-                            <p class="px-2 py-1 bg-red-100 text-red-500 fw-bold text-sm rounded fs-5"
-                                v-if="appointment.appointmentStatus === '03'">
-                                {{ $t('appointment.canceled') }}
-                            </p>
-                            <p class="px-2 py-1 bg-green-100 text-green-500 fw-bold text-sm rounded fs-5" v-else>
-                                {{ $t('appointment.done') }}
-                            </p>
+                        </div>
+                        <div class="d-flex col-gap-20 bg-gray-100 rounded px-2 py-2">
+                            <div class="w-50">
+                                <p class="fs-6 text-gray-700">Status</p>
+                                <p class="fs-5 fw-semibold text-red-500" v-if="appointment.appointmentStatus === '03'">{{ $t('appointment.canceled') }}</p>
+                                <p class="fs-5 fw-semibold" v-else>{{ $t('appointment.done') }}</p>
+                            </div>
+
+                            <div class="w-50 text-end" v-if="appointment.AppointmentQueFormattedNo !== ''">
+                                <p class="fs-6 text-gray-700">No.Antrian</p>
+                                <p class="fs-5 fw-semibold">{{ appointment.AppointmentQueFormattedNo }}</p>
+                            </div>
+                        </div>
+                        <div  v-if="appointment.appointmentStatus === '03'" class="d-flex col-gap-20 bg-gray-100 rounded px-2 py-2">
+                            <p class="fs-5 text-gray-700">{{ appointment.notes }}</p>
                         </div>
                     </div>
                 </section>
@@ -345,7 +361,7 @@ onMounted(() => {
             </div>
         </div>
 
-        
+
     </div>
 
     <div class="modal" id="modal-batal" aria-labelledby="Modal Batal" tabindex="-1" style="display: none"
@@ -363,14 +379,23 @@ onMounted(() => {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>{{ $t('appointment.cancel_consultation_modal.message') }}</p>
+                    <p class="text-start">{{ $t('appointment.cancel_consultation_modal.message') }}</p>
+                    <select class="form-select mt-2" v-model="cancelNote" required @change="cancelNoteChange()">
+                        <option value="Batal Berobat">Batal Berobat</option>
+                        <option value="Salah Pilih Dokter">Salah Pilih Dokter</option>
+                        <option value="Salah Pilih Jadwal Dokter">Salah Pilih Jadwal Dokter</option>
+                        <option value="Jadwal Dokter Berubah">Jadwal Dokter Berubah</option>
+                        <option value="Ada Keperluan Lain">Ada Keperluan Lain</option>
+                    </select>
+                    <p class="fs-6 mt-2" style="font-style: italic;color: red;">{{ errorMessage }}</p>
                 </div>
+
                 <div class="modal-footer flex-nowrap">
                     <button type="button" class="w-50 btn btn-link fw-semibold" data-bs-dismiss="modal" form="#"
                         @click="modalState.cancelAppointmentModal.hide()">
                         {{ $t('appointment.cancel_consultation_modal.no') }}
                     </button>
-                    <button type="button" class="w-50 btn-batal-konsultasi btn btn-red-500-rounded" data-bs-dismiss="modal"
+                    <button type="button" class="w-50 btn-batal-konsultasi btn btn-red-500-rounded"
                         form="#" @click="cancelAppointment()">
                         {{ $t('appointment.cancel_consultation_modal.yes') }}
                     </button>

@@ -39,7 +39,7 @@ export default {
     methods: {
         convertDateTimeToDate,
         initialize(){
-            if(import.meta.env.VITE_SHOW_DOCTOR_FEE === 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE === 'TRUE'){
+            if(import.meta.env.VITE_SHOW_DOCTOR_FEE == 'true' || import.meta.env.VITE_SHOW_DOCTOR_FEE == 'TRUE'){
                 this.showDoctorFee = true;
             }
             else { this.showDoctorFee = false; }
@@ -106,7 +106,7 @@ export default {
                 </p>
             </router-link>
 
-            <router-link v-if="showDoctorFee" to="/fee" class="item summary-fee">
+            <router-link  v-if="showDoctorFee" to="/fee" class="item summary-fee">
                 <div class="icon icon-doctor">
                     <img src="@resources/static/icons/money-white.svg" alt="Icon" width="20" height="20" />
                 </div>

@@ -7,6 +7,8 @@ import Header from "@shared/Components/Header/Header.vue";
 import apiRequest from "@shared/utils/axios.js";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
+import { convertDateTimeToDate } from "@shared/utils/helpers.js";
+
 
 const layoutStore = useLayoutStore();
 const { isLoading } = storeToRefs(layoutStore);
@@ -69,63 +71,39 @@ onMounted(() => {
         <p class="text-center text-gray-700 mt-2">
             {{ selectedSchedule.serviceUnitName }}
         </p>
+        <p class="text-center text-gray-700 mt-2">
+            {{ new Date(selectedSchedule.ScheduleDate_yMdHms).toLocaleDateString('id-ID', { weekday: 'long' }) }},
+            {{ convertDateTimeToDate(selectedSchedule.ScheduleDate_yMdHms) }}
+        </p>
         <section class="mt-5">
             <div class="d-flex col-gap-8 align-items-center">
                 <i class="bi bi-clock-fill icon-blue-500 fs-3"></i>
                 <p class="fs-5 text-gray-700">{{ $t('doctor_schedule.schedule_detail.schedule') }}</p>
             </div>
             <div class="d-flex flex-column rows-gap-8 mt-2">
-                <div
-                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
-                >
-                    <p>{{ $t('doctor_schedule.schedule_detail.monday') }}</p>
-                    <p class="text-end">
-                        {{ selectedSchedule.startTime1 }} -
-                        {{ selectedSchedule.endTime1 }}
-                    </p>
+                <div class="d-flex justify-content-between pb-2 border-bottom border-gray-400">
+                    <p>{{ selectedSchedule.startTime1 }}</p> sampai dengan
+                    <p class="text-end fs-4">{{ selectedSchedule.endTime1 }}</p>
                 </div>
                 <div
+                    v-if="selectedSchedule.startTime2 && selectedSchedule.endTime2"
                     class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
                 >
-                    <p>{{ $t('doctor_schedule.schedule_detail.tuesday') }}</p>
+                    <p>{{ selectedSchedule.startTime2 }}</p>
+                    sampai dengan
+                    <p class="text-end fs-4">{{ selectedSchedule.endTime2 }}</p>
+                </div>
+                <div class="d-flex justify-content-between pb-2 border-bottom border-gray-400">
+                     <p>{{ selectedSchedule.startTime3 }}</p> sampai dengan
+                    <p class="text-end fs-4">{{ selectedSchedule.endTime3 }}</p>
+                </div>
+                <!-- <div class="d-flex justify-content-between pb-2 border-bottom border-gray-400">
+                    <p>{{ $t('doctor_schedule.schedule_detail.schedule2') }}</p>
                     <p class="text-end">
                         {{ selectedSchedule.startTime2 }} -
                         {{ selectedSchedule.endTime2 }}
                     </p>
-                </div>
-                <div
-                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
-                >
-                    <p>{{ $t('doctor_schedule.schedule_detail.thursday') }}</p>
-                    <p class="text-end">
-                        {{ selectedSchedule.startTime3 }} -
-                        {{ selectedSchedule.endTime3 }}
-                    </p>
-                </div>
-                <div
-                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
-                >
-                    <p>{{ $t('doctor_schedule.schedule_detail.wednesday') }}</p>
-                    <p class="text-end">
-                        {{ selectedSchedule.startTime4 }} -
-                        {{ selectedSchedule.endTime4 }}
-                    </p>
-                </div>
-                <div
-                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
-                >
-                    <p>{{ $t('doctor_schedule.schedule_detail.friday') }}</p>
-                    <p class="text-end">
-                        {{ selectedSchedule.startTime5 }} -
-                        {{ selectedSchedule.endTime5 }}
-                    </p>
-                </div>
-                <div
-                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
-                >
-                    <p>{{ $t('doctor_schedule.schedule_detail.saturday') }}</p>
-                    <p class="text-end">-</p>
-                </div>
+                </div> -->
             </div>
             <a
                 href="#"
@@ -134,6 +112,7 @@ onMounted(() => {
                 class="d-block btn btn-blue-500-rounded mt-4"
                 >{{ $t('doctor_schedule.schedule_detail.create_appointment') }}</a
             >
+            <!-- <p class="d-flex justify-content-between pt-3">Notes : </p> -->
         </section>
     </div>
 </template>

@@ -33,27 +33,34 @@ class DoctorScheduleDto extends Data
 
         #[MapInputName('StartTime1')]
         public ?string $startTime1,
-
         #[MapInputName('EndTime1')]
         public ?string $endTime1,
 
         #[MapInputName('StartTime2')]
         public ?string $startTime2,
+        #[MapInputName('EndTime2')]
+        public ?string $endTime2,
 
+        #[MapInputName('StartTime3')]
+        public ?string $startTime3,
         #[MapInputName('EndTime3')]
         public ?string $endTime3,
 
         #[MapInputName('StartTime4')]
         public ?string $startTime4,
+        #[MapInputName('EndTime4')]
+        public ?string $endTime4,
 
+
+        #[MapInputName('StartTime5')]
+        public ?string $startTime5,
         #[MapInputName('EndTime5')]
         public ?string $endTime5,
 
         #[MapInputName('ScheduleDate_yMdHms')]
         public ?string $ScheduleDate_yMdHms,
 
-    ) {
-    }
+    ) {}
 
     public static function normalizers(): array
     {

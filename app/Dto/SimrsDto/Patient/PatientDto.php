@@ -41,6 +41,9 @@ class PatientDto extends Data
         #[MapInputName('PhoneNo')]
         public ?string $phoneNo,
 
+        #[MapInputName('MobilePhoneNo')]
+        public ?string $mobilePhoneNo,
+
         #[MapInputName('Sex')]
         public ?string $sex
     ) {

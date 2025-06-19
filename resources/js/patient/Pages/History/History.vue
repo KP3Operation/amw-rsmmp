@@ -393,7 +393,7 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_lab_result') }}</p>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-4 text-center">
+                <div class="d-flex flex-column rows-gap-16 mt-4 text-center" v-if="$t('history.callcenter')">
                     <p>Apabila membutuhkan informasi lebih lanjut hubungi call center RS :</p>
                     <p class="fw-bold">{{ $t('history.callcenter') }}</p>
                 </div>
@@ -416,7 +416,7 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_lab_result') }}</p>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-4 text-center">
+                <div class="d-flex flex-column rows-gap-16 mt-4 text-center" v-if="$t('history.callcenter')">
                     <p>Apabila membutuhkan informasi lebih lanjut hubungi call center RS :</p>
                     <p class="fw-bold">{{ $t('history.callcenter') }}</p>
                 </div>

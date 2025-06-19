@@ -62,35 +62,48 @@ onMounted(() => {
             </div>
             <div class="d-flex align-items-center justify-content-between col-gap-20">
                 <div class="w-50">
-                    <p class="fs-6 text-gray-700">{{ $t('appointment.queue_number') }}</p>
-                    <p class="fs-5 mt-2">{{ appointment.appointmentQue }}</p>
+                    <p class="fs-6 text-gray-700">{{ $t('appointment.booking_code') }}</p>
+                    <!-- <p class="fs-5 mt-2 fw-semibold">{{ appointment.appointmentQue }}</p> -->
+                    <p class="fs-5 mt-2 fw-semibold">{{ appointment.appointmentNo }}</p>
                 </div>
                 <div class="w-50 text-end">
                     <p class="fs-6 text-gray-700">{{ $t('appointment.medical_no') }}</p>
-                    <p class="fs-5 mt-2">{{ appointment.medicalNo }}</p>
+                    <p class="fs-5 mt-2 fw-semibold">{{ appointment.medicalNo }}</p>
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-between col-gap-20">
                 <div class="w-50">
                     <p class="fs-6 text-gray-700">{{ $t('appointment.patient_name') }}</p>
-                    <p class="fs-5 mt-2">{{ appointment.patientName }}</p>
+                    <p class="fs-5 mt-2 fw-semibold">{{ appointment.patientName }}</p>
                 </div>
                 <div class="w-50 text-end">
                     <p class="fs-6 text-gray-700">{{ $t('appointment.guarantor_name') }}</p>
-                    <p class="fs-5 mt-2">{{ appointment.guarantorName }}</p>
+                    <p class="fs-5 mt-2 fw-semibold">{{ appointment.guarantorName }}</p>
                 </div>
             </div>
-            <div class="d-flex align-items-center justify-content-between col-gap-20">
+            <!-- <div class="d-flex align-items-center justify-content-between col-gap-20">
                 <div class="w-100">
                     <p class="px-2 py-1 bg-gray-100 text-blue-500 fw-bold text-sm rounded fs-5"
                         v-if="appointment.appointmentStatus === 'Open'">
                         status : {{ $t('appointment.status.booking') }}
-                    </p>                            
+                    </p>
                     <p class="px-2 py-1 bg-green-100 text-blue-500 fw-bold text-sm rounded fs-5"
                         v-else>
                         status : {{ $t('appointment.status.confirm') }}
                     </p>
-                </div>         
+                </div>
+            </div> -->
+            <div class="d-flex col-gap-20 rounded py-1">
+                <div class="w-50">
+                    <p class="fs-6 text-gray-700">{{ $t('appointment.queue_status') }}</p>
+                    <p class="fs-5 fw-semibold" v-if="appointment.appointmentStatus === 'Open'">{{ $t('appointment.status.booking') }}</p>
+                    <p class="fs-5 fw-semibold" v-else>{{ $t('appointment.status.confirm') }}</p>
+                </div>
+
+                <div class="w-50 text-end" v-if="appointment.FormattedNo !== ''">
+                    <p class="fs-6 text-gray-700">{{ $t('appointment.queue_number') }}</p>
+                    <p class="fs-5 fw-semibold">{{ appointment.FormattedNo }}</p>
+                </div>
             </div>
 
             <router-link :to="{name: 'AppointmentDetailPage', query: {appointmentNo: appointment.appointmentNo}}" class="d-block btn btn-blue-500-rounded-sm">{{ $t('appointment.actions.detail') }}</router-link>

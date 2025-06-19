@@ -18,6 +18,7 @@ use App\Dto\SimrsDto\Patient\PatientRadResultDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Dto\SimrsDto\Patient\ServiceUnitDataDto;
 use App\Models\Simrs\Patient\CreateAppointment;
+use Illuminate\Http\JsonResponse;
 
 interface IPatientService
 {
@@ -59,4 +60,6 @@ interface IPatientService
     public function getAppointment(string $appointmentNo): AppointmentDto;
 
     public function getPatientsByMedicalNo(string $medicalNo): PatientDataDto;
+
+    public function cancelAppointment(string $appointmentNo, string $cancelNote):JsonResponse;
 }

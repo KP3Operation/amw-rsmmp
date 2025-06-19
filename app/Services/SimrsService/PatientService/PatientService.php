@@ -21,7 +21,7 @@ use App\Exceptions\SimrsException;
 use App\Models\Simrs\Patient\CreateAppointment;
 use App\Services\SimrsService\ISimrsBaseApi;
 use Exception;
-
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class PatientService implements IPatientService
@@ -69,9 +69,9 @@ class PatientService implements IPatientService
                     'Ssn' => $ssn,
                     'Email' => '',
                 ]);
-            }    
+            }
         }
-        
+
         // if (count($data['data']) < 1) {
         //     $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
         //         'MedicalNo' => '',
@@ -386,6 +386,24 @@ class PatientService implements IPatientService
         }
 
         return true;
+    }
+
+    /**
+     * @throws SimrsException
+     */
+    public function cancelAppointment(string $appointmentNo, string $cancelNote): JsonResponse
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/AppointmentCancelWithReason', [], [
+            'AppointmentNo' => $appointmentNo,
+            'notes' => $cancelNote
+        ]);
+
+        if (! $response->successful()) {
+            // throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+            return response()->json(['success' => false,'message' => 'Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami'],400);
+        }
+
+        return response()->json(['success' => true,'message' => 'Janji konsultasi berhasil dibatalkan.'],200);
     }
 
     /**

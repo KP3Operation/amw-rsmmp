@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 class InpatientListController extends Controller
 {
     private IDoctorService $doctorService;
-    
 
-    public function __construct(IDoctorService $doctorService )
+
+    public function __construct(IDoctorService $doctorService)
     {
         $this->doctorService = $doctorService;
     }
@@ -75,11 +75,8 @@ class InpatientListController extends Controller
             return response()->json([
                 'inpatientRooms' => $inpatientRooms->data,
             ]);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => $e]);
         }
-
-        
     }
 }

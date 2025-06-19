@@ -16,7 +16,7 @@ let { id, registrationNo, medicalNo, patientName, roomName } = toRefs(props);
 <template>
     <div :id="'item-' + id" class="item new-data-bg d-flex flex-column rows-gap-16 border rounded px-4 py-3">
         <div class="d-flex align-items-center justify-content-between col-gap-20">
-            <div class="w-50">
+            <div class="w-100">
                 <p class="fs-6 text-gray-700">{{ $t('inpatient_list_card.registration_no') }}</p>
                 <p class="mt-2">{{ registrationNo }}</p>
             </div>
@@ -26,7 +26,7 @@ let { id, registrationNo, medicalNo, patientName, roomName } = toRefs(props);
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-between col-gap-20">
-            <div class="w-50">
+            <div class="w-100">
                 <p class="fs-6 text-gray-700">{{ $t('inpatient_list_card.patient_name') }}</p>
                 <p class="mt-2">{{ patientName }}</p>
             </div>

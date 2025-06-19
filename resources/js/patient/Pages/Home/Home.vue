@@ -51,7 +51,8 @@ onMounted(() => {
 <template>
     <div class="header header-pasien">
         <router-link to="/home">
-            <img :src="LogoWhite" alt="Logo Aviat" width="33" height="33" />
+            <!-- <img :src="LogoWhite" alt="Logo Aviat" width="33" height="33" /> -->
+            <img src="http://[::1]:5173/resources/static/images/company-logo.png" alt="Logo Aviat" width="100" height="50">
         </router-link>
         <p>
             {{ $t("header.greeting") }},

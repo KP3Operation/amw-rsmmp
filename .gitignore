@@ -36,4 +36,7 @@ coverage/
 
 # Custom app static files (private or generated)
 resources/js/auth/Locales/id.json
-resources/static/images/*.png
+resources/static/images/app-background.png
+resources/static/images/logo.png
+resources/static/images/company-logo.png
+resources/static/images/company-slogan.png

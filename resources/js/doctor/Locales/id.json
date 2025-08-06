@@ -130,6 +130,21 @@
             "title": "Konfirmasi Logout",
             "yes": "Ya"
         },
+        "account_delete": {
+            "title": "Konfirmasi Hapus Akun!",
+            "subtitle": "Anda yakin ingin menghapus akun ini?",
+            "description": "Tindakan ini tidak dapat dibatalkan. Semua data dan informasi terkait akun akan dihapus secara permanen dari sistem!",
+            "success": "Berhasil Hapus Akun",
+            "failed": "Gagal Hapus Akun",
+            "delete": "Hapus Akun",
+            "cancel": "Batal"
+        },
+        "deleteAccount_modal": {
+            "title": "Konfirmasi Hapus Akun!",
+            "message": "Anda akan menghapus akun Anda dari Aplikasi Mobile Appointment. Tindakan ini akan menghapus semua data Anda secara permanen!",
+            "yes": "Ya, Hapus Akun",
+            "cancel": "Batal"
+        },
         "phone_number": "No. Handphone",
         "smf": "Staff Medis Fungsional (SMF)",
         "title": "Profile"

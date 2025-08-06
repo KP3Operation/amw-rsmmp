@@ -12,7 +12,8 @@ const authStore = useAuthStore();
 const { userData, userDoctorData } = storeToRefs(authStore);
 const layoutStore = useLayoutStore();
 const modalState = reactive({
-    logoutConfirmationModal: null
+    logoutConfirmationModal: null,
+    deleteAccountConfirmationModal: null
 });
 
 const logout = () => {
@@ -23,14 +24,28 @@ const logout = () => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     });
 }
+const deleteAccount = () => {
+    apiRequest.get('/api/v1/deleteAccount').then(() => {
+        authStore.$reset();
+        // logout(); // Redirect to login after account deletion
+        window.location.href = "/auth/login";
+    }).catch((error) => {
+        layoutStore.toggleErrorAlert(`${error.response.data.message}`);
+    });
+}
 
 onMounted(() => {
     modalState.logoutConfirmationModal = new bootstrap.Modal("#logout-modal", {});
+    modalState.deleteAccountConfirmationModal = new bootstrap.Modal("#deleteAccount-modal", {});
 });
 </script>
 
 <template>
-    <Header :title="$t('profile.title')" :with-back-url="false"></Header>
+    <Header :title="$t('profile.title')" :with-back-url="false" :with-action-btn="true">
+        <router-link to="/profile/delete" class="text-decoration-none icon-red-500">
+            <i class="bi bi-person-x fs-2" title="Delete Account"></i>
+        </router-link>
+    </Header>
     <section class="profile-doctor pt-6">
         <img :src="DefaultAvatar" :alt="userData.userFullName" width="49" height="49">
 
@@ -60,6 +75,8 @@ onMounted(() => {
 
         <a href="javascript:void(0);" @click="modalState.logoutConfirmationModal.show()" class="d-block btn btn-outline-red-500 rounded-pill mt-4 text-decoration-none">{{
             $t('profile.logout') }}</a>
+        <!-- <a href="javascript:void(0);" @click="modalState.deleteAccountConfirmationModal.show()" class="d-block btn btn-link">{{
+            $t('profile.deleteAccount') }}</a> -->
     </div>
 
     <div class="modal" id="logout-modal" aria-labelledby="Logout Modal" aria-hidden="true" tabindex="-1">
@@ -84,6 +101,34 @@ onMounted(() => {
                     </button>
                     <button type="button" @click="logout" class="w-50 btn-masuk btn btn-blue">
                         {{ $t('profile.logout_modal.yes') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="deleteAccount-modal" aria-labelledby="Delete Account Modal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between">
+                    <div class="d-flex align-items-center col-gap-8">
+                        <i class="bi bi-info-circle-fill icon-blue-500 fs-3"></i>
+                        <h5 class="modal-title">{{ $t('profile.deleteAccount_modal.title') }}</h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close"
+                            @click="modalState.deleteAccountConfirmationModal.hide()">
+                        <i class="bi bi-x fs-2 icon-black"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ $t('profile.deleteAccount_modal.message') }}</p>
+                </div>
+                <div class="modal-footer flex-nowrap">
+                    <button type="button" class="w-50 btn btn-link" @click="modalState.deleteAccountConfirmationModal.hide()">
+                        {{ $t('profile.deleteAccount_modal.cancel') }}
+                    </button>
+                    <button type="button" @click="deleteAccount" class="w-50 btn-masuk btn btn-blue">
+                        {{ $t('profile.deleteAccount_modal.yes') }}
                     </button>
                 </div>
             </div>

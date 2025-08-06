@@ -18,6 +18,7 @@ import RadResultViewPage from "@patient/Pages/History/RadResultView.vue";
 import PrescriptionDetailPage from "@patient/Pages/History/PrescriptionDetail.vue";
 import HomePage from "@patient/Pages/Home/Home.vue";
 import ProfilePage from "@patient/Pages/Profile/Profile.vue";
+import DeleteAccountPage from "@patient/Pages/Profile/AccountDelete.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
@@ -93,6 +94,11 @@ const routes = [
         path: "/profile",
         name: "ProfilePage",
         component: ProfilePage,
+    },
+    {
+        path: "/profile/delete",
+        name: "DeleteAccountPage",
+        component: DeleteAccountPage,
     },
     {
         path: "/family/edit/:id",
@@ -195,6 +201,11 @@ router.beforeEach(async (to, from, next) => {
 
     if (to.name === "EditProfilePage") {
         layoutStore.patientActiveMenu = "profile";
+        layoutStore.isFullView = true;
+    }
+
+    if (to.name === "DeleteAccountPage") {
+        layoutStore.patientActiveMenu = "Delete Account";
         layoutStore.isFullView = true;
     }
 

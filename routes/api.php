@@ -33,6 +33,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('/logout', [LogoutController::class, 'invalidateSession']);
+        Route::get('/deleteAccount', [LogoutController::class, 'deleteAccount']);
         Route::put('/register/patient/{phoneNumber}', [RegisterController::class, 'updatePatient']);
         Route::put('/register/doctor/{phoneNumber}', [RegisterController::class, 'updateDoctor']);
 
@@ -77,7 +78,6 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('/notifications/{notification}', [NotificationController::class, 'update']);
             Route::get('/inpatient/rooms', [InpatientListController::class, 'getInpatientRooms']);
             Route::get('/guarantor/summary', [PatientGuarantorController::class, 'index']);
-
         });
     });
 });

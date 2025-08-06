@@ -16,4 +16,15 @@ class LogoutController extends Controller
 
         return response()->json([], 204);
     }
+
+    public function deleteAccount(Request $request)
+    {
+        $user = $request->user();
+        if ($user) {
+            $user->tokens()->delete(); // Revoke all tokens
+            $user->delete(); // Delete the user
+        }
+
+        return response()->json(['message' => 'Account deleted successfully'], 200);
+    }
 }

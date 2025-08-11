@@ -35,7 +35,8 @@ const { patientActiveMenu,
         </router-link>
     </nav>
 
-    <router-view></router-view>
+    <router-view>
+</router-view>
 
     <div :class="showSuccessAlert ? '' : 'd-none'"
         class="alert alert-success alert-dismissible d-flex col-gap-16 shadow fs-5 fw-semibold mt-6" role="alert">

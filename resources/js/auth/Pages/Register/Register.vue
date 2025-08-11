@@ -217,6 +217,7 @@ export default {
                     class="form-control"
                     v-model="registerForm.phoneNumber"
                     @keypress="onlyNumberInput($event)"
+                    autofocus
                 />
             </div>
             <div

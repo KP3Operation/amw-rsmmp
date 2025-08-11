@@ -8,6 +8,7 @@ import InpatientListPage from "@doctor/Pages/InpatientList/InpatientList.vue";
 import PatientDetailPage from "@doctor/Pages/InpatientList/PatientDetail.vue";
 import NotificationPage from "@doctor/Pages/Notification/Notification.vue";
 import ProfilePage from "@doctor/Pages/Profile/Profile.vue";
+import DeleteAccountPage from "@patient/Pages/Profile/AccountDelete.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
@@ -52,6 +53,11 @@ const routes = [
         path: "/profile",
         name: "ProfilePage",
         component: ProfilePage,
+    },
+    {
+        path: "/profile/delete",
+        name: "DeleteAccountPage",
+        component: DeleteAccountPage,
     },
     { path: "/:pathMatch(.*)*", name: "NotFoundPage", component: NotFoundPage },
 ];
@@ -121,6 +127,11 @@ router.beforeEach(async (to, from) => {
 
     if (to.name === "ProfilePage") {
         layoutStore.doctorActiveMenu = "profile";
+    }
+
+    if (to.name === "DeleteAccountPage") {
+        layoutStore.patientActiveMenu = "Delete Account";
+        layoutStore.isFullView = true;
     }
 });
 

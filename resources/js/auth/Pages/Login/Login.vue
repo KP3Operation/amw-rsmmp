@@ -138,6 +138,7 @@ export default {
                         @input="v$.loginForm.phoneNumber.$touch()"
                         v-model.number="loginForm.phoneNumber"
                         @keypress="onlyNumberInput($event)"
+                        autofocus
                     />
                 </div>
                 <div

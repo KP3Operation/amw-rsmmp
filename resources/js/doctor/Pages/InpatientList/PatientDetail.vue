@@ -87,9 +87,9 @@ onMounted(() => {
             <div class="pb-3">
                 <p class="fs-6 text-gray-700">Riwayat Medis</p>
 
-                <div class="accordion d-flex flex-column rows-gap-16 mt-3" id="accordion"
+                <div class="accordion d-flex flex-column rows-gap-16" id="accordion"
                     v-for="(cppt, index) in cppts.values">
-                    <div class="accordion-item rawat-inap">
+                    <div class="accordion-item rawat-inap mt-3" v-if="cppt.sRMedicalNotesInputType === 'SOAP' || cppt.sRMedicalNotesInputType === 'ADIME'">
                         <div v-if="cppt.isDeleted" class="w-100 pt-2 pb-2 text-center" style="background-color: red;border-radius: 5px;">
                             <p style="font-size:14px; font-weight:800;color:white;">VOID</p>
                         </div>
@@ -152,14 +152,14 @@ onMounted(() => {
                                     <li><b>E</b>: {{ cppt.info5 }}</li>
                                 </ul>
 
-                                <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SBAR'">
+                                <!-- <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'SBAR'">
                                     <li><b>S</b>: {{ cppt.info1 }}</li>
                                     <li><b>B</b>: {{ cppt.info2 }}</li>
                                     <li><b>A</b>: {{ cppt.info3 }}</li>
                                     <li><b>R</b>: {{ cppt.info4 }}</li>
                                     <li><b>I</b>: {{ cppt.ppaInstruction }}</li>
                                     <li><b>TBAK</b>: {{ cppt.info5 }}</li>
-                                </ul>
+                                </ul> -->
 
                                 <ul class="mt-3 pl-1" v-if="cppt.sRMedicalNotesInputType === 'ADIME'">
                                     <li><b>A</b>: {{ cppt.info1 }}</li>

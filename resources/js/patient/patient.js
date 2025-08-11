@@ -12,5 +12,4 @@ import { createApp } from "vue";
 const { t } = i18n.global;
 window.t = t;
 
-
 createApp(Patient).use(pinia).use(router).use(i18n).mount("#app");

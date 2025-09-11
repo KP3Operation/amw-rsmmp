@@ -1,42 +1,46 @@
-# Laravel-specific
+# Node & PHP dependencies
+/node_modules
 /vendor
-/.phpunit.result.cache
+
+# Laravel specific
 /.phpunit.cache
+/.phpunit.result.cache
+/public/build
+/public/hot
+/public/storage
 /storage/*.key
+
+# Environment files
 .env
 .env.backup
 .env.production
 
-# Laravel Homestead
-Homestead.json
-Homestead.yaml
-
-# Composer
-composer.phar
-composer-setup.php
+# Composer files
 auth.json
+composer-setup.php
+composer.phar
 
-# Node / NPM / Yarn
-/node_modules
+# Logs & debug
 npm-debug.log
 yarn-error.log
 
-# Vite / Webpack / Frontend build
-/public/build
-/public/hot
-/public/storage
-
-# Coverage / Test reports
-coverage/
-
-# IDE / Editor settings
+# IDE / Editor folders
+/.fleet
 /.idea
 /.vscode
-/.fleet
 
-# Custom app static files (private or generated)
-resources/js/auth/Locales/id.json
-resources/static/images/app-background.png
-resources/static/images/logo.png
-resources/static/images/company-logo.png
-resources/static/images/company-slogan.png
+# Homestead
+Homestead.json
+Homestead.yaml
+
+# Code coverage
+coverage/
+
+# Custom static files (exclude from versioning)
+/resources/js/auth/Locales/id.json
+/resources/static/images/app-background.png
+/resources/static/images/company-logo.png
+/resources/static/images/company-slogan.png
+
+# Ignore all .save files
+*.save

@@ -42,8 +42,5 @@ coverage/
 /resources/static/images/company-logo.png
 /resources/static/images/company-slogan.png
 
-# Save files (ignore file, folder, or extension .save)
-.save
-.save/
+# Ignore all .save files
 *.save
-**/.save

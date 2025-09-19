@@ -96,7 +96,7 @@ return [
     |
     */
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'id'),
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'id_ID',
 
     /*
     |--------------------------------------------------------------------------

@@ -98,7 +98,6 @@ class MedicalHistoryController extends Controller
 
             $response->histories = $prescriptionHistories->data;
             $response->patient = $user;
-
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
             if (! $user->userPatientData->medical_no) {
@@ -177,7 +176,6 @@ class MedicalHistoryController extends Controller
 
             $response->histories = $labResults->data;
             $response->patient = $user;
-
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
             if (! $user->userPatientData->medical_no) {
@@ -191,7 +189,6 @@ class MedicalHistoryController extends Controller
             $response->patient->gender = $user->userPatientData->gender;
             $response->patient->medical_no = $user->userPatientData->medical_no;
             $response->patient->birth_date = $user->userPatientData->birth_date;
-
         }
 
         $paginatedHistories = [];
@@ -219,10 +216,10 @@ class MedicalHistoryController extends Controller
         return response()->json($response);
     }
 
-    public function labResultFile(Request $request, $transactionNo) 
-    {   
+    public function labResultFile(Request $request, $transactionNo)
+    {
         //$transactionNo = 'DS231217-0024';
-        $fileUrlLink = env('LAB_FILE_URL','127.0.0.1').'/'.$transactionNo.'.'.env('LAB_FILE_EXTENSION','pdf');
+        $fileUrlLink = env('LAB_FILE_URL', '127.0.0.1') . '/' . $transactionNo . '.' . env('LAB_FILE_EXTENSION', 'pdf');
         return response()->json(['message' => 'link file created', 'data' => $fileUrlLink]);
     }
 
@@ -263,7 +260,6 @@ class MedicalHistoryController extends Controller
 
             $response->histories = $labResults->data;
             $response->patient = $user;
-
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
             if (! $user->userPatientData->medical_no) {
@@ -277,7 +273,6 @@ class MedicalHistoryController extends Controller
             $response->patient->gender = $user->userPatientData->gender;
             $response->patient->medical_no = $user->userPatientData->medical_no;
             $response->patient->birth_date = $user->userPatientData->birth_date;
-
         }
 
         $paginatedHistories = [];
@@ -305,10 +300,10 @@ class MedicalHistoryController extends Controller
         return response()->json($response);
     }
 
-    public function radResultFile(Request $request, $transactionNo) 
-    {   
+    public function radResultFile(Request $request, $transactionNo)
+    {
         //$transactionNo = 'DS231217-0024';
-        $fileUrlLink = env('LAB_FILE_URL','127.0.0.1').'/'.$transactionNo.'.'.env('LAB_FILE_EXTENSION','pdf');
+        $fileUrlLink = env('LAB_FILE_URL', '127.0.0.1') . '/' . $transactionNo . '.' . env('LAB_FILE_EXTENSION', 'pdf');
         return response()->json(['message' => 'link file created', 'data' => $fileUrlLink]);
     }
 
@@ -338,32 +333,36 @@ class MedicalHistoryController extends Controller
         $prevData = [];
         if ($request->has('prev_data')) {
             $prevData = $request->get('prev_data');
-        }
-        else {
             $previousYear = date('Y') - 1;
             $currentMonth = date('m');
-            $startDate = $previousYear.'-'.$currentMonth.'-01';
+            $startDate = $previousYear . '-' . $currentMonth . '-01';
+            $endDate = date('Y-m-d');
+        } else {
+            $previousYear = date('Y') - 1;
+            $currentMonth = date('m');
+            $startDate = $previousYear . '-' . $currentMonth . '-01';
             $endDate = date('Y-m-d');
         }
-            
+
+        // return $prevData;
 
         if ($request->has('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
-            
+
+            // return response()->json(['start_date' => $startDate, 'end_date' => $endDate, 'medical_no' => $user->medical_no]);
             $encountersList = $this->patientService->getEncounterList(
                 $user->medical_no,
                 '',
                 '',
-                $startDate,//get_current_year_start_date(),
-                $endDate,//get_current_month_date(),
+                $startDate, //get_current_year_start_date(),
+                $endDate, //get_current_month_date(),
             );
 
             $response->histories = $encountersList->data;
             $response->patient = $user;
-
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
             if (! $user->userPatientData->medical_no) {
@@ -378,12 +377,12 @@ class MedicalHistoryController extends Controller
                 $endDate, //get_current_month_date(),
             );
 
+            // return $encountersList;
             $response->histories = $encountersList->data;
             $response->patient = $user;
             $response->patient->gender = $user->userPatientData->gender;
             $response->patient->medical_no = $user->userPatientData->medical_no;
             $response->patient->birth_date = $user->userPatientData->birth_date;
-
         }
 
         $paginatedHistories = [];

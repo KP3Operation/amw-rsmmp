@@ -6,8 +6,10 @@ use App\Dto\SimrsDto\Patient\AppointmentDataDto;
 use App\Dto\SimrsDto\Patient\AppointmentDto;
 use App\Dto\SimrsDto\Patient\CreateAppointmentDataDto;
 use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
+use App\Dto\SimrsDto\Patient\GuarantorDataDto;
 use App\Dto\SimrsDto\Patient\GuarantorDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
+use App\Dto\SimrsDto\Patient\PatientDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDataDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
@@ -330,7 +332,7 @@ class PatientService implements IPatientService
     /**
      * @throws SimrsException
      */
-    public function getGuarantorList(string $guarantorId, string $guarantorName): GuarantorDto
+    public function getGuarantorList(string $guarantorId, string $guarantorName): GuarantorDataDto
     {
         $response = $this->simrsBaseApi->get('/MobileWS2.asmx/GuarantorGetList', [], [
             'GuarantorID' => $guarantorId,
@@ -343,7 +345,25 @@ class PatientService implements IPatientService
 
         $data = $response->json();
 
-        return GuarantorDto::from($data);
+        return GuarantorDataDto::from($data);
+    }
+
+    /**
+     * @throws SimrsException
+     */
+    public function getGuarantorByGuarantorID(string $guarantorID): GuarantorDto
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/GuarantorGetOne', [], [
+            'GuarantorID' => $guarantorID
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        return GuarantorDto::from($data['data']);
     }
 
     /**
@@ -510,5 +530,27 @@ class PatientService implements IPatientService
         // $data = $response->json();
 
         return PatientDataDto::from($data);
+    }
+
+    public function getPatientsByPatientID(string $PatientID): PatientDto
+    {
+        if (! $PatientID) {
+            throw new SimrsException('Pasien tidak memiliki id Pasien');
+        }
+        $response = $this->simrsBaseApi->get('/AppointmentWS.asmx/PatientGetOne', [], [
+            'PatientID' => $PatientID
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        if ($data['status'] == 'ERR') {
+            throw new Exception($data['data']);
+        }
+
+        return PatientDto::from($data['data']);
     }
 }

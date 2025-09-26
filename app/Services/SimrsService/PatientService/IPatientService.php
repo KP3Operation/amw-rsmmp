@@ -6,7 +6,9 @@ use App\Dto\SimrsDto\Patient\AppointmentDataDto;
 use App\Dto\SimrsDto\Patient\AppointmentDto;
 use App\Dto\SimrsDto\Patient\CreateAppointmentDataDto;
 use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
+use App\Dto\SimrsDto\Patient\GuarantorDataDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
+use App\Dto\SimrsDto\Patient\PatientDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDataDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
@@ -52,7 +54,7 @@ interface IPatientService
 
     public function getServiceUnitList(string $serviceUnitId, string $serviceUnitName): ServiceUnitDataDto;
 
-    public function getGuarantorList(string $guarantorId, string $guarantorName): GuarantorDto;
+    public function getGuarantorList(string $guarantorId, string $guarantorName): GuarantorDataDto;
 
     public function createAppointment(CreateAppointment $createAppointment): CreateAppointmentDataDto;
 
@@ -63,6 +65,10 @@ interface IPatientService
     public function getAppointment(string $appointmentNo): AppointmentDto;
 
     public function getPatientsByMedicalNo(string $medicalNo): PatientDataDto;
+
+    public function getPatientsByPatientID(string $patientId): PatientDto;
+
+    public function getGuarantorByGuarantorID(string $guarantorId): GuarantorDto;
 
     public function cancelAppointment(string $appointmentNo, string $cancelNote): JsonResponse;
 }

@@ -11,6 +11,7 @@ export const useAppointmentStore = defineStore("appointment-store", () => {
     let selectedDate = ref(getCurrentDate());
     let selectedParamedicId = ref("");
     let selectedServiceUnitId = ref("");
+    let selectedGuarantorId = ref("");
     let selectedStartDate = ref("");
     let selectedEndDate = ref("");
     let selectedPatient = reactive({
@@ -54,6 +55,9 @@ export const useAppointmentStore = defineStore("appointment-store", () => {
     function updateSelectedServiceUnitId(id) {
         selectedServiceUnitId.value = id;
     }
+    function updateSelectedGuarantorId(id) {
+        selectedGuarantorId.value = id;
+    }
 
     function updateSelectedStartDate(date) {
         selectedStartDate.value = date;
@@ -85,6 +89,7 @@ export const useAppointmentStore = defineStore("appointment-store", () => {
         selectedDate.value = getCurrentDate();
         selectedParamedicId.value = "";
         selectedServiceUnitId.value = "";
+        selectedGuarantorId.value = "";
         selectedStartDate.value = "";
         selectedEndDate.value = "";
         selectedEndDate.value = "";
@@ -106,6 +111,7 @@ export const useAppointmentStore = defineStore("appointment-store", () => {
         updateCloseAppointments,
         updateSelectedParamedicId,
         updateSelectedServiceUnitId,
+        updateSelectedGuarantorId,
         updateSelectedStartDate,
         updateSelectedEndDate,
         updateSelectedPatient,
@@ -117,6 +123,7 @@ export const useAppointmentStore = defineStore("appointment-store", () => {
         closeAppointments,
         selectedParamedicId,
         selectedServiceUnitId,
+        selectedGuarantorId,
         selectedStartDate,
         selectedEndDate,
         selectedPatient,

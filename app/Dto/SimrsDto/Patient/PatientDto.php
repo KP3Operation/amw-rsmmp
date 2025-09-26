@@ -46,6 +46,5 @@ class PatientDto extends Data
 
         #[MapInputName('Sex')]
         public ?string $sex
-    ) {
-    }
+    ) {}
 }

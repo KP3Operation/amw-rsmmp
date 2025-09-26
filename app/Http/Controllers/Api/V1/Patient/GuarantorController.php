@@ -16,22 +16,52 @@ class GuarantorController extends Controller
         $this->patientService = $patientService;
     }
 
+    // public function index(Request $request)
+    // {
+    //     $GuarantorID = '';
+    //     $response = new stdClass();
+
+    //     // if ($request->has('guarantor_id')) {
+    //     //     $guarantorId = $request->guarantor_id;
+    //     // }
+
+    //     $guarantorLists = $this->patientService->getGuarantorList(
+    //         $GuarantorID ?? '',
+    //         $guarantorName ?? ''
+    //     );
+
+    //     $response->guarantor = $guarantorLists;
+
+    //     return response()->json($response);
+    // }
+
     public function index(Request $request)
     {
-        $guarantorId = '';
-        $response = new stdClass();
+        $GuarantorID   = $request->guarantor_id ?? '';
+        $guarantorName = $request->guarantor_name ?? '';
 
-        if ($request->has('guarantor_id')) {
-            $guarantorId = $request->guarantor_id;
-        }
-
+        // Ambil data dari service
         $guarantorLists = $this->patientService->getGuarantorList(
-            $guarantorId ?? '',
-            $guarantorName ?? ''
+            $GuarantorID,
+            $guarantorName
         );
 
-        $response->guarantor = $guarantorLists;
+        // Pastikan tidak ada array bersarang
+        $guarantorLists = collect($guarantorLists)
+            ->flatten(1) // hilangkan 1 tingkat array
+            ->filter(function ($item) {
+                $name = data_get($item, 'guarantorName');
+                return stripos($name, 'BPJS') === false;
+            })
+            ->sortBy('guarantorName')
+            ->values()
+            ->all();
 
-        return response()->json($response);
+        // Bungkus dengan format sesuai kebutuhan
+        return response()->json([
+            'guarantor' => [
+                'data' => $guarantorLists
+            ]
+        ]);
     }
 }

@@ -120,6 +120,7 @@
             "consultation_date": "Tanggal Konsultasi",
             "unit": "Pilih Unit",
             "guarantor": "Pilih Penjamin",
+            "guarantor_name": "Nama Penjamin",
             "paramedic": "Pilih Dokter",
             "save": "Simpan",
             "cancel": "Batal"

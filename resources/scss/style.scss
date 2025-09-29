@@ -376,8 +376,8 @@ $form-select-padding-y: $spacer * .5;
     padding: 18px 20px;
     position: fixed;
     top: 0;
-    width: 100%;
-    max-width: 100%;
+    // width: 100%;
+    // min-width: 90%;
     z-index: 999;
 
     &.header-default {
@@ -405,7 +405,7 @@ $form-select-padding-y: $spacer * .5;
         }
 
         .add {
-            font-size: 14px;
+            font-size: 24px;
             color: $blue-500;
         }
     }
@@ -1205,4 +1205,24 @@ Jika mixin yang telah dibuat tidak mengganti style default komponen, maka coba p
         @include button-variant($blue-500, $blue-500, $white);
         border-radius: 100px;
     }
+}
+
+// comment css for form create appointment
+.wrap-select-option {
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.wrap-select-option option {
+  white-space: normal;
+  word-wrap: break-word;
+//   display: block;
+//   max-width: 100%;
+}
+
+/* Trik untuk Chrome / WebKit */
+.wrap-select-option:focus {
+  width: 100% !important;
 }

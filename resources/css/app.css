@@ -104,7 +104,7 @@ input::-webkit-inner-spin-button {
     }
 
     main > div > div.header {
-        width: 480px;
+        width: 100%;
     }
 
     main > div > div > div.header {

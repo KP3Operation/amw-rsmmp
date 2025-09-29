@@ -77,15 +77,15 @@ export default {
                     required
                 ),
             },
-            service_unit_id: {
-                required: helpers.withMessage(
-                    "Unit tidak boleh kosong",
-                    required
-                ),
-            },
             guarantor_id: {
                 required: helpers.withMessage(
                     "Penjamin tidak boleh kosong",
+                    required
+                ),
+            },
+            service_unit_id: {
+                required: helpers.withMessage(
+                    "Unit tidak boleh kosong",
                     required
                 ),
             },
@@ -96,7 +96,6 @@ export default {
                 ),
             },
             family_id: {},
-            guarantor_id: {},
         };
         const v$ = useVuelidate(rules, form);
         const paramedics = ref([]);
@@ -580,36 +579,23 @@ export default {
                         }}
                         <span class="text-red-500 fw-semibold">*</span></label
                     >
-                    <div style="overflow-x: auto; max-width: 100%">
-                        <select
-                            name="guarantor"
-                            id="guarantor"
-                            class="form-select mt-2"
-                            v-model="form.guarantor_id"
-                            style="
-                                min-width: 300px;
-                                white-space: nowrap;
-                                overflow-x: auto;
-                                text-overflow: ellipsis;
-                            "
+                    <select
+                        name="guarantor"
+                        id="guarantor"
+                        class="form-select mt-2 wrap-select-option"
+                        v-model="form.guarantor_id"
+                    >
+                        <option value="" selected disabled>
+                            Pilih Penjamin
+                        </option>
+                        <option
+                            v-for="guarantor in guarantors"
+                            :value="guarantor.guarantorID"
+                            style="white-space: normal"
                         >
-                            <option value="" selected disabled>
-                                Pilih Penjamin
-                            </option>
-                            <option
-                                v-for="guarantor in guarantors"
-                                :value="guarantor.guarantorID"
-                                :title="guarantor.guarantorName"
-                            >
-                                {{
-                                    guarantor.guarantorName.length > 30
-                                        ? guarantor.guarantorName.slice(0, 30) +
-                                          "..."
-                                        : guarantor.guarantorName
-                                }}
-                            </option>
-                        </select>
-                    </div>
+                            {{ guarantor.guarantorName }}
+                        </option>
+                    </select>
                     <div
                         class="error mt-2 fs-6 fw-bold text-red-200"
                         v-for="error of v$.guarantor_id.$errors"

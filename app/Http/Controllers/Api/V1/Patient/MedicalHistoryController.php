@@ -114,9 +114,14 @@ class MedicalHistoryController extends Controller
         }
 
         $paginatedHistories = [];
+        // Filter out histories where PrescriptionNo contains 'RSP'
+        $filteredHistories = array_filter($response->histories->toArray(), function ($recipe) {
+            return strpos($recipe['PrescriptionNo'], 'RSP') === false;
+        });
+
         if (count($prevData) >= 10) {
-            foreach ($response->histories as $patient) {
-                if (! in_array($patient->PrescriptionNo, $prevData)) {
+            foreach ($filteredHistories as $patient) {
+                if (! in_array($patient['PrescriptionNo'], $prevData)) {
                     $paginatedHistories[] = $patient;
                 }
 
@@ -125,7 +130,7 @@ class MedicalHistoryController extends Controller
                 }
             }
         } else {
-            foreach ($response->histories as $patient) {
+            foreach ($filteredHistories as $patient) {
                 $paginatedHistories[] = $patient;
                 if (count($paginatedHistories) == 10) {
                     break;

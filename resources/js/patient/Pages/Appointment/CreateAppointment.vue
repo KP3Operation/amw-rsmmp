@@ -580,23 +580,36 @@ export default {
                         }}
                         <span class="text-red-500 fw-semibold">*</span></label
                     >
-                    <select
-                        name="guarantor"
-                        id="guarantor"
-                        class="form-select mt-2"
-                        v-model="form.guarantor_id"
-                    >
-                        <option value="" selected disabled>
-                            Pilih Penjamin
-                        </option>
-                        <!-- <option v-for="unit in serviceUnits"></option> -->
-                        <option
-                            v-for="guarantor in guarantors"
-                            :value="guarantor.guarantorID"
+                    <div style="overflow-x: auto; max-width: 100%">
+                        <select
+                            name="guarantor"
+                            id="guarantor"
+                            class="form-select mt-2"
+                            v-model="form.guarantor_id"
+                            style="
+                                min-width: 300px;
+                                white-space: nowrap;
+                                overflow-x: auto;
+                                text-overflow: ellipsis;
+                            "
                         >
-                            {{ guarantor.guarantorName }}
-                        </option>
-                    </select>
+                            <option value="" selected disabled>
+                                Pilih Penjamin
+                            </option>
+                            <option
+                                v-for="guarantor in guarantors"
+                                :value="guarantor.guarantorID"
+                                :title="guarantor.guarantorName"
+                            >
+                                {{
+                                    guarantor.guarantorName.length > 30
+                                        ? guarantor.guarantorName.slice(0, 30) +
+                                          "..."
+                                        : guarantor.guarantorName
+                                }}
+                            </option>
+                        </select>
+                    </div>
                     <div
                         class="error mt-2 fs-6 fw-bold text-red-200"
                         v-for="error of v$.guarantor_id.$errors"

@@ -373,10 +373,11 @@ $form-select-padding-y: $spacer * .5;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
+    padding: 18px 20px;
     position: fixed;
     top: 0;
-    width: 393px;
+    width: 100%;
+    max-width: 100%;
     z-index: 999;
 
     &.header-default {
@@ -400,11 +401,11 @@ $form-select-padding-y: $spacer * .5;
             flex-grow: 1;
             font-size: 20px;
             font-weight: 700;
-            margin-right: 30px;
+            margin: 0%;
         }
 
         .add {
-            font-size: 24px;
+            font-size: 14px;
             color: $blue-500;
         }
     }

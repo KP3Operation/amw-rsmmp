@@ -135,6 +135,7 @@ const cancelAppointment = () => {
             .then((response) => {
                 fetchAppointments();
                 selectedAppointmentNo.value = "";
+                cancelNote.value = null;
                 modalState.cancelAppointmentModal.hide();
             })
             .catch((error) => {

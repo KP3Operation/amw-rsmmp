@@ -14,8 +14,8 @@ export const useLayoutStore = defineStore("layout", () => {
     let infoAlertMessage = ref("");
     let showDoctorFee = ref(true);
 
-    function toggleSuccessAlert(msg = '') {
-        if (msg !== '') {
+    function toggleSuccessAlert(msg = "") {
+        if (msg !== "") {
             showSuccessAlert.value = !showSuccessAlert.value;
             successAlertMessage.value = `${msg}`;
             if (showSuccessAlert.value) {
@@ -28,28 +28,28 @@ export const useLayoutStore = defineStore("layout", () => {
         }
     }
 
-    function toggleErrorAlert(msg = '') {
-        if (msg !== '') {
+    function toggleErrorAlert(msg = "") {
+        if (msg !== "") {
             showErrorAlert.value = !showErrorAlert.value;
             errorAlertMessage.value = `${msg}`;
             if (showErrorAlert.value) {
                 setTimeout(() => {
                     toggleErrorAlert();
-                }, 3000);
+                }, 7000);
             }
         } else {
             showErrorAlert.value = false;
         }
     }
 
-    function toggleInfoAlert(msg = '') {
-        if (msg !== '') {
+    function toggleInfoAlert(msg = "") {
+        if (msg !== "") {
             showInfoAlert.value = !showInfoAlert.value;
             infoAlertMessage.value = `${msg}`;
             if (showInfoAlert.value) {
                 setTimeout(() => {
                     toggleInfoAlert();
-                }, 3000);
+                }, 7000);
             }
         } else {
             showInfoAlert.value = false;
@@ -59,8 +59,8 @@ export const useLayoutStore = defineStore("layout", () => {
     /**
      * @param {boolean} loading
      */
-    function updateLoadingState (loading) {
-       isLoading.value = loading;
+    function updateLoadingState(loading) {
+        isLoading.value = loading;
     }
 
     function $reset() {
@@ -93,6 +93,6 @@ export const useLayoutStore = defineStore("layout", () => {
         isLoading,
         showInfoAlert,
         infoAlertMessage,
-        showDoctorFee
+        showDoctorFee,
     };
 });

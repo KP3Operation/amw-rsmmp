@@ -373,10 +373,11 @@ $form-select-padding-y: $spacer * .5;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
+    padding: 18px 20px;
     position: fixed;
     top: 0;
-    width: 393px;
+    // width: 100%;
+    // min-width: 90%;
     z-index: 999;
 
     &.header-default {
@@ -400,7 +401,7 @@ $form-select-padding-y: $spacer * .5;
             flex-grow: 1;
             font-size: 20px;
             font-weight: 700;
-            margin-right: 30px;
+            margin: 0%;
         }
 
         .add {
@@ -1204,4 +1205,24 @@ Jika mixin yang telah dibuat tidak mengganti style default komponen, maka coba p
         @include button-variant($blue-500, $blue-500, $white);
         border-radius: 100px;
     }
+}
+
+// comment css for form create appointment
+.wrap-select-option {
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.wrap-select-option option {
+  white-space: normal;
+  word-wrap: break-word;
+//   display: block;
+//   max-width: 100%;
+}
+
+/* Trik untuk Chrome / WebKit */
+.wrap-select-option:focus {
+  width: 100% !important;
 }

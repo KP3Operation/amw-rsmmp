@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\Patient\DoctorScheduleController;
 use App\Http\Controllers\Api\V1\Patient\FamilyController;
 use App\Http\Controllers\Api\V1\Patient\MedicalHistoryController;
 use App\Http\Controllers\Api\V1\Shared\MeController;
+use App\Http\Controllers\Api\V1\Patient\GuarantorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,6 +65,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/appointments/store', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'store']);
             Route::delete('/appointments', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'destroy']);
             Route::get('/appointments', [\App\Http\Controllers\Api\V1\Patient\AppointmentController::class, 'index']);
+            // New Routes
+            Route::get('/guarantors', [GuarantorController::class, 'index']);
         });
 
         Route::group(['prefix' => 'doctor'], function () {

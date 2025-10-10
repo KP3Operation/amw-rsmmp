@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Patient;
 
+use App\Dto\SimrsDto\Patient\PatientDataDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Patient\CancelAppointmentRequest;
 use App\Http\Requests\Patient\DestroyAppointmentRequest;
@@ -153,9 +154,9 @@ class AppointmentController extends Controller
         foreach ($response as $appointment) {
 
             $appDate = Carbon::createFromFormat('Y-m-d H:m:s', $appointment['appointmentDate_yMdHms'])->toDateString();
-            $appointment['full_appointmentDate']  = Carbon::createFromFormat('Y-m-d H:i', $appDate.' '.$appointment['appointmentTime'])->toDateTimeString();
+            $appointment['full_appointmentDate']  = Carbon::createFromFormat('Y-m-d H:i', $appDate . ' ' . $appointment['appointmentTime'])->toDateTimeString();
 
-            if ($appointment['appointmentStatus'] == '01' || $appointment['appointmentStatus'] == '02' ) { // open
+            if ($appointment['appointmentStatus'] == '01' || $appointment['appointmentStatus'] == '02') { // open
                 $opens[] = $appointment;
             } elseif ($appointment['appointmentStatus'] == '04') { // done
                 $dones[] = $appointment;
@@ -164,15 +165,15 @@ class AppointmentController extends Controller
             }
         }
 
-        usort($opens, function($a, $b) {
+        usort($opens, function ($a, $b) {
             return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
         });
 
-        usort($dones, function($a, $b) {
+        usort($dones, function ($a, $b) {
             return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
         });
 
-        usort($cancels, function($a, $b) {
+        usort($cancels, function ($a, $b) {
             return strtotime($b['full_appointmentDate']) - strtotime($a['full_appointmentDate']);
         });
 
@@ -195,6 +196,23 @@ class AppointmentController extends Controller
         $user = User::findOrFail(auth()->user()->id);
         $patient = UserPatient::where('user_id', auth()->user()->id)->firstOrFail();
 
+
+        if ($request->patient_id || $patient->patient_id != '') {
+
+            $patientSearch = $this->patientService->getPatientsByPatientID($request->patient_id ?? $patient->patient_id);
+
+            $guarantor = $this->patientService->getGuarantorByGuarantorID($patientSearch->guarantorId);
+
+            if (stripos($guarantor->guarantorName, 'BPJS KESEHATAN') !== false) {
+                return response()->json([
+                    throw new \Exception('Sebelumnya anda sudah pernah mendaftar menggunakan BPJS Kesehatan! silahkan melakukan pendaftaran di loket pendaftaran atau gunakan Mobile JKN!')
+                ]);
+            }
+            // if (!$family) {
+            //     throw new \Exception('Gagal mengambil data family member');
+            // }
+        }
+
         DB::transaction(function () use ($request, $user, $patient) {
             // register it self
             if (!$request->is_family_member) {
@@ -214,7 +232,7 @@ class AppointmentController extends Controller
                     $request->gender === 'Perempuan' ? 'F' : 'M', //$sex
                     '', //street name
                     $user->email ?? '', //email
-                    'SELF', //guarantor ID
+                    $request->guarantor_id, //'SELF', //guarantor ID
                     '', //district
                     '', //county
                     '', //city
@@ -287,7 +305,7 @@ class AppointmentController extends Controller
                     $request->gender === 'Perempuan' ? 'F' : 'M', //sex
                     '', //streetname
                     $family->email ?? '', //email
-                    'SELF', //guarantorID
+                    $request->guarantor_id, //'SELF', //guarantor ID
                     '', //district
                     '', //county
                     '', //city
@@ -341,6 +359,6 @@ class AppointmentController extends Controller
     public function cancelAppointment(CancelAppointmentRequest $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validated();
-        return $this->patientService->cancelAppointment($validated['appointment_no'],$validated['note']);
+        return $this->patientService->cancelAppointment($validated['appointment_no'], $validated['note']);
     }
 }

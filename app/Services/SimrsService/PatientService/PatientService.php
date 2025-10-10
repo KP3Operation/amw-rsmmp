@@ -6,7 +6,10 @@ use App\Dto\SimrsDto\Patient\AppointmentDataDto;
 use App\Dto\SimrsDto\Patient\AppointmentDto;
 use App\Dto\SimrsDto\Patient\CreateAppointmentDataDto;
 use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
+use App\Dto\SimrsDto\Patient\GuarantorDataDto;
+use App\Dto\SimrsDto\Patient\GuarantorDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
+use App\Dto\SimrsDto\Patient\PatientDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDataDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
@@ -56,10 +59,9 @@ class PatientService implements IPatientService
         $data = $response->json();
 
         if (count($data['data']) < 1) {
-            if($isPersist) {
+            if ($isPersist) {
                 throw new SimrsException('data pasien tidak ditemukan', 500);
-            }
-            else {
+            } else {
                 $response = $this->simrsBaseApi->get('/V1_1/AppointmentWS.asmx/PatientSearchByField', [], [
                     'MedicalNo' => '',
                     'Name' => '',
@@ -177,7 +179,8 @@ class PatientService implements IPatientService
     public function getLabResult(string $medicalNo): PatientLabResultDataDto
     {
         $response = $this->simrsBaseApi->get('/MobileWS2.asmx/PatientLabResultList', [], [
-            'MedicalNo' => $medicalNo,'RecordCount' => 20
+            'MedicalNo' => $medicalNo,
+            'RecordCount' => 20
         ]);
 
         if (! $response->successful()) {
@@ -213,7 +216,8 @@ class PatientService implements IPatientService
     public function getRadResult(string $medicalNo): PatientRadResultDataDto
     {
         $response = $this->simrsBaseApi->get('/MobileWS2.asmx/RadiologyResultsExpertise', [], [
-            'MedicalNo' => $medicalNo,'RecordCount' => 20
+            'MedicalNo' => $medicalNo,
+            'RecordCount' => 20
         ]);
 
         if (! $response->successful()) {
@@ -327,6 +331,43 @@ class PatientService implements IPatientService
 
     /**
      * @throws SimrsException
+     */
+    public function getGuarantorList(string $guarantorId, string $guarantorName): GuarantorDataDto
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/GuarantorGetList', [], [
+            'GuarantorID' => $guarantorId,
+            'GuarantorName' => $guarantorName,
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        return GuarantorDataDto::from($data);
+    }
+
+    /**
+     * @throws SimrsException
+     */
+    public function getGuarantorByGuarantorID(string $guarantorID): GuarantorDto
+    {
+        $response = $this->simrsBaseApi->get('/MobileWS2.asmx/GuarantorGetOne', [], [
+            'GuarantorID' => $guarantorID
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        return GuarantorDto::from($data['data']);
+    }
+
+    /**
+     * @throws SimrsException
      * @throws Exception
      */
     public function createAppointment(CreateAppointment $createAppointment): CreateAppointmentDataDto
@@ -400,10 +441,10 @@ class PatientService implements IPatientService
 
         if (! $response->successful()) {
             // throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
-            return response()->json(['success' => false,'message' => 'Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami'],400);
+            return response()->json(['success' => false, 'message' => 'Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami'], 400);
         }
 
-        return response()->json(['success' => true,'message' => 'Janji konsultasi berhasil dibatalkan.'],200);
+        return response()->json(['success' => true, 'message' => 'Janji konsultasi berhasil dibatalkan.'], 200);
     }
 
     /**
@@ -489,5 +530,27 @@ class PatientService implements IPatientService
         // $data = $response->json();
 
         return PatientDataDto::from($data);
+    }
+
+    public function getPatientsByPatientID(string $PatientID): PatientDto
+    {
+        if (! $PatientID) {
+            throw new SimrsException('Pasien tidak memiliki id Pasien');
+        }
+        $response = $this->simrsBaseApi->get('/AppointmentWS.asmx/PatientGetOne', [], [
+            'PatientID' => $PatientID
+        ]);
+
+        if (! $response->successful()) {
+            throw new SimrsException('Gagal terhubung dengan SIMRS, mohon menghubungi tim support kami', 500);
+        }
+
+        $data = $response->json();
+
+        if ($data['status'] == 'ERR') {
+            throw new Exception($data['data']);
+        }
+
+        return PatientDto::from($data['data']);
     }
 }

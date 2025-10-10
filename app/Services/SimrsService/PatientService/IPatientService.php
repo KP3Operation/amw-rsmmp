@@ -6,7 +6,9 @@ use App\Dto\SimrsDto\Patient\AppointmentDataDto;
 use App\Dto\SimrsDto\Patient\AppointmentDto;
 use App\Dto\SimrsDto\Patient\CreateAppointmentDataDto;
 use App\Dto\SimrsDto\Patient\DoctorScheduleDataDto;
+use App\Dto\SimrsDto\Patient\GuarantorDataDto;
 use App\Dto\SimrsDto\Patient\PatientDataDto;
+use App\Dto\SimrsDto\Patient\PatientDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDataDto;
 use App\Dto\SimrsDto\Patient\PatientEncounterDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientLabResultDataDto;
@@ -17,6 +19,7 @@ use App\Dto\SimrsDto\Patient\PatientRadResultDataDto;
 use App\Dto\SimrsDto\Patient\PatientRadResultDetailDataDto;
 use App\Dto\SimrsDto\Patient\PatientVitalSignHistoryDataDto;
 use App\Dto\SimrsDto\Patient\ServiceUnitDataDto;
+use App\Dto\SimrsDto\Patient\GuarantorDto;
 use App\Models\Simrs\Patient\CreateAppointment;
 use Illuminate\Http\JsonResponse;
 
@@ -51,6 +54,8 @@ interface IPatientService
 
     public function getServiceUnitList(string $serviceUnitId, string $serviceUnitName): ServiceUnitDataDto;
 
+    public function getGuarantorList(string $guarantorId, string $guarantorName): GuarantorDataDto;
+
     public function createAppointment(CreateAppointment $createAppointment): CreateAppointmentDataDto;
 
     public function deleteAppointment(string $appointmentNo): bool;
@@ -61,5 +66,9 @@ interface IPatientService
 
     public function getPatientsByMedicalNo(string $medicalNo): PatientDataDto;
 
-    public function cancelAppointment(string $appointmentNo, string $cancelNote):JsonResponse;
+    public function getPatientsByPatientID(string $patientId): PatientDto;
+
+    public function getGuarantorByGuarantorID(string $guarantorId): GuarantorDto;
+
+    public function cancelAppointment(string $appointmentNo, string $cancelNote): JsonResponse;
 }

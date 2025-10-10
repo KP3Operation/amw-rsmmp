@@ -6,10 +6,10 @@ use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 
-class PatientDataDto extends Data
+class GuarantorDataDto extends Data
 {
     public function __construct(
-        #[DataCollectionOf(PatientDto::class)]
+        #[DataCollectionOf(GuarantorDto::class)]
         public DataCollection $data
     ) {}
 }

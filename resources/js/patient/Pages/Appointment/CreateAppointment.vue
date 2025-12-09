@@ -24,16 +24,16 @@ export default {
         const layoutStore = useLayoutStore();
         const { isLoading } = storeToRefs(layoutStore);
         const familyStore = useFamilyStore();
-        const guarantorStore = useGuarantorStore();
+        // const guarantorStore = useGuarantorStore();
         const { families } = storeToRefs(familyStore);
-        const { guarantors } = storeToRefs(guarantorStore);
+        // const { guarantors } = storeToRefs(guarantorStore);
         const authStore = useAuthStore();
         const { userData, userPatientData } = storeToRefs(authStore);
         const appointmentStore = useAppointmentStore();
 
         const {
             selectedServiceUnitId,
-            selectedGuarantorId,
+            // selectedGuarantorId,
             selectedParamedicId,
             selectedStartDate,
             selectedEndDate,
@@ -46,7 +46,7 @@ export default {
             gender: null,
             appointment_date: selectedDate,
             service_unit_id: selectedServiceUnitId.value,
-            guarantor_id: selectedGuarantorId.value,
+            // guarantor_id: selectedGuarantorId.value,
             paramedic_id: selectedParamedicId.value,
             is_family_member: false,
             family_id: "",
@@ -77,12 +77,12 @@ export default {
                     required
                 ),
             },
-            guarantor_id: {
-                required: helpers.withMessage(
-                    "Penjamin tidak boleh kosong",
-                    required
-                ),
-            },
+            // guarantor_id: {
+            //     required: helpers.withMessage(
+            //         "Penjamin tidak boleh kosong",
+            //         required
+            //     ),
+            // },
             service_unit_id: {
                 required: helpers.withMessage(
                     "Unit tidak boleh kosong",
@@ -133,7 +133,7 @@ export default {
                 (form.patient_id === null || form.patient_id == "")
             ) {
                 form.family_id = selectedFamilyId.value;
-                form.guarantor_id = selectedGuarantorId.value;
+                // form.guarantor_id = selectedGuarantorId.value;
             }
 
             apiRequest
@@ -185,21 +185,21 @@ export default {
                 });
         };
 
-        const fetchGuarantor = () => {
-            apiRequest
-                .get(`/api/v1/patient/guarantors`)
-                .then((response) => {
-                    const data = response.data.guarantor.data;
+        // const fetchGuarantor = () => {
+        //     apiRequest
+        //         .get(`/api/v1/patient/guarantors`)
+        //         .then((response) => {
+        //             const data = response.data.guarantor.data;
 
-                    guarantorStore.updateGuarantors(data);
-                    // guarantors.value = data;
-                })
-                .catch((error) => {
-                    layoutStore.toggleErrorAlert(
-                        `${error.response.data.message}`
-                    );
-                });
-        };
+        //             guarantorStore.updateGuarantors(data);
+        //             // guarantors.value = data;
+        //         })
+        //         .catch((error) => {
+        //             layoutStore.toggleErrorAlert(
+        //                 `${error.response.data.message}`
+        //             );
+        //         });
+        // };
 
         const fetchDoctorSchedules = () => {
             apiRequest
@@ -287,7 +287,7 @@ export default {
                     serviceUnits.value = [];
                     paramedics.value = [];
                     form.service_unit_id = "";
-                    form.guarantor_id = "";
+                    // form.guarantor_id = "";
                     form.paramedic_id = "";
                     doctorScheduleStore.updateSelectedDate(newValue);
                     fetchDoctorSchedules();
@@ -324,14 +324,14 @@ export default {
             }
         );
 
-        watch(
-            () => form.guarantor_id,
-            (newValue, oldValue) => {
-                if (newValue) {
-                    appointmentStore.updateSelectedGuarantorId(newValue);
-                }
-            }
-        );
+        // watch(
+        //     () => form.guarantor_id,
+        //     (newValue, oldValue) => {
+        //         if (newValue) {
+        //             appointmentStore.updateSelectedGuarantorId(newValue);
+        //         }
+        //     }
+        // );
 
         onMounted(() => {
             isFromDoctorSchedulePage.value = false;
@@ -339,7 +339,7 @@ export default {
                 ? userPatientData.value.patientId
                 : "nopatientid";
             fetchFamily();
-            fetchGuarantor();
+            // fetchGuarantor();
 
             if (
                 selectedParamedicId.value !== "" &&
@@ -355,7 +355,7 @@ export default {
                 appointmentStore.updateSelectedServiceUnitId("");
                 form.service_unit_id = "";
                 form.paramedic_id = "";
-                form.guarantor_id = "";
+                // form.guarantor_id = "";
                 form.appointment_date = getCurrentDate();
             }
         });
@@ -363,7 +363,7 @@ export default {
         onUnmounted(() => {
             isFromDoctorSchedulePage.value = false;
             appointmentStore.updateSelectedServiceUnitId("");
-            appointmentStore.updateSelectedGuarantorId("");
+            // appointmentStore.updateSelectedGuarantorId("");
             appointmentStore.updateSelectedParamedicId("");
             appointmentStore.updateSelectedStartDate(getCurrentDate());
         });
@@ -377,7 +377,7 @@ export default {
             userData,
             userPatientData,
             selectedServiceUnitId,
-            selectedGuarantorId,
+            // selectedGuarantorId,
             selectedParamedicId,
             form,
             paramedics,
@@ -391,8 +391,8 @@ export default {
             storeAppointment,
             fetchFamily,
             fetchDoctorSchedules,
-            fetchGuarantor,
-            guarantors,
+            // fetchGuarantor,
+            // guarantors,
         };
     },
 };
@@ -569,7 +569,7 @@ export default {
                     </div>
                 </div>
 
-                <div
+                <!-- <div
                     class="mt-3"
                     :class="{ error: v$.guarantor_id.$errors.length }"
                 >
@@ -603,7 +603,7 @@ export default {
                     >
                         {{ error.$message }}
                     </div>
-                </div>
+                </div> -->
                 <div
                     class="mt-3"
                     :class="{ error: v$.service_unit_id.$errors.length }"

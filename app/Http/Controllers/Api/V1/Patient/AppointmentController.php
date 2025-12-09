@@ -201,13 +201,13 @@ class AppointmentController extends Controller
 
             $patientSearch = $this->patientService->getPatientsByPatientID($request->patient_id ?? $patient->patient_id);
 
-            $guarantor = $this->patientService->getGuarantorByGuarantorID($patientSearch->guarantorId);
+            // $guarantor = $this->patientService->getGuarantorByGuarantorID($patientSearch->guarantorId);
 
-            if (stripos($guarantor->guarantorName, 'BPJS KESEHATAN') !== false) {
-                return response()->json([
-                    throw new \Exception('Sebelumnya anda sudah pernah mendaftar menggunakan BPJS Kesehatan! silahkan melakukan pendaftaran di loket pendaftaran atau gunakan Mobile JKN!')
-                ]);
-            }
+            // if (stripos($guarantor->guarantorName, 'BPJS KESEHATAN') !== false) {
+            //     return response()->json([
+            //         throw new \Exception('Sebelumnya anda sudah pernah mendaftar menggunakan BPJS Kesehatan! silahkan melakukan pendaftaran di loket pendaftaran atau gunakan Mobile JKN!')
+            //     ]);
+            // }
             // if (!$family) {
             //     throw new \Exception('Gagal mengambil data family member');
             // }
@@ -232,7 +232,7 @@ class AppointmentController extends Controller
                     $request->gender === 'Perempuan' ? 'F' : 'M', //$sex
                     '', //street name
                     $user->email ?? '', //email
-                    $request->guarantor_id, //'SELF', //guarantor ID
+                    $request->guarantor_id ?? 'SELF', //guarantor ID
                     '', //district
                     '', //county
                     '', //city
@@ -305,7 +305,7 @@ class AppointmentController extends Controller
                     $request->gender === 'Perempuan' ? 'F' : 'M', //sex
                     '', //streetname
                     $family->email ?? '', //email
-                    $request->guarantor_id, //'SELF', //guarantor ID
+                    $request->guarantor_id ?? 'SELF', //guarantor ID
                     '', //district
                     '', //county
                     '', //city

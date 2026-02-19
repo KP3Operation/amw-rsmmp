@@ -129,8 +129,14 @@ export default {
                 </p>
             </router-link>
         </section>
+
         <section class="homepage-banner mt-6">
-            <img src="@resources/static/images/banner.png" alt="Banner" height="177" />
+            <img 
+            src="@resources/static/images/banner.png" 
+            alt="Banner" 
+            class="w-100"
+            style="height: auto; max-height: 177px; object-fit: cover;"
+            />
         </section>
 
         <section class="mt-5">

@@ -41,7 +41,7 @@ export default {
     <div class="header header-dokter">
         <router-link to="/home">
             <!-- <img id="company-logo" alt="Logo Aviat" width="100" height="30"> -->
-             <img src="http://[::1]:5173/resources/static/images/company-logo.png" alt="Logo Aviat" width="100" height="50">
+             <img src="@resources/static/images/company-logo.png" alt="Logo Aviat" width="100" height="50">
         </router-link>
         <router-link to="/notification" class="notifikasi">
             <i class="bi bi-bell-fill fs-3"></i>

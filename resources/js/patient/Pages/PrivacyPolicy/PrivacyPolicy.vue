@@ -224,26 +224,26 @@ const messages = {
   id: {
     topbarTitle: 'Kebijakan Privasi',
     contents: 'Daftar Isi',
-    title: 'Kebijakan Privasi Mitra Medika Mobile App',
+    title: 'Kebijakan Privasi Aviat Mobile Web',
     effective: 'Berlaku Sejak: 1 Maret 2026',
     footerRights: 'Semua hak dilindungi.',
 
     sec1: {
       title: '1. Informasi Umum',
-      p1: 'Kebijakan Privasi ini menjelaskan bagaimana <strong>Mitra Medika Mobile App</strong> ("Aplikasi", "kami") mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda ketika menggunakan layanan kami di perangkat Android.',
-      p2: 'Aplikasi ini adalah platform layanan kesehatan digital milik <strong>RS Mitra Medika Premiere</strong> yang memungkinkan pasien melakukan pendaftaran online, melihat antrean secara real-time, mengakses jadwal dokter, serta melihat riwayat kunjungan dan rekam medis.',
-      note: '<strong>Penting:</strong> Dengan mengunduh atau menggunakan Aplikasi ini, Anda menyatakan telah membaca, memahami, dan menyetujui seluruh ketentuan dalam Kebijakan Privasi ini. Jika Anda tidak menyetujuinya, harap hentikan penggunaan Aplikasi.',
+      p1: 'Kebijakan Privasi ini menjelaskan bagaimana <strong>Aviat Mobile Web</strong> ("Aplikasi", "kami") yang dioperasikan oleh <strong>RS Mitra Medika Premiere</strong> mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda ketika menggunakan layanan kami melalui peramban web di perangkat Android maupun iOS.',
+      p2: 'Aplikasi ini adalah platform layanan kesehatan digital yang melayani dua jenis pengguna: <strong>Pasien</strong> — untuk membuat janji temu, melihat riwayat kunjungan, hasil laboratorium, riwayat resep, dan grafik tanda vital; serta <strong>Dokter</strong> — untuk mengelola daftar janji temu, daftar pasien rawat inap, catatan medis, dan ringkasan biaya.',
+      note: '<strong>Penting:</strong> Dengan mengakses atau menggunakan Aplikasi ini, Anda menyatakan telah membaca, memahami, dan menyetujui seluruh ketentuan dalam Kebijakan Privasi ini. Jika Anda tidak menyetujuinya, harap hentikan penggunaan Aplikasi.',
     },
 
     sec2: {
       title: '2. Data yang Kami Kumpulkan',
-      intro: 'Untuk memberikan layanan kesehatan digital yang optimal, kami mengumpulkan kategori data berikut:',
+      intro: 'Untuk memberikan layanan kesehatan digital yang optimal, kami mengumpulkan kategori data berikut berdasarkan jenis pengguna:',
       cols: ['Kategori', 'Jenis Data', 'Cara Pengumpulan'],
       rows: [
-        ['Identitas', 'Nama lengkap, NIK/KTP, tanggal lahir, jenis kelamin', 'Diisi langsung saat registrasi'],
-        ['Kontak', 'Nomor telepon, alamat email, alamat domisili', 'Diisi langsung oleh pengguna'],
-        ['Medis', 'Nomor rekam medis, riwayat kunjungan, nama dokter, keluhan', 'Otomatis dari sistem SIMRS'],
-        ['Transaksi', 'Rincian tagihan, jenis layanan, status pembayaran', 'Otomatis dari sistem SIMRS'],
+        ['Identitas Pasien', 'Nama lengkap, NIK/KTP, nomor telepon/WhatsApp', 'Diisi langsung saat registrasi'],
+        ['Identitas Dokter', 'Nama lengkap, nomor telepon/WhatsApp, ID Dokter', 'Diisi langsung saat registrasi dan divalidasi dari SIMRS'],
+        ['Data Medis Pasien', 'Riwayat janji temu, riwayat kunjungan, hasil laboratorium, riwayat resep, grafik tanda vital', 'Otomatis dari sistem SIMRS'],
+        ['Data Notifikasi', 'Token perangkat untuk pengiriman notifikasi janji temu dan pengingat', 'Otomatis dari sistem saat login'],
       ],
     },
 
@@ -251,14 +251,15 @@ const messages = {
       title: '3. Tujuan Penggunaan Data',
       intro: 'Data yang kami kumpulkan digunakan untuk tujuan-tujuan berikut:',
       items: [
-        'Memproses pendaftaran dan antrean layanan kesehatan secara online',
-        'Menampilkan notifikasi terkait status antrean, jadwal dokter, dan informasi penting lainnya',
-        'Menampilkan riwayat kunjungan pasien',
-        'Mengelola akun dan autentikasi pengguna secara aman',
+        'Memproses pendaftaran akun dan verifikasi identitas pengguna melalui OTP WhatsApp',
+        'Memungkinkan pasien membuat, melihat, dan membatalkan janji temu dengan dokter',
+        'Menampilkan jadwal dokter yang tersedia beserta unit pelayanan dan jam operasional',
+        'Mengirimkan notifikasi konfirmasi, pengingat, serta perubahan atau pembatalan janji temu',
+        'Menampilkan riwayat kunjungan, hasil laboratorium, riwayat resep, dan grafik tanda vital pasien',
+        'Memungkinkan dokter mengakses daftar janji temu, daftar rawat inap, catatan medis, dan ringkasan biaya',
         'Menyinkronkan data dengan Sistem Informasi Manajemen Rumah Sakit (SIMRS)',
-        'Menganalisis penggunaan Aplikasi secara anonim untuk meningkatkan performa',
         'Memenuhi kewajiban hukum dan regulasi di bidang kesehatan',
-        'Memberikan dukungan teknis melalui pusat bantuan Aplikasi',
+        'Memberikan dukungan teknis kepada pengguna',
       ],
       note: 'Kami <strong>tidak menggunakan</strong> data Anda untuk periklanan pihak ketiga, profiling komersial, atau penjualan data dalam bentuk apapun.',
     },
@@ -268,7 +269,7 @@ const messages = {
       intro: 'Kami tidak menjual atau menyewakan data pribadi Anda. Data hanya dibagikan dalam kondisi berikut:',
       cols: ['Penerima Data', 'Tujuan Pembagian', 'Dasar'],
       rows: [
-        ['Tenaga medis & staf RS Mitra Medika Premiere', 'Pemberian layanan kesehatan langsung kepada Anda', { label: 'Layanan medis', class: 'badge-medical' }],
+        ['Tenaga medis & staf RS Mitra Medika Premiere', 'Pemberian layanan kesehatan langsung kepada pasien, termasuk akses data janji temu dan catatan medis', { label: 'Layanan medis', class: 'badge-medical' }],
         ['Penyedia layanan teknologi', 'Mitra teknis pendukung operasional aplikasi — terikat perjanjian kerahasiaan', { label: 'Kontrak & NDA', class: 'badge-contract' }],
         ['Otoritas pemerintah', 'Kewajiban hukum atau regulasi yang berlaku (termasuk Kemenkes dan BPJS Kesehatan)', { label: 'Kewajiban hukum', class: 'badge-legal' }],
       ],
@@ -279,11 +280,11 @@ const messages = {
       intro: 'Kami menerapkan langkah-langkah teknis dan organisasional sesuai standar industri untuk melindungi data Anda, termasuk:',
       cols: ['Langkah Keamanan', 'Keterangan'],
       rows: [
-        ['Enkripsi data transit', 'Protokol <strong>HTTPS/TLS 1.2+</strong> untuk semua komunikasi data'],
-        ['Enkripsi data tersimpan', 'Data sensitif dienkripsi pada penyimpanan (<em>encryption at rest</em>)'],
-        ['Autentikasi berlapis', 'Akses ke sistem backend dilindungi lebih dari satu lapisan verifikasi'],
-        ['Kontrol akses berbasis peran', 'Pembatasan akses berdasarkan peran pengguna (RBAC)'],
-        ['Pemantauan & audit log', 'Pemantauan keamanan dan pencatatan aktivitas secara berkala'],
+        ['Enkripsi data transit', 'Seluruh komunikasi dienkripsi menggunakan <strong>HTTPS/TLS</strong> melalui Cloudflare SSL'],
+        ['Enkripsi data tersimpan', 'Data sensitif dienkripsi pada penyimpanan menggunakan fitur enkripsi bawaan Laravel'],
+        ['Autentikasi OTP WhatsApp', 'Login menggunakan kode OTP yang dikirim ke nomor WhatsApp terdaftar — tanpa kata sandi'],
+        ['Perlindungan CDN & Firewall', 'Cloudflare digunakan sebagai CDN dan lapisan firewall untuk mencegah serangan DDoS dan akses berbahaya'],
+        ['Pemantauan & audit log', 'Pemantauan keamanan dan pencatatan aktivitas sistem dilakukan secara berkala'],
         ['Pengujian keamanan', 'Pengujian keamanan aplikasi dilakukan secara periodik'],
       ],
       note: 'Tidak ada sistem yang 100% kebal dari ancaman. Jika Anda mencurigai adanya akses tidak sah ke akun Anda, segera hubungi kami.',
@@ -295,11 +296,11 @@ const messages = {
       cols: ['Jenis Data', 'Durasi Penyimpanan', 'Dasar'],
       rows: [
         ['Data akun aktif', 'Selama akun aktif', 'Kebutuhan layanan'],
-        ['Rekam medis elektronik', 'Minimal 5 tahun', 'Permenkes No. 24 Tahun 2022'],
+        ['Rekam medis & data klinis', 'Minimal 5 tahun', 'Permenkes No. 24 Tahun 2022'],
         ['Log aktivitas', 'Maksimal 12 bulan', 'Keamanan sistem'],
         ['Data transaksi', 'Minimal 5 tahun', 'Ketentuan perpajakan'],
       ],
-      footer: 'Permintaan penghapusan akun dapat diajukan melalui menu pengaturan Aplikasi atau dengan menghubungi tim kami. Permintaan akan diproses dalam <strong>30 hari kerja</strong>.',
+      footer: 'Permintaan penghapusan akun dapat diajukan dengan menghubungi tim kami. Permintaan akan diproses dalam <strong>30 hari kerja</strong>.',
     },
 
     sec7: {
@@ -309,24 +310,24 @@ const messages = {
       rows: [
         ['Hak Akses', 'Meminta salinan data pribadi yang kami miliki tentang Anda'],
         ['Hak Koreksi', 'Meminta perbaikan data yang tidak akurat atau tidak lengkap'],
-        ['Hak Penghapusan', 'Meminta penghapusan data, sesuai batasan hukum yang berlaku'],
+        ['Hak Penghapusan', 'Meminta penghapusan akun dan data, sesuai batasan hukum yang berlaku'],
         ['Hak Portabilitas', 'Menerima data dalam format yang dapat dibaca oleh mesin'],
         ['Hak Keberatan', 'Mengajukan keberatan atas pemrosesan data untuk tujuan tertentu'],
-        ['Hak Penarikan Persetujuan', 'Mencabut izin kapan saja melalui pengaturan perangkat Android Anda'],
+        ['Hak Penarikan Persetujuan', 'Mencabut izin kapan saja dengan menghubungi tim kami atau melalui pengaturan akun Anda'],
       ],
     },
 
     sec8: {
       title: '8. Kebijakan Perlindungan Anak',
       p1: 'Aplikasi ini tidak dirancang untuk digunakan secara mandiri oleh anak di bawah usia <strong>17 tahun</strong>. Kami tidak secara sengaja mengumpulkan data pribadi dari anak-anak tanpa persetujuan orang tua atau wali yang sah.',
-      p2: 'Apabila pasien adalah anak-anak, pendaftaran wajib dilakukan oleh orang tua atau wali yang berwenang. Jika Anda menemukan data anak yang dikumpulkan tanpa izin, segera hubungi kami.',
+      p2: 'Apabila pasien adalah anak-anak, pendaftaran dan penggunaan aplikasi wajib dilakukan oleh orang tua atau wali yang berwenang. Jika Anda menemukan data anak yang dikumpulkan tanpa izin, segera hubungi kami.',
     },
 
     sec9: {
       title: '9. Perubahan Kebijakan Privasi',
       intro: 'Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Setiap perubahan yang bersifat material akan dikomunikasikan melalui:',
       items: [
-        'Notifikasi push dalam Aplikasi',
+        'Notifikasi dalam Aplikasi',
         'Pemberitahuan saat Anda membuka Aplikasi setelah pembaruan',
         'Pembaruan tanggal "Berlaku" di bagian atas halaman ini',
       ],
@@ -352,26 +353,26 @@ const messages = {
   en: {
     topbarTitle: 'Privacy Policy',
     contents: 'Contents',
-    title: 'Mitra Medika Mobile App Privacy Policy',
+    title: 'Aviat Mobile Web Privacy Policy',
     effective: 'Effective: March 1, 2026',
     footerRights: 'All rights reserved.',
 
     sec1: {
       title: '1. General Information',
-      p1: 'This Privacy Policy explains how the <strong>Mitra Medika Mobile App</strong> ("App", "we", "us") collects, uses, stores, and protects your personal information when you use our services on Android devices.',
-      p2: 'This App is a digital healthcare platform operated by <strong>RS Mitra Medika Premiere</strong> that enables patients to register online, view real-time queue status, access doctor schedules, and review visit history and medical records.',
-      note: '<strong>Important:</strong> By downloading or using this App, you acknowledge that you have read, understood, and agreed to all provisions of this Privacy Policy. If you do not agree, please discontinue use of the App.',
+      p1: 'This Privacy Policy explains how <strong>Aviat Mobile Web</strong> ("App", "we", "us"), operated by <strong>RS Mitra Medika Premiere</strong>, collects, uses, stores, and protects your personal information when you use our services through a web browser on Android or iOS devices.',
+      p2: 'This App is a digital healthcare platform serving two types of users: <strong>Patients</strong> — to book appointments, view visit history, lab results, prescription history, and vital sign charts; and <strong>Doctors</strong> — to manage appointment lists, inpatient lists, medical notes, and fee summaries.',
+      note: '<strong>Important:</strong> By accessing or using this App, you acknowledge that you have read, understood, and agreed to all provisions of this Privacy Policy. If you do not agree, please discontinue use of the App.',
     },
 
     sec2: {
       title: '2. Data We Collect',
-      intro: 'To deliver optimal digital healthcare services, we collect the following categories of data:',
+      intro: 'To deliver optimal digital healthcare services, we collect the following categories of data based on user type:',
       cols: ['Category', 'Type of Data', 'Collection Method'],
       rows: [
-        ['Identity', 'Full name, national ID (NIK), date of birth, gender', 'Provided directly during registration'],
-        ['Contact', 'Phone number, email address, home address', 'Provided directly by user'],
-        ['Medical', 'Medical record number, visit history, selected doctor, complaints', 'Automatically from SIMRS system'],
-        ['Transactions', 'Billing details, type of service received, payment status', 'Automatically from SIMRS system'],
+        ['Patient Identity', 'Full name, national ID (NIK), phone/WhatsApp number', 'Provided directly during registration'],
+        ['Doctor Identity', 'Full name, phone/WhatsApp number, Doctor ID', 'Provided during registration and validated against SIMRS'],
+        ['Patient Medical Data', 'Appointment history, visit history, lab results, prescription history, vital sign charts', 'Automatically from SIMRS system'],
+        ['Notification Data', 'Device token for appointment notifications and reminders', 'Automatically generated upon login'],
       ],
     },
 
@@ -379,14 +380,15 @@ const messages = {
       title: '3. Purpose of Data Use',
       intro: 'The data we collect is used solely for the following purposes:',
       items: [
-        'Processing online healthcare registration and queue management',
-        'Displaying notifications regarding queue status, doctor schedules, and other important updates',
-        'Displaying patient visit history',
-        'Managing user accounts and secure authentication',
+        'Processing account registration and verifying user identity via WhatsApp OTP',
+        'Enabling patients to create, view, and cancel appointments with doctors',
+        'Displaying available doctor schedules including service units and operating hours',
+        'Sending confirmation notifications, reminders, and appointment change or cancellation alerts',
+        'Displaying patient visit history, lab results, prescription history, and vital sign charts',
+        'Enabling doctors to access appointment lists, inpatient lists, medical notes, and fee summaries',
         'Synchronizing data with the Hospital Management Information System (SIMRS)',
-        'Analyzing App usage anonymously to improve performance and features',
         'Complying with legal and regulatory obligations in the healthcare sector',
-        'Providing technical support through the App\'s help center',
+        'Providing technical support to users',
       ],
       note: 'We do <strong>not use</strong> your data for third-party advertising, commercial profiling, or data sales in any form.',
     },
@@ -396,7 +398,7 @@ const messages = {
       intro: 'We are committed to not selling or renting your personal data. Data may only be shared under the following circumstances:',
       cols: ['Recipient', 'Purpose', 'Basis'],
       rows: [
-        ['Medical personnel & RS Mitra Medika Premiere staff', 'Delivering direct healthcare services to you', { label: 'Medical service', class: 'badge-medical' }],
+        ['Medical personnel & RS Mitra Medika Premiere staff', 'Delivering direct healthcare services, including access to appointment and medical record data', { label: 'Medical service', class: 'badge-medical' }],
         ['Technology service providers', 'Technical partners supporting app operations — bound by confidentiality agreements', { label: 'Contract & NDA', class: 'badge-contract' }],
         ['Government authorities', 'When required by applicable law or regulation (including Ministry of Health and BPJS Kesehatan)', { label: 'Legal obligation', class: 'badge-legal' }],
       ],
@@ -407,11 +409,11 @@ const messages = {
       intro: 'We implement technical and organizational measures in line with industry standards to protect your data, including:',
       cols: ['Security Measure', 'Description'],
       rows: [
-        ['Data encryption in transit', '<strong>HTTPS/TLS 1.2+</strong> protocol for all data communications'],
-        ['Encryption at rest', 'Sensitive data is encrypted when stored'],
-        ['Multi-layered authentication', 'Backend system access is protected by multiple verification layers'],
-        ['Role-based access control', 'Access is restricted based on user roles (RBAC)'],
-        ['Security monitoring & audit logs', 'Regular security monitoring and activity logging'],
+        ['Data encryption in transit', 'All communications are encrypted via <strong>HTTPS/TLS</strong> through Cloudflare SSL'],
+        ['Encryption at rest', 'Sensitive data is encrypted in storage using Laravel\'s built-in encryption features'],
+        ['WhatsApp OTP authentication', 'Login uses a one-time code sent to your registered WhatsApp number — no password required'],
+        ['CDN & firewall protection', 'Cloudflare is used as a CDN and firewall layer to prevent DDoS attacks and malicious access'],
+        ['Security monitoring & audit logs', 'Regular security monitoring and system activity logging are conducted'],
         ['Security testing', 'Periodic application security testing is conducted'],
       ],
       note: 'No system is entirely immune to threats. If you suspect unauthorized access to your account, please contact us immediately.',
@@ -423,11 +425,11 @@ const messages = {
       cols: ['Data Type', 'Retention Period', 'Basis'],
       rows: [
         ['Active account data', 'As long as account is active', 'Service requirement'],
-        ['Electronic medical records', 'Minimum 5 years', 'Ministerial Regulation No. 24 of 2022'],
+        ['Medical records & clinical data', 'Minimum 5 years', 'Ministerial Regulation No. 24 of 2022'],
         ['Activity logs', 'Maximum 12 months', 'System security'],
         ['Transaction data', 'Minimum 5 years', 'Applicable tax regulations'],
       ],
-      footer: 'Requests to delete your account may be submitted through the App settings or by contacting our team. Requests will be processed within <strong>30 business days</strong>.',
+      footer: 'Requests to delete your account may be submitted by contacting our team. Requests will be processed within <strong>30 business days</strong>.',
     },
 
     sec7: {
@@ -437,24 +439,24 @@ const messages = {
       rows: [
         ['Right of Access', 'Request a copy of personal data we hold about you'],
         ['Right to Rectification', 'Request correction of inaccurate or incomplete data'],
-        ['Right to Erasure', 'Request deletion of your data, subject to legal retention obligations'],
+        ['Right to Erasure', 'Request deletion of your account and data, subject to legal retention obligations'],
         ['Right to Portability', 'Receive your data in a machine-readable format'],
         ['Right to Object', 'Object to specific processing activities'],
-        ['Right to Withdraw Consent', 'Revoke any consent at any time through your Android device settings'],
+        ['Right to Withdraw Consent', 'Revoke any consent at any time by contacting our team or through your account settings'],
       ],
     },
 
     sec8: {
       title: '8. Children\'s Privacy Policy',
       p1: 'This App is not designed for independent use by children under the age of <strong>17</strong>. We do not knowingly collect personal data from minors without verifiable parental or guardian consent.',
-      p2: 'Where patients are minors, registration must be completed by a parent or authorized guardian. If you believe a child\'s data has been collected without proper authorization, please contact us immediately.',
+      p2: 'Where patients are minors, registration and use of the App must be carried out by a parent or authorized guardian. If you believe a child\'s data has been collected without proper authorization, please contact us immediately.',
     },
 
     sec9: {
       title: '9. Changes to This Policy',
       intro: 'We may update this Privacy Policy from time to time. Material changes will be communicated through:',
       items: [
-        'Push notifications within the App',
+        'In-App notifications',
         'An in-App notice when you open the App after an update',
         'An updated "Effective" date at the top of this page',
       ],

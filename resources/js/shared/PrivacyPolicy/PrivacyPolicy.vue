@@ -41,20 +41,22 @@
         <section class="pp-section" id="sec2">
           <h2>{{ t('sec2.title') }}</h2>
           <p>{{ t('sec2.intro') }}</p>
-          <table class="pp-table">
-            <thead>
-              <tr>
-                <th v-for="col in t('sec2.cols')" :key="col" :style="col === t('sec2.cols')[0] ? 'width:24%' : col === t('sec2.cols')[2] ? 'width:30%' : ''">{{ col }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in t('sec2.rows')" :key="row[0]">
-                <td><strong>{{ row[0] }}</strong></td>
-                <td>{{ row[1] }}</td>
-                <td class="pp-col-hide">{{ row[2] }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="pp-table">
+              <thead>
+                <tr>
+                  <th v-for="col in t('sec2.cols')" :key="col" :style="col === t('sec2.cols')[0] ? 'width:24%' : col === t('sec2.cols')[2] ? 'width:30%' : ''">{{ col }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in t('sec2.rows')" :key="row[0]">
+                  <td><strong>{{ row[0] }}</strong></td>
+                  <td>{{ row[1] }}</td>
+                  <td class="pp-col-hide">{{ row[2] }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <!-- SEC 3 -->

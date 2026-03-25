@@ -5,7 +5,7 @@ import CreateAppointmentPage from "@patient/Pages/Appointment/CreateAppointment.
 import DoctorSchedulePage from "@patient/Pages/DoctorSchedule/DoctorSchedule.vue";
 import DoctorScheduleDetailPage from "@patient/Pages/DoctorSchedule/DoctorScheduleDetail.vue";
 import EditProfilePage from "@patient/Pages/EditProfile/EditProfile.vue";
-import PrivacyPolicy from "@patient/Pages/PrivacyPolicy/PrivacyPolicy.vue";
+import PrivacyPolicy from "@shared/PrivacyPolicy/PrivacyPolicy.vue";
 import DataConfirmationPage from "@patient/Pages/Family/DataConfirmation.vue";
 import FamilyPage from "@patient/Pages/Family/Family.vue";
 import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";

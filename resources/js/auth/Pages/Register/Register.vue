@@ -344,6 +344,11 @@ export default {
             >
         </p>
     </div>
+    <div class="mx-4 text-center" v-show="!isLoading">
+        <router-link to="/privacy-policy" class="d-block text-blue-500 fw-semibold text-center mt-5">
+            <span>Kebijakan Privasi</span>
+        </router-link>
+    </div>
     <div
         class="modal"
         id="modal-register"

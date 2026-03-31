@@ -12,6 +12,7 @@ import DeleteAccountPage from "@patient/Pages/Profile/AccountDelete.vue";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import NotFoundPage from "@shared/Pages/NotFound/NotFound.vue";
+import PrivacyPolicy from "@shared/PrivacyPolicy/PrivacyPolicy.vue";
 
 const routes = [
     {
@@ -53,6 +54,11 @@ const routes = [
         path: "/profile",
         name: "ProfilePage",
         component: ProfilePage,
+    },
+    {
+        path: "/privacy-policy",
+        name: "PrivacyPolicy",
+        component: PrivacyPolicy,
     },
     {
         path: "/profile/delete",
@@ -127,6 +133,11 @@ router.beforeEach(async (to, from) => {
 
     if (to.name === "ProfilePage") {
         layoutStore.doctorActiveMenu = "profile";
+    }
+
+    if (to.name === "PrivacyPolicy") {
+        layoutStore.patientActiveMenu = "profile";
+        layoutStore.isFullView = true;
     }
 
     if (to.name === "DeleteAccountPage") {

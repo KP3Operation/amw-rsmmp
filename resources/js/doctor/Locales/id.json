@@ -124,6 +124,7 @@
     },
     "profile": {
         "logout": "Logout",
+        "privacy_policy": "Kebijakan Privasi",
         "logout_modal": {
             "cancel": "Batal",
             "message": "Anda akan logout dari Aviat Mobile Web",

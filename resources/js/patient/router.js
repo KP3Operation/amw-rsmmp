@@ -5,6 +5,7 @@ import CreateAppointmentPage from "@patient/Pages/Appointment/CreateAppointment.
 import DoctorSchedulePage from "@patient/Pages/DoctorSchedule/DoctorSchedule.vue";
 import DoctorScheduleDetailPage from "@patient/Pages/DoctorSchedule/DoctorScheduleDetail.vue";
 import EditProfilePage from "@patient/Pages/EditProfile/EditProfile.vue";
+import PrivacyPolicy from "@shared/PrivacyPolicy/PrivacyPolicy.vue";
 import DataConfirmationPage from "@patient/Pages/Family/DataConfirmation.vue";
 import FamilyPage from "@patient/Pages/Family/Family.vue";
 import UpsertFamilyPage from "@patient/Pages/Family/UpsertFamily.vue";
@@ -89,6 +90,11 @@ const routes = [
         path: "/profile/edit",
         name: "EditProfilePage",
         component: EditProfilePage,
+    },
+    {
+        path: "/profile/privacy",
+        name: "PrivacyPolicy",
+        component: PrivacyPolicy,
     },
     {
         path: "/profile",
@@ -200,6 +206,11 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.name === "EditProfilePage") {
+        layoutStore.patientActiveMenu = "profile";
+        layoutStore.isFullView = true;
+    }
+
+    if (to.name === "privacypolicy") {
         layoutStore.patientActiveMenu = "profile";
         layoutStore.isFullView = true;
     }

@@ -40,7 +40,8 @@
         "doctor_id": "ID Dokter",
         "phone_number_not_registered": "No Hp Belum Terdaftar",
         "phone_number_not_registered_desc": "No Hp Belum Terdaftar, Lanjut daftar dengan nomor ini?",
-        "yes": "Ya"
+        "yes": "Ya",
+        "privacy": "Kebijakan Privasi"
     },
     "confirmation": {
         "title": {

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import ConfirmationPage from "@auth/Pages/Confirmation/Confirmation.vue";
 import LoginPage from "@auth/Pages/Login/Login.vue";
+import PrivacyPolicy from "@shared/PrivacyPolicy/PrivacyPolicy.vue";
 import NotFoundPage from "@auth/Pages/NotFound/NotFound.vue";
 import RegisterPage from "@auth/Pages/Register/Register.vue";
 import VerificationPage from "@auth/Pages/Verification/Verification.vue";
@@ -13,6 +14,11 @@ const routes = [
         path: "/login",
         name: "LoginPage",
         component: LoginPage,
+    },
+    {
+        path: "/privacy-policy",
+        name: "PrivacyPolicy",
+        component: PrivacyPolicy,
     },
     {
         path: "/register",

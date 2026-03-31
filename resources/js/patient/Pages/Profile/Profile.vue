@@ -137,7 +137,7 @@ onMounted(() => {
                     class="d-block text-red-500 fw-semibold text-center text-decoration-none mt-4">
                     {{ $t('profile.logout')}}
                 </a>
-                <router-link to="/profile/privacy" class="d-block text-blue-500 fw-semibold text-center mt-5">
+                <router-link to="/privacy-policy" class="d-block text-blue-500 fw-semibold text-center mt-5">
                     <span>{{ $t('profile.privacy_policy')}}</span>
                 </router-link>
             </div>

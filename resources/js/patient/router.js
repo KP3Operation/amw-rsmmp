@@ -92,7 +92,7 @@ const routes = [
         component: EditProfilePage,
     },
     {
-        path: "/profile/privacy",
+        path: "/privacy-policy",
         name: "PrivacyPolicy",
         component: PrivacyPolicy,
     },

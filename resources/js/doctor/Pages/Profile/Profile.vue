@@ -75,6 +75,10 @@ onMounted(() => {
 
         <a href="javascript:void(0);" @click="modalState.logoutConfirmationModal.show()" class="d-block btn btn-outline-red-500 rounded-pill mt-4 text-decoration-none">{{
             $t('profile.logout') }}</a>
+            
+        <router-link to="/privacy-policy" class="d-block text-blue-500 fw-semibold text-center mt-5">
+            <span>{{ $t('profile.privacy_policy')}}</span>
+        </router-link>
         <!-- <a href="javascript:void(0);" @click="modalState.deleteAccountConfirmationModal.show()" class="d-block btn btn-link">{{
             $t('profile.deleteAccount') }}</a> -->
     </div>

@@ -226,13 +226,13 @@ const messages = {
   id: {
     topbarTitle: 'Kebijakan Privasi',
     contents: 'Daftar Isi',
-    title: 'Kebijakan Privasi Aviat Mobile Web',
+    title: 'Kebijakan Privasi One Premiere Mobile App',
     effective: 'Berlaku Sejak: 1 Maret 2026',
     footerRights: 'Semua hak dilindungi.',
 
     sec1: {
       title: '1. Informasi Umum',
-      p1: 'Kebijakan Privasi ini menjelaskan bagaimana <strong>Aviat Mobile Web</strong> ("Aplikasi", "kami") yang dioperasikan oleh <strong>RS Mitra Medika Premiere</strong> mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda ketika menggunakan layanan kami melalui peramban web di perangkat Android maupun iOS.',
+      p1: 'Kebijakan Privasi ini menjelaskan bagaimana <strong>One Premiere Mobile App</strong> ("Aplikasi", "kami") yang dioperasikan oleh <strong>RS Mitra Medika Premiere</strong> mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda ketika menggunakan layanan kami melalui peramban web di perangkat Android maupun iOS.',
       p2: 'Aplikasi ini adalah platform layanan kesehatan digital yang melayani dua jenis pengguna: <strong>Pasien</strong> — untuk membuat janji temu, melihat riwayat kunjungan, hasil laboratorium, riwayat resep, dan grafik tanda vital; serta <strong>Dokter</strong> — untuk mengelola daftar janji temu, daftar pasien rawat inap, catatan medis, dan ringkasan biaya.',
       note: '<strong>Penting:</strong> Dengan mengakses atau menggunakan Aplikasi ini, Anda menyatakan telah membaca, memahami, dan menyetujui seluruh ketentuan dalam Kebijakan Privasi ini. Jika Anda tidak menyetujuinya, harap hentikan penggunaan Aplikasi.',
     },
@@ -355,13 +355,13 @@ const messages = {
   en: {
     topbarTitle: 'Privacy Policy',
     contents: 'Contents',
-    title: 'Aviat Mobile Web Privacy Policy',
+    title: 'One Premiere Mobile App Privacy Policy',
     effective: 'Effective: March 1, 2026',
     footerRights: 'All rights reserved.',
 
     sec1: {
       title: '1. General Information',
-      p1: 'This Privacy Policy explains how <strong>Aviat Mobile Web</strong> ("App", "we", "us"), operated by <strong>RS Mitra Medika Premiere</strong>, collects, uses, stores, and protects your personal information when you use our services through a web browser on Android or iOS devices.',
+      p1: 'This Privacy Policy explains how <strong>One Premiere Mobile App</strong> ("App", "we", "us"), operated by <strong>RS Mitra Medika Premiere</strong>, collects, uses, stores, and protects your personal information when you use our services through a web browser on Android or iOS devices.',
       p2: 'This App is a digital healthcare platform serving two types of users: <strong>Patients</strong> — to book appointments, view visit history, lab results, prescription history, and vital sign charts; and <strong>Doctors</strong> — to manage appointment lists, inpatient lists, medical notes, and fee summaries.',
       note: '<strong>Important:</strong> By accessing or using this App, you acknowledge that you have read, understood, and agreed to all provisions of this Privacy Policy. If you do not agree, please discontinue use of the App.',
     },

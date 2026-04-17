@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\SimrsService\PatientService\IPatientService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use stdClass;
 
@@ -100,12 +101,12 @@ class MedicalHistoryController extends Controller
             $response->patient = $user;
         } else {
             $user = User::where('id', '=', $request->user()->id)->first();
+
             if (! $user->userPatientData->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
             $prescriptionHistories = $this->patientService->getPrescriptionHistory(10, $user->userPatientData->medical_no);
-
             $response->histories = $prescriptionHistories->data;
             $response->patient = $user;
             $response->patient->gender = $user->userPatientData->gender;
@@ -115,9 +116,11 @@ class MedicalHistoryController extends Controller
 
         $paginatedHistories = [];
         // Filter out histories where PrescriptionNo contains 'RSP'
-        $filteredHistories = array_filter($response->histories->toArray(), function ($recipe) {
-            return strpos($recipe['PrescriptionNo'], 'RSP') === false;
+        $historiesArray = is_array($response->histories) ? $response->histories : $response->histories->toArray();
+        $filteredHistories = array_filter($historiesArray, function ($recipe) {
+            return Str::contains($recipe['PrescriptionNo'], 'RSP') === true;
         });
+
 
         if (count($prevData) >= 10) {
             foreach ($filteredHistories as $patient) {

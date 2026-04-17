@@ -36,8 +36,7 @@ const selectedVitalSignType = ref("BP1");
 const familyStore = useFamilyStore();
 const { families } = storeToRefs(familyStore);
 const medicalHistoriesStore = useMedicalHistoryStore();
-const { vitalSignHistories, prescriptionHistories, encounterHistories,
-    labResultHistories,radResultHistories, selectedPatient, selectedTab, selectedFamilyMemberId } = storeToRefs(medicalHistoriesStore);
+const { vitalSignHistories, prescriptionHistories, encounterHistories, labResultHistories, radResultHistories, selectedPatient, selectedTab, selectedFamilyMemberId } = storeToRefs(medicalHistoriesStore);
 
 const fetchVitalSignHistories = () => {
     medicalHistoriesStore.updateVitalSignHistories([]);
@@ -79,7 +78,7 @@ const fetchPrescriptionHistories = () => {
     }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updatePrescriptionHitories(data.histories);
-        data.histories.map((history) => {
+        data.histories.map((history) => {            
             prevPrescriptionData.value.push(history.PrescriptionNo);
         });
     }).catch((error) => {

@@ -80,10 +80,9 @@ onMounted(() => {
                 <i class="bi bi-clock-fill icon-blue-500 fs-3"></i>
                 <p class="fs-5 text-gray-700">{{ $t('doctor_schedule.schedule_detail.schedule') }}</p>
             </div>
-            <div class="d-flex flex-column rows-gap-8 mt-2">
+            <!-- <div class="d-flex flex-column rows-gap-8 mt-2">
                 <div class="d-flex justify-content-between pb-2 border-bottom border-gray-400">
-                    <p>{{ selectedSchedule.startTime1 }}</p> sampai dengan
-                    <p class="text-end fs-4">{{ selectedSchedule.endTime1 }}</p>
+                    <p>{{ selectedSchedule.startTime1 + ' '+ selectedSchedule.operationalTimeName }}</p> sampai dengan <p class="text-end fs-4">{{ selectedSchedule.endTime1 }}</p>
                 </div>
                 <div
                     v-if="selectedSchedule.startTime2 && selectedSchedule.endTime2"
@@ -97,13 +96,47 @@ onMounted(() => {
                      <p>{{ selectedSchedule.startTime3 }}</p> sampai dengan
                     <p class="text-end fs-4">{{ selectedSchedule.endTime3 }}</p>
                 </div>
-                <!-- <div class="d-flex justify-content-between pb-2 border-bottom border-gray-400">
-                    <p>{{ $t('doctor_schedule.schedule_detail.schedule2') }}</p>
-                    <p class="text-end">
-                        {{ selectedSchedule.startTime2 }} -
-                        {{ selectedSchedule.endTime2 }}
-                    </p>
-                </div> -->
+            </div> -->
+            <div class="d-flex flex-column rows-gap-8 mt-2">
+                <div
+                    v-if="
+                        (selectedSchedule.startTime1 &&
+                            selectedSchedule.startTime1.trim() !== '') ||
+                        (selectedSchedule.endTime1 &&
+                            selectedSchedule.endTime1.trim() !== '')
+                    "
+                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
+                >
+                    <p>{{ selectedSchedule.startTime1 }}</p>
+                    sampai dengan
+                    <p class="text-end fs-4">{{ selectedSchedule.endTime1 }}</p>
+                </div>
+                <div
+                    v-if="
+                        (selectedSchedule.startTime2 &&
+                            selectedSchedule.startTime2.trim() !== '') ||
+                        (selectedSchedule.endTime2 &&
+                            selectedSchedule.endTime2.trim() !== '')
+                    "
+                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
+                >
+                    <p>{{ selectedSchedule.startTime2 }}</p>
+                    sampai dengan
+                    <p class="text-end fs-4">{{ selectedSchedule.endTime2 }}</p>
+                </div>
+                <div
+                    v-if="
+                        (selectedSchedule.startTime3 &&
+                            selectedSchedule.startTime3.trim() !== '') ||
+                        (selectedSchedule.endTime3 &&
+                            selectedSchedule.endTime3.trim() !== '')
+                    "
+                    class="d-flex justify-content-between pb-2 border-bottom border-gray-400"
+                >
+                    <p>{{ selectedSchedule.startTime3 }}</p>
+                    sampai dengan
+                    <p class="text-end fs-4">{{ selectedSchedule.endTime3 }}</p>
+                </div>
             </div>
             <a
                 href="#"
@@ -112,7 +145,14 @@ onMounted(() => {
                 class="d-block btn btn-blue-500-rounded mt-4"
                 >{{ $t('doctor_schedule.schedule_detail.create_appointment') }}</a
             >
-            <!-- <p class="d-flex justify-content-between pt-3">Notes : </p> -->
+            <div
+                v-if="selectedSchedule.operationalTimeName === 'BY APPOINMENT'"
+                class="text-center text-gray-700 mt-6"
+            >
+                <p class="mb-1 fw-bold">By APPOINTMENT</p>
+                <p class="fs-4 fw-bold">Mohon Konfirmasi Janji Temu ke Welcome Center</p>
+                <p class="mt-2 fw-bold">0811-328-135</p>
+            </div>
         </section>
     </div>
 </template>

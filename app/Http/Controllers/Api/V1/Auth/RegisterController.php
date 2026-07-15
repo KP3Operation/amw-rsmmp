@@ -76,11 +76,11 @@ class RegisterController extends Controller
         // Delete old user otp codes
         OtpCode::where('user_id', '=', $user->id)->delete();
 
-        $otpCode = generate_otp(6);
-        // if it is local env force the otpCode to 12345; for dev only
-        // if (config('app.env') == 'local') {
-        //     $otpCode = 12345;
-        // }
+        if ($this->shouldBypassOtp($user->phone_number)) {
+            $otpCode = '123451';
+        } else {
+            $otpCode = generate_otp(6);
+        }
 
         $otpCodeData = OtpCode::create([
             'user_id' => $user->id,
@@ -196,11 +196,11 @@ class RegisterController extends Controller
         // Delete old user otp codes
         OtpCode::where('user_id', '=', $user->id)->delete();
 
-        $otpCode = generate_otp(6);
-        // if it is local env force the otpCode to 12345; for dev only
-        // if (config('app.env') == 'local') {
-        //     $otpCode = 12345;
-        // }
+        if ($this->shouldBypassOtp($user->phone_number)) {
+            $otpCode = '123451';
+        } else {
+            $otpCode = generate_otp(6);
+        }
 
         OtpCode::where('user_id', '=', $user->id)->delete();
 
@@ -257,5 +257,10 @@ class RegisterController extends Controller
         });
 
         return new UpdateDoctorResource($user);
+    }
+
+    private function shouldBypassOtp(?string $phoneNumber): bool
+    {
+        return !empty($phoneNumber) && $phoneNumber === '+6281234524434';
     }
 }

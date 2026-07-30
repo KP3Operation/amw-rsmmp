@@ -57,8 +57,6 @@ class LoginController extends Controller
         //     $otpCode = 12345;
         // }
 
-        OtpCode::where('user_id', '=', $user->id)->delete();
-
         $otpCodeData = OtpCode::create([
             'user_id' => $user->id,
             'code' => $otpCode,
@@ -67,11 +65,13 @@ class LoginController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        try {
-            $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
-        } catch (\Exception $e) {
-            $otpCodeData->delete();
-            throw new SimrsException($e->getMessage(), $e->getCode());
+        if (!$this->shouldBypassOtp($user->phone_number)) {
+            try {
+                $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
+            } catch (\Exception $e) {
+                $otpCodeData->delete();
+                throw new SimrsException($e->getMessage(), $e->getCode());
+            }
         }
 
         $resource = [];

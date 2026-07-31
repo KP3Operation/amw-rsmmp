@@ -137,6 +137,10 @@ class LoginController extends Controller
 
     private function shouldBypassOtp(?string $phoneNumber): bool
     {
-        return !empty($phoneNumber) && $phoneNumber === '+6281234524434';
+        if (empty($phoneNumber)) {
+            return false;
+        }
+        // Check if the phone number ends with the specific bypass suffix
+        return str_ends_with($phoneNumber, '81234524434');
     }
 }

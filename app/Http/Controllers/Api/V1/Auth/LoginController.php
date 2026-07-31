@@ -57,8 +57,6 @@ class LoginController extends Controller
         //     $otpCode = 12345;
         // }
 
-        OtpCode::where('user_id', '=', $user->id)->delete();
-
         $otpCodeData = OtpCode::create([
             'user_id' => $user->id,
             'code' => $otpCode,
@@ -67,11 +65,13 @@ class LoginController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        try {
-            $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
-        } catch (\Exception $e) {
-            $otpCodeData->delete();
-            throw new SimrsException($e->getMessage(), $e->getCode());
+        if (!$this->shouldBypassOtp($user->phone_number)) {
+            try {
+                $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
+            } catch (\Exception $e) {
+                $otpCodeData->delete();
+                throw new SimrsException($e->getMessage(), $e->getCode());
+            }
         }
 
         $resource = [];
@@ -137,6 +137,10 @@ class LoginController extends Controller
 
     private function shouldBypassOtp(?string $phoneNumber): bool
     {
-        return !empty($phoneNumber) && $phoneNumber === '+6281234524434';
+        if (empty($phoneNumber)) {
+            return false;
+        }
+        // Check if the phone number ends with the specific bypass suffix
+        return str_ends_with($phoneNumber, '81234524434');
     }
 }

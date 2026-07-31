@@ -90,12 +90,14 @@ class RegisterController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        try {
-            $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
-        } catch (\Exception $e) {
-            $user->delete();
-            $otpCodeData->delete();
-            throw new SimrsException($e->getMessage(), $e->getCode());
+        if (!$this->shouldBypassOtp($user->phone_number)) {
+            try {
+                $sendOtpResult = $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
+            } catch (\Exception $e) {
+                $user->delete();
+                $otpCodeData->delete();
+                throw new SimrsException($e->getMessage(), $e->getCode());
+            }
         }
 
         $resource = new \stdClass();
@@ -202,8 +204,6 @@ class RegisterController extends Controller
             $otpCode = generate_otp(6);
         }
 
-        OtpCode::where('user_id', '=', $user->id)->delete();
-
         $otpCodeData = OtpCode::create([
             'user_id' => $user->id,
             'code' => $otpCode,
@@ -212,12 +212,14 @@ class RegisterController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        try {
-            $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
-        } catch (\Exception $e) {
-            $user->delete();
-            $otpCodeData->delete();
-            throw new SimrsException($e->getMessage(), $e->getCode());
+        if (!$this->shouldBypassOtp($user->phone_number)) {
+            try {
+                $this->otpService->sendOtp($user->phone_number, (string) $otpCode);
+            } catch (\Exception $e) {
+                $user->delete();
+                $otpCodeData->delete();
+                throw new SimrsException($e->getMessage(), $e->getCode());
+            }
         }
 
         $user->smf_name = $user->userDoctorData->smf_name;
@@ -261,6 +263,10 @@ class RegisterController extends Controller
 
     private function shouldBypassOtp(?string $phoneNumber): bool
     {
-        return !empty($phoneNumber) && $phoneNumber === '+6281234524434';
+        if (empty($phoneNumber)) {
+            return false;
+        }
+        // Check if the phone number ends with the specific bypass suffix
+        return str_ends_with($phoneNumber, '81234524434');
     }
 }

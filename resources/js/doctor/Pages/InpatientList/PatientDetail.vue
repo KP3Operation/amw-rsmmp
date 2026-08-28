@@ -151,7 +151,6 @@ onMounted(() => {
                 <p class="fs-5 text-gray-700">Riwayat Medis</p>
 
                 <div class="mt-3">
-                    <label for="cppt-type-filter" class="form-label">Filter Tipe CPPT</label>
                     <select
                         id="cppt-type-filter"
                         v-model="selectedCpptType"

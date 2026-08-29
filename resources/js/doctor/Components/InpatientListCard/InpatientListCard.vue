@@ -35,6 +35,9 @@ let { id, registrationNo, medicalNo, patientName, roomName } = toRefs(props);
                 <p class="mt-2">{{ roomName }}</p>
             </div>
         </div>
-        <router-link to="/inpatient/detail?" class="d-block btn btn-blue-500-rounded-sm">{{ $t('inpatient_list_card.detail') }}</router-link>
+        <router-link
+            :to="{ path: '/inpatient/detail', query: { registration_no: registrationNo } }"
+            class="d-block btn btn-blue-500-rounded-sm"
+        >{{ $t('inpatient_list_card.detail') }}</router-link>
     </div>
 </template>

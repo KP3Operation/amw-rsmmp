@@ -26,10 +26,10 @@ class MedicalHistoryController extends Controller
         $response = new stdClass();
         $prevData = [];
         if ($request->has('prev_data')) {
-            $prevData = $request->get('prev_data');
+            $prevData = (array) $request->get('prev_data');
         }
 
-        if ($request->has('family_member_id') && $request->family_member_id != 0) {
+        if ($request->filled('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
@@ -46,8 +46,14 @@ class MedicalHistoryController extends Controller
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
+            // SIMRS' vital-sign query needs ~23s for anything up to 50 rows and blows
+            // past its own 30s timeout from about 100, so ask only for what the
+            // pagination below consumes: the rows the client already holds plus the
+            // next page, bounded by the largest size SIMRS still answers.
+            $recordCount = min(2 * count($prevData) + 10, 50);
+
             $vitalSignHistoryData = $this->patientService
-                ->getVitalSignHistory($request->type ?? '', 999, $user->userPatientData->medical_no);
+                ->getVitalSignHistory($request->type ?? '', $recordCount, $user->userPatientData->medical_no);
 
             $response->histories = $vitalSignHistoryData->data;
             $response->patient = $user;
@@ -88,7 +94,7 @@ class MedicalHistoryController extends Controller
         if ($request->has('prev_data')) {
             $prevData = $request->get('prev_data');
         }
-        if ($request->has('family_member_id') && $request->family_member_id != 0) {
+        if ($request->filled('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
@@ -174,7 +180,7 @@ class MedicalHistoryController extends Controller
         if ($request->has('prev_data')) {
             $prevData = $request->get('prev_data');
         }
-        if ($request->has('family_member_id') && $request->family_member_id !== null) {
+        if ($request->filled('family_member_id')) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
@@ -258,7 +264,7 @@ class MedicalHistoryController extends Controller
         if ($request->has('prev_data')) {
             $prevData = $request->get('prev_data');
         }
-        if ($request->has('family_member_id') && $request->family_member_id !== null) {
+        if ($request->filled('family_member_id')) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
@@ -354,7 +360,7 @@ class MedicalHistoryController extends Controller
 
         // return $prevData;
 
-        if ($request->has('family_member_id') && $request->family_member_id != 0) {
+        if ($request->filled('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");

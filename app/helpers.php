@@ -72,7 +72,9 @@ if (!function_exists('date_diff_in_second')) {
         $currentDate = Carbon::parse(date('Y-m-d H:i:s'));
         $pastDate = Carbon::parse($pastDate);
 
-        return $currentDate->diffInSeconds($pastDate);
+        // Carbon 3 returns a signed float here, so the absolute flag and the int
+        // cast are required to keep this returning elapsed seconds as a positive int.
+        return (int) $currentDate->diffInSeconds($pastDate, true);
     }
 }
 

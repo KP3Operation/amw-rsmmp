@@ -145,7 +145,6 @@
         "pulse": "Denyut Nadi",
         "body_temperature": "Suhu Tubuh",
         "blood_pressure": "Tekanan Darah",
-        "load_more": "Load More",
         "choose_vital_unit": "Pilih Tipe",
         "vital_unit": {
             "bp1": "Tekanan Darah Sistolik",

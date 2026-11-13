@@ -1,6 +1,8 @@
 <script setup>
 import { useInpatientStore } from "@doctor/+store/inpatient.store.js";
 import Header from "@shared/Components/Header/Header.vue";
+import Pagination from "@shared/Components/Pagination/Pagination.vue";
+import { usePagination } from "@shared/utils/usePagination.js";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -17,7 +19,6 @@ const { isLoading } = storeToRefs(layoutStore);
 const route = useRoute();
 const cppts = ref([]);
 const selectedCpptType = ref("");
-const currentPage = ref(1);
 const itemsPerPage = 5;
 
 const truncateCpptType = (cpptType) => {
@@ -47,22 +48,11 @@ const filteredCppts = computed(() => {
     });
 });
 
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredCppts.value.length / itemsPerPage)));
-
-const paginatedCppts = computed(() => {
-    const startIndex = (currentPage.value - 1) * itemsPerPage;
-    return filteredCppts.value.slice(startIndex, startIndex + itemsPerPage);
-});
-
-watch(selectedCpptType, () => {
-    currentPage.value = 1;
-});
-
-watch(totalPages, (newTotalPages) => {
-    if (currentPage.value > newTotalPages) {
-        currentPage.value = newTotalPages;
-    }
-});
+const {
+    page: currentPage,
+    totalItems: totalCppts,
+    paginatedItems: paginatedCppts,
+} = usePagination(filteredCppts, itemsPerPage);
 
 const fetchPatientRegistrationCPPTs = () => {
     const registrationNo = selectedRegistrationNo.value || route.query.registration_no;
@@ -254,23 +244,11 @@ onMounted(() => {
                     Data riwayat medis tidak ditemukan.
                 </p>
 
-                <div v-if="filteredCppts.length > itemsPerPage" class="cppt-pagination d-flex align-items-center justify-content-center col-gap-20 mt-4" role="navigation" aria-label="Pagination riwayat medis">
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary cppt-pagination-button"
-                        :disabled="currentPage === 1"
-                        @click="currentPage--"
-                        aria-label="Halaman sebelumnya"
-                    ><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
-                    <span class="cppt-page-info">Hal. {{ currentPage }}/{{ totalPages }}</span>
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary cppt-pagination-button"
-                        :disabled="currentPage === totalPages"
-                        @click="currentPage++"
-                        aria-label="Halaman berikutnya"
-                    ><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
-                </div>
+                <Pagination
+                    v-model="currentPage"
+                    :total-items="totalCppts"
+                    :per-page="itemsPerPage"
+                    nav-label="Navigasi halaman riwayat medis" />
             </div>
         </div>
     </div>
@@ -314,24 +292,5 @@ onMounted(() => {
 
 .cppt-type-select option {
     max-width: 100%;
-}
-
-.cppt-pagination {
-    width: 100%;
-    padding: 8px 0;
-}
-
-.cppt-pagination-button {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cppt-page-info {
-    min-width: 72px;
-    text-align: center;
 }
 </style>

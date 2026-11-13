@@ -14,6 +14,18 @@ use stdClass;
 
 class MedicalHistoryController extends Controller
 {
+    /**
+     * Jumlah baris yang diminta dari SIMRS untuk satu tab riwayat.
+     *
+     * Halaman riwayat memuat satu jendela data sekali saja lalu memecahnya
+     * menjadi halaman-halaman di sisi klien, jadi angka ini sekaligus menjadi
+     * batas atas data yang bisa ditelusuri pengguna. 50 adalah ukuran terbesar
+     * yang masih dijawab VitalSignByMedicalNo (~23 detik) sebelum menabrak
+     * timeout 30 detik miliknya sendiri; endpoint riwayat lain jauh lebih cepat
+     * tetapi disamakan supaya perilaku tiap tab seragam.
+     */
+    private const HISTORY_RECORD_COUNT = 50;
+
     private IPatientService $patientService;
 
     public function __construct(IPatientService $patientService)
@@ -24,11 +36,6 @@ class MedicalHistoryController extends Controller
     public function vitalSign(Request $request)
     {
         $response = new stdClass();
-        $prevData = [];
-        if ($request->has('prev_data')) {
-            $prevData = (array) $request->get('prev_data');
-        }
-
         if ($request->filled('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
@@ -36,7 +43,7 @@ class MedicalHistoryController extends Controller
             }
 
             $vitalSignHistoryData = $this->patientService
-                ->getVitalSignHistory($request->type ?? '', 10, $user->medical_no);
+                ->getVitalSignHistory($request->type ?? '', self::HISTORY_RECORD_COUNT, $user->medical_no);
 
             $response->histories = $vitalSignHistoryData->data;
             $response->patient = $user;
@@ -46,14 +53,8 @@ class MedicalHistoryController extends Controller
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
-            // SIMRS' vital-sign query needs ~23s for anything up to 50 rows and blows
-            // past its own 30s timeout from about 100, so ask only for what the
-            // pagination below consumes: the rows the client already holds plus the
-            // next page, bounded by the largest size SIMRS still answers.
-            $recordCount = min(2 * count($prevData) + 10, 50);
-
             $vitalSignHistoryData = $this->patientService
-                ->getVitalSignHistory($request->type ?? '', $recordCount, $user->userPatientData->medical_no);
+                ->getVitalSignHistory($request->type ?? '', self::HISTORY_RECORD_COUNT, $user->userPatientData->medical_no);
 
             $response->histories = $vitalSignHistoryData->data;
             $response->patient = $user;
@@ -62,27 +63,14 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
         }
 
-        $paginatedHistories = [];
-        if (count($prevData) >= 10) {
-            foreach ($response->histories as $patient) {
-                if (! in_array($patient->registrationNo, $prevData)) {
-                    $paginatedHistories[] = $patient;
-                }
-
-                if (count($paginatedHistories) == (count($prevData) + 10)) {
-                    break;
-                }
-            }
-        } else {
-            foreach ($response->histories as $patient) {
-                $paginatedHistories[] = $patient;
-                if (count($paginatedHistories) == 10) {
-                    break;
-                }
-            }
+        // Seluruh jendela data dikirim sekali; pemecahan per halaman dikerjakan
+        // di sisi klien, jadi berpindah halaman tidak memanggil SIMRS lagi.
+        $histories = [];
+        foreach ($response->histories as $history) {
+            $histories[] = $history;
         }
 
-        $response->histories = $paginatedHistories;
+        $response->histories = $histories;
 
         return response()->json($response);
     }
@@ -90,10 +78,6 @@ class MedicalHistoryController extends Controller
     public function prescriptionHistory(Request $request)
     {
         $response = new stdClass();
-        $prevData = [];
-        if ($request->has('prev_data')) {
-            $prevData = $request->get('prev_data');
-        }
         if ($request->filled('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
@@ -101,7 +85,7 @@ class MedicalHistoryController extends Controller
             }
 
             $prescriptionHistories = $this->patientService
-                ->getPrescriptionHistory(10, $user->medical_no);
+                ->getPrescriptionHistory(self::HISTORY_RECORD_COUNT, $user->medical_no);
 
             $response->histories = $prescriptionHistories->data;
             $response->patient = $user;
@@ -112,7 +96,7 @@ class MedicalHistoryController extends Controller
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
-            $prescriptionHistories = $this->patientService->getPrescriptionHistory(10, $user->userPatientData->medical_no);
+            $prescriptionHistories = $this->patientService->getPrescriptionHistory(self::HISTORY_RECORD_COUNT, $user->userPatientData->medical_no);
             $response->histories = $prescriptionHistories->data;
             $response->patient = $user;
             $response->patient->gender = $user->userPatientData->gender;
@@ -120,34 +104,15 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
         }
 
-        $paginatedHistories = [];
         // Filter out histories where PrescriptionNo contains 'RSP'
         $historiesArray = is_array($response->histories) ? $response->histories : $response->histories->toArray();
         $filteredHistories = array_filter($historiesArray, function ($recipe) {
             return Str::contains($recipe['PrescriptionNo'], 'RSP') === true;
         });
 
-
-        if (count($prevData) >= 10) {
-            foreach ($filteredHistories as $patient) {
-                if (! in_array($patient['PrescriptionNo'], $prevData)) {
-                    $paginatedHistories[] = $patient;
-                }
-
-                if (count($paginatedHistories) == (count($prevData) + 10)) {
-                    break;
-                }
-            }
-        } else {
-            foreach ($filteredHistories as $patient) {
-                $paginatedHistories[] = $patient;
-                if (count($paginatedHistories) == 10) {
-                    break;
-                }
-            }
-        }
-
-        $response->histories = $paginatedHistories;
+        // Seluruh jendela data dikirim sekali; pemecahan per halaman dikerjakan
+        // di sisi klien, jadi berpindah halaman tidak memanggil SIMRS lagi.
+        $response->histories = array_values($filteredHistories);
 
         return response()->json($response);
     }
@@ -176,17 +141,13 @@ class MedicalHistoryController extends Controller
     public function labResult(Request $request)
     {
         $response = new stdClass();
-        $prevData = [];
-        if ($request->has('prev_data')) {
-            $prevData = $request->get('prev_data');
-        }
         if ($request->filled('family_member_id')) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
-            $labResults = $this->patientService->getLabResult($user->medical_no);
+            $labResults = $this->patientService->getLabResult($user->medical_no, self::HISTORY_RECORD_COUNT);
 
             $response->histories = $labResults->data;
             $response->patient = $user;
@@ -196,7 +157,7 @@ class MedicalHistoryController extends Controller
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
-            $labResults = $this->patientService->getLabResult($user->userPatientData->medical_no);
+            $labResults = $this->patientService->getLabResult($user->userPatientData->medical_no, self::HISTORY_RECORD_COUNT);
 
             $response->histories = $labResults->data;
             $response->patient = $user;
@@ -205,27 +166,14 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
         }
 
-        $paginatedHistories = [];
-        if (count($prevData) >= 10) {
-            foreach ($response->histories as $patient) {
-                if (! in_array($patient->registrationNo, $prevData)) {
-                    $paginatedHistories[] = $patient;
-                }
-
-                if (count($paginatedHistories) == (count($prevData) + 10)) {
-                    break;
-                }
-            }
-        } else {
-            foreach ($response->histories as $patient) {
-                $paginatedHistories[] = $patient;
-                if (count($paginatedHistories) == 10) {
-                    break;
-                }
-            }
+        // Seluruh jendela data dikirim sekali; pemecahan per halaman dikerjakan
+        // di sisi klien, jadi berpindah halaman tidak memanggil SIMRS lagi.
+        $histories = [];
+        foreach ($response->histories as $history) {
+            $histories[] = $history;
         }
 
-        $response->histories = $paginatedHistories;
+        $response->histories = $histories;
 
         return response()->json($response);
     }
@@ -260,17 +208,13 @@ class MedicalHistoryController extends Controller
     public function radResult(Request $request)
     {
         $response = new stdClass();
-        $prevData = [];
-        if ($request->has('prev_data')) {
-            $prevData = $request->get('prev_data');
-        }
         if ($request->filled('family_member_id')) {
             $user = Family::findOrFail($request->family_member_id);
             if (! $user->medical_no) {
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
-            $labResults = $this->patientService->getRadResult($user->medical_no);
+            $labResults = $this->patientService->getRadResult($user->medical_no, self::HISTORY_RECORD_COUNT);
 
             $response->histories = $labResults->data;
             $response->patient = $user;
@@ -280,7 +224,7 @@ class MedicalHistoryController extends Controller
                 throw new ModelNotFoundException("Tidak ada No. RM untuk pasien {$user->name}");
             }
 
-            $labResults = $this->patientService->getRadResult($user->userPatientData->medical_no);
+            $labResults = $this->patientService->getRadResult($user->userPatientData->medical_no, self::HISTORY_RECORD_COUNT);
 
             $response->histories = $labResults->data;
             $response->patient = $user;
@@ -289,27 +233,14 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
         }
 
-        $paginatedHistories = [];
-        if (count($prevData) >= 10) {
-            foreach ($response->histories as $patient) {
-                if (! in_array($patient->registrationNo, $prevData)) {
-                    $paginatedHistories[] = $patient;
-                }
-
-                if (count($paginatedHistories) == (count($prevData) + 10)) {
-                    break;
-                }
-            }
-        } else {
-            foreach ($response->histories as $patient) {
-                $paginatedHistories[] = $patient;
-                if (count($paginatedHistories) == 10) {
-                    break;
-                }
-            }
+        // Seluruh jendela data dikirim sekali; pemecahan per halaman dikerjakan
+        // di sisi klien, jadi berpindah halaman tidak memanggil SIMRS lagi.
+        $histories = [];
+        foreach ($response->histories as $history) {
+            $histories[] = $history;
         }
 
-        $response->histories = $paginatedHistories;
+        $response->histories = $histories;
 
         return response()->json($response);
     }
@@ -344,21 +275,12 @@ class MedicalHistoryController extends Controller
     public function encounterList(Request $request)
     {
         $response = new stdClass();
-        $prevData = [];
-        if ($request->has('prev_data')) {
-            $prevData = $request->get('prev_data');
-            $previousYear = date('Y') - 1;
-            $currentMonth = date('m');
-            $startDate = $previousYear . '-' . $currentMonth . '-01';
-            $endDate = date('Y-m-d');
-        } else {
-            $previousYear = date('Y') - 1;
-            $currentMonth = date('m');
-            $startDate = $previousYear . '-' . $currentMonth . '-01';
-            $endDate = date('Y-m-d');
-        }
 
-        // return $prevData;
+        // Rentang tetap: dari bulan yang sama tahun lalu sampai hari ini.
+        $previousYear = date('Y') - 1;
+        $currentMonth = date('m');
+        $startDate = $previousYear . '-' . $currentMonth . '-01';
+        $endDate = date('Y-m-d');
 
         if ($request->filled('family_member_id') && $request->family_member_id != 0) {
             $user = Family::findOrFail($request->family_member_id);
@@ -399,27 +321,14 @@ class MedicalHistoryController extends Controller
             $response->patient->birth_date = $user->userPatientData->birth_date;
         }
 
-        $paginatedHistories = [];
-        if (count($prevData) >= 10) {
-            foreach ($response->histories as $patient) {
-                if (! in_array($patient->registrationNo, $prevData)) {
-                    $paginatedHistories[] = $patient;
-                }
-
-                if (count($paginatedHistories) == (count($prevData) + 10)) {
-                    break;
-                }
-            }
-        } else {
-            foreach ($response->histories as $patient) {
-                $paginatedHistories[] = $patient;
-                if (count($paginatedHistories) == 10) {
-                    break;
-                }
-            }
+        // Seluruh jendela data dikirim sekali; pemecahan per halaman dikerjakan
+        // di sisi klien, jadi berpindah halaman tidak memanggil SIMRS lagi.
+        $histories = [];
+        foreach ($response->histories as $history) {
+            $histories[] = $history;
         }
 
-        $response->histories = $paginatedHistories;
+        $response->histories = $histories;
 
         return response()->json($response);
     }

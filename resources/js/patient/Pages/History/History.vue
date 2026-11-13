@@ -14,19 +14,14 @@ import LabImage from "@resources/static/images/lab.png";
 import NotFoundImage from "@resources/static/images/not-found.png";
 import { useLayoutStore } from "@shared/+store/layout.store";
 import Header from "@shared/Components/Header/Header.vue";
+import Pagination from "@shared/Components/Pagination/Pagination.vue";
 import apiRequest from "@shared/utils/axios.js";
+import { usePagination } from "@shared/utils/usePagination.js";
 import * as bootsrap from "bootstrap";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive, ref, watch } from "vue";
 
-const prevVitalSignData = ref([]);
-const prevPrescriptionData = ref([]);
-const prevLabResultData = ref([]);
-const prevRadResultData = ref([]);
-const prevEncounterData = ref(1);
 const isLabResultFile = ref(false);
-
-const loadMoreIndexPertemuan = ref(1);
 
 const layoutStore = useLayoutStore();
 const modalState = reactive({
@@ -38,22 +33,49 @@ const { families } = storeToRefs(familyStore);
 const medicalHistoriesStore = useMedicalHistoryStore();
 const { vitalSignHistories, prescriptionHistories, encounterHistories, labResultHistories, radResultHistories, selectedPatient, selectedTab, selectedFamilyMemberId } = storeToRefs(medicalHistoriesStore);
 
+// Tiap tab memuat satu jendela data sekali lalu memecahnya di sini, jadi
+// berpindah halaman tidak memanggil SIMRS lagi.
+const {
+    page: vitalSignPage,
+    totalItems: vitalSignTotal,
+    paginatedItems: vitalSigns,
+} = usePagination(vitalSignHistories);
+
+const {
+    page: prescriptionPage,
+    totalItems: prescriptionTotal,
+    paginatedItems: prescriptions,
+} = usePagination(prescriptionHistories);
+
+const {
+    page: labResultPage,
+    totalItems: labResultTotal,
+    paginatedItems: labResults,
+} = usePagination(labResultHistories);
+
+const {
+    page: radResultPage,
+    totalItems: radResultTotal,
+    paginatedItems: radResults,
+} = usePagination(radResultHistories);
+
+const {
+    page: encounterPage,
+    totalItems: encounterTotal,
+    paginatedItems: encounters,
+} = usePagination(encounterHistories);
+
 const fetchVitalSignHistories = () => {
     medicalHistoriesStore.updateVitalSignHistories([]);
     layoutStore.isLoading = true;
     apiRequest.get(`/api/v1/patient/medical/history/vitalsign`, {
         params: {
             type: selectedVitalSignType.value,
-            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
-            prev_data: prevVitalSignData.value
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value
         }
     }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updateVitalSignHistories(data.histories);
-
-        data.histories.map((history) => {
-           prevVitalSignData.value.push(history.registrationNo);
-        });
         medicalHistoriesStore.updateSelectedPatient({
             name: data.patient.name,
             gender: data.patient.gender,
@@ -72,15 +94,11 @@ const fetchPrescriptionHistories = () => {
     layoutStore.isLoading = true;
     apiRequest.get(`/api/v1/patient/medical/history/prescription`, {
         params: {
-            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
-            prev_data: prevPrescriptionData.value
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value
         }
     }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updatePrescriptionHitories(data.histories);
-        data.histories.map((history) => {            
-            prevPrescriptionData.value.push(history.PrescriptionNo);
-        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -93,15 +111,11 @@ const fetchLabResults = () => {
     layoutStore.isLoading = true;
     apiRequest.get(`/api/v1/patient/medical/history/labresult`, {
         params: {
-            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
-            prev_data: prevLabResultData.value
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value
         }
     }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updateLabResultHistories(data.histories);
-        data.histories.map((history) => {
-            prevLabResultData.value.push(history.registrationNo);
-        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -114,15 +128,11 @@ const fetchRadResults = () => {
     layoutStore.isLoading = true;
     apiRequest.get(`/api/v1/patient/medical/history/radresult`, {
         params: {
-            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
-            prev_data: prevRadResultData.value
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value
         }
     }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updateRadResultHistories(data.histories);
-        data.histories.map((history) => {
-            prevRadResultData.value.push(history.registrationNo);
-        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -136,15 +146,11 @@ const fetchEncounterHistories = () => {
     layoutStore.isLoading = true;
     apiRequest.get(`/api/v1/patient/medical/history/encounters`, {
         params: {
-            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value,
-            prev_data: prevEncounterData.value
+            family_member_id: selectedFamilyMemberId.value === 0 ? '' : selectedFamilyMemberId.value
         }
     }).then((response) => {
         const data = response.data;
         medicalHistoriesStore.updateEncounterHistories(data.histories);
-        data.histories.map((history) => {
-            prevEncounterData.value.push(history.registrationNo);
-        });
     }).catch((error) => {
         layoutStore.toggleErrorAlert(`${error.response.data.message}`);
     }).finally(() => {
@@ -153,18 +159,10 @@ const fetchEncounterHistories = () => {
 }
 
 const onTabChange = (tab) => {
-    prevVitalSignData.value = [];
-    prevPrescriptionData.value = [];
-    prevLabResultData.value = [];
-    prevEncounterData.value = [];
     medicalHistoriesStore.updateSelectedTab(tab);
 }
 
-watch(selectedVitalSignType, (newValue, oldValue) => {
-    if(newValue !== oldValue) {
-        prevVitalSignData.value = [];
-    }
-    selectedVitalSignType.value = newValue;
+watch(selectedVitalSignType, () => {
     fetchVitalSignHistories();
 });
 
@@ -218,25 +216,6 @@ const filterByFamily = () => {
 
     medicalHistoriesStore.updateSelectedFamilyMemberId(selectedFamilyMember.id);
 
-    if (selectedTab.value === 'unit-vital') {
-        fetchVitalSignHistories();
-    }
-
-    if (selectedTab.value === 'resep-obat') {
-        fetchPrescriptionHistories();
-    }
-
-    if (selectedTab.value === 'hasil-lab') {
-        fetchLabResults();
-    }
-
-    if (selectedTab.value === 'pertemuan') {
-        fetchEncounterHistories();
-    }
-
-}
-
-const loadMore = () => {
     if (selectedTab.value === 'unit-vital') {
         fetchVitalSignHistories();
     }
@@ -341,7 +320,7 @@ onMounted(() => {
                         <option value="RESP">{{ $t('history.vital_unit.resp') }}</option>
                     </select>
                 </div>
-                <div v-if="vitalSignHistories.length > 0" class="d-flex flex-column rows-gap-16 mt-4" v-for="history in vitalSignHistories">
+                <div v-for="history in vitalSigns" :key="history.registrationNo" class="d-flex flex-column rows-gap-16 mt-4">
                     <VitalSignCard :dateCreated="history.recordDate_yMdHms" :timeCreated="history.recordTime"
                         :registrationNo="history.registrationNo" :vitalSignUnit="history.vitalSignUnit"
                         :vitalSignName="history.vitalSignName"
@@ -353,14 +332,15 @@ onMounted(() => {
                     <p class="mt-3 fs-3 fw-bold" v-html="$t('history.no_vital_unit_result')"></p>
                 </div>
 
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4"
-                     v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
-                </div>
+                <Pagination
+                    v-if="!layoutStore.isLoading"
+                    v-model="vitalSignPage"
+                    :total-items="vitalSignTotal"
+                    nav-label="Navigasi halaman tanda vital" />
 
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'resep-obat' ? 'show active' : ''" id="resep-obat" role="tabpanel" aria-labelledby="resep-obat" tabindex="0">
-                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in prescriptionHistories">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="history in prescriptions" :key="history.PrescriptionNo">
                     <PrescriptionCard
                         :prescription-no="history.PrescriptionNo"
                         :prescription-date_y-md-hms="history.prescriptionDate_yMdHms"
@@ -371,12 +351,14 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_prescription') }}</p>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
-                </div>
+                <Pagination
+                    v-if="!layoutStore.isLoading"
+                    v-model="prescriptionPage"
+                    :total-items="prescriptionTotal"
+                    nav-label="Navigasi halaman resep obat" />
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'hasil-lab' ? 'show active' : ''" id="hasil-lab" role="tabpanel" aria-labelledby="hasil-lab" tabindex="0">
-                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in labResultHistories">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in labResults" :key="result.transactionNo">
                     <LabResultCard
                         paramedic-name="-"
                         :sequence-no="result.sequenceNo"
@@ -397,12 +379,14 @@ onMounted(() => {
                     <p class="fw-bold">{{ $t('history.callcenter') }}</p>
                 </div>
                 
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
-                </div>
+                <Pagination
+                    v-if="!layoutStore.isLoading"
+                    v-model="labResultPage"
+                    :total-items="labResultTotal"
+                    nav-label="Navigasi halaman hasil lab" />
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'hasil-rad' ? 'show active' : ''" id="hasil-rad" role="tabpanel" aria-labelledby="hasil-rad" tabindex="0">
-                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in radResultHistories">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in radResults" :key="result.transactionNo">
                     <RadResultCard
                         :paramedic-name="result.readBy"
                         :result-date="result.testResultDate"
@@ -420,12 +404,14 @@ onMounted(() => {
                     <p class="fw-bold">{{ $t('history.callcenter') }}</p>
                 </div>
                 
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
-                </div>
+                <Pagination
+                    v-if="!layoutStore.isLoading"
+                    v-model="radResultPage"
+                    :total-items="radResultTotal"
+                    nav-label="Navigasi halaman radiologi" />
             </section>
             <section class="tab-pane fade" :class="selectedTab === 'pertemuan' ? 'show active' : ''" id="pertemuan" role="tabpanel" aria-labelledby="pertemuan" tabindex="0">
-                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in encounterHistories">
+                <div class="d-flex flex-column rows-gap-16 mt-4" v-for="result in encounters" :key="result.registrationNo">
                     <EncounterCard
                         :registration-no="result.registrationNo"
                         :date="result.registrationDate_yMdHms"
@@ -436,9 +422,11 @@ onMounted(() => {
                          width="238" height="198" class="d-inline-block">
                     <p class="mt-4 fs-3 fw-bold">{{ $t('history.no_encounter') }}</p>
                 </div>
-                <div class="d-flex flex-column rows-gap-16 mt-6 px-4" v-if="!layoutStore.isLoading && vitalSignHistories.length >= 10" @click="loadMore">
-                    <button type="button" class="btn btn-default">{{ $t('history.load_more') }}</button>
-                </div>
+                <Pagination
+                    v-if="!layoutStore.isLoading"
+                    v-model="encounterPage"
+                    :total-items="encounterTotal"
+                    nav-label="Navigasi halaman pertemuan" />
             </section>
             <div class="text-center mt-3" v-if="layoutStore.isLoading">
                 <div class="spinner-border" role="status">

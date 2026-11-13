@@ -1,6 +1,5 @@
 <script setup>
 import DefaultAvatar from "@resources/static/images/avatar-default.png";
-import SyncPhoto from "@resources/static/images/sinkronisasi.png";
 import { useAuthStore } from "@shared/+store/auth.store.js";
 import { useLayoutStore } from "@shared/+store/layout.store.js";
 import * as bootstrap from 'bootstrap';
@@ -8,7 +7,12 @@ import {onMounted, reactive, ref, watch} from 'vue';
 import { calculateAge, updateMyProfileStore } from "@shared/utils/helpers.js";
 import Header from "@shared/Components/Header/Header.vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import apiRequest from "@shared/utils/axios.js";
+
+// t() sudah dipakai di syncData(), logout() dan deleteAccount() tetapi tidak
+// pernah diimpor, sehingga tiap alert di sana melempar ReferenceError.
+const { t } = useI18n();
 
 const modalState = reactive({
     syncDataModal: null,
@@ -178,12 +182,10 @@ onMounted(() => {
         </div>
     </div>
 
-    <div class="bg-white d-flex align-items-center mt-8 h-100" v-if="layoutStore.isFullView">
-        <div class="text-center">
-            <img :src="SyncPhoto" alt="Ilustrasi Sinkronisasi" width="324" height="212" class="d-inline-block">
-
-            <h1 class="mt-2 fs-4 fw-bold">{{ $t('profile.sync.title') }}</h1>
-            <p class="mt-2 text-gray-700">{{ $t('profile.sync.subtitle') }}</p>
+    <div class="bg-white d-flex align-items-center justify-content-center min-vh-100"
+         v-if="layoutStore.isFullView">
+        <div class="spinner-border text-blue-500 sync-spinner" role="status">
+            <span class="visually-hidden">{{ $t('profile.sync.title') }}</span>
         </div>
     </div>
 
@@ -243,3 +245,10 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.sync-spinner {
+    width: 3rem;
+    height: 3rem;
+}
+</style>

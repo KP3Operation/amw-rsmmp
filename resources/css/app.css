@@ -6,23 +6,37 @@
     --app-main-txt: #ffffff;
     --app-second-txt: #dddddd;
     --app-warning-txt: #fcef98;
+    /* Warna area di luar frame aplikasi (kiri/kanan pada layar lebar).
+       Sama dengan gray-200 yang dipakai class bg-gray-200 di <body>. */
+    --app-page-bg: #e9ecef;
     --background-src: url("../static/images/app-background.png");
     --logo-src: url("../static/images/aviat-logo.png");
     --company-slogan-src: url("../static/images/company-slogan.png");
     --company-logo-src: url("../static/images/company-logo.png");
 }
 
-body {
-    background-color: #000;
+/* Latar kanvas halaman sengaja hanya warna solid.
+
+   app-background.png berukuran 1080x1920 (rasio layar ponsel). Saat dipasang
+   di <html> dengan background-size: cover, gambar itu diskalakan ke lebar
+   viewport desktop (1920px -> tinggi 3413px), jadi yang terlihat hanya
+   potongan paling atasnya — pita gelap melintang di bagian atas halaman.
+   Wallpaper-nya tetap dipakai di .bg-app-primary (<main> halaman auth),
+   tempat lebarnya memang 393px sehingga rasionya pas. */
+html {
+    background-color: var(--app-page-bg);
+    min-height: 100%;
 }
 
-html {
-    --bs-bg-opacity: 0;
-    background-image: var(--background-src);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-color: var(--app-main-bg) !important;
-    height: 100vh;
+body {
+    /* display: flow-root menahan margin-atas elemen pertama di dalam #app
+       (misal .mt-8 pada layar sinkronisasi = 70px). Tanpa ini margin tersebut
+       collapse keluar menembus #app dan <main> sampai ke <body>, menggeser
+       kotak <body> ke bawah sehingga latar kanvas tersingkap sebagai pita
+       kosong setinggi margin itu di atas halaman. */
+    display: flow-root;
+    min-height: 100vh;
+    background-color: var(--app-page-bg);
 }
 
 /* nama class tidak perlu di ubah, cukup ubah variable nya */
@@ -94,9 +108,12 @@ input::-webkit-inner-spin-button {
 }
 
 @media (max-width: 480px) {
+    /* Lebar mengikuti layar. Nilai tetap 480px membuat <main> lebih lebar dari
+       viewport di ponsel 360-430px, sehingga halaman bisa digeser menyamping
+       dan menyisakan ruang kosong di sisi kanan. */
     main {
-        width: 480px;
-        min-height: 120vh;
+        width: 100%;
+        min-height: 100vh;
     }
 
     main > div > nav {

@@ -120,7 +120,14 @@ export default {
 </script>
 
 <template>
-    <div style="margin:40% auto;padding-bottom:12em;">
+    <!--
+        Dulu di sini ada inline style margin: 40% auto + padding-bottom: 12em.
+        margin persen dihitung dari LEBAR induk, jadi di frame ~360px itu
+        menambah ~144px di atas, ~144px di bawah, plus ~192px padding: total
+        ~480px ruang kosong yang membuat halaman selalu bisa di-scroll.
+        Pemusatan vertikalnya sekarang dikerjakan flexbox di app.css.
+    -->
+    <div>
         <h1 class="fs-1 mt-6 fw-bold">{{ $t("welcome_message") }}</h1>
         <div class="company-slogan"></div>
         <form id="login-form" class="mt-8" @submit.prevent="login">

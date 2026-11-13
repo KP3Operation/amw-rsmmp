@@ -35,8 +35,43 @@ body {
        kotak <body> ke bawah sehingga latar kanvas tersingkap sebagai pita
        kosong setinggi margin itu di atas halaman. */
     display: flow-root;
+    /* svh = tinggi layar saat address bar browser mobile masih TAMPIL.
+       100vh memakai tinggi saat address bar tersembunyi, jadi selalu ~56-100px
+       lebih tinggi dari area yang benar-benar terlihat dan halaman tetap bisa
+       di-scroll walau isinya kosong. Baris 100vh di atasnya cadangan untuk
+       browser lama yang belum mengenal svh. */
     min-height: 100vh;
+    min-height: 100svh;
     background-color: var(--app-page-bg);
+}
+
+/* Alasannya sama dengan body di atas, tapi untuk sisi bawah.
+   <main> hanya punya padding atas (pt-6), sisi bawahnya kosong, sehingga
+   margin-bawah elemen terakhir di dalam #app collapse keluar menembus <main>
+   dan mendarat di <body> — area berwarna <main> berhenti lebih awal dan
+   tersisa pita abu-abu di bawahnya. flow-root menahannya di dalam. */
+main {
+    display: flow-root;
+}
+
+/* Halaman auth (login/register/verifikasi/konfirmasi): isinya dipusatkan
+   secara vertikal lewat flexbox, bukan lewat margin/padding tetap.
+   .bg-app-primary hanya dipakai <main> di layouts/auth.blade.php, jadi aturan
+   ini tidak menyentuh layout pasien maupun dokter.
+
+   Memakai min-height (bukan height) supaya halaman yang isinya memang lebih
+   tinggi dari layar — misalnya saat keyboard terbuka atau muncul pesan
+   validasi — tetap mengalir dan bisa di-scroll seperti biasa. */
+main.bg-app-primary {
+    display: flex;
+    flex-direction: column;
+}
+
+main.bg-app-primary > #app {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* nama class tidak perlu di ubah, cukup ubah variable nya */
@@ -114,6 +149,7 @@ input::-webkit-inner-spin-button {
     main {
         width: 100%;
         min-height: 100vh;
+        min-height: 100svh;
     }
 
     main > div > nav {
@@ -143,5 +179,6 @@ input::-webkit-inner-spin-button {
     main {
         width: 393px;
         min-height: 100vh;
+        min-height: 100svh;
     }
 }

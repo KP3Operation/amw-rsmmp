@@ -176,11 +176,11 @@ class PatientService implements IPatientService
     /**
      * @throws SimrsException
      */
-    public function getLabResult(string $medicalNo): PatientLabResultDataDto
+    public function getLabResult(string $medicalNo, int $count = 20): PatientLabResultDataDto
     {
         $response = $this->simrsBaseApi->get('/MobileWS2.asmx/PatientLabResultList', [], [
             'MedicalNo' => $medicalNo,
-            'RecordCount' => 20
+            'RecordCount' => $count,
         ]);
 
         if (! $response->successful()) {
@@ -213,11 +213,11 @@ class PatientService implements IPatientService
     /**
      * @throws SimrsException
      */
-    public function getRadResult(string $medicalNo): PatientRadResultDataDto
+    public function getRadResult(string $medicalNo, int $count = 20): PatientRadResultDataDto
     {
         $response = $this->simrsBaseApi->get('/MobileWS2.asmx/RadiologyResultsExpertise', [], [
             'MedicalNo' => $medicalNo,
-            'RecordCount' => 20
+            'RecordCount' => $count,
         ]);
 
         if (! $response->successful()) {

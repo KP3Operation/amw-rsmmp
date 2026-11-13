@@ -37,11 +37,11 @@ interface IPatientService
 
     public function getPrescriptionHistoryDetail(string $prescriptionNo): PatientPrescriptionHistoryDetailDataDto;
 
-    public function getLabResult(string $medicalNo): PatientLabResultDataDto;
+    public function getLabResult(string $medicalNo, int $count = 20): PatientLabResultDataDto;
 
     public function getLabResultDetail(string $transactionNo): PatientLabResultDetailDataDto;
 
-    public function getRadResult(string $medicalNo): PatientRadResultDataDto;
+    public function getRadResult(string $medicalNo, int $count = 20): PatientRadResultDataDto;
 
     public function getRadResultDetail(string $transactionNo): PatientRadResultDetailDataDto;
 

@@ -46,7 +46,9 @@ return [
     |
     */
 
-    'expiration' => now()->addDay(), // 1 days token expire
+    // Sanctum expects a number of minutes here, not a date instance: the Guard
+    // evaluates it as now()->subMinutes($expiration).
+    'expiration' => 60 * 24, // 1 day token expire
 
     /*
     |--------------------------------------------------------------------------
@@ -60,8 +62,10 @@ return [
     */
 
     'middleware' => [
-        'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
+        'validate_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
+        // 'authenticate_session' is intentionally omitted: enabling it would log
+        // out token-based mobile clients whose session is not carried per request.
     ],
 
 ];
